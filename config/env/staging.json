@@ -1,0 +1,31 @@
+{
+"project_name" : "JET_SKI",
+	"version" : "v1",
+	"base_url" : "",	
+	"secret_key":"secre@tke@y",
+    "token_expiry_time":"10h",
+    "port":1455,
+	"db":{
+		"host":"localhost",
+		"user":"mobiloitte",
+		"pass":"mobiloitte123",
+		"name":"JET_SKI"		
+	},
+    "twilio":{
+        "sid": "",
+        "auth_token": "",
+        "number":"+"
+    },
+    "speakeasy":{
+        "secret_key":"@123"
+    },
+    "nodemailer":{
+        "pass": "pramodsmsit",
+        "user": "pramodgiri54.com"
+    },
+    "cloudinary":{
+        "CLOUD_NAME"   : "smsit",
+        "API_KEY"      : "359377722525269",
+        "API_SECRET"   : "OIUzbbSYowTrLVySFFVh02oN-uo"
+      }
+}
