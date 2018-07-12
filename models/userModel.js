@@ -38,10 +38,10 @@ const user = mongoose.Schema({
         default:Date.now()
     },
 
-    jwtToken:
-    {
-        type:String
-    },
+    // jwtToken:
+    // {
+    //     type:String
+    // },
 
     social: {
         socialId:{type: String},

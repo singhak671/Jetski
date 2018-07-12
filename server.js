@@ -7,11 +7,12 @@ const environment = require('./config/config')();
 const dbconnection = require('./db_handler/mongodb');
 const mongoose = require('mongoose');
 const common = require('./common_functions/message');
-
+const cors = require('cors');
+const CronJob = require('cron').CronJob;
 // mongoose.connect('mongodb://localhost/JET_SKI');
 
 const PORT = 8000;
-
+app.use(cors());  
 app.use(bodyParser.urlencoded({
     extended: false
 }));

@@ -19,7 +19,7 @@ module.exports = {
     "signup": function(req, res){
      //   console.log("signup==>>",req.body);
         if(!req.body.email || !req.body.password)  
-            Response.sendResponseWithData(res, resCode.INTERNAL_SERVER_ERROR, "Plase provide email id and password");
+            Response.sendResponseWithData(res, resCode.INTERNAL_SERVER_ERROR, "email_id and password are required**");
        else{
         userSchema.findOne({email:req.body.email,status:"ACTIVE"},(err,result)=>{
             if(err)
@@ -53,7 +53,7 @@ module.exports = {
                                 }else{
                                     var result = result.toObject();
                                     delete result.password;
-                                    Response.sendResponseWithData(res,resCode.EVERYTHING_IS_OK,"SignUp successfully.")
+                                    Response.sendResponseWithData(res,resCode.EVERYTHING_IS_OK,"SignUp successfully.",result)
                                     //  message.sendemail(result.email, "Your account for JET_SKI is created.", "Your email id is "+result.email+" and password is"+retVal, (err,success)=>{
                                     //     if(success)
                                     //     {
@@ -73,13 +73,14 @@ module.exports = {
   //......................................................................Login API....................................................................... //
   "login":(req,res)=>{
         if(!req.body.email || !req.body.password)
-        return  Response.sendResponseWithoutData(res, resCode.BAD_REQUEST, "Please Provide Email & Password"); 
-        userSchema.findOne({email: req.body.email,status:"ACTIVE",userType:req.body.userType},{email:0,address:0,mobile_no:0},{lean:true},(err,result)=>{
+        return  Response.sendResponseWithoutData(res, resCode.BAD_REQUEST, "Please provide email_id and password"); 
+        if(!req.body.userType)
+        
+        return  Response.sendResponseWithoutData(res, resCode.BAD_REQUEST, "Please provide userType");
+       
+        userSchema.findOne({email: req.body.email,status:"ACTIVE",userType:req.body.userType},{name:0},{lean:true},(err,result)=>{
                 console.log("Login success==>>",result)
-                if(!req.body.userType)
-                {
-                return  Response.sendResponseWithoutData(res, resCode.BAD_REQUEST, "Please Provide userType");
-                }
+              
             if(err)
                 return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, 'INTERNAL SERVER ERROR')
             if(!result)            
@@ -113,7 +114,7 @@ module.exports = {
    //..................................................................userDetail API............................................................................... //
    "viewUserDetail": (req, res) => {
     console.log("requested id is"+req.params.userId);
-    userSchema.findOne({_id:req.params.userId,status: "ACTIVE"},{password:0,jwtToken:0},(error,result)=>{
+    userSchema.findOne({_id:req.params.userId,status: "ACTIVE"},{password:0},(error,result)=>{
         if(error)
             Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
         else if(!result)
@@ -125,34 +126,23 @@ module.exports = {
 
 //................................................................editUser API.................................................................................. //
 
-
-// "editUser": (req, res) => {
-//     console.log("edit customer request"+JSON.stringify(req.body))
-//     userSchema.findOneAndUpdate({_id:req.body._id,status: "ACTIVE"},req.body,{new: true,password:0}).lean().exec((error,result)=>{
-//         if(error)
-//             Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG);
-//         else if(!result)
-//             Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND, result);
-//         else
-//         {
-//             delete result['password'];
-//             Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, resMessage.SUCCESSFULLY_UPDATE,result)
-//         }
-//     })
-// },
-
-
 "editUser": (req, res) => {
     console.log((req.body));
+    if(req.body._id!=req.headers._id)
+     return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, "_id of body and header doesnot match");
     userSchema.findOne({_id:req.body._id,status: "ACTIVE"},(err,success)=>{
         if(err)
             return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG);
-        if(!success)
-            return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, "User Not found");
-        cloudinary.uploadImage(req.body.profilePic, (err, result) => {
+         if(!success)
+            return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, "User_id Not found");
+       //success part
+            cloudinary.uploadImage(req.body.profilePic, (err, result) => {
+
+
                 console.log("result On controller",result,"err",err);
-                if(err || !result)
+                if(err)
                     return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, "Picture not uploaded successfully");
+                if(result)    
                 req.body.profilePic = result;
             userSchema.findByIdAndUpdate({_id:req.body._id,status: "ACTIVE"},req.body,{new:true},(err2,final)=>{
                 if (err2 || !final) 
@@ -162,12 +152,13 @@ module.exports = {
           })
                
         })
-                       
+       
+              
                     
      })
         
     
-},
+   },
 
 
  //................................................................forgot password API............................................................................//
@@ -314,8 +305,7 @@ module.exports = {
         })
     },
 
- //=======================================================LogOut Api====================================================================================
-
+ //=======================================================LogOut Api======================================================================================================
     'logOut': (req,res) => {
         console.log("req for logout is "+JSON.stringify(req.body))
         if(!req.body)
