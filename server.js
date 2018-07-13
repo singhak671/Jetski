@@ -23,7 +23,7 @@ app.use(bodyParser.json({
 app.use('/api/v1/user', require('./routes/userRoute'));
 //app.use('/api/v1/webBusiness', require('./routes/businessRoute'));
 app.use('/api/v1/static', require('./routes/termsAndPrivacyRoutes'));
-//app.use('/api/v1/business',require('./routes/userRoute'));
+app.use('/api/v1/business',require('./routes/businessRoute'));
 //app.use(express.static(path.join(__dirname, 'dist')));
 
 // app.get('*', (req, res) => {

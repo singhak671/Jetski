@@ -11,27 +11,27 @@ var businessSchema= require('../models/businessModel');
 //const async = require('async');
 
 module.exports = {
-    'addBusiness': (req, res) => {
+    'addEvent': (req, res) => {
       //  console.log("addddddddddddd", req.body);
         
-        if(!req.body.businessName || !req.body.businessImage){
+        if(!req.body){
             response.sendResponseWithoutData(res, responseCode.SOMETHING_WENT_WRONG, responseMessage.REQUIRED_DATA)
         }
         else{
-        cloudinary.uploadImage(req.body.businessImage, (err, result) => {
+        cloudinary.uploadImage(req.body.eventImage, (err, result) => {
             if(err)
             Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.INTERNAL_SERVER_ERROR);
            else if(result ){
-                req.body.businessImage = result
+                req.body.eventImage = result
                 var business = new businessSchema(req.body)
-                business.save((err2, createbusiness) => {
+                business.save((err2, createEvent) => {
                     if (err2) {
                         console.log("business added error>>>>>>>", err2)
                         response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.")
                     }
-                    else if (createbusiness) {
-                        console.log(createbusiness)
-                        response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "business saved successfully.")
+                    else if (createEvent) {
+                        console.log(createEvent)
+                        response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Event saved successfully.")
                     }
                     else
                         response.sendResponseWithoutData(res, responseCode.SOMETHING_WENT_WRONG, "Error !!!")

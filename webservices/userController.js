@@ -181,8 +181,9 @@ module.exports = {
                    if(!success)
                    return Response.sendResponseWithData(res,resCode.NOT_FOUND,"Email not found");
 
-                   message.sendemail(success.email, "Updated Password for JET_SKI Account", `${success.name} your password is `+otp, (err,result)=>{
-                       if(err)
+                 message.sendemail(success.email, "Updated Password for Aqua_Ludus Account", `Dear ${success.name} , \ 
+                 Your password is `+otp, (err,result)=>{
+                        if(err)
                        {
                           console.log("Email not sent")
                          Response.sendResponseWithoutData(res, resCode.UNAUTHORIZED, resMessage.UNAUTHORIZED);

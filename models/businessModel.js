@@ -3,24 +3,24 @@ const mongoosePaginate = require('mongoose-paginate');
 const Schema=mongoose.Schema;
 const User=require("./userModel");
 const business = mongoose.Schema({
-   businessName: {
+   eventName: {
         type: String
     },
-    businessId:{
+    userId:{
         type: Schema.Types.ObjectId,
         ref: 'User'
     },
    
-   businessDescription: {
+   eventDescription: {
         type: String
     },
-   businessImage: [
+   eventImage: [
          String
     ],
-   businessPrice: {
+   eventPrice: {
         type: Number
     },
-    businessAddress: {
+    eventAddress: {
         type: String
     },
     
