@@ -43,10 +43,9 @@ const user = mongoose.Schema({
     //     type:String
     // },
 
-    social: {
-        socialId:{type: String},
-        socialType:{type: Boolean}
-    },
+    
+socialId:{type: String},
+   
 
     country:{
         type:String
@@ -94,10 +93,10 @@ module.exports = mongoose.model('User', user);
 (function init() {
 
     let obj = {
-        name: "Pramod Giri",
+        adminName: "Pramod Giri",
         password: "admin1234",
         userType: "SUPERADMIN",
-        email: "pramod.giri@mobiloitte.in",
+        adminEmail: "pramod.giri@mobiloitte.in",
         mobile_no: "+918299547036",
         address: "Okhla Phase-1, Delhi"
         };

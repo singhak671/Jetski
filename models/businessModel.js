@@ -24,19 +24,7 @@ const business = mongoose.Schema({
         type: String
     },
     
-    mostViewed: {
-        type: Number,
-        default:0
-    },
-    mostSearched:{
-        type:Number,
-        default:0
-    },
-
-    pushNotification: {
-        type: Boolean,
-        default: false
-    },
+   
 
     status: {
         type: String,

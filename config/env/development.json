@@ -1,7 +1,7 @@
 {
 	"project_name" : "JET_SKI",
 	"version" : "v1",
-	"base_url" : "http://172.16.6.9:",	
+	"base_url" : "http://169.254.32.80:",	
 	"secret_key":"secre@tke@y",
     "token_expiry_time":"10h",
     "port":8080,
