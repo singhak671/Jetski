@@ -95,7 +95,7 @@ module.exports = {
                         return   Response.sendResponseWithoutData(res, resCode.WENT_WRONG,"Data doesn't save")
                         else{
                             var token = jwt.sign({_id:(success._id),socialId:req.body.socialId},config.secret_key);
-                            userSchema.findByIdAndUpdate(success._id,{new:true},(err_,success1)=>{
+                            userSchema.findOne({_id:success._id,status:"ACTIVE"},{name:1},(err_,success1)=>{
                                 if(err_)
                                 return   Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG);
         

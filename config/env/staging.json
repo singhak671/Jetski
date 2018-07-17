@@ -21,7 +21,7 @@
     },
     "nodemailer":{
         "pass": "pramodsmsit",
-        "user": "pramodgiri54.com"
+        "user": "pramodgiri54@gmail.com"
     },
     "cloudinary":{
         "CLOUD_NAME"   : "smsit",
