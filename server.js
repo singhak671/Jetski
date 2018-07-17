@@ -10,7 +10,7 @@ const common = require('./common_functions/message');
 const cors = require('cors');
 // mongoose.connect('mongodb://localhost/JET_SKI');
 
-const PORT = 8000;
+//const PORT = environment.PORT;
 app.use(cors());  
 app.use(bodyParser.urlencoded({
     extended: false
@@ -27,6 +27,6 @@ app.use('/api/v1/business',require('./routes/businessRoute'));
 
 
 
-app.listen(PORT,()=>{
-    console.log(`Server is running on ${PORT}`)
+app.listen(environment.port,()=>{
+    console.log(`Server is running on ${environment.port}`)
 })

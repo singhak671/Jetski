@@ -83,69 +83,67 @@ module.exports = {
                     { console.log("res>>>>>.",result);
                         var token = jwt.sign({_id:(result._id),socialId:req.body.socialId},config.secret_key);                   
                      return Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, resMessage.LOGIN_SUCCESS,result,token);
-    
-                        
-    
+
                 }
                    
              if(!result)
              {
-                userSchemaData.save((err,success)=>{
-                    if(err)
-                        return   Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG);
-                    if(!success)
-                    return   Response.sendResponseWithoutData(res, resCode.WENT_WRONG,"Data doesn't save")
-                    else{
-                        var token = jwt.sign({_id:(success._id),socialId:req.body.socialId},config.secret_key);
-                        userSchema.findByIdAndUpdate(success._id,{new:true},(err_,success1)=>{
-                            if(err_)
+                    userSchemaData.save((err,success)=>{
+                        if(err)
                             return   Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG);
-    
-                             if(!success)
-                            return   Response.sendResponseWithoutData(res, resCode.WENT_WRONG,"Data doesn't exist")
-                              
-                                return Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, resMessage.LOGIN_SUCCESS,success1,token);
-    
-                        })
-                    }
-                
-    
-                })
-          }
-        })
+                        if(!success)
+                        return   Response.sendResponseWithoutData(res, resCode.WENT_WRONG,"Data doesn't save")
+                        else{
+                            var token = jwt.sign({_id:(success._id),socialId:req.body.socialId},config.secret_key);
+                            userSchema.findByIdAndUpdate(success._id,{new:true},(err_,success1)=>{
+                                if(err_)
+                                return   Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG);
+        
+                                if(!success)
+                                return   Response.sendResponseWithoutData(res, resCode.WENT_WRONG,"Data doesn't exist")
+                                
+                              return Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, resMessage.LOGIN_SUCCESS,success1,token);
+        
+                            })
+                        }
+                    
+        
+                    })
+                }
+           })
         
         }  
         else{
             if(!req.body.email || !req.body.password)
             return  Response.sendResponseWithoutData(res, resCode.BAD_REQUEST, "Please provide email_id & password"); 
-        userSchema.findOne({email: req.body.email,status:"ACTIVE",userType:req.body.userType},{email:0,address:0,mobile_no:0},{lean:true},(err,result)=>{
+         userSchema.findOne({email: req.body.email,status:"ACTIVE",userType:req.body.userType},{email:0,address:0,mobile_no:0},{lean:true},(err,result)=>{
                 console.log("Login success==>>",result)
-            if(err)
-                return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, 'INTERNAL SERVER ERROR')
-            if(!result)            
-                return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_MATCH);
-    
-            bcrypt.compare(req.body.password, result.password, (err, res1)=>{
-            if(res1)
-            {
-                // console.log("secret key is "+config.secret_key)
-                var token =  jwt.sign({_id:result._id,email:result.email,password:result.password},config.secret_key);
-                // userSchema.findOneAndUpdate({email:req.body.email},{$set:{jwtToken:token}},{select:{"password":0},new:true},(err1,res2)=>{
-                //     if(err1)
-                //     return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, 'INTERNAL SERVER ERROR')
-                //     if(!res2)            
-                //     return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_MATCH);   
+                if(err)
+                    return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, 'INTERNAL SERVER ERROR')
+                if(!result)            
+                    return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_MATCH);
+        
+                bcrypt.compare(req.body.password, result.password, (err, res1)=>{
+                    if(res1)
+                    {
+                        // console.log("secret key is "+config.secret_key)
+                        var token =  jwt.sign({_id:result._id,email:result.email,password:result.password},config.secret_key);
+                        // userSchema.findOneAndUpdate({email:req.body.email},{$set:{jwtToken:token}},{select:{"password":0},new:true},(err1,res2)=>{
+                        //     if(err1)
+                        //     return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, 'INTERNAL SERVER ERROR')
+                        //     if(!res2)            
+                        //     return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_MATCH);   
+                        
+                        // })
+                        delete result['password']
+                    
+                        return Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, resMessage.LOGIN_SUCCESS,result,token)
+                    }
+                    else
+                    return Response.sendResponseWithoutData(res, resCode.UNAUTHORIZED, "Incorrect password.")
                 
-                // })
-                delete result['password']
-            
-                return Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, resMessage.LOGIN_SUCCESS,result,token)
-                }
-            else
-            return Response.sendResponseWithoutData(res, resCode.UNAUTHORIZED, "Incorrect password.")
-            
-            })  
-        })
+                })  
+            })
         }
     },
     
@@ -158,7 +156,7 @@ module.exports = {
           return  Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
         if(!result)
           return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND, result)
-        console.log("RESULT-------->",result)
+        console.log("SIGNUP RESULT-------->",result)
           return  Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, resMessage.SUCCESSFULLY_DONE, result)
        })
     },
@@ -178,7 +176,7 @@ module.exports = {
             return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, "UserId Not found");
        //success part
             cloudinary.uploadImage(req.body.profilePic, (err, result) => {
-              console.log("result On controller",result,"err",err);
+              console.log("login result On controller",result,"err",err);
                 if(err)
                     return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, "Picture not uploaded successfully");
                 if(result)    
@@ -318,67 +316,7 @@ module.exports = {
         }
     })
  },
-         
  
-
-
-
-//  //=====================================================Add Customer Feedback Api========================================================================================//
-//  "addCustomerFeedback": (req, res) => {
-//         if (!req.body._id)
-//             Response.sendResponseWithoutData(res, resCode.SOMETHING_WENT_WRONG, resMessage.REQUIRED_DATA)
-//         else {
-//             var feedback = new Feedback(req.body)
-//             userSchema.findOne({ _id: req.body._id, status: "ACTIVE" }, (err, result) => {
-//                 if (err)
-//                     Response.sendResponseWithData(res, resCode.SOMETHING_WENT_WRONG, "Error Occured !!!!", err)
-//                 else if (!result)
-//                     Response.sendResponseWithoutData(res, resCode.SOMETHING_WENT_WRONG, "No result !!!!")
-//                 else {
-//                       feedback.save((err_, result_) => {
-//                         if (err_)
-//                             Response.sendResponseWithoutData(res, resCode.SOMETHING_WENT_WRONG, "Error Occured !!!!")
-//                         else if (result_)
-//                             Response.sendResponseWithoutData(res, resCode.EVERYTHING_IS_OK, "Feedback is successfully send.")
-//                         else
-//                             Response.sendResponseWithoutData(res, resCode.NOT_FOUND, "Something went wrong....")
-//                     })
-//                 }
-//             })
-//         }
-//     },
-//  //=======================================================View Customer Feedback Api====================================================================================
-//  "viewCustomerFeedback": (req, res) => {
-//         Feedback.find({}, { name:1, email:1, _id:1 }, (error, result) => {
-//             if (error)
-//                 Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
-//             else if (result.length == 0)
-//                 Response.sendResponseWithoutData(res, resCode.NOT_FOUND, "No data found...")
-//             else
-//                 Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, resMessage.SUCCESSFULLY_DONE, result)
-//         })
-//     },
-
-//  //=======================================================LogOut Api======================================================================================================
-//     'logOut': (req,res) => {
-//         console.log("req for logout is "+JSON.stringify(req.body))
-//         if(!req.body)
-//             Response.sendResponseWithoutData(res, resCode.BAD_REQUEST, "Please give userId.")
-//         else{
-//             userSchema.update({_id:req.body.userId},{$set:{jwtToken:''}},(error,result)=>{
-//                 if(error){
-//                     console.log("error of logout "+JSON.stringify(error))
-//                     Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.INTERNAL_SERVER_ERROR)
-//                 }else if(!result){
-//                     Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
-//                 }
-//                 else{
-//                     console.log("result of logout "+JSON.stringify(result))
-//                     Response.sendResponseWithoutData(res, resCode.EVERYTHING_IS_OK, "User logged out successfully.")
-//                 }
-//             })
-//         }
-//     }  
 
 }
 
