@@ -26,13 +26,11 @@ module.exports = {
             if(err)
             Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.INTERNAL_SERVER_ERROR);
         else if(result)
-            Response.sendResponseWithoutData(res, resCode.ALREADY_EXIST, resMessage.ALL_READY_EXIST_EMAIL);
+            Response.sendResponseWithoutData(res, resCode.ALREADY_EXIST, `EmailId already exists with ${result.userType} account`  );
         else{
             var retVal = "";
                 const saltRounds = 10;
                 retVal = req.body.password;
-
-
                 bcrypt.genSalt(saltRounds, (err, salt)=> {
                     bcrypt.hash(retVal, salt, (error,hash)=>{
                             req.body.password = hash;
@@ -119,11 +117,12 @@ module.exports = {
          userSchema.findOne({email: req.body.email,status:"ACTIVE",userType:req.body.userType},{email:0,address:0,mobile_no:0},{lean:true},(err,result)=>{
                 console.log("Login success==>>",result)
                 if(err)
-                    return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, 'INTERNAL SERVER ERROR')
+                    return Response.sendResponseWithoutData(res, resCode.INTERNAL_SERVER_ERROR, 'INTERNAL SERVER ERROR')
                 if(!result)            
-                    return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_MATCH);
-        
+                    return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, "Please provide valid credentials");        
                 bcrypt.compare(req.body.password, result.password, (err, res1)=>{
+                    if(err)
+                        return Response.sendResponseWithoutData(res, resCode.INTERNAL_SERVER_ERROR, 'INTERNAL SERVER ERROR')
                     if(res1)
                     {
                         // console.log("secret key is "+config.secret_key)
@@ -165,11 +164,11 @@ module.exports = {
 
  "editUser": (req, res) => {
           console.log((req.body));
-            if(req.body._id!=req.headers._id){
-            console.log("headerId and UserId not match")
-            return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, "Provided UserData not match.");
-            }
-    userSchema.findOne({_id:req.body._id,status: "ACTIVE"},(err,success)=>{
+            // if(req.body._id!=req.headers._id){
+            // console.log("headerId and UserId not match")
+            // return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, "Provided UserData not match.");
+            // }
+    userSchema.findOne({_id:req.headers._id,status: "ACTIVE"},(err,success)=>{
         if(err)
             return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG);
          if(!success)
@@ -181,7 +180,7 @@ module.exports = {
                     return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, "Picture not uploaded successfully");
                 if(result)    
                 req.body.profilePic = result;
-            userSchema.findByIdAndUpdate({_id:req.body._id,status: "ACTIVE"},req.body,{new:true},(err2,final)=>{
+            userSchema.findByIdAndUpdate({_id:req.headers._id,status: "ACTIVE"},req.body,{new:true,select:{"password":0}},(err2,final)=>{
                 if (err2 || !final) 
                 return   Response.sendResponseWithData(res, resCode.INTERNAL_SERVER_ERROR, "Error Occured.",err2)     
             return Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "Data Uploaded successfully.",final)
@@ -193,7 +192,6 @@ module.exports = {
               
                     
      })
-        
     
    },
 
@@ -247,29 +245,30 @@ module.exports = {
      console.log("Change password request "+JSON.stringify(req.body))
          userSchema.findById(req.headers._id,(err,success)=>{
             if (err)
-            return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, 'INTERNAL SERVER ERROR')
+            return Response.sendResponseWithoutData(res, resCode.WENT_WRONG,resMessage.INTERNAL_SERVER_ERROR);
          if (!success)
-        return Response.sendResponseWithData(res,resCode.NOT_FOUND,"USER_NOT_EXIST");
+        return Response.sendResponseWithData(res,resCode.NOT_FOUND,"USER NOT EXIST");
        //success
           {
             bcrypt.compare(req.body.oldPassword, success.password, (err, result) => {
+                console.log("err>>>>>>",err,"result of change>>>>",result);
                 if (result) {
                     if (req.body.newPassword != req.body.confirmPassword) {
-                        return  Response.sendResponseWithoutData(res, resCode.BAD_REQUEST, "NEW_CONFIRM_INCORRECT");
+                        return  Response.sendResponseWithoutData(res, resCode.BAD_REQUEST, resMessage.NEW_CONFIRM_INCORRECT);
                     }
                     let salt = bcrypt.genSaltSync(10);
                     success.password = bcrypt.hashSync(req.body.newPassword, salt)
                     success.save((err, success) => {
                         if (err) {
-                            return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, 'INTERNAL SERVER ERROR')
+                            return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.INTERNAL_SERVER_ERROR);
                         } else {
 
-                            Response.sendResponseWithoutData(res, resCode.EVERYTHING_IS_OK, "PASSWORD_UPDATE_SUCCESS ")
+                            Response.sendResponseWithoutData(res, resCode.EVERYTHING_IS_OK, resMessage.PASSWORD_UPDATE_SUCCESS);
 
                         }
                     })
                 } else {
-                    return  Response.sendResponseWithoutData(res, resCode.BAD_REQUEST, "OLD_PASSWORD_INCORRECT");
+                    return  Response.sendResponseWithoutData(res, resCode.BAD_REQUEST,resMessage.OLD_PASSWORD_INCORRECT);
                 }
             })
            }
