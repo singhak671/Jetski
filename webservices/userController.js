@@ -248,7 +248,7 @@ module.exports = {
             return Response.sendResponseWithoutData(res, resCode.WENT_WRONG,resMessage.INTERNAL_SERVER_ERROR);
          if (!success)
         return Response.sendResponseWithData(res,resCode.NOT_FOUND,"USER NOT EXIST");
-       //success
+    //   //success
           {
             bcrypt.compare(req.body.oldPassword, success.password, (err, result) => {
                 console.log("err>>>>>>",err,"result of change>>>>",result);
