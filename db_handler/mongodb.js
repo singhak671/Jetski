@@ -6,7 +6,7 @@ const config = require('../config/config')();
 
 
 // const config = require('../config/env/development').db.name;
-const DB_URL = `mongodb://localhost/JET_Final`;
+const DB_URL = `mongodb://localhost/JET_SKI`;
 
 var againConnect = ()=>{
     setInterval(()=>{

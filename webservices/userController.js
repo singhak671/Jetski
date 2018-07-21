@@ -118,8 +118,10 @@ module.exports = {
                 console.log("Login success==>>",result)
                 if(err)
                     return Response.sendResponseWithoutData(res, resCode.INTERNAL_SERVER_ERROR, 'INTERNAL SERVER ERROR')
-                if(!result)            
-                    return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, "Please provide valid credentials");        
+                if(!result) { 
+                     console.log("i am here" ,result)     
+                    return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, "Please provide valid credentials");    
+                }    
                 bcrypt.compare(req.body.password, result.password, (err, res1)=>{
                     if(err)
                         return Response.sendResponseWithoutData(res, resCode.INTERNAL_SERVER_ERROR, 'INTERNAL SERVER ERROR')
@@ -244,8 +246,10 @@ module.exports = {
    
      console.log("Change password request "+JSON.stringify(req.body))
          userSchema.findById(req.headers._id,(err,success)=>{
-            if (err)
+            if (err){
+            console.log("Data of change pass>>>>>>>>>>>>>>",err)
             return Response.sendResponseWithoutData(res, resCode.WENT_WRONG,resMessage.INTERNAL_SERVER_ERROR);
+            }
          if (!success)
         return Response.sendResponseWithData(res,resCode.NOT_FOUND,"USER NOT EXIST");
     //   //success

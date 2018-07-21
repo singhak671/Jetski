@@ -96,7 +96,7 @@ module.exports = mongoose.model('User', user);
         adminName: "Pramod Giri",
         password: "admin1234",
         userType: "SUPERADMIN",
-        adminEmail: "pramod.giri@mobiloitte.in",
+        email: "pramod.giri@mobiloitte.in",
         mobile_no: "+918299547036",
         address: "Okhla Phase-1, Delhi"
         };
