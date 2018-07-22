@@ -6,6 +6,7 @@ const user = mongoose.Schema({
 
    email: {
        type: String, 
+       lowercase: true
     },
    password: {
        type: String,
@@ -73,7 +74,7 @@ socialId:{type: String},
 
     gender:{
         type:String,
-        enum:['MALE', 'FEMALE']
+        enum:['Male', 'Female']
     }
 
     // isApproved: {

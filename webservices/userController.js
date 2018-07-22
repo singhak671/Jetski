@@ -300,13 +300,13 @@ module.exports = {
    // var query = {};
     let options = {
         page:req.params.pageNumber,
-        select:   'userType email name status',
+        select:   'userType email name status mobile_no address',
         limit:10,
         sort:{created_At:-1},
         //password:0,
         lean: false
     }
-    userSchema.paginate({$and:[{userType:("CUSTOMER","BUSINESS")},{status:"ACTIVE"}]}, options, (error,result)=> {
+    userSchema.paginate({$and:[{userType:"CUSTOMER"},{status:"ACTIVE"}]}, options, (error,result)=> {
         if(error)
             Respondatedatese.sendResponseWithoutData(res, resCode.INTERNAL_SERVER_ERROR, resMessage.INTERNAL_SERVER_ERROR)
         else if(result.docs.length==0)

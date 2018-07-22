@@ -13,7 +13,7 @@ router.post('/editUser',authHandler.verifyToken,User.editUser)
 router.post('/forgotPassword', User.forgotPassword)
 router.post('/changePassword',authHandler.verifyToken, User.changePassword)
 router.post('/deleteUser',authHandler.verifyToken,User.deleteUser);
-router.get('/getAllCustomer/:pageNumber',authHandler.verifyToken,User.getAllCustomer);;
+router.get('/getAllCustomer/:pageNumber',User.getAllCustomer);;
 
 //router.post('/myProfileEdit',User.myProfileEdit);
 
