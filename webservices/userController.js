@@ -185,7 +185,7 @@ module.exports = {
             userSchema.findByIdAndUpdate({_id:req.headers._id,status: "ACTIVE"},req.body,{new:true,select:{"password":0}},(err2,final)=>{
                 if (err2 || !final) 
                 return   Response.sendResponseWithData(res, resCode.INTERNAL_SERVER_ERROR, "Error Occured.",err2)     
-            return Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "Data Uploaded successfully.",final)
+            return Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "Profile Uploaded successfully.",final)
 
           })
                
