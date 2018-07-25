@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 var userSchema =require("./models/userModel");
-var businessSchema= require('./models/businessModel')
+//var businessSchema= require('./models/eventManagementModel')
 const environment = require('./config/config')();
 const dbconnection = require('./db_handler/mongodb');
 const mongoose = require('mongoose');
@@ -20,11 +20,10 @@ app.use(bodyParser.json({
 }));
 
 app.use('/api/v1/user', require('./routes/userRoute'));
-app.use('/admin', require('./routes/userRoute'));
+app.use('/api/v1/admin', require('./routes/userRoute'));
 // app.use('/admin', require('./routes/businessRoute'));
-//app.use('/api/v1/webBusiness', require('./routes/businessRoute'));
 app.use('/api/v1/static', require('./routes/termsAndPrivacyRoutes'));
-app.use('/api/v1/business',require('./routes/businessRoute'));
+app.use('/api/v1/event',require('./routes/eventRoute'));
 
 
 

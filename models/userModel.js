@@ -25,19 +25,24 @@ const user = mongoose.Schema({
     compCount:{
         type:Number
     },
-    status:{
-        type:String,
-        default:"ACTIVE"
+    // status:{
+    //     type:String,
+    //     default:"ACTIVE"
+    // },
+    status: {
+        type: String,
+        enum: ["ACTIVE","INACTIVE","BLOCK"],
+        default: "ACTIVE"
     },
     userType:{
         type:String,
         default:"CUSTOMER",
         enum:['CUSTOMER', 'SUPERADMIN', 'BUSINESS']
     },
-    created_At:{
-        type:Date,
-        default:Date.now()
-    },
+    // created_At:{
+    //     type:Date,
+    //     default:Date.now()
+    // },
 
     // jwtToken:
     // {

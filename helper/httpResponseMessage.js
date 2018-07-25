@@ -29,5 +29,5 @@ module.exports = {
     ADMIN_ID_INCORRECT:'Admin id is incorrect.',
     OLD_PASSWORD_INCORRECT:'Old password is incorrect.',
     NEW_CONFIRM_INCORRECT:'New and confirm password are not similar.',
-    PASSWORD_UPDATE_SUCCESS:"Password updated successfully."
+    PASSWORD_UPDATE_SUCCESS:"Your password updated successfully."
  };

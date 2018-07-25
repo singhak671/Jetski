@@ -6,6 +6,7 @@ const business = mongoose.Schema({
    eventName: {
         type: String
     },
+    
     userId:{
         type: Schema.Types.ObjectId,
         ref: 'User'
@@ -14,9 +15,10 @@ const business = mongoose.Schema({
    eventDescription: {
         type: String
     },
-   eventImage: [
-         String
-    ],
+
+    eventImage:{
+        type:String
+    },
    eventPrice: {
         type: Number
     },
@@ -24,21 +26,38 @@ const business = mongoose.Schema({
         type: String
     },
     
-   
-
     status: {
         type: String,
+        enum: ["ACTIVE","INACTIVE","BLOCK"],
         default: "ACTIVE"
     },
+    period:{
+        type:String,
+        enum:["DAILY","MONTHLY","WEEKLY"]
+    },
 
-    // created_At:{
-    //     type:Date,
-    //     default:Date.now()
-    // },
+    duration: {type:Array},
+            
+    
+
+    eventCreated_At:{
+        type:Date,
+        default:Date.now()
+    },
+
+    jwtToken:{
+        type:String
+    },
+
+    deviceToken:{
+        type:String
+    },
+
+
 },
- {
-    timestamps: true
- });
+    {
+        timestamps: true
+    });
 
 business.plugin(mongoosePaginate);
 module.exports = mongoose.model('Businesses',business);

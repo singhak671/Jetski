@@ -9,13 +9,15 @@ const User= require('../webservices/userController');
 router.post('/signup',User.signup);
 router.post('/login',User.login);
 router.get('/viewUserDetail',authHandler.verifyToken,User.viewUserDetail);
-router.post('/editUser',authHandler.verifyToken,User.editUser)
-router.post('/forgotPassword', User.forgotPassword)
-router.post('/changePassword',authHandler.verifyToken, User.changePassword)
-router.post('/deleteUser',authHandler.verifyToken,User.deleteUser);
+router.get('/viewDetail/:_id',User.viewDetail);//by Admin panel
+router.post('/editUser',authHandler.verifyToken,User.editUser);
+router.post('/edit',User.edit)//by Admin panel
+router.post('/forgotPassword', User.forgotPassword);
+router.post('/changePassword',authHandler.verifyToken, User.changePassword);
+router.post('/deleteUser',User.deleteUser);//by Admin panel
 router.get('/getAllCustomer/:pageNumber',User.getAllCustomer);;
+router.post('/searchCustomerFilter',User.searchCustomerFilter);//by Admin panel
 
-//router.post('/myProfileEdit',User.myProfileEdit);
 
 
 module.exports = router;
