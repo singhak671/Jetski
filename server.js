@@ -21,7 +21,6 @@ app.use(bodyParser.json({
 
 app.use('/api/v1/user', require('./routes/userRoute'));
 app.use('/api/v1/admin', require('./routes/userRoute'));
-// app.use('/admin', require('./routes/businessRoute'));
 app.use('/api/v1/static', require('./routes/termsAndPrivacyRoutes'));
 app.use('/api/v1/event',require('./routes/eventRoute'));
 

@@ -14,8 +14,6 @@ module.exports = {
      DELETE:" deleted successfully.",
      ALL_READY_EXIST_REGISTRATION_NO:"This registration number is already exists.",
     CORRECT_EMAIL:'Please send correct Email.',
-    CORRECT_MOBILE:'Please send correct Mobile Number.',
-    CORRECT_PASSWORD:'Please send correct Password.',
     EMAIL_IS_REQ :'Email is required.',
     NAME_IS_REQ : 'Name is required.',
     ADMIN_PASS_REQ : 'Admin password is required.',

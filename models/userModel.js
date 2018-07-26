@@ -22,9 +22,9 @@ const user = mongoose.Schema({
     address: {
         type:String
     },
-    compCount:{
-        type:Number
-    },
+    // compCount:{
+    //     type:Number
+    // },
     // status:{
     //     type:String,
     //     default:"ACTIVE"
@@ -60,6 +60,10 @@ socialId:{type: String},
     businessName:{
         type:String
     },
+
+    eventId:[{
+        type:String
+    }],
 
     deviceToken:{
         type:String

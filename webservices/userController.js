@@ -62,7 +62,7 @@ module.exports = {
 
     //......................................................................Login API....................................................................... //
     "login": (req, res) => {
-        //console.log("login request====++",req.body)
+        console.log("login request====++",req.body)
         let id;
 
         if (req.body.socialId) {
@@ -357,6 +357,31 @@ module.exports = {
             }
         })
     },
+
+      //......................................................................getAllBusiness API for Admin............................................................................//
+    'getAllBusiness': (req, res) => {
+        //console.log("get al customer")
+       // var query = {};
+       let options = {
+        page: req.params.pageNumber,
+        select: 'userType email name status businessName gender  country',
+        limit: 10,
+        sort: { created_At: -1 },
+        //password:0,
+        lean: false
+    }
+    userSchema.paginate({ $and: [{ userType: "BUSINESS" }, { $or: [{ status: "ACTIVE" }, { status: "BLOCK" }] }] }, options, (error, result) => {
+        if (error)
+            Respondatedatese.sendResponseWithoutData(res, resCode.INTERNAL_SERVER_ERROR, resMessage.INTERNAL_SERVER_ERROR)
+        else if (result.docs.length == 0)
+            Response.sendResponseWithData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
+        else {
+            console.log("result is" + JSON.stringify(result))
+            result.docs.map(x => delete x['password'])
+            Response.sendResponseWithPagination(res, resCode.EVERYTHING_IS_OK, resMessage.SUCCESSFULLY_DONE, result.docs, { total: result.total, limit: result.limit, currentPage: result.page, totalPage: result.pages });
+        }
+    })
+},
 
 
     "searchCustomerFilter": (req, res) => {
