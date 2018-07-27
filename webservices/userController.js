@@ -12,7 +12,7 @@ const cloudinary = require('../common_functions/uploadImage');
 const mongoose = require('mongoose')
 const jwt = require('jsonwebtoken');
 var mongoosePaginate = require('mongoose-paginate');
-var waterfall = require("async-waterfall");
+// var waterfall = require("async-waterfall");
 
 module.exports = {
 
@@ -372,7 +372,7 @@ module.exports = {
     }
     userSchema.paginate({ $and: [{ userType: "BUSINESS" }, { $or: [{ status: "ACTIVE" }, { status: "BLOCK" }] }] }, options, (error, result) => {
         if (error)
-            Respondatedatese.sendResponseWithoutData(res, resCode.INTERNAL_SERVER_ERROR, resMessage.INTERNAL_SERVER_ERROR)
+            Response.sendResponseWithoutData(res, resCode.INTERNAL_SERVER_ERROR, resMessage.INTERNAL_SERVER_ERROR)
         else if (result.docs.length == 0)
             Response.sendResponseWithData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
         else {
