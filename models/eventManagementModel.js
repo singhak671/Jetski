@@ -38,7 +38,7 @@ const business = mongoose.Schema({
 
     duration: {type:Array},
             
-    
+    // businessImage: {type:String},
 
     eventCreated_At:{
         type:Date,

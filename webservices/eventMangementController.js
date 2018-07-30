@@ -66,22 +66,50 @@ module.exports = {
     },
     
 
+    // 'latestEvent': (req, res) => {
+    //     //console.log("get al customer")
+    //     var query = {};
+    //     let options = {
+    //        // page: req.params.pageNumber,
+    //         select: 'period eventCreated_At profileImage eventImage duration eventName status country eventPrice ',
+    //         limit:5,
+    //         sort: { eventCreated_At: -1 },
+    //         //password:0,
+    //         lean: false
+    //     }
+    //     // eventSchema.findOne({ _id: req.body.userId }, (err, success) => {
+    //     //             if(err)
+    //     //             return response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.");
+    //     //         if(!success)
+    //     //         return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found.");
+    //           //success
+    //             eventSchema.paginate( query, options, (error, result) => {
+    //             if (error)
+    //             response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR)
+    //             else if (result.docs.length == 0)
+    //             response.sendResponseWithData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND)
+    //             else {
+    //                 console.log("result is" + JSON.stringify(result))
+    //                 result.docs.map(x => delete x['password'])
+    //                 response.sendResponseWithPagination(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result.docs);
+    //             }
+    //         })
+    //     // })
+    // },
+
+
     'latestEvent': (req, res) => {
         //console.log("get al customer")
         var query = {};
         let options = {
            // page: req.params.pageNumber,
-            select: 'period eventCreated_At eventImage duration eventName status country eventPrice ',
+            select: 'period  eventCreated_At eventImage duration eventName status country eventPrice ',
             limit:5,
             sort: { eventCreated_At: -1 },
             //password:0,
-            lean: false
+            lean: false,
+            populate:{path:'userId',select:'profilePic'},
         }
-        // eventSchema.findOne({ _id: req.body.userId }, (err, success) => {
-        //             if(err)
-        //             return response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.");
-        //         if(!success)
-        //         return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found.");
               //success
                 eventSchema.paginate( query, options, (error, result) => {
                 if (error)
@@ -91,11 +119,12 @@ module.exports = {
                 else {
                     console.log("result is" + JSON.stringify(result))
                     result.docs.map(x => delete x['password'])
-                    response.sendResponseWithPagination(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result.docs);
+                    response.sendResponseWithPagination(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result);
                 }
             })
         // })
     },
+
 
     "bookingEvent": (req, res) =>{
         eventSchema.findOne({ _id:req.body.userId }, (err, success) => {
@@ -120,15 +149,15 @@ module.exports = {
         var date1 = new Date(today1)
     console.log(today1)
         //    var Data =req.body.duration[0].date;
-        var Data = req.body.duration
-    console.log("data result duration",Data)
+         var Data = success.duration;
+    console.log("data result duration>>>>>>>>>>>",Data)
            
             let arr=[];
 
             for(let i=0;i<Data.length;i++){
 
                 console.log("aa gya===>>",Data[i])
-                if(new Date(Data[i].date).getTime() >= date1.getTime())
+                if(new Date(Data[i].date.formatted).getTime() >= date1.getTime())
                 arr.push(Data[i])
             
             }

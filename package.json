@@ -28,6 +28,7 @@
     "node-cron-job": "^0.2.3",
     "nodemailer": "^4.6.7",
     "nodemon": "^1.17.5",
-    "npm": "^6.1.0"
+    "npm": "^6.1.0",
+    "populate": "^5.0.1"
   }
 }

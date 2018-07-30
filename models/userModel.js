@@ -77,9 +77,8 @@ socialId:{type: String},
 
     profilePic:String,
 
-    dateOfBirth:{
-        type:Date
-    },
+    dateOfBirth:
+        {type:Array},
 
     gender:{
         type:String,
