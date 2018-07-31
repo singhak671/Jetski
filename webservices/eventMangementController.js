@@ -127,103 +127,238 @@ module.exports = {
     },
 
 
-    "bookingEvent": (req, res) => {
-        console.log("@$@^&%@&*@*&^@^@((@",req.body);
-        eventSchema.findOne({ _id: req.body.userId }, (err, success) => {
-            if (err)
-                return response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.");
-            if (!success)
-                return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found.");
-            //success
-            var today = new Date();
-            var dd = today.getDate();
-            var mm = today.getMonth() + 1; //January is 0!
-            var yyyy = today.getFullYear();
-            if (dd < 10) {
-                dd = '0' + dd
-            }
+    // "bookingEvent": (req, res) => {
+  
+    //     eventSchema.findOne({ _id: req.body.userId }, (err, success) => {
+    //         if (err)
+    //             return response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.");
+    //         if (!success)
+    //             return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found.");
+    //         else{
+    //             console.log("@$@^&%@&*@*&^@^@((@", );
+    //             // console.log("success part>>>>>>>>>"+JSON.stringify(success))
+    //             if(success.period == "DAILY"){
+    //                   var date = Date.now()
 
-            if (mm < 10) {
-                mm = '0' + mm
-            }
-
-            today1 = yyyy + '-' + mm + '-' + dd;//2018-07-27
-            var date1 = new Date(today1)
-
+    //                  if(success.duration[i].date.formatted  ==  date && date <=success.duration[i].date.formatted + 86399999){
+                         
+    //                  }
+    //             }
+    //             if(success.period == "WEEKLY"){
+                    
+    //             }
+    //             if(success.period == "MONTHLY"){
+                    
+    //             }
+    //     }
             
-            //    var Data =req.body.duration[0].date;
-            var Data = success.duration;
-
-
-             var dateToday = new Date(Date.now());
-             console.log("@@@@@@@@@@@@@@@@",dateToday);
-            dateToday.setHours(0,0,0,0);
-           var dateLast = new Date(Date.now());
-           dateLast.setHours(23,59,59,999);
-
-console.log("!!!!!!!!!!!!!!!!!!",dateToday,dateLast);
-
-            let arr = [];
-
-            var date = new Date(), y = date.getFullYear(), m = date.getMonth();
-            var firstDay = new Date(y, m, 1);
-            var lastDay = new Date(y, m + 1, 0);
-
-            var a = lastDay.toString();
-            lastDay = a.split(" ");
-
-            var currentDate = new Date();
-
-
-            var daily = {
-                _id: mongoose.Types.ObjectId(req.body.userId),
-                'duration.date.jsdate':{$gte:dateToday}
-            }
-
-            var weekly = {
-                _id: req.body.userId,
-                $gte: {
-                    'duration.date.jsdate': Date.now() + 19800000
-                },
-                $lte: {
-                    'duration.date.jsdate': currentDate.setDate(currentDate.getDate() + 6) + 19800000
-                }
-            }
-
-            var monthly = {
-                _id: req.body.userId,
-                $gte: {
-                    'duration.date.jsdate': Date.now() + 19800000
-                },
-                $lte: {
-                    'duration.date.jsdate': currentDate.setDate(currentDate.getDate() + 31) + 19800000
-                }
-            }
+            
+    //         // return response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, success);
 
 
 
-            // for (let i = 0; i < Data.length; i++) {
-
-            //     console.log("aa gya===>>", Data[i])
-            //     if (new Date(Data[i].date.formatted).getTime() >= date1.getTime())
-            //         arr.push(Data[i])
-
-            // }
-            console.log("QUERY FOR DAILY ===>", daily);
-            eventSchema.find(daily,(err1, succ) => {
-                console.log("result for duration correction>>>>>>>>>.",err1,succ)
-                if (err1)
-                    return response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.");
-                if (!succ)
-                    return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found.");
-                else {
-                    return response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, succ);
-                }
-            })
-            // "DAILY","MONTHLY","WEEKLY"
-        })
-    }
+    //     })
+    // }
 }
+
+
+
+
+
+
+
+
+//             //success
+//             var today = new Date();
+//             var dd = today.getDate();
+//             var mm = today.getMonth() + 1; //January is 0!
+//             var yyyy = today.getFullYear();
+//             if (dd < 10) {
+//                 dd = '0' + dd
+//             }
+
+//             if (mm < 10) {
+//                 mm = '0' + mm
+//             }
+
+//             today1 = yyyy + '-' + mm + '-' + dd;//2018-07-27
+//             var date1 = new Date(today1)
+
+
+//             //    var Data =req.body.duration[0].date;
+//             var Data = success.duration;
+
+
+//              var dateToday = new Date(Date.now());
+//              console.log("@@@@@@@@@@@@@@@@",dateToday);
+//             dateToday.setHours(0,0,0,0);
+//            var dateLast = new Date(Date.now());
+//            dateLast.setHours(23,59,59,999);
+
+// console.log("!!!!!!!!!!!!!!!!!!",dateToday,dateLast);
+
+//             let arr = [];
+
+//             var date = new Date(), y = date.getFullYear(), m = date.getMonth();
+//             var firstDay = new Date(y, m, 1);
+//             var lastDay = new Date(y, m + 1, 0);
+
+//             var a = lastDay.toString();
+//             lastDay = a.split(" ");
+
+//             var currentDate = new Date();
+
+
+//             var daily = {
+//                 _id: mongoose.Types.ObjectId(req.body.userId),
+//                 'duration.date.jsdate':{$gte:dateToday}
+//             }
+
+//             var weekly = {
+//                 _id: req.body.userId,
+//                 $gte: {
+//                     'duration.date.jsdate': Date.now() + 19800000
+//                 },
+//                 $lte: {
+//                     'duration.date.jsdate': currentDate.setDate(currentDate.getDate() + 6) + 19800000
+//                 }
+//             }
+
+//             var monthly = {
+//                 _id: req.body.userId,
+//                 $gte: {
+//                     'duration.date.jsdate': Date.now() + 19800000
+//                 },
+//                 $lte: {
+//                     'duration.date.jsdate': currentDate.setDate(currentDate.getDate() + 31) + 19800000
+//                 }
+//             }
+
+
+
+//             // for (let i = 0; i < Data.length; i++) {
+
+//             //     console.log("aa gya===>>", Data[i])
+//             //     if (new Date(Data[i].date.formatted).getTime() >= date1.getTime())
+//             //         arr.push(Data[i])
+
+//             // }
+//             console.log("QUERY FOR DAILY ===>", daily);
+//             eventSchema.find(daily,(err1, succ) => {
+//                 console.log("result for duration correction>>>>>>>>>.",err1,succ)
+//                 if (err1)
+//                     return response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.");
+//                 if (!succ)
+//                     return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found.");
+//                 else {
+//                     return response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, succ);
+//                 }
+//             })
+//             // "DAILY","MONTHLY","WEEKLY"
+//         })
+//     }
+
+
+
+
+
+//     "bookingEvent": (req, res) => {
+//         console.log("@$@^&%@&*@*&^@^@((@",req.body);
+//         eventSchema.findOne({ _id: req.body.userId }, (err, success) => {
+//             if (err)
+//                 return response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.");
+//             if (!success)
+//                 return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found.");
+//             //success
+//             var today = new Date();
+//             var dd = today.getDate();
+//             var mm = today.getMonth() + 1; //January is 0!
+//             var yyyy = today.getFullYear();
+//             if (dd < 10) {
+//                 dd = '0' + dd
+//             }
+
+//             if (mm < 10) {
+//                 mm = '0' + mm
+//             }
+
+//             today1 = yyyy + '-' + mm + '-' + dd;//2018-07-27
+//             var date1 = new Date(today1)
+
+
+//             //    var Data =req.body.duration[0].date;
+//             var Data = success.duration;
+
+
+//              var dateToday = new Date(Date.now());
+//              console.log("@@@@@@@@@@@@@@@@",dateToday);
+//             dateToday.setHours(0,0,0,0);
+//            var dateLast = new Date(Date.now());
+//            dateLast.setHours(23,59,59,999);
+
+// console.log("!!!!!!!!!!!!!!!!!!",dateToday,dateLast);
+
+//             let arr = [];
+
+//             var date = new Date(), y = date.getFullYear(), m = date.getMonth();
+//             var firstDay = new Date(y, m, 1);
+//             var lastDay = new Date(y, m + 1, 0);
+
+//             var a = lastDay.toString();
+//             lastDay = a.split(" ");
+
+//             var currentDate = new Date();
+
+
+//             var daily = {
+//                 _id: mongoose.Types.ObjectId(req.body.userId),
+//                 'duration.date.jsdate':{$gte:dateToday}
+//             }
+
+//             var weekly = {
+//                 _id: req.body.userId,
+//                 $gte: {
+//                     'duration.date.jsdate': Date.now() + 19800000
+//                 },
+//                 $lte: {
+//                     'duration.date.jsdate': currentDate.setDate(currentDate.getDate() + 6) + 19800000
+//                 }
+//             }
+
+//             var monthly = {
+//                 _id: req.body.userId,
+//                 $gte: {
+//                     'duration.date.jsdate': Date.now() + 19800000
+//                 },
+//                 $lte: {
+//                     'duration.date.jsdate': currentDate.setDate(currentDate.getDate() + 31) + 19800000
+//                 }
+//             }
+
+
+
+//             // for (let i = 0; i < Data.length; i++) {
+
+//             //     console.log("aa gya===>>", Data[i])
+//             //     if (new Date(Data[i].date.formatted).getTime() >= date1.getTime())
+//             //         arr.push(Data[i])
+
+//             // }
+//             console.log("QUERY FOR DAILY ===>", daily);
+//             eventSchema.find(daily,(err1, succ) => {
+//                 console.log("result for duration correction>>>>>>>>>.",err1,succ)
+//                 if (err1)
+//                     return response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.");
+//                 if (!succ)
+//                     return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found.");
+//                 else {
+//                     return response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, succ);
+//                 }
+//             })
+//             // "DAILY","MONTHLY","WEEKLY"
+//         })
+//     }
+// }
 
 
 

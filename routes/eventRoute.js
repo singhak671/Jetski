@@ -4,6 +4,6 @@ const Business= require('../webservices/eventMangementController');
 
 router.post('/addEvent',Business.addEvent);
  router.get('/latestEvent',Business.latestEvent);
- router.post('/bookingEvent',Business.bookingEvent);
+ //router.post('/bookingEvent',Business.bookingEvent);
  
 module.exports = router;
