@@ -31,6 +31,13 @@ const business = mongoose.Schema({
         enum: ["ACTIVE","INACTIVE","BLOCK"],
         default: "ACTIVE"
     },
+
+    eventStatus:{
+        type:String,
+        enum:["PENDING","CONFIRMED","REJECTED"],
+      //  default:"PENDING"
+        },
+
     period:{
         type:String,
         enum:["DAILY","MONTHLY","WEEKLY"]

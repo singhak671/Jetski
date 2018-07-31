@@ -348,7 +348,7 @@ module.exports = {
         }
         userSchema.paginate({ $and: [{ userType: "CUSTOMER" }, { $or: [{ status: "ACTIVE" }, { status: "BLOCK" }] }] }, options, (error, result) => {
             if (error)
-                Respondatedatese.sendResponseWithoutData(res, resCode.INTERNAL_SERVER_ERROR, resMessage.INTERNAL_SERVER_ERROR)
+                Response.sendResponseWithoutData(res, resCode.INTERNAL_SERVER_ERROR, resMessage.INTERNAL_SERVER_ERROR)
             else if (result.docs.length == 0)
                 Response.sendResponseWithData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
             else {

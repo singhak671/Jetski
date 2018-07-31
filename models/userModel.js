@@ -1,8 +1,14 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const mongoosePaginate = require('mongoose-paginate');
+var eventSchema = require('../models/eventManagementModel');
 const user = mongoose.Schema({
     
+
+    // userId:{
+    //     type: Schema.Types.ObjectId,
+    //     ref: 'eventSchema'
+    // },
 
    email: {
        type: String, 
@@ -62,7 +68,8 @@ socialId:{type: String},
     },
 
     eventId:[{
-        type:String
+        type:String,
+        ref:'Businesses'
     }],
 
     deviceToken:{
@@ -78,7 +85,7 @@ socialId:{type: String},
     profilePic:String,
 
     dateOfBirth:
-        {type:String},
+        {type:Object},
 
     gender:{
         type:String,

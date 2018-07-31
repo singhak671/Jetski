@@ -66,50 +66,47 @@ module.exports = {
         })
     },
 
+    //-------------------------------------------------------------------------------All Event at business site before login-----------------------------------------------------------------//
+    'allEvent': (req, res) => {
+        //console.log("get al customer")
+        var query = {};
+        let options = {
+            page: req.params.pageNumber,
+            select: 'eventAddress  eventImage eventName eventDescription eventPrice ',
+            limit: 5,
+            //sort: ,
+            //password:0,
+            lean: false,
+            //populate: { path: 'userId', select: 'profilePic name' },
+        }
+        //success
+        eventSchema.paginate(query, options, (error, result) => {
+            if (error)
+                response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR)
+            else if (result.docs.length == 0)
+                response.sendResponseWithData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND)
+            else {
+                console.log("result is" + JSON.stringify(result))
+                result.docs.map(x => delete x['password'])
+                response.sendResponseWithPagination(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result);
+            }
+        })
+        // })
+    },
 
-    // 'latestEvent': (req, res) => {
-    //     //console.log("get al customer")
-    //     var query = {};
-    //     let options = {
-    //        // page: req.params.pageNumber,
-    //         select: 'period eventCreated_At profileImage eventImage duration eventName status country eventPrice ',
-    //         limit:5,
-    //         sort: { eventCreated_At: -1 },
-    //         //password:0,
-    //         lean: false
-    //     }
-    //     // eventSchema.findOne({ _id: req.body.userId }, (err, success) => {
-    //     //             if(err)
-    //     //             return response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.");
-    //     //         if(!success)
-    //     //         return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found.");
-    //           //success
-    //             eventSchema.paginate( query, options, (error, result) => {
-    //             if (error)
-    //             response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR)
-    //             else if (result.docs.length == 0)
-    //             response.sendResponseWithData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND)
-    //             else {
-    //                 console.log("result is" + JSON.stringify(result))
-    //                 result.docs.map(x => delete x['password'])
-    //                 response.sendResponseWithPagination(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result.docs);
-    //             }
-    //         })
-    //     // })
-    // },
+    //-------------------------------------------------------------------------------alllatestEvent for app site-----------------------------------------------------------------//
 
 
-    'latestEvent': (req, res) => {
+    'latestEvents': (req, res) => {
         //console.log("get al customer")
         var query = {};
         let options = {
             // page: req.params.pageNumber,
             select: 'period eventAddress eventCreated_At eventImage duration eventName status eventDescription eventPrice ',
             limit: 5,
-            sort: { eventCreated_At: -1 },
-            //password:0,
-            lean: false,
+            sort: { created_At: -1 },
             populate: { path: 'userId', select: 'profilePic name' },
+            lean: false
         }
         //success
         eventSchema.paginate(query, options, (error, result) => {
@@ -127,8 +124,142 @@ module.exports = {
     },
 
 
+
+    //-------------------------------------------------------------------------------My Event at business site after login-----------------------------------------------------------------//
+
+
+    'myAllEvents': (req, res) => {
+        //console.log("get al customer")
+         var query = {};
+         var limit =  5;
+         var page = (req.body.page === undefined) ? 1 : req.body.page;
+        // let options = {
+        //    // page: req.body.pageNumber||1,
+        //    // _id: req.body.userId,
+        //   // select: 'eventAddress  eventImage eventName eventDescription eventPrice ',
+        //   //  limit: 5,
+        //     sort: { created_At: -1 },
+        //     populate:{path:'eventId',select:'eventAddress  eventImage eventName eventDescription eventPrice '},
+        //     //password:0,
+        //  // populate: ('eventId'),
+        //     lean: false
+        // }
+       // User.paginate({ _id: req.body.userId }, (err, success) => {
+            // if (err)
+            //     response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR)
+            // else if (!success)
+            //     response.sendResponseWithData(res, responseCode.NOT_FOUND, "UserId not found")
+            // else {
+                console.log("succ in populate")
+                User.findById( {_id: req.body.userId}). populate({path:'eventId',select:'eventAddress  eventImage eventName eventDescription eventPrice '}).sort({ created_At: -1 }).limit(limit).skip(limit*(page-1) ).exec((error, result) => {
+                    if (error){
+                        console.log("err-->"+error)
+                        response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR)
+                    }
+                   
+                    // else if (result.docs.length == 0)
+                    //  response.sendResponseWithData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND)
+                    else {
+                        console.log("i am here>>>>>>>>>>>>",JSON.stringify(result))
+                        //result.docs.map(x => delete x['password'])
+                        response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result)
+                       // response.sendResponseWithPagination(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result.docs, { total: result.total, limit: result.limit, currentPage: result.page, totalPage: result.pages });
+                    }
+               // })
+            
+        //}
+    })
+},
+
+
+
+
+
+
+
+
+
+
+    'latestLocation': (req, res) => {
+        //console.log("get al customer")
+        var query = {};
+        let options = {
+            // page: req.params.pageNumber,
+            select: ' eventAddress ',
+            sort: { eventCreated_At: -1 },
+            //password:0,
+            lean: false,
+            // populate: { path: 'userId', select: 'profilePic name' },
+        }
+        //success
+        eventSchema.paginate(query, options, (error, result) => {
+            if (error)
+                response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR)
+            else if (result.docs.length == 0)
+                response.sendResponseWithData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND)
+            else {
+                console.log("result is" + JSON.stringify(result))
+                result.docs.map(x => delete x['password'])
+                response.sendResponseWithPagination(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result);
+            }
+        })
+        // })
+    },
+
+
+    "eventsPending": (req, res) => {
+
+        eventSchema.find({ eventStatus: "PENDING" }, (error, result) => {
+            // console.log("naveen=======>",error,result);
+            if (error)
+                return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
+            else if (!result)
+                return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND)
+            else
+                return response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, result)
+        })
+    },
+
+
+    "confirmEventStatus": (req, res) => {
+        console.log("event status request " + req.body._id)
+        eventSchema.findByIdAndUpdate({ _id: req.body._id }, { $set: { eventStatus: "CONFIRMED" } }, { new: true }, (error, result) => {
+            if (error)
+                response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
+            else if (!result)
+                response.sendResponseWithoutData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND)
+            else
+                response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Event status is confirmed")
+        })
+    },
+
+
+    "rejectEventStatus": (req, res) => {
+        console.log("event status request " + req.body._id)
+        eventSchema.findByIdAndUpdate({ _id: req.body._id }, { $set: { eventStatus: "REJECTED" } }, { new: true }, (error, result) => {
+            if (error)
+                response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
+            else if (!result)
+                response.sendResponseWithoutData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND)
+            else
+                response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Event status is rejected")
+        })
+    },
+
+
+    "eventsConfirmed": (req, res) => {
+        eventSchema.find({ eventStatus: "CONFIRMED" }, (error, result) => {
+            if (error)
+                response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
+            else if (!result)
+                response.sendResponseWithoutData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND)
+            else
+                response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, result)
+        })
+    }
+
     // "bookingEvent": (req, res) => {
-  
+
     //     eventSchema.findOne({ _id: req.body.userId }, (err, success) => {
     //         if (err)
     //             return response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.");
@@ -141,18 +272,18 @@ module.exports = {
     //                   var date = Date.now()
 
     //                  if(success.duration[i].date.formatted  ==  date && date <=success.duration[i].date.formatted + 86399999){
-                         
+
     //                  }
     //             }
     //             if(success.period == "WEEKLY"){
-                    
+
     //             }
     //             if(success.period == "MONTHLY"){
-                    
+
     //             }
     //     }
-            
-            
+
+
     //         // return response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, success);
 
 
