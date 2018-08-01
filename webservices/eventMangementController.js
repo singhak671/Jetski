@@ -19,8 +19,8 @@ module.exports = {
         if (!req.body) {
             return response.sendResponseWithoutData(res, responseCode.SOMETHING_WENT_WRONG, responseMessage.REQUIRED_DATA);
         }
-
-        User.findById(req.body.userId, (err4, succ) => {
+        User.findOne({ _id: req.body.userId, status: "ACTIVE" }, (err4, succ) => {
+            // User.findById(req.body.userId, (err4, succ) => {
             if (err4)
                 return response.sendResponseWithData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.", err3);
             if (!succ)
@@ -80,6 +80,11 @@ module.exports = {
             //populate: { path: 'userId', select: 'profilePic name' },
         }
         //success
+        // User.findById(req.body.userId, (err4, succ) => {
+        //     if (err4)
+        //         return response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.");
+        //     if (!succ)
+        //         return response.sendResponseWithData(res, responseCode.NOT_FOUND, "UserId not found");
         eventSchema.paginate(query, options, (error, result) => {
             if (error)
                 response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR)
@@ -125,7 +130,7 @@ module.exports = {
 
 
 
-    //-------------------------------------------------------------------------------My Event at business site after login-----------------------------------------------------------------//
+    //-------------------------------------------------------------------------------My Event at business site after login for myBooking App -----------------------------------------------------------------//
 
 
     'myAllEvents': (req, res) => {
@@ -135,7 +140,14 @@ module.exports = {
         var page = (req.body.page === undefined) ? 1 : req.body.page;
 
         console.log("succ in populate")
-        User.findById({ _id: req.body.userId }).populate({ path: 'eventId', select: 'eventAddress duration  eventImage eventName eventDescription eventPrice ' }).sort({ created_At: -1 }).limit(limit).skip(limit * (page - 1)).exec((error, result) => {
+
+
+        // $or: { asdfasdf, asdfasdfadsfds, { $and: { asdfasdfadsf, asdfasdfasdfadsf } } }
+
+        User.findOne({ $and: [{ _id: req.body.userId, period: req.body.period }] }, { $or: [{ _id: req.body.userId, status: "ACTIVE" }] }).populate({
+            path: 'eventId',
+            select: 'eventAddress duration  eventImage eventName eventDescription period eventPrice '
+        }).sort({ created_At: -1 }).limit(limit).skip(limit * (page - 1)).exec((error, result) => {
             if (error) {
                 console.log("err-->" + error)
                 response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR)
@@ -153,18 +165,61 @@ module.exports = {
 
             //}
         })
+
+
     },
 
-    //------------------------------------------------------------------------------- API for Filter location in app   -----------------------------------------------------------------//
 
+
+    // 'myAllEvents': (req, res) => {
+    //     //console.log("get al customer")
+    //     var query = {};
+    //     var limit = 5;
+    //     var page = (req.body.page === undefined) ? 1 : req.body.page;
+
+    //     console.log("succ in populate")
+
+
+    //         // $or: { asdfasdf, asdfasdfadsfds, { $and: { asdfasdfadsf, asdfasdfasdfadsf } } }
+
+    //         User.findOne({ $or:[{ _id: req.body.userId, status: "ACTIVE"},
+    //         { $and:[ { _id: req.body.userId, period: req.body.period } ]}]}).populate({ path: 'eventId', 
+    //             select: 'eventAddress duration  eventImage eventName eventDescription period eventPrice '}).sort({ created_At: -1 }).limit(limit).skip(limit * (page - 1)).exec((error, result) => {
+    //             if (error) {
+    //                 console.log("err-->" + error)
+    //                 response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR)
+    //             }
+
+    //             // else if (result.docs.length == 0)
+    //             //  response.sendResponseWithData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND)
+    //             else {
+    //                 console.log("i am here>>>>>>>>>>>>", JSON.stringify(result))
+    //                 //result.docs.map(x => delete x['password'])
+    //                 response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result)
+    //                 // response.sendResponseWithPagination(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result.docs, { total: result.total, limit: result.limit, currentPage: result.page, totalPage: result.pages });
+    //             }
+    //             // })
+
+    //             //}
+    //         })
+
+
+    // },
+
+    //------------------------------------------------------------------------------- API for Filter location in app   -----------------------------------------------------------------//
     "eventLocation": (req, res) => {
         eventSchema.distinct("eventAddress", (error, result) => {
+            console.log("==", result.length)
+            var jsonObj = [];
+            for (var i = 0; i < result.length; i++) {
+                jsonObj.push({ "eventAddress": result[i] });
+            }
             if (error)
                 response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
             else if (!result)
                 response.sendResponseWithoutData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND)
             else
-                response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result)
+                response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, jsonObj)
         })
     },
 
@@ -172,13 +227,16 @@ module.exports = {
 
 
     "locationDetail": (req, res) => {
-        eventSchema.find({ eventAddress: req.body.eventAddress }, (error, result) => {
+        console.log("array=====>>>", req.body)
+        let list = req.body.eventAddress.map((x) => x.eventAddress)
+        let query = { eventAddress: { $in: list } }
+        eventSchema.find(query, (error, result) => {
             if (error)
                 response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
             else if (!result)
                 response.sendResponseWithoutData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND)
             else
-                response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, result)
+                response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result)
         })
     },
 
@@ -189,7 +247,7 @@ module.exports = {
     "eventsPending": (req, res) => {
         var query = { eventStatus: "PENDING" }
         let options = {
-            page: req.params.pageNumber,
+            page: req.body.pageNumber,
             select: 'status eventStatus duration eventCreated_At _id userId period eventName eventAddress eventDescription eventImage createdAt updatedAt',
             limit: 10,
             sort: { eventCreated_At: -1 },
@@ -231,7 +289,39 @@ module.exports = {
             lean: false
         }
         User.findOne({ _id: req.body.userId, status: "ACTIVE" }, (err_1, result) => {
-            if (error)
+            if (err_1)
+                return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
+            if (!result)
+                return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found")
+            else
+                eventSchema.paginate(query, options, (error, result) => {
+                    if (error)
+                        return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
+                    else if (!result)
+                        return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND)
+                    else
+                        response.sendResponseWithPagination(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result.docs, { total: result.total, limit: result.limit, currentPage: result.page, totalPage: result.pages });
+                })
+        })
+    },
+
+
+    //------------------------------------------------------------------------------- API for myAllBooking for APP   -----------------------------------------------------------------//
+
+
+    "myBooking": (req, res) => {
+        var query = {}
+        let options = {
+            page: req.params.pagenumber,
+            select: 'status eventStatus duration eventCreated_At _id userId period eventName eventAddress eventDescription eventImage createdAt updatedAt',
+            limit: 10,
+            sort: { eventCreated_At: -1 },
+            lean: false,
+            populate: { path: 'userId', select: 'profilePic name' },
+
+        }
+        User.findOne({ _id: req.body.userId, status: "ACTIVE" }, (err_1, result) => {
+            if (err_1)
                 return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
             if (!result)
                 return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found")
@@ -249,6 +339,25 @@ module.exports = {
 
 
 
+
+    //------------------------------------------------------------------------------- API for Pending individual in business site   -----------------------------------------------------------------//
+
+
+
+    "eventBookNow": (req, res) => {
+        console.log("event status request " + req.body._id)
+        eventSchema.findByIdAndUpdate({ _id: req.body._id }, { $set: { eventStatus: "PENDING" } }, { new: true }, (error, result) => {
+            if (error)
+                response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
+            else if (!result)
+                response.sendResponseWithoutData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND)
+            else
+                response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Event status is on pending")
+        })
+    },
+
+
+
     //------------------------------------------------------------------------------- API for Confirm individual in business site   -----------------------------------------------------------------//
 
 
@@ -257,7 +366,7 @@ module.exports = {
 
     "confirmEventStatus": (req, res) => {
         console.log("event status request " + req.body._id)
-        EventSchema.findByIdAndUpdate({ _id: req.body._id }, { $set: { eventStatus: "CONFIRMED" } }, { new: true }, (error, result) => {
+        eventSchema.findByIdAndUpdate({ _id: req.body._id }, { $set: { eventStatus: "CONFIRMED" } }, { new: true }, (error, result) => {
             if (error)
                 response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
             else if (!result)
@@ -286,108 +395,103 @@ module.exports = {
                 response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Event status is rejected")
         })
     },
+
+    //------------------------------------------------------------------------------- API for booking Event for App  -----------------------------------------------------------------//
+
+
+    "bookingEvent": (req, res) => {
+
+        var date = new Date();
+        var newDate = date.toJSON()
+        var array = newDate.split("T")[0]
+        var newDate1 = array + " 00:00:00"
+        var d = new Date(newDate1)
+        var Time_stamp = d.getTime();
+        var nextWeek = new Date(Time_stamp + 7 * 24 * 60 * 60 * 1000);
+
+
+        let todayArray = [];
+        let weekArray = [];
+        let monthlyArray = [];
+
+        eventSchema.findOne({ _id: req.body.userId }, (err, success) => {
+            if (err)
+                return response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.");
+            if (!success)
+                return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found.");
+            else {
+                console.log("success===" + JSON.stringify(success))
+
+
+                if (req.body.period == 'DAILY') {
+
+                    for (var i = 0; i < success.duration.length; i++) {
+                        // console.log('TIME STAMP VALUE',Time_stamp);
+                        // console.log('DATA EPOC IS',success.duration[i].date.epoc*1000);
+                        // console.log('SUCCESS +++++++++',success.duration[i].date.epoc * 1000 == Time_stamp);
+                        if (success.duration[i].date.epoc * 1000 == Time_stamp) {
+                            todayArray.push(success.duration[i])
+                            console.log('ARRAY IS', todayArray);
+
+                        }
+                    }
+                    return response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, "Data found successfully", todayArray);
+
+
+
+
+
+                }
+
+                else if (req.body.period == 'WEEKLY') {
+                    var current_date = Date.now();
+                    var newDate = nextWeek.toJSON()
+                    var array = newDate.split("T")[0]
+                    var newDate1 = array + " 00:00:00"
+                    var d = new Date(newDate1)
+                    var Time_stamp2 = d.getTime();
+                    // console.log('NEXT WEEK DATA IS',Time_stamp2);
+
+                    for (var i = 0; i < success.duration.length; i++) {
+                        // console.log('TIME STAMP VALUE',Time_stamp2);
+                        // console.log('DATA EPOC IS',success.duration[i].date.epoc*1000);
+
+
+                        if (success.duration[i].date.epoc * 1000 < Time_stamp2 && success.duration[i].date.epoc * 1000 >= Time_stamp) {
+                            weekArray.push(success.duration[i])
+                            console.log('ARRAY IS', weekArray);
+
+                        }
+                    }
+                    return response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, "Data found successfully", weekArray);
+
+                }
+                else if (req.body.period == 'MONTHLY') {
+                    var current_date = new Date();
+                    var current_month = current_date.getMonth() + 1;
+                    var current_year = current_date.getFullYear();
+                    var number_of_days = new Date(current_year, current_month, 0).getDate();
+                    var nextMonth = new Date(Time_stamp + number_of_days * 24 * 60 * 60 * 1000);
+                    for (var i = 0; i < success.duration.length; i++) {
+                        // console.log('TIME STAMP VALUE',Time_stamp2);
+                        // console.log('DATA EPOC IS',success.duration[i].date.epoc*1000);
+
+
+                        if (success.duration[i].date.epoc * 1000 < nextMonth && success.duration[i].date.epoc * 1000 >= Time_stamp) {
+                            monthlyArray.push(success.duration[i])
+                            console.log('ARRAY IS', monthlyArray);
+
+                        }
+                    }
+                    return response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, "Data found successfully", monthlyArray);
+
+                }
+
+            }
+        })
+
+
+    }
+
+
 }
-
-
-//     "bookingEvent": (req, res) => {
-//         console.log("@$@^&%@&*@*&^@^@((@",req.body);
-//         eventSchema.findOne({ _id: req.body.userId }, (err, success) => {
-//             if (err)
-//                 return response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.");
-//             if (!success)
-//                 return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found.");
-//             //success
-//             var today = new Date();
-//             var dd = today.getDate();
-//             var mm = today.getMonth() + 1; //January is 0!
-//             var yyyy = today.getFullYear();
-//             if (dd < 10) {
-//                 dd = '0' + dd
-//             }
-
-//             if (mm < 10) {
-//                 mm = '0' + mm
-//             }
-
-//             today1 = yyyy + '-' + mm + '-' + dd;//2018-07-27
-//             var date1 = new Date(today1)
-
-
-//             //    var Data =req.body.duration[0].date;
-//             var Data = success.duration;
-
-
-//              var dateToday = new Date(Date.now());
-//              console.log("@@@@@@@@@@@@@@@@",dateToday);
-//             dateToday.setHours(0,0,0,0);
-//            var dateLast = new Date(Date.now());
-//            dateLast.setHours(23,59,59,999);
-
-// console.log("!!!!!!!!!!!!!!!!!!",dateToday,dateLast);
-
-//             let arr = [];
-
-//             var date = new Date(), y = date.getFullYear(), m = date.getMonth();
-//             var firstDay = new Date(y, m, 1);
-//             var lastDay = new Date(y, m + 1, 0);
-
-//             var a = lastDay.toString();
-//             lastDay = a.split(" ");
-
-//             var currentDate = new Date();
-
-
-//             var daily = {
-//                 _id: mongoose.Types.ObjectId(req.body.userId),
-//                 'duration.date.jsdate':{$gte:dateToday}
-//             }
-
-//             var weekly = {
-//                 _id: req.body.userId,
-//                 $gte: {
-//                     'duration.date.jsdate': Date.now() + 19800000
-//                 },
-//                 $lte: {
-//                     'duration.date.jsdate': currentDate.setDate(currentDate.getDate() + 6) + 19800000
-//                 }
-//             }
-
-//             var monthly = {
-//                 _id: req.body.userId,
-//                 $gte: {
-//                     'duration.date.jsdate': Date.now() + 19800000
-//                 },
-//                 $lte: {
-//                     'duration.date.jsdate': currentDate.setDate(currentDate.getDate() + 31) + 19800000
-//                 }
-//             }
-
-
-
-//             // for (let i = 0; i < Data.length; i++) {
-
-//             //     console.log("aa gya===>>", Data[i])
-//             //     if (new Date(Data[i].date.formatted).getTime() >= date1.getTime())
-//             //         arr.push(Data[i])
-
-//             // }
-//             console.log("QUERY FOR DAILY ===>", daily);
-//             eventSchema.find(daily,(err1, succ) => {
-//                 console.log("result for duration correction>>>>>>>>>.",err1,succ)
-//                 if (err1)
-//                     return response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.");
-//                 if (!succ)
-//                     return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found.");
-//                 else {
-//                     return response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, succ);
-//                 }
-//             })
-//             // "DAILY","MONTHLY","WEEKLY"
-//         })
-//     }
-// }
-
-
-
-
-

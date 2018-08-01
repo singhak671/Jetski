@@ -4,15 +4,17 @@ const Business= require('../webservices/eventMangementController');
 
 router.post('/addEvent',Business.addEvent);
  router.get('/latestEvents',Business.latestEvents);
-  router.get('/allEvent',Business.allEvent);
+  router.post('/allEvent',Business.allEvent);
  router.post('/myAllEvents',Business.myAllEvents);
  router.get('/eventLocation',Business.eventLocation);
  router.post('/locationDetail',Business.locationDetail);
- router.get('/eventsPending/:pageNumber',Business.eventsPending);
- router.get('/eventsConfirmed/:pageNumber',Business.eventsConfirmed);
+ router.post('/myBooking',Business.myBooking);
+ router.post('/eventsPending',Business.eventsPending);
+ router.post('/eventBookNow',Business.eventBookNow);
+ router.post('/eventsConfirmed',Business.eventsConfirmed);
  router.post('/confirmEventStatus',Business.confirmEventStatus);
  router.post('/rejectEventStatus',Business.confirmEventStatus);
-
+ router.post('/bookingEvent',Business.bookingEvent);
  
  
 
