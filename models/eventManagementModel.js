@@ -20,7 +20,7 @@ const business = mongoose.Schema({
         type:String
     },
    eventPrice: {
-        type: Number
+        type: String
     },
     eventAddress: {
         type: String
