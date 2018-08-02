@@ -62,7 +62,7 @@ module.exports = {
 
     //......................................................................Login API....................................................................... //
     "login": (req, res) => {
-        console.log("login request====++",req.body)
+        console.log("login request====++", req.body)
         let id;
 
         if (req.body.socialId) {
@@ -251,7 +251,7 @@ module.exports = {
         })
     },
 
-    
+
 
     //................................................................forgot password API............................................................................//
 
@@ -359,74 +359,98 @@ module.exports = {
         })
     },
 
-      //......................................................................getAllBusiness API for Admin............................................................................//
+    //......................................................................getAllBusiness API for Admin............................................................................//
     'getAllBusiness': (req, res) => {
         //console.log("get al customer")
-       // var query = {};
-       let options = {
-        page: req.params.pageNumber,
-        select: 'userType email name status businessName gender  country',
-        limit: 10,
-        sort: { created_At: -1 },
-        //password:0,
-        lean: false
-    }
-    userSchema.paginate({ $and: [{ userType: "BUSINESS" }, { $or: [{ status: "ACTIVE" }, { status: "BLOCK" }] }] }, options, (error, result) => {
-        if (error)
-            Response.sendResponseWithoutData(res, resCode.INTERNAL_SERVER_ERROR, resMessage.INTERNAL_SERVER_ERROR)
-        else if (result.docs.length == 0)
-            Response.sendResponseWithData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
-        else {
-            console.log("result is" + JSON.stringify(result))
-            result.docs.map(x => delete x['password'])
-            Response.sendResponseWithPagination(res, resCode.EVERYTHING_IS_OK, resMessage.SUCCESSFULLY_DONE, result.docs, { total: result.total, limit: result.limit, currentPage: result.page, totalPage: result.pages });
+        // var query = {};
+        let options = {
+            page: req.params.pageNumber,
+            select: 'userType email name status businessName gender  country',
+            limit: 10,
+            sort: { created_At: -1 },
+            //password:0,
+            lean: false
         }
-    })
-},
+        userSchema.paginate({ $and: [{ userType: "BUSINESS" }, { $or: [{ status: "ACTIVE" }, { status: "BLOCK" }] }] }, options, (error, result) => {
+            if (error)
+                Response.sendResponseWithoutData(res, resCode.INTERNAL_SERVER_ERROR, resMessage.INTERNAL_SERVER_ERROR)
+            else if (result.docs.length == 0)
+                Response.sendResponseWithData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
+            else {
+                console.log("result is" + JSON.stringify(result))
+                result.docs.map(x => delete x['password'])
+                Response.sendResponseWithPagination(res, resCode.EVERYTHING_IS_OK, resMessage.SUCCESSFULLY_DONE, result.docs, { total: result.total, limit: result.limit, currentPage: result.page, totalPage: result.pages });
+            }
+        })
+    },
 
 
     "searchCustomerFilter": (req, res) => {
 
-        var value = new RegExp('^' + req.body.name,"i");
-        var value2 = new RegExp('^' + req.body.email,"i");
-       console.log("this is active",req.body)
-        if (req.body.status== "ACTIVE") {
-                userSchema.find({$or:[{ name: value},{email:value2}],status:'ACTIVE'}).exec(function (err, data) {
-                if (err) {
+        var value = new RegExp('^' + req.body.search, "i")
+        console.log("this is active", req.body)
+        if (req.body.status == "ACTIVE") {
+            userSchema.find({status: 'ACTIVE'},{userType: req.body.userType }).exec(function (err, dat) {
+                if (err) 
                     return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.INTERNAL_SERVER_ERROR);
-                }
-                if (!data) {
-                    return Response.sendResponseWithData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
-                }  else {
-                    console.log("dfgfghfhfgh",data)
-                  Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, resMessage.SUCCESSFULLY_DONE,data);
-                }
+                
+                // if (!dat) 
+                //     return Response.sendResponseWithData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
+                
+                 if(!dat){
 
-            })
-        } else if(req.body.status=='INACTIVE'){
-            userSchema.find({$or:[{ name: value},{email:value2}],status:'INACTIVE'}).exec(function (err_, data1) {
-                if (err_) 
-                    return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.INTERNAL_SERVER_ERROR);
-                 if (!data1) {
-                    return Response.sendResponseWithData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
-                } else {
-                    console.log("dfgfghfhfghData123123",data1)
-                    Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK," Inactive All status data found",data1);
+                    userSchema.find({ $or: [{ name: value }, { email: value }, { status: value }], status: 'ACTIVE', userType: req.body.userType }).exec(function (err, data) {
+                        if (err) 
+                            return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.INTERNAL_SERVER_ERROR);
+                        
+                        if (!data) 
+                            return Response.sendResponseWithData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
+                       
+                            //console.log("dfgfghfhfgh", data)
+                            return Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, resMessage.SUCCESSFULLY_DONE, data);
+                       
+
+                    })
                 }
+                    //console.log("dfgfghfhfgh", dat)
+                    return Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, resMessage.SUCCESSFULLY_DONE, dat);
+                
             })
-        }   else{
-            userSchema.find({$or:[{ name: value},{email:value2}]}).exec(function (err__, data2) {
-            if (err__) 
-            return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.INTERNAL_SERVER_ERROR);
-        
-        if (!data2) {
-            return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
-        }
-            else {
-            Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, " All status data found",data2);
-                }
-            })
-        }
+
+
+
+
+
+
+
+
+
+            
+        } 
+        // else if (req.body.status == 'INACTIVE') {
+        //     userSchema.find({ $or: [{ name: value }, { email: value }, { status: value }], status: 'INACTIVE', userType: req.body.userType }).exec(function (err_, data1) {
+        //         if (err_)
+        //             return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.INTERNAL_SERVER_ERROR);
+        //         if (!data1) {
+        //             return Response.sendResponseWithData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
+        //         } else {
+        //             console.log("dfgfghfhfghData123123", data1)
+        //             Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, " Inactive All status data found", data1);
+        //         }
+        //     })
+        // } else {
+        //     userSchema.find({ $or: [{ name: value }, { email: value }, { status: value }], userType: req.body.userType }).exec(function (err__, data2) {
+        //         if (err__)
+        //             return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.INTERNAL_SERVER_ERROR);
+
+        //         if (!data2) {
+        //             return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
+        //         }
+        //         else {
+        //             Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, " All status data found", data2);
+        //         }
+        //     })
+        // }
     },
 }
 

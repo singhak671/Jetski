@@ -52,7 +52,7 @@ module.exports = {
                             
                           //  User.findByIdAndUpdate({ _id: req.body.userId }, { $push: { eventId: createEvent._id }}, { new: true }, (err3, success) => {
                                 
-                              User.findByIdAndUpdate({ _id: req.body.userId }, { $push:{services:{ eventId: createEvent._id ,eventIdPeriod: createEvent.status  }}}, { new: true }, (err3, success) => {
+                              User.findByIdAndUpdate({ _id: req.body.userId }, { $push:{services:{ eventId: createEvent._id ,eventIdPeriod: createEvent.period  }}}, { new: true }, (err3, success) => {
                                     console.log(err3)
                                 if (!success)
                                     console.log("cannot update userId with the event update")
@@ -175,9 +175,9 @@ module.exports = {
 
         // $or: { asdfasdf, asdfasdfadsfds, { $and: { asdfasdfadsf, asdfasdfasdfadsf } } }
 
-        User.find({$or:[{_id:req.body.userId,period:req.body.period,status:"ACTIVE"},{_id:req.body.userId,status:"ACTIVE"}]}).populate({
+        User.find({$or:[{_id:req.body.userId,period:req.body.period,status:"ACTIVE"},{_id:req.body.userId,status:"ACTIVE"}]} ,{ services:1}).populate({
             path: 'services.eventId',
-            model:"Businesses",
+            // model:"Businesses",
             match:query,
             select: 'eventAddress duration  eventImage eventName eventDescription period eventPrice ',
            
@@ -288,7 +288,7 @@ module.exports = {
             lean: false
         }
         User.findOne({ _id: req.body.userId, status: "ACTIVE" }, (err_1, result) => {
-            if (error)
+            if (err_1)
                 return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
             if (!result)
                 return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found")
