@@ -16,7 +16,7 @@ function uploadImage(image_data, callback){
   console.log("in fun")
   cloudinary.uploader.upload(image_data, function(result){
    if(result){
-     console.log("result-==========================>"+result.url)
+     console.log("profile pic result-==========================>"+result.url)
      callback(null,result.url);
     }
   })

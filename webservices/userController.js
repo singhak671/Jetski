@@ -389,32 +389,41 @@ module.exports = {
 
         var value = new RegExp('^' + req.body.name,"i");
         var value2 = new RegExp('^' + req.body.email,"i");
-      console.log("this is active",req.body)
+       console.log("this is active",req.body)
         if (req.body.status== "ACTIVE") {
-                userSchema.findOne({ name: value,email:value2,status:'ACTIVE'}).exec(function (err, data) {
+                userSchema.find({$or:[{ name: value},{email:value2}],status:'ACTIVE'}).exec(function (err, data) {
                 if (err) {
                     return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.INTERNAL_SERVER_ERROR);
-                } else {
+                }
+                if (!data) {
+                    return Response.sendResponseWithData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
+                }  else {
                     console.log("dfgfghfhfgh",data)
                   Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, resMessage.SUCCESSFULLY_DONE,data);
                 }
 
             })
         } else if(req.body.status=='INACTIVE'){
-            userSchema.findOne({ name: value,status:"INACTIVE"}).exec(function (err_, data1) {
-                if (err_) {
+            userSchema.find({$or:[{ name: value},{email:value2}],status:'INACTIVE'}).exec(function (err_, data1) {
+                if (err_) 
                     return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.INTERNAL_SERVER_ERROR);
+                 if (!data1) {
+                    return Response.sendResponseWithData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
                 } else {
                     console.log("dfgfghfhfghData123123",data1)
-                    Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK,"Success Inactive All status data found",data1);
+                    Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK," Inactive All status data found",data1);
                 }
             })
         }   else{
-            userSchema.findOne({ name: value }).exec(function (err__, data2) {
+            userSchema.find({$or:[{ name: value},{email:value2}]}).exec(function (err__, data2) {
             if (err__) 
             return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.INTERNAL_SERVER_ERROR);
+        
+        if (!data2) {
+            return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
+        }
             else {
-            Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "Success All status data found",data2);
+            Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, " All status data found",data2);
                 }
             })
         }

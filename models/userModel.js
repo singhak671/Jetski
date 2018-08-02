@@ -67,10 +67,26 @@ socialId:{type: String},
         type:String
     },
 
-    eventId:[{
-        type:String,
-        ref:'Businesses'
-    }],
+//     eventId:[{
+//         type:String,
+//         ref:'Businesses'
+//         //    eventIdPeriod:{
+//         //   type:String
+          
+//  }],
+   services:[{
+    eventId:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'Businesses',
+       // _id:false
+
+       },
+       eventIdPeriod:{
+           type:String
+       },
+       _id:false
+
+   }],
 
     deviceToken:{
         type:String

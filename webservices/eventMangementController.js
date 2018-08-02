@@ -12,15 +12,18 @@ var User = require("../models/userModel.js");
 moment().format();
 
 module.exports = {
+                         
+
+  
 
     'addEvent': (req, res) => {
-        //  console.log("addddddddddddd", req.body);
+       
         console.log("i am here>>>>>>>>", req.body)
         if (!req.body) {
             return response.sendResponseWithoutData(res, responseCode.SOMETHING_WENT_WRONG, responseMessage.REQUIRED_DATA);
         }
-        User.findOne({ _id: req.body.userId, status: "ACTIVE" }, (err4, succ) => {
-            // User.findById(req.body.userId, (err4, succ) => {
+
+        User.findById(req.body.userId, (err4, succ) => {
             if (err4)
                 return response.sendResponseWithData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.", err3);
             if (!succ)
@@ -46,13 +49,10 @@ module.exports = {
                         else if (createEvent) {
 
                             response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, "Event saved successfully.", createEvent);
-                            // console.log("fgfgjgdfjgdfgh", createEvent)
-                            // console.log("please check", createEvent._id)
-                            // console.log("push value", { $push: { eventId: createEvent._id } })
-                            // console.log("userid", { _id: req.body.userId })
-                            User.findByIdAndUpdate({ _id: req.body.userId }, { $push: { eventId: createEvent._id } }, { new: true }, (err3, success) => {
-                                // console.log("success", success)
-                                if (err3)
+                            
+                          //  User.findByIdAndUpdate({ _id: req.body.userId }, { $push: { eventId: createEvent._id }}, { new: true }, (err3, success) => {
+                                
+                              User.findByIdAndUpdate({ _id: req.body.userId }, { $push:{services:{ eventId: createEvent._id ,eventIdPeriod: createEvent.status  }}}, { new: true }, (err3, success) => {
                                     console.log(err3)
                                 if (!success)
                                     console.log("cannot update userId with the event update")
@@ -65,6 +65,36 @@ module.exports = {
             })
         })
     },
+
+
+    'latestEvent': (req, res) => {
+        //console.log("get al customer")
+        var query = {};
+        let options = {
+            // page: req.params.pageNumber,
+            select: 'period eventAddress eventCreated_At eventImage duration eventName status eventDescription eventPrice ',
+            limit: 5,
+            sort: { eventCreated_At: -1 },
+            //password:0,
+            lean: false,
+            populate: { path: 'userId', select: 'profilePic name' },
+        }
+        //success
+        eventSchema.paginate(query, options, (error, result) => {
+            if (error)
+                response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR)
+            else if (result.docs.length == 0)
+                response.sendResponseWithData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND)
+            else {
+                console.log("result is" + JSON.stringify(result))
+                result.docs.map(x => delete x['password'])
+                response.sendResponseWithPagination(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result);
+            }
+        })
+        // })
+    },
+
+
 
     //-------------------------------------------------------------------------------All Event at business site before login-----------------------------------------------------------------//
     'allEvent': (req, res) => {
@@ -140,13 +170,17 @@ module.exports = {
         var page = (req.body.page === undefined) ? 1 : req.body.page;
 
         console.log("succ in populate")
-
+        if(req.body.period)
+        query.period=req.body.period
 
         // $or: { asdfasdf, asdfasdfadsfds, { $and: { asdfasdfadsf, asdfasdfasdfadsf } } }
 
-        User.findOne({ $and: [{ _id: req.body.userId, period: req.body.period }] }, { $or: [{ _id: req.body.userId, status: "ACTIVE" }] }).populate({
-            path: 'eventId',
-            select: 'eventAddress duration  eventImage eventName eventDescription period eventPrice '
+        User.find({$or:[{_id:req.body.userId,period:req.body.period,status:"ACTIVE"},{_id:req.body.userId,status:"ACTIVE"}]}).populate({
+            path: 'services.eventId',
+            model:"Businesses",
+            match:query,
+            select: 'eventAddress duration  eventImage eventName eventDescription period eventPrice ',
+           
         }).sort({ created_At: -1 }).limit(limit).skip(limit * (page - 1)).exec((error, result) => {
             if (error) {
                 console.log("err-->" + error)
