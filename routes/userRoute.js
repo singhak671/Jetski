@@ -15,7 +15,7 @@ router.post('/edit',User.edit)//by Admin panel
 router.post('/forgotPassword', User.forgotPassword);
 router.post('/changePassword',authHandler.verifyToken, User.changePassword);
 router.post('/deleteUser',User.deleteUser);//by Admin panel
-router.post('/blockUser',User.deleteUser);//by Admin panel
+router.post('/blockUser',User.blockUser);//by Admin panel
 router.get('/getAllCustomer/:pageNumber',User.getAllCustomer);//by Admin panel
 router.get('/getAllBusiness/:pageNumber',User.getAllBusiness);//by Admin panel
 router.post('/searchCustomerFilter',User.searchCustomerFilter);//by Admin panel

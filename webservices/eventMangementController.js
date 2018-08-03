@@ -52,7 +52,7 @@ module.exports = {
                             
                           //  User.findByIdAndUpdate({ _id: req.body.userId }, { $push: { eventId: createEvent._id }}, { new: true }, (err3, success) => {
                                 
-                              User.findByIdAndUpdate({ _id: req.body.userId }, { $push:{services:{ eventId: createEvent._id ,eventIdPeriod: createEvent.period  }}}, { new: true }, (err3, success) => {
+                              User.findByIdAndUpdate({ _id: req.body.userId }, { $push:{services:{ eventId: createEvent._id ,eventIdStatus: createEvent.eventStatus}}}, { new: true }, (err3, success) => {
                                     console.log(err3)
                                 if (!success)
                                     console.log("cannot update userId with the event update")

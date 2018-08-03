@@ -251,18 +251,50 @@ module.exports = {
         })
     },
 
-  //...............................................................delete User Api for both................................................................................//
-  "blockUser": (req, res) => {
-    console.log("delete user request" + req.body._id)
-    userSchema.findByIdAndUpdate({ _id: req.body._id }, { $set: { status: "BLOCK" } }, { new: true }, (error, result) => {
-        if (error)
-            Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
-        else if (!result)
-            Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
-        else
-            Response.sendResponseWithoutData(res, resCode.EVERYTHING_IS_OK, "User is successfully deleted. ")
-    })
-},
+    //...............................................................Block/Active User Api for both................................................................................//
+ 
+    "blockUser": (req, res) => {
+        userSchema.findById({ _id: req.body._id }).exec(function (err, data) {
+            if (err) {
+                console.log("@@@@@@@",err)
+                Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
+            }
+            else if (!data)
+                Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
+            else {
+                if (data.status == 'ACTIVE') {
+                    userSchema.findByIdAndUpdate({ _id: req.body._id }, { $set: { status: "BLOCK" } }, { new: true }, (error, result) => {
+                        if (error) {
+                            console.log("@@@@@@@",error)
+                            Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
+                        }
+                        else if (!result)
+                            Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
+                        else {
+                            Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "User is successfully blocked. ",result)
+                        }
+                    })
+                }
+                else if (data.status == 'BLOCK') {
+                    userSchema.findByIdAndUpdate({ _id: req.body._id }, { $set: { status: "ACTIVE" } }, { new: true }, (errr, result1) => {
+                        if (errr) {
+                            Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
+                        }
+                        else if (!result1)
+                            Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
+                        else {
+                            Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "User is active successfully . ",result1)
+                        }
+                    })
+                }
+
+            }
+
+        })
+
+
+    },
+
 
 
     //................................................................forgot password API............................................................................//
@@ -432,22 +464,21 @@ module.exports = {
 
     searchCustomerFilter: (req, res) => {
         var value = new RegExp('^' + req.body.search, "i")
-        if(req.body.search&&req.body.status)
-        {
-            var obj={
-                $or:[{$and: [{ status: req.body.status}, {userType: 'CUSTOMER' },{ name: value }]}, { $and: [{ status: req.body.status},{userType: 'CUSTOMER' },{ email: value }]} ]
+        if (req.body.search && req.body.status) {
+            var obj = {
+                $or: [{ $and: [{ status: req.body.status }, { userType: 'CUSTOMER' }, { name: value }] }, { $and: [{ status: req.body.status }, { userType: 'CUSTOMER' }, { email: value }] }]
             }
         }
-    
-        else if(!req.body.search&&req.body.status){
-            var obj={
-                $and: [{ status: req.body.status}, {userType: 'CUSTOMER' }]
+
+        else if (!req.body.search && req.body.status) {
+            var obj = {
+                $and: [{ status: req.body.status }, { userType: 'CUSTOMER' }]
             }
         }
-        else{
-            var obj={
-                $or:[{$and: [{userType: 'CUSTOMER' },{ name: value }]}, { $and: [{userType: 'CUSTOMER' },{ email: value }]} ]
-               // $and: [{ name: req.body.search},{email: req.body.search} ,{userType: 'CUSTOMER' }]
+        else {
+            var obj = {
+                $or: [{ $and: [{ userType: 'CUSTOMER' }, { name: value }] }, { $and: [{ userType: 'CUSTOMER' }, { email: value }] }]
+                // $and: [{ name: req.body.search},{email: req.body.search} ,{userType: 'CUSTOMER' }]
             }
         }
         userSchema.find(obj).exec(function (err, data) {
@@ -467,7 +498,7 @@ module.exports = {
         })
     }
 
-    
+
 
 
 
