@@ -476,15 +476,15 @@ module.exports = {
                 $and: [{ status: req.body.status }, { userType: 'CUSTOMER' }]
             }
         }
-        // else if(req.body.userType) {
-        //     obj = 
-        //        { "userType": req.body.userType}
-        //     //    {"status":"ACTIVE" || "BLOCK"}
-        //         // $and: [{ name: req.body.search},{email: req.body.search} ,{userType: 'CUSTOMER' }]
+        else if(req.body.userType) {
+            obj = {$and:{status:"ACTIVE",status:"BLOCK"}}
+              
+            //    {"status":"ACTIVE" || "BLOCK"}
+                // $and: [{ name: req.body.search},{email: req.body.search} ,{userType: 'CUSTOMER' }]
 
-        // }
+        }
         else {
-            obj = {
+            obj = {                           
                 $or: [{ $and: [{ userType: 'CUSTOMER' }, { name: value }] }, { $and: [{ userType: 'CUSTOMER' }, { email: value }] }]
                 // $and: [{ name: req.body.search},{email: req.body.search} ,{userType: 'CUSTOMER' }]
             }
@@ -492,58 +492,13 @@ module.exports = {
         userSchema.find(obj).exec(function (err, data) {
             if (err) {
                 return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.INTERNAL_SERVER_ERROR);
-            } else {
-                console.log("dat", data)
-                //          userSchema.find({ $or: [{data:value },{data:value }]}).exec(function (err_, data_) {
-                //         if(err_){
-                //             return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.INTERNAL_SERVER_ERROR);
-                //         }else{
-                //             return Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, resMessage.SUCCESSFULLY_DONE, data_);
-                //         }
-                //    })
-                Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, resMessage.SUCCESSFULLY_DONE, data)
+            } 
+            if(!data){
+                return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND);     
             }
-        })
-    },
-
-
-
-
-    'booking': (req, res) => {
-        if (!req.body) {
-            return response.sendResponseWithoutData(res, responseCode.SOMETHING_WENT_WRONG, responseMessage.REQUIRED_DATA);
-        }
-        userSchema.findById(req.body.userId, (err4, succ) => {
-            if (err4)
-                return response.sendResponseWithData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.", err3);
-            if (!succ)
-                return response.sendResponseWithData(res, responseCode.NOT_FOUND, "UserId not found");
-
-            eventSchema.findOne({ _id: req.body.eventId, time: req.body.time }, (err5, succ1) => {
-                if (err5)
-                    return response.sendResponseWithData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.", err5);
-                if (!succ1) {
-                    // console.log("successss>>>>>>>", succ1);
-                    return response.sendResponseWithData(res, responseCode.NOT_FOUND, "eventId or Time is incorrect");
-                }
-                else if (succ1) {
-                    var durationArr = dateTimeArr.duration;
-                    var valid = validateEvent(durationArr);
-                    if (!valid) {
-                        eventSchema.findByIdAndUpdate({ _id: req.body.eventId }, { $push: { bookingId: succ.userId } }, { new: true }, (err3, success) => {
-                            console.log("success", success)
-                            if (err3)
-                                console.log(err3)
-                            if (!success)
-                                console.log("cannot update ")
-                        })
-                        return response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, "Event saved successfully.", createEvent);
-                    } else {
-                        return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Time is not valid");
-                    }
-                }
-
-            })
+               console.log("dat", data)
+                Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, resMessage.SUCCESSFULLY_DONE, data)
+            
         })
     },
 
