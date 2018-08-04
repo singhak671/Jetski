@@ -252,11 +252,11 @@ module.exports = {
     },
 
     //...............................................................Block/Active User Api for both................................................................................//
- 
+
     "blockUser": (req, res) => {
         userSchema.findById({ _id: req.body._id }).exec(function (err, data) {
             if (err) {
-                console.log("@@@@@@@",err)
+                console.log("@@@@@@@", err)
                 Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
             }
             else if (!data)
@@ -265,13 +265,13 @@ module.exports = {
                 if (data.status == 'ACTIVE') {
                     userSchema.findByIdAndUpdate({ _id: req.body._id }, { $set: { status: "BLOCK" } }, { new: true }, (error, result) => {
                         if (error) {
-                            console.log("@@@@@@@",error)
+                            console.log("@@@@@@@", error)
                             Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
                         }
                         else if (!result)
                             Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
                         else {
-                            Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "User is successfully blocked. ",result)
+                            Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "User is successfully blocked. ", result)
                         }
                     })
                 }
@@ -283,7 +283,7 @@ module.exports = {
                         else if (!result1)
                             Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
                         else {
-                            Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "User is active successfully . ",result1)
+                            Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "User is active successfully . ", result1)
                         }
                     })
                 }
@@ -464,19 +464,27 @@ module.exports = {
 
     searchCustomerFilter: (req, res) => {
         var value = new RegExp('^' + req.body.search, "i")
+        var obj
         if (req.body.search && req.body.status) {
-            var obj = {
+            obj = {
                 $or: [{ $and: [{ status: req.body.status }, { userType: 'CUSTOMER' }, { name: value }] }, { $and: [{ status: req.body.status }, { userType: 'CUSTOMER' }, { email: value }] }]
             }
         }
 
         else if (!req.body.search && req.body.status) {
-            var obj = {
+            obj = {
                 $and: [{ status: req.body.status }, { userType: 'CUSTOMER' }]
             }
         }
+        // else if(req.body.userType) {
+        //     obj = 
+        //        { "userType": req.body.userType}
+        //     //    {"status":"ACTIVE" || "BLOCK"}
+        //         // $and: [{ name: req.body.search},{email: req.body.search} ,{userType: 'CUSTOMER' }]
+
+        // }
         else {
-            var obj = {
+            obj = {
                 $or: [{ $and: [{ userType: 'CUSTOMER' }, { name: value }] }, { $and: [{ userType: 'CUSTOMER' }, { email: value }] }]
                 // $and: [{ name: req.body.search},{email: req.body.search} ,{userType: 'CUSTOMER' }]
             }
@@ -496,11 +504,48 @@ module.exports = {
                 Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, resMessage.SUCCESSFULLY_DONE, data)
             }
         })
-    }
+    },
 
 
 
 
+    'booking': (req, res) => {
+        if (!req.body) {
+            return response.sendResponseWithoutData(res, responseCode.SOMETHING_WENT_WRONG, responseMessage.REQUIRED_DATA);
+        }
+        userSchema.findById(req.body.userId, (err4, succ) => {
+            if (err4)
+                return response.sendResponseWithData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.", err3);
+            if (!succ)
+                return response.sendResponseWithData(res, responseCode.NOT_FOUND, "UserId not found");
+
+            eventSchema.findOne({ _id: req.body.eventId, time: req.body.time }, (err5, succ1) => {
+                if (err5)
+                    return response.sendResponseWithData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.", err5);
+                if (!succ1) {
+                    // console.log("successss>>>>>>>", succ1);
+                    return response.sendResponseWithData(res, responseCode.NOT_FOUND, "eventId or Time is incorrect");
+                }
+                else if (succ1) {
+                    var durationArr = dateTimeArr.duration;
+                    var valid = validateEvent(durationArr);
+                    if (!valid) {
+                        eventSchema.findByIdAndUpdate({ _id: req.body.eventId }, { $push: { bookingId: succ.userId } }, { new: true }, (err3, success) => {
+                            console.log("success", success)
+                            if (err3)
+                                console.log(err3)
+                            if (!success)
+                                console.log("cannot update ")
+                        })
+                        return response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, "Event saved successfully.", createEvent);
+                    } else {
+                        return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Time is not valid");
+                    }
+                }
+
+            })
+        })
+    },
 
 
 

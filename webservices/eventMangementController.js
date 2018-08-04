@@ -11,18 +11,51 @@ var User = require("../models/userModel.js");
 //var userSchema = require("../models/userModel");
 moment().format();
 
-module.exports = {
-                         
+function joinDateTime(d, t) {
+    // console.log('d==>>', d + " t==>>>"+t);
+    var dateString = d + " " + t,
+        dateTimeParts = dateString.split(' '),
+        timeParts = dateTimeParts[1].split(':'),
+        dateParts = (dateTimeParts[0].split('-')).reverse(),
+        date;
+    //     console.log("dateTimeParts==>>", dateTimeParts);
+    //     console.log("timeParts==>>", timeParts);
+    //     console.log("dateParts==>>", dateParts);
+    date = new Date(dateParts[2], parseInt(dateParts[1], 10) - 1, dateParts[0], timeParts[0], timeParts[1]);
+    //     console.log('date==>>' + date);
 
-  
+    //     console.log(date.getTime()); //1379426880000
+    //     console.log(date);
+    var finalObj = { dateTime: date.getTime() }
+    return finalObj;
+}
+
+function validateEvent(duration) {
+    var eventShowTimeArr = [];
+    duration.map(x =>
+        x.times.map(y => eventShowTimeArr.push(joinDateTime(x.date.formatted, y.time)))
+    )
+
+    var currentTime = new Date().getTime();
+    var index = eventShowTimeArr.findIndex(z => (z.dateTime - currentTime) <= 0);
+
+    if (index != -1) {
+        return false;
+    } else {
+        return true;
+    }
+}
+
+
+module.exports = {
+
 
     'addEvent': (req, res) => {
-       
-        console.log("i am here>>>>>>>>", req.body)
+        // console.log("addddddddddddd", req.body);
+
         if (!req.body) {
             return response.sendResponseWithoutData(res, responseCode.SOMETHING_WENT_WRONG, responseMessage.REQUIRED_DATA);
         }
-
         User.findById(req.body.userId, (err4, succ) => {
             if (err4)
                 return response.sendResponseWithData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.", err3);
@@ -32,7 +65,7 @@ module.exports = {
                 if (err5)
                     return response.sendResponseWithData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.", err5);
                 if (succ1) {
-                    // console.log("successss>>>>>>>", succ1);
+                    console.log("successss>>>>>>>", succ1);
                     return response.sendResponseWithData(res, responseCode.BAD_REQUEST, "Event name already exists");
                 }
                 var base64 = req.body.eventImage
@@ -41,30 +74,99 @@ module.exports = {
                         req.body.eventImage = result;
                     }
                     var business = new eventSchema(req.body)
-                    business.save((err2, createEvent) => {
-                        if (err2) {
-                            // console.log("business added error>>>>>>>>>>>", err2)
-                            response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.", err2)
-                        }
-                        else if (createEvent) {
 
-                            response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, "Event saved successfully.", createEvent);
-                            
-                          //  User.findByIdAndUpdate({ _id: req.body.userId }, { $push: { eventId: createEvent._id }}, { new: true }, (err3, success) => {
-                                
-                              User.findByIdAndUpdate({ _id: req.body.userId }, { $push:{services:{ eventId: createEvent._id ,eventIdStatus: createEvent.eventStatus}}}, { new: true }, (err3, success) => {
-                                    console.log(err3)
-                                if (!success)
-                                    console.log("cannot update userId with the event update")
-                            })
-                        }
-                        else
-                            response.sendResponseWithoutData(res, responseCode.SOMETHING_WENT_WRONG, "Error !!!", err2)
-                    })
+                    var durationArr = business.duration;
+                    var valid = validateEvent(durationArr);
+                    if (!valid) {
+                        console.log("Please madam sahi data bhej do.")
+                        return response.sendResponseWithData(res, responseCode.NOT_FOUND, "Please provide correct duration time");
+                    }
+                    else {
+                        console.log("Wahh Gauri Ma'am ab sahi data bheji ho.")
+                        business.save((err2, createEvent) => {
+                            if (err2) {
+                                console.log("business added error>>>>>>>>>>>", err2)
+                                response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.", err2)
+                            }
+                            else if (createEvent) {
+                                response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, "Event saved successfully.", createEvent);
+                            User.findByIdAndUpdate({ _id: req.body.userId }, { $push:{services:{ eventId: createEvent._id ,eventIdStatus: createEvent.eventStatus}}}, { new: true }, (err3, success) => {
+                             console.log("success", success)
+                                    if (err3)
+                                        console.log(err3)
+                                    if (!success)
+                                        console.log("cannot update userId with the event update")
+                                })
+                            }
+                            else
+                                response.sendResponseWithoutData(res, responseCode.SOMETHING_WENT_WRONG, "Error !!!", err2)
+                        })
+                    }
                 })
             })
         })
     },
+
+    // 'addEvent': (req, res) => {
+
+    //     console.log("i am here>>>>>>>>", req.body)
+    //     if (!req.body) {
+    //         return response.sendResponseWithoutData(res, responseCode.SOMETHING_WENT_WRONG, responseMessage.REQUIRED_DATA);
+    //     }
+
+    //     User.findById(req.body.userId, (err4, succ) => {
+    //         if (err4)
+    //             return response.sendResponseWithData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.", err3);
+    //         if (!succ)
+    //             return response.sendResponseWithData(res, responseCode.NOT_FOUND, "UserId not found");
+    //         eventSchema.findOne({ userId: req.body.userId, eventName: req.body.eventName }, (err5, succ1) => {
+    //             if (err5)
+    //                 return response.sendResponseWithData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.", err5);
+    //             if (succ1) {
+    //                 // console.log("successss>>>>>>>", succ1);
+    //                 return response.sendResponseWithData(res, responseCode.BAD_REQUEST, "Event name already exists");
+    //             }
+    //             var base64 = req.body.eventImage
+    //             cloudinary.uploadImage(base64, (err, result) => {
+    //                 if (result) {
+    //                     req.body.eventImage = result;
+    //                 }
+    //                 var business = new eventSchema(req.body)
+    //                 business.save((err2, createEvent) => {
+    //                     if (err2) {
+    //                         // console.log("business added error>>>>>>>>>>>", err2)
+    //                         response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.", err2)
+    //                     }
+    //                     else if (createEvent) {
+
+    //                         var durationArr = createEvent.duration;
+
+    //                         var valid = validateEvent(durationArr);
+    //                         if(!valid){
+    //                         console.log("Please madam sahi data bhej do.")
+    //                         return response.sendResponseWithData(res, responseCode.NOT_FOUND, "Please provide correct duration with ");
+    //                         }else{
+    //                         console.log("Wahh Gauri Ma'am ab sahi data bheji ho.")
+
+
+
+    //                         response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, "Event saved successfully.", createEvent);
+    //                         }
+    //                       //  User.findByIdAndUpdate({ _id: req.body.userId }, { $push: { eventId: createEvent._id }}, { new: true }, (err3, success) => {
+
+    //                           User.findByIdAndUpdate({ _id: req.body.userId }, { $push:{services:{ eventId: createEvent._id ,eventIdStatus: createEvent.eventStatus}}}, { new: true }, (err3, success) => {
+    //                                 console.log(err3)
+    //                             if (!success)
+    //                                 console.log("cannot update userId with the event update")
+    //                         })
+    //                     }
+    //                     else
+    //                         response.sendResponseWithoutData(res, responseCode.SOMETHING_WENT_WRONG, "Error !!!", err2)
+    //                 })
+    //             })
+    //         })
+    //     })
+    // },
 
 
     'latestEvent': (req, res) => {
@@ -170,17 +272,17 @@ module.exports = {
         var page = (req.body.page === undefined) ? 1 : req.body.page;
 
         console.log("succ in populate")
-        if(req.body.period)
-        query.period=req.body.period
+        if (req.body.period)
+            query.period = req.body.period
 
         // $or: { asdfasdf, asdfasdfadsfds, { $and: { asdfasdfadsf, asdfasdfasdfadsf } } }
 
-        User.find({$or:[{_id:req.body.userId,period:req.body.period,status:"ACTIVE"},{_id:req.body.userId,status:"ACTIVE"}]} ,{ services:1}).populate({
+        User.find({ $or: [{ _id: req.body.userId, period: req.body.period, status: "ACTIVE" }, { _id: req.body.userId, status: "ACTIVE" }] }, { services: 1 }).populate({
             path: 'services.eventId',
             // model:"Businesses",
-            match:query,
+            match: query,
             select: 'eventAddress duration  eventImage eventName eventDescription period eventPrice ',
-           
+
         }).sort({ created_At: -1 }).limit(limit).skip(limit * (page - 1)).exec((error, result) => {
             if (error) {
                 console.log("err-->" + error)

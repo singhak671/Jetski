@@ -55,7 +55,8 @@ const user = mongoose.Schema({
     //     type:String
     // },
 
-    
+ 
+
 socialId:{type: String},
    
 

@@ -16,7 +16,6 @@ router.post('/addEvent',Business.addEvent);
  router.post('/rejectEventStatus',Business.confirmEventStatus);
  router.post('/bookingEvent',Business.bookingEvent);
  
- 
 
  //router.post('/bookingEvent',Business.bookingEvent);
  
