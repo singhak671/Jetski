@@ -8,7 +8,7 @@ var each = require('async-each-series');
 var eventSchema = require('../models/eventManagementModel');
 var moment = require('moment');
 var User = require("../models/userModel.js");
-var Booking = require("../models/bookingModel.js")
+var booking = require("../models/bookingModel.js")
 const waterfall = require('async-waterfall')
 //var userSchema = require("../models/userModel");
 moment().format();
@@ -335,7 +335,7 @@ module.exports = {
         console.log("array=====>>>", req.body)
         let list = req.body.eventAddress.map((x) => x.eventAddress)
         let query = { eventAddress: { $in: list } }
-        eventSchema.find(query, (error, result) => {
+        eventSchema.find(query).populate("userId", { name: 1, profilePic: 1 }).exec((error, result) => {
             if (error)
                 response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
             else if (!result)
@@ -351,38 +351,53 @@ module.exports = {
     //------------------------------------------------------------------------------- API for Pending in business site   -----------------------------------------------------------------//
 
 
-    "eventsPending": (req, res) => {
-        var query = { eventStatus: "PENDING" }
-        let options = {
-            page: req.body.pageNumber,
-            select: 'status eventStatus duration eventCreated_At _id userId period eventName eventAddress eventDescription eventImage createdAt updatedAt',
-            limit: 10,
-            sort: { eventCreated_At: -1 },
-            lean: false
-        }
-        User.findOne({ _id: req.body.userId, status: "ACTIVE" }, (err_1, result) => {
-            if (err_1)
-                return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
-            if (!result)
-                return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found")
+    // "eventsPending": (req, res) => {
+    //     var query = { eventStatus: "PENDING" }
+    //     let options = {
+    //         page: req.body.pageNumber,
+    //         select: 'status eventStatus duration eventCreated_At _id userId period eventName eventAddress eventDescription eventImage createdAt updatedAt',
+    //         limit: 10,
+    //         sort: { eventCreated_At: -1 },
+    //         lean: false
+    //     }
+    //     User.findOne({ _id: req.body.userId, status: "ACTIVE" }, (err_1, result) => {
+    //         if (err_1)
+    //             return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
+    //         if (!result)
+    //             return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found")
+    //         else
+    //             eventSchema.paginate(query, options, (error, result) => {
+    //                 if (error)
+    //                     return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
+    //                 else if (!result)
+    //                     return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND)
+    //                 else
+    //                     response.sendResponseWithPagination(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result.docs, { total: result.total, limit: result.limit, currentPage: result.page, totalPage: result.pages });
+    //                 // Response.sendResponseWithPagination(res, resCode.EVERYTHING_IS_OK, resMessage.SUCCESSFULLY_DONE, result.docs, { total: result.total, limit: result.limit, currentPage: result.page, totalPage: result.pages });
+
+    //             })
+    //     })
+
+
+
+    // },
+
+
+
+    'eventsPending': (req, res) => {
+       
+            var query = { userId: req.body.userId }
+            // console.log("++++++++++++++++", query)
+            Booking.find({ userId: req.body.userId, status:"PENDING" }, { eventId: 1, duration: 1, _id: 0 }).populate("eventId", { duration: 0 }).populate("userId", { name: 1, profilePic: 1 }).exec((error, result) => {
+            if (error)
+            return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
+            else if (!result)
+            return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND)
             else
-                eventSchema.paginate(query, options, (error, result) => {
-                    if (error)
-                        return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
-                    else if (!result)
-                        return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND)
-                    else
-                        response.sendResponseWithPagination(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result.docs, { total: result.total, limit: result.limit, currentPage: result.page, totalPage: result.pages });
-                    // Response.sendResponseWithPagination(res, resCode.EVERYTHING_IS_OK, resMessage.SUCCESSFULLY_DONE, result.docs, { total: result.total, limit: result.limit, currentPage: result.page, totalPage: result.pages });
-
-                })
-        })
-
-
-
-    },
-
-
+            return response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, result)
+            })
+            },
+        
     //------------------------------------------------------------------------------- API for AllConfirm in business site   -----------------------------------------------------------------//
 
 
@@ -453,7 +468,7 @@ module.exports = {
 
     "eventBookNow": (req, res) => {
         console.log("event status request " + req.body._id)
-        eventSchema.findByIdAndUpdate({ _id: req.body._id }, { $set: { eventStatus: "PENDING" } }, { new: true }, (error, result) => {
+        booking.findByIdAndUpdate({ _id: req.body._id }, { $set: { bookingStatus: "PENDING" } }, { new: true }, (error, result) => {
             if (error)
                 response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
             else if (!result)
@@ -473,7 +488,7 @@ module.exports = {
 
     "confirmEventStatus": (req, res) => {
         console.log("event status request " + req.body._id)
-        eventSchema.findByIdAndUpdate({ _id: req.body._id }, { $set: { eventStatus: "CONFIRMED" } }, { new: true }, (error, result) => {
+        booking.findByIdAndUpdate({ _id: req.body._id }, { $set: { bookingStatus: "CONFIRMED" } }, { new: true }, (error, result) => {
             if (error)
                 response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
             else if (!result)
@@ -493,7 +508,7 @@ module.exports = {
 
     "rejectEventStatus": (req, res) => {
         console.log("event status request " + req.body._id)
-        eventSchema.findByIdAndUpdate({ _id: req.body._id }, { $set: { eventStatus: "REJECTED" } }, { new: true }, (error, result) => {
+        booking.findByIdAndUpdate({ _id: req.body._id }, { $set: { bookingStatus: "REJECTED" } }, { new: true }, (error, result) => {
             if (error)
                 response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
             else if (!result)
@@ -588,7 +603,7 @@ module.exports = {
 
                             }
                     }
-                    else if(req.body.period=="MONTHLY"){
+                    else if (req.body.period == "MONTHLY") {
 
                         var current_date = new Date();
                         var current_month = current_date.getMonth() + 1;
@@ -598,19 +613,19 @@ module.exports = {
 
                         for (let x = 0; x < success.services.length; x++)
                             if (success.services[x].eventId) {
-                        for (var i = 0; i < success.services[x].eventId.duration.length; i++)
-                            // console.log('TIME STAMP VALUE',Time_stamp2);
-                            // console.log('DATA EPOC IS',success.duration[i].date.epoc*1000);
-    
-    
-                            if (success.services[x].eventId.duration[i].date.epoc * 1000 < nextMonth && success.services[x].eventId.duration[i].date.epoc * 1000 >= Time_stamp) {
-                                monthlyArray.push(success.duration[i])
-                                console.log('ARRAY IS', monthlyArray);
-    
+                                for (var i = 0; i < success.services[x].eventId.duration.length; i++)
+                                    // console.log('TIME STAMP VALUE',Time_stamp2);
+                                    // console.log('DATA EPOC IS',success.duration[i].date.epoc*1000);
+
+
+                                    if (success.services[x].eventId.duration[i].date.epoc * 1000 < nextMonth && success.services[x].eventId.duration[i].date.epoc * 1000 >= Time_stamp) {
+                                        monthlyArray.push(success.duration[i])
+                                        console.log('ARRAY IS', monthlyArray);
+
+                                    }
+                                success.services[x].eventId.duration = monthlyArray;
                             }
-                            success.services[x].eventId.duration = monthlyArray;
-                        }
-                    
+
                         return response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, "Data found successfully", success);
 
                     }
@@ -726,7 +741,7 @@ module.exports = {
         if (!req.body) {
             return response.sendResponseWithoutData(res, responseCode.SOMETHING_WENT_WRONG, responseMessage.REQUIRED_DATA);
         }
-        User.findOne({ _id: req.body.userId, userType: "CUSTOMER" ,status:"ACTIVE" }, (err4, succ) => {
+        User.findOne({ _id: req.body.userId, userType: "CUSTOMER", status: "ACTIVE" }, (err4, succ) => {
             if (err4)
                 return response.sendResponseWithData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.", err3);
             if (!succ)
@@ -775,18 +790,19 @@ module.exports = {
         })
     },
     //////////////////////////////////  My all booking in app        /////////////////////////////
-"myBookingShow": (req, res) => {
-    var query = { userId: req.body.userId }
-    console.log("++++++++++++++++", query)
-    Booking.find({userId: req.body.userId},{eventId:1,duration:1,_id:0}).populate("eventId").exec((error, result) => {
-    if (error)
-    return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
-    else if (!result)
-    return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND)
-    else
-    return response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK,"Data found successfully", result)
-    })
-    }
+    "myBookingShow": (req, res) => {
+        var query = { userId: req.body.userId }
+        // console.log("++++++++++++++++", query)
+        booking.find({ userId: req.body.userId }, { eventId: 1, duration: 1, _id: 0 }).populate("eventId", { duration: 0, userId: 0 }).populate("userId", { name: 1, profilePic: 1 }).exec((error, result) => {
+            if (error)
+                return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
+            else if (!result)
+                return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND)
+            else
+                return response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, result)
+        })
+    },
+
 }
 
 

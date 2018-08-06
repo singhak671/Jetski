@@ -23,7 +23,7 @@ app.use('/api/v1/user', require('./routes/userRoute'));
 app.use('/api/v1/admin', require('./routes/userRoute'));
 app.use('/api/v1/static', require('./routes/termsAndPrivacyRoutes'));
 app.use('/api/v1/event',require('./routes/eventRoute'));
-
+//  app.use('/api/v1/chat',require('./routes/chatRoute'));
 
 
 

@@ -17,7 +17,7 @@ const booking = mongoose.Schema({
         type: Array,
         ref: 'Businesses'
     },
-    status: {
+    bookingStatus: {
         type: String,
         default: "PENDING"
     }
