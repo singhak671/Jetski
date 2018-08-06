@@ -351,52 +351,73 @@ module.exports = {
     //------------------------------------------------------------------------------- API for Pending in business site   -----------------------------------------------------------------//
 
 
-    // "eventsPending": (req, res) => {
-    //     var query = { eventStatus: "PENDING" }
-    //     let options = {
-    //         page: req.body.pageNumber,
-    //         select: 'status eventStatus duration eventCreated_At _id userId period eventName eventAddress eventDescription eventImage createdAt updatedAt',
-    //         limit: 10,
-    //         sort: { eventCreated_At: -1 },
-    //         lean: false
-    //     }
-    //     User.findOne({ _id: req.body.userId, status: "ACTIVE" }, (err_1, result) => {
-    //         if (err_1)
-    //             return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
-    //         if (!result)
-    //             return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found")
-    //         else
-    //             eventSchema.paginate(query, options, (error, result) => {
-    //                 if (error)
-    //                     return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
-    //                 else if (!result)
-    //                     return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND)
-    //                 else
-    //                     response.sendResponseWithPagination(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result.docs, { total: result.total, limit: result.limit, currentPage: result.page, totalPage: result.pages });
-    //                 // Response.sendResponseWithPagination(res, resCode.EVERYTHING_IS_OK, resMessage.SUCCESSFULLY_DONE, result.docs, { total: result.total, limit: result.limit, currentPage: result.page, totalPage: result.pages });
-
-    //             })
-    //     })
-
-
-
-    // },
-
-
-
-    'eventsPending': (req, res) => {
-       
-            var query = { userId: req.body.userId }
-            // console.log("++++++++++++++++", query)
-            Booking.find({ userId: req.body.userId, status:"PENDING" }, { eventId: 1, duration: 1, _id: 0 }).populate("eventId", { duration: 0 }).populate("userId", { name: 1, profilePic: 1 }).exec((error, result) => {
-            if (error)
-            return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
-            else if (!result)
-            return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND)
+    "eventsPending": (req, res) => {
+        var arr=[]
+        var query = { bookingStatus: "PENDING" }
+        let options = {
+            page: req.body.pageNumber,
+            select: 'status eventStatus duration eventCreated_At _id userId period eventName eventAddress eventDescription eventImage createdAt updatedAt',
+            limit: 10,
+            sort: { eventCreated_At: -1 },
+            lean: false
+        }
+        User.findOne({ _id: req.body.userId, status: "ACTIVE" }, (err_1, result) => {
+            if (err_1)
+                return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
+            if (!result)
+                return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found")
             else
-            return response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, result)
-            })
-            },
+               {
+                   waterfall([
+                       function(callback)
+                       {
+                            for(var i=0;i<result.services.length;i++)
+                            {
+                                var temp_service_id=result.services[i].eventId;
+                                User.aggregate([
+                                    {
+                                        "$lookup": {
+                                            "from": "Booking",
+                                            "localField": "temp_service_id",
+                                            "foreignField": "eventId",
+                                            "as": "arr"
+                                        }
+                                    }]
+                                ).exec((err55,succ55)=>
+                            {
+                               console.log('RESULT',succ55);
+                               
+                            })
+
+
+                            }
+                       }
+                   ],(err,result1)=>
+                {
+
+                })
+               }
+        })
+
+
+
+    },
+
+
+
+    // 'eventsPending': (req, res) => {
+       
+    //         var query = { userId: req.body.userId }
+    //         // console.log("++++++++++++++++", query)
+    //         Booking.find({ userId: req.body.userId, status:"PENDING" }, { eventId: 1, duration: 1, _id: 0 }).populate("eventId", { duration: 0 }).populate("userId", { name: 1, profilePic: 1 }).exec((error, result) => {
+    //         if (error)
+    //         return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
+    //         else if (!result)
+    //         return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND)
+    //         else
+    //         return response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, result)
+    //         })
+    //         },
         
     //------------------------------------------------------------------------------- API for AllConfirm in business site   -----------------------------------------------------------------//
 
@@ -758,7 +779,7 @@ module.exports = {
                     array = req.body.duration[0].times;
                     if (array.length == 1) {
                         if (validateEvent(req.body.duration)) {
-                            Booking.findOne({ eventId: req.body.eventId, userId: req.body.userId }, (err, success) => {
+                            booking.findOne({ eventId: req.body.eventId, userId: req.body.userId }, (err, success) => {
                                 if (err)
                                     return response.sendResponseWithData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.", err);
                                 else if (success) {

@@ -18,14 +18,14 @@ const messageSchema = mongoose.Schema({
                 type:Schema.Types.ObjectId,
                 ref: 'user'
             },
-            message:String,
+            message:{
+                type:String
+            },
             createdAt:{
                 type:Date,
                 default:Date.now()
             }
             
-        },{
-
         }
     ],
     eventId:{
