@@ -721,12 +721,12 @@ module.exports = {
 
 
 
-    /////////////////////////////////////////////////////////////////////////////------APP bookins--------------\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+    /////////////////////////////////////////////////////////////////////////////------APP booking--------------\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
     'booking': (req, res) => {
         if (!req.body) {
             return response.sendResponseWithoutData(res, responseCode.SOMETHING_WENT_WRONG, responseMessage.REQUIRED_DATA);
         }
-        User.findOne({ _id: req.body.userId, userType: "CUSTOMER" }, (err4, succ) => {
+        User.findOne({ _id: req.body.userId, userType: "CUSTOMER" ,status:"ACTIVE" }, (err4, succ) => {
             if (err4)
                 return response.sendResponseWithData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.", err3);
             if (!succ)
@@ -773,6 +773,19 @@ module.exports = {
                 }
             })
         })
+    },
+    //////////////////////////////////  My all booking in app        /////////////////////////////
+"myBookingShow": (req, res) => {
+    var query = { userId: req.body.userId }
+    console.log("++++++++++++++++", query)
+    Booking.find({userId: req.body.userId},{eventId:1,duration:1,_id:0}).populate("eventId").exec((error, result) => {
+    if (error)
+    return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
+    else if (!result)
+    return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND)
+    else
+    return response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK,"Data found successfully", result)
+    })
     }
 }
 

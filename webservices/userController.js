@@ -429,39 +429,7 @@ module.exports = {
     },
 
 
-    // "searchCustomerFilter": (req, res) => {
-
-    //     var value = new RegExp('^' + req.body.search, "i")
-    //     console.log("this is active", req.body)
-    //     if (req.body.status == "ACTIVE") {
-    //         userSchema.find({status: 'ACTIVE'},{userType: req.body.userType }).exec(function (err, dat) {
-    //             if (err) 
-    //                 return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.INTERNAL_SERVER_ERROR);
-
-    //             // if (!dat) 
-    //             //     return Response.sendResponseWithData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
-
-    //              if(!dat){
-
-    //                 userSchema.find({ $or: [{ name: value }, { email: value }, { status: value }], status: 'ACTIVE', userType: req.body.userType }).exec(function (err, data) {
-    //                     if (err) 
-    //                         return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.INTERNAL_SERVER_ERROR);
-
-    //                     if (!data) 
-    //                         return Response.sendResponseWithData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
-
-    //                         //console.log("dfgfghfhfgh", data)
-    //                         return Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, resMessage.SUCCESSFULLY_DONE, data);
-
-
-    //                 })
-    //             }
-    //                 //console.log("dfgfghfhfgh", dat)
-    //                 return Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, resMessage.SUCCESSFULLY_DONE, dat);
-
-    //  })
-    //
-
+    
     searchCustomerFilter: (req, res) => {
         var value = new RegExp('^' + req.body.search, "i")
         var obj
@@ -505,35 +473,3 @@ module.exports = {
 
 
 }
-        // else if (req.body.status == 'INACTIVE') {
-        //     userSchema.find({ $or: [{ name: value }, { email: value }, { status: value }], status: 'INACTIVE', userType: req.body.userType }).exec(function (err_, data1) {
-        //         if (err_)
-        //             return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.INTERNAL_SERVER_ERROR);
-        //         if (!data1) {
-        //             return Response.sendResponseWithData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
-        //         } else {
-        //             console.log("dfgfghfhfghData123123", data1)
-        //             Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, " Inactive All status data found", data1);
-        //         }
-        //     })
-        // } else {
-        //     userSchema.find({ $or: [{ name: value }, { email: value }, { status: value }], userType: req.body.userType }).exec(function (err__, data2) {
-        //         if (err__)
-        //             return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.INTERNAL_SERVER_ERROR);
-
-        //         if (!data2) {
-        //             return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
-        //         }
-        //         else {
-        //             Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, " All status data found", data2);
-        //         }
-        //     })
-        // }
-  //  },
-//}
-
-
-
-
-
-

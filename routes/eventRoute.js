@@ -18,7 +18,7 @@ router.post('/addEvent',Business.addEvent);
  router.post('/booking',Business.booking);
  router.post('/eventDescription',Business.eventDescription);
  router.post('/filterEvent',Business.filterEvent);
-
+ router.post('/myBookingShow',Business.myBookingShow);
  //router.post('/bookingEvent',Business.bookingEvent);
  
 module.exports = router;
