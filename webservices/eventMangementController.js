@@ -356,7 +356,7 @@ module.exports = {
         var query = { businessManId: req.body.userId, bookingStatus: "PENDING" }
         let options = {
             page: req.body.pageNumber || 1,
-            populate: [{ path: "eventId", select: "status eventStatus  eventCreated_At _id period eventName eventAddress eventDescription eventImage createdAt" },
+            populate: [{ path: "eventId", select: "status eventStatus  eventCreated_At _id period eventName eventAddress eventDescription eventImage eventPrice createdAt" },
             { path: "userId", select: "profilePic name" }],
             //select: 'status eventStatus duration eventCreated_At _id userId period eventName eventAddress eventDescription eventImage createdAt updatedAt',
             limit: req.body.limit || 10,
@@ -387,7 +387,8 @@ module.exports = {
         var query = { businessManId: req.body.userId, bookingStatus: "CONFIRMED" }
         let options = {
             page: req.body.pageNumber || 1,
-            populate: [{ path: "eventId", select: "status eventStatus  eventCreated_At _id period eventName eventAddress eventDescription eventImage " }],
+            populate: [{ path: "eventId", select: "status eventStatus  eventCreated_At _id period eventName eventAddress eventDescription eventPrice eventImage " },
+            { path: "userId", select: "profilePic name" }],
             //select: 'status eventStatus duration eventCreated_At _id userId period eventName eventAddress eventDescription eventImage createdAt updatedAt',
             limit: req.body.limit || 10,
             sort: { eventCreated_At: -1 },
@@ -445,7 +446,7 @@ module.exports = {
         var query = { businessManId: req.body.userId, bookingStatus: "PENDING", period: req.body.period }
         let options = {
             page: req.body.pageNumber || 1,
-            populate: [{ path: "eventId", select: "status eventStatus eventCreated_At _id period eventName eventAddress eventDescription eventImage createdAt" }],
+            populate: [{ path: "eventId", select: "status eventStatus eventCreated_At _id  eventName eventAddress eventDescription eventImage createdAt" }],
             //select: 'status eventStatus duration eventCreated_At _id userId period eventName eventAddress eventDescription eventImage createdAt updatedAt',
             limit: req.body.limit || 10,
             sort: { eventCreated_At: -1 },
@@ -469,7 +470,7 @@ module.exports = {
         var query = { businessManId: req.body.userId, bookingStatus: "CONFIRMED", period: req.body.period }
         let options = {
             page: req.body.pageNumber || 1,
-            populate: [{ path: "eventId", select: "status eventStatus eventCreated_At _id period eventName eventAddress eventDescription eventPrice eventImage createdAt" }],
+            populate: [{ path: "eventId", select: "status eventStatus eventCreated_At _id  eventName eventAddress eventDescription eventPrice eventImage createdAt" }],
             //select: 'status eventStatus duration eventCreated_At _id userId period eventName eventAddress eventDescription eventImage createdAt updatedAt',
             limit: req.body.limit || 10,
             sort: { eventCreated_At: -1 },
@@ -493,8 +494,8 @@ module.exports = {
 
 
     "confirmEventStatus": (req, res) => {
-        console.log("event status request " + req.body.eventId)
-        booking.findByIdAndUpdate({ eventId: req.body.eventId }, { $set: { bookingStatus: "CONFIRMED" } }, { new: true }, (error, result) => {
+        console.log("event status request " + req.body.bookingId)
+        booking.findByIdAndUpdate({ _id: req.body.bookingId }, { $set: { bookingStatus: "CONFIRMED" } }, { new: true }, (error, result) => {
             if (error)
                 response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
             else if (!result)
@@ -513,8 +514,8 @@ module.exports = {
 
 
     "rejectEventStatus": (req, res) => {
-        console.log("event status request " + req.body.eventId)
-        booking.findByIdAndUpdate({ eventId: req.body.eventId }, { $set: { bookingStatus: "REJECTED" } }, { new: true }, (error, result) => {
+        console.log("event status request " + req.body.bookingId)
+        booking.findByIdAndUpdate({_Id: req.body.bookingId }, { $set: { bookingStatus: "REJECTED" } }, { new: true }, (error, result) => {
             if (error)
                 response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
             else if (!result)
@@ -766,14 +767,7 @@ module.exports = {
                         if (validateEvent(req.body.duration)) {
                             booking.findOne({ eventId: req.body.eventId, userId: req.body.userId, businessManId: req.body.businessManId ,period:req.body.period }, (err, success) => {
                                 if (err)
-                                    return response.sendResponseWithData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.", err);
-                                else if (success) {
-                                    success.duration.push(req.body.duration);
-                                    success.save((err, success1) => {
-                                        if (success1)
-                                            response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, success1);
-                                    })
-                                }
+                                    return response.sendResponseWithData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.", err)
                                 else {
                                     booking.create(req.body, (err, success) => {
                                         if (err)

@@ -23,7 +23,7 @@ const staticApi = {
         else{
             StaticContent.findByIdAndUpdate({_id:req.body._id},{$set:{
                 "termsAndConditions":req.body.termsAndConditions,
-                "aboutUs": req.body.privacyPolicy,
+                "aboutUs": req.body.aboutUs,
                 "privacyPolicy": req.body.privacyPolicy
             }},{new:true},
             (error,result)=>{
@@ -32,7 +32,7 @@ const staticApi = {
                 else if(!result)
                     Response.sendResponseWithoutData(res, resCode.NOT_FOUND, "This id does not exist.")
                 else 
-                    Response.sendResponseWithoutData(res, resCode.EVERYTHING_IS_OK, req.body.termsAndConditions?"Terms and Conditions updated successfully.":"Privacy policy updated successfully.")
+                    Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "Content data upload successfully",result)
             })
         }
     },

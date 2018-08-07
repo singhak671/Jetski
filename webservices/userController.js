@@ -431,6 +431,7 @@ module.exports = {
 
     
     searchCustomerFilter: (req, res) => {
+        console.log("anurag##################",req.body);
         var value = new RegExp('^' + req.body.search, "i")
         var obj
         if (req.body.search && req.body.status) {
@@ -444,14 +445,19 @@ module.exports = {
                 $and: [{ status: req.body.status }, { userType: 'CUSTOMER' }]
             }
         }
-        else if(req.body.userType && !req.body.status) {
+        else if(req.body.userType && !req.body.status && !req.body.search) {
             console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% ")
             obj = {status:{$in:["ACTIVE", "BLOCK"]},userType:req.body.userType}
-              
             //    {"status":"ACTIVE" || "BLOCK"}
                 // $and: [{ name: req.body.search},{email: req.body.search} ,{userType: 'CUSTOMER' }]
 
         }
+        else if(req.body.userType && req.body.search) {
+            console.log("&&&&&&&&&&&&&&&&&&&& ")
+            obj =  { 
+                $or: [ {status:{$in:["ACTIVE", "BLOCK"]},userType:req.body.userType, name: value }, { status:{$in:["ACTIVE", "BLOCK"]},userType:req.body.userType, email: value }]
+            }
+    }
         else {
             obj = {                           
                 $or: [{ $and: [{ userType: 'CUSTOMER' }, { name: value }] }, { $and: [{ userType: 'CUSTOMER' }, { email: value }] }]
@@ -465,7 +471,7 @@ module.exports = {
             if(!data){
                 return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND);     
             }
-               console.log("dat", data)
+              // console.log("dat", data)
                 Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, resMessage.SUCCESSFULLY_DONE, data)
             
         })
