@@ -1,6 +1,8 @@
 
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+var mongoosePaginate = require('mongoose-paginate');
+
 const User = require("./userModel");
 const Businesses = require("./eventManagementModel");
 const booking = mongoose.Schema({
@@ -13,6 +15,10 @@ const booking = mongoose.Schema({
         ref: 'User'
     },
 
+    period:{
+        type:String,
+        enum:["DAILY","MONTHLY","WEEKLY"]
+    },
     duration: {
         type: Array,
         ref: 'Businesses'
@@ -20,10 +26,15 @@ const booking = mongoose.Schema({
     bookingStatus: {
         type: String,
         default: "PENDING"
+    },
+    businessManId:{
+        type: Schema.Types.ObjectId,
+        ref: 'User'
     }
 },
     {
         timestamps: true
     });
+    booking.plugin(mongoosePaginate);
 
 module.exports = mongoose.model('Booking', booking);

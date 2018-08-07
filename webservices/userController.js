@@ -444,8 +444,9 @@ module.exports = {
                 $and: [{ status: req.body.status }, { userType: 'CUSTOMER' }]
             }
         }
-        else if(req.body.userType) {
-            obj = {$and:{status:"ACTIVE",status:"BLOCK"}}
+        else if(req.body.userType && !req.body.status) {
+            console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% ")
+            obj = {status:{$in:["ACTIVE", "BLOCK"]},userType:req.body.userType}
               
             //    {"status":"ACTIVE" || "BLOCK"}
                 // $and: [{ name: req.body.search},{email: req.body.search} ,{userType: 'CUSTOMER' }]

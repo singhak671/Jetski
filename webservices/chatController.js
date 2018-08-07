@@ -45,7 +45,7 @@ module.exports = {
                                 response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, succ2);
                         })
                     }
-                    else if (succ1 != undefined || succ1 != '' || succ1 != [] || succ1 != null) {
+                    else if (!succ1==false) {
                         var query = {
                             businesssManId: businesssManId,
                             customerId: customerId,
