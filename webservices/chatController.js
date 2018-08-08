@@ -1,4 +1,5 @@
 var response = require('../common_functions/response_handler');
+var mongoose = require('mongoose');
 var responseMessage = require('../helper/httpResponseMessage');
 var responseCode = require('../helper/httpResponseCode');
 var eventSchema = require('../models/eventManagementModel');
@@ -6,142 +7,49 @@ var User = require("../models/userModel.js");
 const chatSchema = require('../models/message')
 const waterfall = require('async-waterfall');
 
-module.exports = {
+module.exports = {                                                 
 
 
-
-    //         "chatAPI": (req, res) => {
-    //     var businesssManId = req.body.businesssManId;
-    //     var customerId = req.body.customerId;
-    //     var eventId = req.body.eventId;
-    //     var message = req.body.message[0].message
-
-
-    //     User.findOne({$or:[{_id:req.body.customerId,_id:req.body.businesssManId}]}, (err, success) => {
-
-    //         if (err)
-    //             return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG);
-
-    //         if (!success)
-    //             return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "UserId Not found");
-    //         if (success) {
-    //             // console.log('SUccdesss of ')
-    //             chatSchema.find({}).exec((err1, succ1) => {
-    //                 console.log('err1,succ1', err1, succ1);
-    //                 if (err1)
-    //                     return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG);
-    //                 if (succ1 == undefined || succ1 == '' || succ1 == [] || succ1 == null) {
-    //                     console.log('i m here');
-    //                     var chatSchema_data = new chatSchema({
-    //                         businesssManId: businesssManId,
-    //                         customerId: customerId,
-    //                         message: {
-    //                             senderId: success._id,
-    //                             message: message
-    //                         },
-    //                         eventId: eventId
-    //                     })
-    //                     chatSchema_data.save((err2, succ2) => {
-    //                         if (err2)
-    //                             return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG);
-    //                         else if (succ2)
-    //                             response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, succ2);
-    //                     })
-    //                 }
-    //                 else if (!succ1 == false) {
-    //                     var query = {
-    //                         businesssManId: businesssManId,
-    //                         customerId: customerId,
-    //                         eventId: eventId,
-
-    //                     }
-    //                     var data = {};
-    //                     data.senderId = success._id;
-    //                     data.message = message;
-    //                     chatSchema.findOneAndUpdate(query, { $push: { message: data } }, { new: true }).exec((err3, succ3) => {
-    //                         if (err3)
-    //                             return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG);
-    //                         else if (succ3) {
-    //                             response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, succ3);
-    //                         }
-    //                     })
-    //                 }
-    //             })
-    //         }
-
-    //     })
-
-    // },
-    "chatAPI": (req, res) => {
-        var businesssManId = req.body.businesssManId;
-        var customerId = req.body.customerId;
-        var eventId = req.body.eventId;
-        var message = req.body.message[0].message
-        var userId=req.body.message[0].userId;
-
-
-        User.findOne({$or:[{_id:req.body.customerId,_id:req.body.businesssManId}]}, (err, success) => {
-
-            if (err)
-                return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG);
-
-            if (!success)
-                return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "UserId Not found");
-            if (success) {
-                console.log('user is is',userId);
-                chatSchema.find({}).exec((err1, succ1) => {
-                    console.log('err1,succ1', err1, succ1);
-                    if (err1)
-                        return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG);
-                    if (succ1 == undefined || succ1 == '' || succ1 == [] || succ1 == null) {
-                        console.log('i m here');
-                        var chatSchema_data = new chatSchema({
-                            businesssManId: businesssManId,
-                            customerId: customerId,
-                            message: {
-                                senderId: userId,
-                                message: message
-                            },
-                            eventId: eventId
-                        })
-                        chatSchema_data.save((err2, succ2) => {
-                            if (err2)
+"chatAPI":(req,res)=>{
+    if(!req.body.eventId || !req.body.businesssManId ||! req.body.message[0].senderId || !req.body.customerId || !req.body.message[0].message)
+        return response.sendResponseWithoutData(res, responseCode.BAD_REQUEST, "Please provide all required fields !");
+    else
+    User.findOne({_id:req.body.customerId,_id:req.body.businesssManId,status:"ACTIVE"}, (err, success) => {
+                if (err)
+                    return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG);
+                else if (!success)
+                        return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "UserId Not found");
+                    else
+                        eventSchema.findOne({_id:req.body.eventId,status:"ACTIVE"},(err,success2)=>{
+                            if (err)
                                 return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG);
-                            else if (succ2)
-                                response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, succ2);
+                            else if (!success2)
+                                    return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "EventId Not found");
+                                else
+                                    chatSchema.findOneAndUpdate({eventId:req.body.eventId,businesssManId:req.body.businesssManId,customerId:req.body.customerId},{$push:{message:req.body.message}},{new:true,upsert:true})
+                                    .populate("message.senderId","_id name profilePic")
+                                    .exec((err,success3)=>{
+                                        if (err)
+                                            return response.sendResponseWithData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG,err);
+                                        else if (!success3)
+                                                return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Cannot send message !");
+                                            else
+                                                response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, success3);
+                                    })
                         })
-                    }
-                    else if (!succ1 == false) {
-                        var query = {
-                            businesssManId: businesssManId,
-                            customerId: customerId,
-                            eventId: eventId,
+                    })
 
-                        }
-                        var data = {};
-                        data.senderId = userId;
-                        data.message = message;
-                        chatSchema.findOneAndUpdate(query, { $push: { message: data } }, { new: true }).exec((err3, succ3) => {
-                            if (err3)
-                                return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG);
-                            else if (succ3) {
-                                response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, succ3);
-                            }
-                        })
-                    }
-                })
-            }
 
-        })
-
-    },
+},
 "chatHistory": (req, res) => {
-
-        chatSchema.find({ businesssManId: req.body.businesssManId, customerId: req.body.customerId, eventId: req.body.eventId }).exec((err, succ) => {
+    if(!req.body.eventId || !req.body.businesssManId || !req.body.customerId )
+    return response.sendResponseWithoutData(res, responseCode.BAD_REQUEST, "Please provide all required fields !");
+        else
+        chatSchema.findOne({ businesssManId: req.body.businesssManId, customerId: req.body.customerId, eventId: req.body.eventId }).populate("message.senderId","_id name profilePic").exec((err, succ) => {
             if (err)
                 return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG);
-            if (!succ)
-                return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "UserId Not found");
+            if (succ ==false)
+                return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found!");
             else if (succ) {
                 response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, succ);
             }

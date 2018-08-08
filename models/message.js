@@ -6,17 +6,17 @@ var eventSchema = require('../models/eventManagementModel');
 const messageSchema = mongoose.Schema({
     businesssManId:{
         type:Schema.Types.ObjectId,
-        ref: 'user'
+        ref: 'User'
     },
     customerId:{
         type:Schema.Types.ObjectId,
-        ref: 'user'
+        ref: 'User'
     },
     message:[
         {
             senderId:{
                 type:Schema.Types.ObjectId,
-                ref: 'user'
+                ref: 'User'
             },
             message:{
                 type:String
