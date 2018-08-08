@@ -21,11 +21,7 @@ const staticApi = {
         if(!req.body)
             Response.sendResponseWithoutData(res, resCode.BAD_REQUEST, resMessage. BAD_REQUEST)
         else{
-            StaticContent.findByIdAndUpdate({_id:req.body._id},{$set:{
-                "termsAndConditions":req.body.termsAndConditions,
-                "aboutUs": req.body.aboutUs,
-                "privacyPolicy": req.body.privacyPolicy
-            }},{new:true},
+            StaticContent.findOneAndUpdate({},req.body,{new:true},
             (error,result)=>{
                 if(error)
                     Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.INTERNAL_SERVER_ERROR)

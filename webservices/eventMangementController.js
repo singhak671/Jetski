@@ -414,35 +414,35 @@ module.exports = {
 
 
     "myBooking": (req, res) => {
-        var query = {}
+        var query = {userId: req.body.userId}
         let options = {
-            page: req.params.pagenumber,
-            select: 'status eventStatus duration eventCreated_At _id userId period eventName eventAddress eventDescription eventImage  ',
+            page: req.params.pagenumber || 1,
+            // select: 'status  eventPrice  eventStatus  eventCreated_At  _id   eventName eventAddress eventDescription eventImage  ',
             limit: 10,
             sort: { eventCreated_At: -1 },
             lean: false,
-            populate: { path: 'userId', select: 'profilePic name' },
+            populate: [{ path: 'userId', select: 'profilePic name' },{path:"eventId",select: "status  eventCreated_At _id  eventName eventAddress eventDescription eventPrice eventImage createdAt"}]
 
         }
-        User.findOne({ _id: req.body.userId, status: "ACTIVE" }, (err_1, result) => {
+        booking.paginate(query, options, (err_1, result) => {
             if (err_1)
                 return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
             if (!result)
                 return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found")
             else
-                eventSchema.paginate(query, options, (error, result) => {
-                    if (error)
-                        return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
-                    else if (!result)
-                        return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND)
-                    else
+                // eventSchema.paginate(query, options, (error, result) => {
+                //     if (error)
+                //         return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
+                //     else if (!result)
+                //         return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND)
+                //     else
                         response.sendResponseWithPagination(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result.docs, { total: result.total, limit: result.limit, currentPage: result.page, totalPage: result.pages });
-                })
+                
         })
     },
 
     "filterEventsPending": (req, res) => {
-        var arr = []
+        // var arr = []
         var query = { businessManId: req.body.userId, bookingStatus: "PENDING", period: req.body.period }
         let options = {
             page: req.body.pageNumber || 1,
