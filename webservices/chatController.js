@@ -8,7 +8,7 @@ const chatSchema = require('../models/message')
 const waterfall = require('async-waterfall');
 
 module.exports = {                                                 
-
+//***********************************************************************************chat API****************************************************************************/
 
 "chatAPI":(req,res)=>{
     if(!req.body.eventId || !req.body.businesssManId ||! req.body.message[0].senderId || !req.body.customerId || !req.body.message[0].message)
