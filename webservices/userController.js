@@ -43,7 +43,7 @@ module.exports = {
                                 } else {
                                     var result = result.toObject();
                                     delete result.password;
-                                    Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "You have successfully signup.")
+                                    Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "You have successfully signup.",result)
                                     //  message.sendemail(result.email, "Your account for AQUA_LUDUS is created.", "Your email id is "+result.email+" and password is"+retVal, (err,success)=>{
                                     //     if(success)
                                     //     {
@@ -383,8 +383,8 @@ module.exports = {
         //console.log("get al customer")
         // var query = {};
         let options = {
-            page: req.params.pageNumber,
-            select: 'userType email name status mobile_no address',
+            page: req.params.pageNumber || 1,
+            select: 'userType email name status mobile_no  address',
             limit: 10,
             sort: { created_At: -1 },
             //password:0,
@@ -408,8 +408,8 @@ module.exports = {
         //console.log("get al customer")
         // var query = {};
         let options = {
-            page: req.params.pageNumber,
-            select: 'userType email name status businessName gender  country',
+            page: req.params.pageNumber || 1,
+            select: 'userType email name status  businessName gender  address',
             limit: 10,
             sort: { created_At: -1 },
             //password:0,
@@ -432,17 +432,20 @@ module.exports = {
     
     searchCustomerFilter: (req, res) => {
         console.log("anurag##################",req.body);
+
+      
+        
         var value = new RegExp('^' + req.body.search, "i")
         var obj
         if (req.body.search && req.body.status) {
             obj = {
-                $or: [{ $and: [{ status: req.body.status }, { userType: 'CUSTOMER' }, { name: value }] }, { $and: [{ status: req.body.status }, { userType: 'CUSTOMER' }, { email: value }] }]
+                $or: [{ $and: [{ status: req.body.status }, { userType: req.body.userType }, { name: value }] }, { $and: [{ status: req.body.status }, {  userType: req.body.userType }, { email: value }] }]
             }
         }
 
         else if (!req.body.search && req.body.status) {
             obj = {
-                $and: [{ status: req.body.status }, { userType: 'CUSTOMER' }]
+                $and: [{ status: req.body.status }, {  userType: req.body.userType }]
             }
         }
         else if(req.body.userType && !req.body.status && !req.body.search) {
@@ -460,11 +463,19 @@ module.exports = {
     }
         else {
             obj = {                           
-                $or: [{ $and: [{ userType: 'CUSTOMER' }, { name: value }] }, { $and: [{ userType: 'CUSTOMER' }, { email: value }] }]
+                $or: [{ $and: [{  userType: req.body.userType }, { name: value }] }, { $and: [{  userType: req.body.userType }, { email: value }] }]
                 // $and: [{ name: req.body.search},{email: req.body.search} ,{userType: 'CUSTOMER' }]
             }
         }
-        userSchema.find(obj).exec(function (err, data) {
+        let options = {
+            page: req.body.pageNumber ||1 ,
+           // select: 'userType email name status businessName gender  country',
+            limit: 10,
+            sort: { created_At: -1 },
+            select: 'userType email name status mobile_no address businessName gender',
+            lean: false
+        }
+        userSchema.paginate(obj,options,(err, data)=> {
             if (err) {
                 return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.INTERNAL_SERVER_ERROR);
             } 
@@ -472,7 +483,7 @@ module.exports = {
                 return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND);     
             }
               // console.log("dat", data)
-                Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, resMessage.SUCCESSFULLY_DONE, data)
+              Response.sendResponseWithPagination(res, resCode.EVERYTHING_IS_OK, resMessage.SUCCESSFULLY_DONE, data.docs, { total: data.total, limit: data.limit, currentPage: data.page, totalPage: data.pages });
             
         })
     },
