@@ -760,7 +760,7 @@ textarea{resize: none;}
 .btn-common{min-width:100px;}
 input.search-input[type="text"]{border-radius: 18px!important;padding-left:40px!important;padding-right: 31px!important}
 .btn-right{text-align:right;}
-.search-icon{position:relative;width: auto;}
+.search-icon{position:relative;    width: 262px;}
 .search-icon i {position: absolute;left: 12px;top: 9px;font-size: 16px;color: #777;}
 .label-right{text-align:right;}
 .label-top{padding-top:6px;}
