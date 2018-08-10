@@ -897,7 +897,7 @@ var DashboardComponent = /** @class */ (function () {
     DashboardComponent.prototype.getAllCustomer = function () {
         var _this = this;
         this.service.getApi("admin/getAllCustomer/" + this.pageNo, 1).subscribe(function (response) {
-            console.log('res');
+            // console.log('res')
             if (response['response_code'] == 200) {
                 console.log(' Customer data found successfully', response);
                 _this.customer = response["result"];
@@ -1608,11 +1608,11 @@ var LoginComponent = /** @class */ (function () {
         console.log(loginData);
         this.service.postApi('user/login', loginData, 0).subscribe(function (response) {
             _this.responseData = response;
-            console.log("Pramod" + JSON.stringify(_this.responseData));
+            // console.log("Pramod"+JSON.stringify(this.responseData))
             // console.log(`Login Data====>${JSON.stringify(response)}`);
             if (response['response_code'] == 200) {
                 _this.service.showSuccess(response['response_message']);
-                console.log("success");
+                // console.log("success")
                 localStorage.setItem('token', _this.responseData.token);
                 localStorage.setItem('adminId', _this.responseData.result._id);
                 _this.router.navigate(['/dashboard']);
