@@ -1997,7 +1997,8 @@ var MainService = /** @class */ (function () {
     function MainService(http, toastr) {
         this.http = http;
         this.toastr = toastr;
-        this.baseUrl = 'http://172.16.6.74:8000/api/v1/';
+        //  baseUrl =  'http://172.16.6.74:8000/api/v1/';
+        this.baseUrl = 'http://ec2-52-76-162-65.ap-southeast-1.compute.amazonaws.com:1406/api/v1/';
     }
     MainService.prototype.postApi = function (url, data, isHeader) {
         console.log("entered in post api ");
