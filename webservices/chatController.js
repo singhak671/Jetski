@@ -17,7 +17,7 @@ module.exports = {
     User.findOne({_id:req.body.customerId,_id:req.body.businesssManId,status:"ACTIVE"}, (err, success) => {
                 if (err)
                     return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG);
-                else if (!success)
+                else if (success==false)
                         return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "UserId Not found");
                     else
                         eventSchema.findOne({_id:req.body.eventId,status:"ACTIVE"},(err,success2)=>{
@@ -45,7 +45,7 @@ module.exports = {
     if(!req.body.eventId || !req.body.businesssManId || !req.body.customerId )
     return response.sendResponseWithoutData(res, responseCode.BAD_REQUEST, "Please provide all required fields !");
         else
-        chatSchema.findOne({ businesssManId: req.body.businesssManId, customerId: req.body.customerId, eventId: req.body.eventId }).populate("message.senderId","_id name profilePic").exec((err, succ) => {
+        chatSchema.findOne({ businesssManId: req.body.businesssManId, customerId: req.body.customerId, eventId: req.body.eventId  ,status:"ACTIVE"  }).populate("message.senderId","_id name profilePic").exec((err, succ) => {
             if (err)
                 return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG);
             if (succ ==false)

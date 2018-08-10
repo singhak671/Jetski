@@ -420,16 +420,22 @@ module.exports = {
             // select: 'status  eventPrice  eventStatus  eventCreated_At  _id   eventName eventAddress eventDescription eventImage  ',
             limit: 10,
             sort: { eventCreated_At: -1 },
-            lean: false,
-            populate: [{ path: 'eventId.userId', select: 'profilePic  name' },{path:"eventId",select: "status  eventCreated_At _id  eventName eventAddress eventDescription eventPrice eventImage createdAt"}]
+            lean: true,
+            populate: [{ path: 'businessManId', select: 'profilePic  name' },{path:"eventId",select: "status  eventCreated_At _id eventName eventAddress eventDescription eventPrice eventImage createdAt"}]
 
         }
         booking.paginate(query, options, (err_1, result) => {
             if (err_1)
                 return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
-            if (!result)
+            if (result==false)
                 return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found")
-            else
+            else{
+                // for(let data of result){
+                //     data.userId=data.businessManId;
+                //     delete result["businessManId"];
+                // }
+                
+                
                 // eventSchema.paginate(query, options, (error, result) => {
                 //     if (error)
                 //         return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
@@ -438,7 +444,7 @@ module.exports = {
                 //     else
                         response.sendResponseWithPagination(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result.docs, { total: result.total, limit: result.limit, currentPage: result.page, totalPage: result.pages });
                 
-        })
+        }})
     },
 
     "filterEventsPending": (req, res) => {
@@ -455,7 +461,7 @@ module.exports = {
         booking.paginate(query, options, (err_1, result) => {
             if (err_1)
                 return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
-            if (!result)
+            if (result==false)
                 return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found")
             else {
                 response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result)
@@ -662,7 +668,7 @@ module.exports = {
         let weekArray = [];
         let monthlyArray = [];
 
-        eventSchema.findOne({ _id: req.body.userId }, (err, success) => {
+        eventSchema.findOne({ _id: req.body.userId ,status:"ACTIVE" }, (err, success) => {
             if (err)
                 return response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.");
             if (!success)
