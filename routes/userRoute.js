@@ -9,16 +9,16 @@ const User= require('../webservices/userController');
 router.post('/signup',User.signup);
 router.post('/login',User.login);
 router.get('/viewUserDetail',authHandler.verifyToken,User.viewUserDetail);
-router.get('/viewDetail/:_id',User.viewDetail);//by Admin panel
+router.get('/viewDetail/:_id',authHandler.verifyToken,User.viewDetail);//by Admin panel
 router.post('/editUser',authHandler.verifyToken,User.editUser);
-router.post('/edit',User.edit)//by Admin panel
+router.post('/edit',authHandler.verifyToken,User.edit)//by Admin panel
 router.post('/forgotPassword', User.forgotPassword);
 router.post('/changePassword',authHandler.verifyToken, User.changePassword);
-router.post('/deleteUser',User.deleteUser);//by Admin panel
-router.post('/blockUser',User.blockUser);//by Admin panel
-router.get('/getAllCustomer/:pageNumber',User.getAllCustomer);//by Admin panel
-router.get('/getAllBusiness/:pageNumber',User.getAllBusiness);//by Admin panel
-router.post('/searchCustomerFilter',User.searchCustomerFilter);//by Admin panel
+router.post('/deleteUser',authHandler.verifyToken,User.deleteUser);//by Admin panel
+router.post('/blockUser',authHandler.verifyToken,User.blockUser);//by Admin panel
+router.get('/getAllCustomer/:pageNumber',authHandler.verifyToken,User.getAllCustomer);//by Admin panel
+router.get('/getAllBusiness/:pageNumber',authHandler.verifyToken,User.getAllBusiness);//by Admin panel
+router.post('/searchCustomerFilter',authHandler.verifyToken,User.searchCustomerFilter);//by Admin panel
 
  
 

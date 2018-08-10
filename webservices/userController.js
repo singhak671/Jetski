@@ -311,7 +311,7 @@ module.exports = {
                     console.log("Replace password is >>", hash);
                     var newvalues = { $set: { password: hash } };
                     console.log("hass>>>>>>", hash);
-                    userSchema.findOneAndUpdate({ email: req.body.email, status: "ACTIVE" }, newvalues, (err, success) => {
+                    userSchema.findOneAndUpdate({ email: req.body.email,status: "ACTIVE" }, newvalues, (err, success) => {
                         if (err)
                             return Response.sendResponseWithoutData(res, resCode.BAD_REQUEST.resMessage.WENT_WRONG);
                         if (!success)

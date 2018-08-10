@@ -421,7 +421,7 @@ module.exports = {
             limit: 10,
             sort: { eventCreated_At: -1 },
             lean: false,
-            populate: [{ path: 'userId', select: 'profilePic name' },{path:"eventId",select: "status  eventCreated_At _id  eventName eventAddress eventDescription eventPrice eventImage createdAt"}]
+            populate: [{ path: 'eventId.userId', select: 'profilePic  name' },{path:"eventId",select: "status  eventCreated_At _id  eventName eventAddress eventDescription eventPrice eventImage createdAt"}]
 
         }
         booking.paginate(query, options, (err_1, result) => {
@@ -804,7 +804,7 @@ module.exports = {
     },
 
 
-    //////////////////////////////////  My all booking in app        /////////////////////////////
+    //////////////////////////////////  oo all booking in app        /////////////////////////////
 
 }
 

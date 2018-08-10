@@ -448,14 +448,13 @@ div.dataTables_wrapper div.dataTables_info {
 }
 .copyrights {
     width: 100%;
-    position: absolute;
+    position: fixed;
     bottom: 0px;
     font-size: 14px;
     height: 45px;
     line-height: 45px;
     text-align: center;
-    background: #153469
-;
+    background: #153469;z-index:99;
     color: #fff;
     border-top: 1px solid #d2d6de;
 }
@@ -818,7 +817,8 @@ input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill {back
 }
 
 
-
+.mainbox.main-modify{position: initial;top:auto;left:auto;}
+.main-modify .right-section{min-height:calc(100vh - 60px);}
 
 
 

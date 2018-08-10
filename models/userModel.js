@@ -99,7 +99,9 @@ socialId:{type: String},
         expiryDate:{Date}
     },
 
-    profilePic:String,
+    profilePic:{
+        type:String,
+        default:"http://res.cloudinary.com/dhp4gnyyd/image/upload/v1516084496/ptxhxz72rldohuap7k3g.png"},
 
     dateOfBirth:
         {type:Object},
