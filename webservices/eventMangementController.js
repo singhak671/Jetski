@@ -13,7 +13,7 @@ const waterfall = require('async-waterfall')
 //var userSchema = require("../models/userModel");
 moment().format();
 
-function joinDateTime(d, t) {
+function joinDateTime(d, t,offset) {
     // console.log('d==>>', d + " t==>>>"+t);
     var dateString = d + " " + t,
         dateTimeParts = dateString.split(' '),
@@ -28,14 +28,14 @@ function joinDateTime(d, t) {
 
     //     console.log(date.getTime()); //1379426880000
     //     console.log(date);
-    var finalObj = { dateTime:(date.getTime() *1000)}
+    var finalObj = { dateTime:(date.getTime() *1000)-offset}
     return finalObj;
 }
 
 function validateEvent(duration) {
     var eventShowTimeArr = [];
     duration.map(x =>
-        x.times.map(y => eventShowTimeArr.push(joinDateTime(x.date.formatted, y.time)))
+        x.times.map(y => eventShowTimeArr.push(joinDateTime(x.date.formatted, y.time,offset)))
     )
 
     var currentTime = new Date().getTime();
@@ -47,21 +47,21 @@ function validateEvent(duration) {
         return true;
     }
 }
-function validateLatestEvent(duration) {
-    var eventShowTimeArr = [];
-    duration.map(x =>
-        x.times.map(y => eventShowTimeArr.push(joinDateTime(x.date.formatted, y.time)))
-    )
+// function validateLatestEvent(duration) {
+//     var eventShowTimeArr = [];
+//     duration.map(x =>
+//         x.times.map(y => eventShowTimeArr.push(joinDateTime(x.date.formatted, y.time)))
+//     )
 
-    var currentTime = new Date().getTime();
-    var index = eventShowTimeArr.findIndex(z => (z.dateTime - currentTime) <= 0);
+//     var currentTime = new Date().getTime();
+//     var index = eventShowTimeArr.findIndex(z => (z.dateTime - currentTime) <= 0);
 
-    if (index != -1) {
-        return false;
-    } else {
-        return true;
-    }
-}
+//     if (index != -1) {
+//         return false;
+//     } else {
+//         return true;
+//     }
+// }
 
 
 module.exports = {
@@ -94,7 +94,7 @@ module.exports = {
                     var business = new eventSchema(req.body)
 
                     var durationArr = business.duration;
-                    var valid = validateEvent(durationArr);
+                    var valid = validateEvent(durationArr,req.body.offset);
                     if (!valid) {
                         // console.log("@@@@@@@@@@@@@@@@@.")
                         return response.sendResponseWithData(res, responseCode.NOT_FOUND, "Please provide correct duration time");
