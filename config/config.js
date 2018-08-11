@@ -28,6 +28,17 @@ module.exports = config_function;
 
 
 
+// 1.API of login with nodejs Authentication 	
+// 2..Bug resolve 
+// 3.Add event time duration bug solve
+// ac9351274ed99c185f2ae10c00284724b3ce206e
+
+
+// https://drive.google.com/file/d/1EUsVU8pOB8Z_LTc9kmjS7TZLG8Rpc5Xw/view
+// https://www.flinto.com/p/2651545d
+
+
+
 
 // function joinDateTime(d, t) {
 //   // console.log('d==>>', d + " t==>>>"+t);
