@@ -430,11 +430,8 @@ module.exports = {
 
 
     
-    searchCustomerFilter: (req, res) => {
-        console.log("anurag##################",req.body);
-
-      
-        
+    "searchCustomerFilter": (req, res) => {
+ 
         var value = new RegExp('^' + req.body.search, "i")
         var obj
         if (req.body.search && req.body.status) {

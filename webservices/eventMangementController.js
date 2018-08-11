@@ -337,6 +337,32 @@ module.exports = {
     // },
 
 
+    'latestEvents': (req, res) => {
+        //console.log("get al customer")
+        var durationArr = [];
+        var query = {};
+        let options = {
+        // page: req.params.pageNumber,
+        select: 'period eventAddress eventCreated_At eventImage duration eventName status eventDescription eventPrice ',
+        limit: 5,
+        sort: { eventCreated_At: -1 },
+        populate: { path: 'userId', select: 'profilePic name' },
+        lean: false
+        }
+        //success
+        eventSchema.paginate(query, options, (error, result) => {
+        if (error)
+        response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR)
+        else if (result.docs.length == 0)
+        response.sendResponseWithData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND)
+        else {
+        console.log("result is" + JSON.stringify(result))
+        response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result)
+
+        }
+        })
+        },
+
 
     //-------------------------------------------------------------------------------My Event at business site after login for myBooking App -----------------------------------------------------------------//
 
