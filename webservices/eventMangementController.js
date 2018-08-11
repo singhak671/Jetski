@@ -28,7 +28,7 @@ function joinDateTime(d, t) {
 
     //     console.log(date.getTime()); //1379426880000
     //     console.log(date);
-    var finalObj = { dateTime: date.getTime() }
+    var finalObj = { dateTime:(date.getTime() *1000)}
     return finalObj;
 }
 
@@ -38,7 +38,7 @@ function validateEvent(duration) {
         x.times.map(y => eventShowTimeArr.push(joinDateTime(x.date.formatted, y.time)))
     )
 
-    var currentTime =( new Date().getTime())*1000;
+    var currentTime = new Date().getTime();
     var index = eventShowTimeArr.findIndex(z => (z.dateTime - currentTime) <= 0);
 
     if (index != -1) {
@@ -291,6 +291,7 @@ module.exports = {
     //             // response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result);
     //             waterfall([
     //                 function (callback) {
+    //                     console.log('result is =======================================>',result);
     //                 for (var i = 0; i < result.docs.length;) {
     //                     var event_date=(result.docs[i].date.epoc)*1000;
     //                     var current_date=Time_stamp;
