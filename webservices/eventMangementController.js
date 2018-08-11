@@ -28,11 +28,11 @@ function joinDateTime(d, t,offset) {
 
     //     console.log(date.getTime()); //1379426880000
     //     console.log(date);
-    var finalObj = { dateTime:(date.getTime() *1000)-offset}
+    var finalObj = { dateTime:(date.getTime()) + offset}
     return finalObj;
 }
 
-function validateEvent(duration) {
+function validateEvent(duration,offset) {
     var eventShowTimeArr = [];
     duration.map(x =>
         x.times.map(y => eventShowTimeArr.push(joinDateTime(x.date.formatted, y.time,offset)))
