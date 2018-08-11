@@ -45,10 +45,10 @@ module.exports = {
     if(!req.body.eventId || !req.body.businesssManId || !req.body.customerId )
     return response.sendResponseWithoutData(res, responseCode.BAD_REQUEST, "Please provide all required fields !");
         else
-        chatSchema.findOne({ businesssManId: req.body.businesssManId, customerId: req.body.customerId, eventId: req.body.eventId  ,status:"ACTIVE"  }).populate("message.senderId","_id name profilePic").exec((err, succ) => {
+        chatSchema.findOne({ businesssManId: req.body.businesssManId, customerId: req.body.customerId, eventId: req.body.eventId  }).populate("message.senderId","_id name profilePic").exec((err, succ) => {
             if (err)
                 return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG);
-            if (succ ==false)
+            if (!succ)
                 return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found!");
             else if (succ) {
                 response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, succ);

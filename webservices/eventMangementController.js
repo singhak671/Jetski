@@ -38,6 +38,21 @@ function validateEvent(duration) {
         x.times.map(y => eventShowTimeArr.push(joinDateTime(x.date.formatted, y.time)))
     )
 
+    var currentTime =( new Date().getTime())*1000;
+    var index = eventShowTimeArr.findIndex(z => (z.dateTime - currentTime) <= 0);
+
+    if (index != -1) {
+        return false;
+    } else {
+        return true;
+    }
+}
+function validateLatestEvent(duration) {
+    var eventShowTimeArr = [];
+    duration.map(x =>
+        x.times.map(y => eventShowTimeArr.push(joinDateTime(x.date.formatted, y.time)))
+    )
+
     var currentTime = new Date().getTime();
     var index = eventShowTimeArr.findIndex(z => (z.dateTime - currentTime) <= 0);
 
@@ -54,6 +69,7 @@ module.exports = {
 
     'addEvent': (req, res) => {
         // console.log("addddddddddddd", req.body);
+        console.log("***@@@@@@@@@@@@@@@@",req.body);
 
         if (!req.body) {
             return response.sendResponseWithoutData(res, responseCode.SOMETHING_WENT_WRONG, responseMessage.REQUIRED_DATA);
@@ -80,11 +96,11 @@ module.exports = {
                     var durationArr = business.duration;
                     var valid = validateEvent(durationArr);
                     if (!valid) {
-                        console.log("Please madam sahi data bhej do.")
+                        // console.log("@@@@@@@@@@@@@@@@@.")
                         return response.sendResponseWithData(res, responseCode.NOT_FOUND, "Please provide correct duration time");
                     }
                     else {
-                        console.log("Wahh Gauri Ma'am ab sahi data bheji ho.")
+                        // console.log("&&&&&&&&&&&&&&&&&&&&&.")
                         business.save((err2, createEvent) => {
                             if (err2) {
                                 console.log("business added error>>>>>>>>>>>", err2)
@@ -110,32 +126,36 @@ module.exports = {
     },
 
 
-    'latestEvent': (req, res) => {
-        //console.log("get al customer")
-        var query = {};
-        let options = {
-            // page: req.params.pageNumber,
-            select: 'period eventAddress eventCreated_At eventImage duration eventName status eventDescription eventPrice ',
-            limit: 5,
-            sort: { eventCreated_At: -1 },
-            //password:0,
-            lean: false,
-            populate: { path: 'userId', select: 'profilePic name' },
-        }
-        //success
-        eventSchema.paginate(query, options, (error, result) => {
-            if (error)
-                response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR)
-            else if (result.docs.length == 0)
-                response.sendResponseWithData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND)
-            else {
-                console.log("result is" + JSON.stringify(result))
-                result.docs.map(x => delete x['password'])
-                response.sendResponseWithPagination(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result);
-            }
-        })
-        // })
-    },
+    // 'latestEvent': (req, res) => {
+    //     var current_time = new Date().getTime / 1000;
+    //     console.log("#########",current_time);
+    //     //console.log("get al customer")
+    //     var query = {'duration.date.epoc':{
+    //         $gte:current_time
+    //     }};
+    //     let options = {
+    //         // page: req.params.pageNumber,
+    //         select: 'period eventAddress eventCreated_At eventImage duration eventName status eventDescription eventPrice ',
+    //         limit: 5,
+    //         sort: { eventCreated_At: -1 },
+    //         //password:0,
+    //         lean: false,
+    //         populate: { path: 'userId', select: 'profilePic name' },
+    //     }
+    //     //success
+    //     eventSchema.paginate(query, options, (error, result) => {
+    //         if (error)
+    //             response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR)
+    //         else if (result.docs.length == 0)
+    //             response.sendResponseWithData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND)
+    //         else {
+    //             console.log("result is" + JSON.stringify(result))
+    //             result.docs.map(x => delete x['password'])
+    //             response.sendResponseWithPagination(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result);
+    //         }
+    //     })
+    //     // })
+    // },
 
 
 
@@ -152,12 +172,7 @@ module.exports = {
             lean: false,
             //populate: { path: 'userId', select: 'profilePic name' },
         }
-        //success
-        // User.findById(req.body.userId, (err4, succ) => {
-        //     if (err4)
-        //         return response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.");
-        //     if (!succ)
-        //         return response.sendResponseWithData(res, responseCode.NOT_FOUND, "UserId not found");
+       
         eventSchema.paginate(query, options, (error, result) => {
             if (error)
                 response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR)
@@ -235,34 +250,90 @@ module.exports = {
 
     },
 
-    //-------------------------------------------------------------------------------alllatestEvent for app site----------------------------------------------------------------//
+    //-------------------------------------------------------------------------------alllatestEvent for app site as well as business website----------------------------------------------------------------//
 
 
-    'latestEvents': (req, res) => {
-        //console.log("get al customer")
-        var query = {};
-        let options = {
-            // page: req.params.pageNumber,
-            select: 'period eventAddress eventCreated_At eventImage duration eventName status eventDescription eventPrice ',
-            limit: 5,
-            sort: { eventCreated_At: -1 },
-            populate: { path: 'userId', select: 'profilePic name' },
-            lean: false
-        }
-        //success
-        eventSchema.paginate(query, options, (error, result) => {
-            if (error)
-                response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR)
-            else if (result.docs.length == 0)
-                response.sendResponseWithData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND)
-            else {
-                console.log("result is" + JSON.stringify(result))
-                result.docs.map(x => delete x['password'])
-                response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result);
-            }
-        })
-        // })
-    },
+    // 'latestEvents': (req, res) => {
+    //     var durationArr=[];
+    //     var current_time = new Date().getTime()/1000;
+    //     console.log("#########",current_time);
+    //     //console.log("get al customer")
+    //     // var query = {'duration.date.epoc':{
+    //     //     $gte:current_time
+    //     // }};
+    //     var TempDate=Date.now();
+    //     var date = new Date();
+    //     var newDate = date.toJSON()
+    //     var array = newDate.split("T")[0];
+    //     var newDate1 = array + " 00:00:00"//2018-08-11
+    //     var d = new Date(newDate1)
+    //     var Time_stamp = d.getTime(); //1533925800000
+    //     var query={};
+    //     let options = {
+    //         // page: req.params.pageNumber,
+    //         select: 'period eventAddress eventCreated_At eventImage duration eventName status eventDescription eventPrice ',
+    //         limit: 5,
+    //         sort: { eventCreated_At: -1 },
+    //         populate: { path: 'userId', select: 'profilePic name' },
+    //         lean: false
+    //     }
+    //     //success
+    //     eventSchema.paginate(query, options, (error, result) => {
+    //         if (error)
+    //             response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR)
+    //         else if (result.docs.length == 0)
+    //             response.sendResponseWithData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND)
+    //         else {
+              
+
+    //             // console.log("result is" + JSON.stringify(result))
+    //             // result.docs.map(x => delete x['password'])
+    //             // response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result);
+    //             waterfall([
+    //                 function (callback) {
+    //                 for (var i = 0; i < result.docs.length;) {
+    //                     var event_date=(result.docs[i].date.epoc)*1000;
+    //                     var current_date=Time_stamp;
+
+    //                     if(event_date>=current_date)
+    //                     {
+    //                         for(var j=0;j<result.docs[i].times.length;)
+    //                         {
+    //                         let date = result.docs[i].times[j];
+    //                         let newDate = date.toJSON()
+    //                         let array = newDate.split("T")[1];
+    //                         var temp_value=temp_array.split(".")["0"]
+    //                         var a=temp_value.split(":")[0]
+    //                         var b=temp_value.split(":")[1]
+    //                         var c=String(a+":"+b);
+    //                         console.log('Current date in ISO',c);
+    //                         var final_date=array+' '+c;
+    //                         console.log('Final Date is',final_date);
+    //                         if(TempDate>=final_date)
+    //                         {
+    //                             durationArr.push(result.docs[i].times[j]);
+    //                             j++;
+    //                         }    
+    //                         else
+    //                         j++;
+
+
+                                
+
+    //                         }
+    //                     }
+                        
+
+    //                 }
+    //                 callback();
+    //                 }
+    //                 ], (err, result) => {
+    //                 response.sendResponseWithData(res, responseCode.SUCCESSFULLY_DONE, durationArr);
+    //                 })
+    //         }
+    //     })
+    //     // })
+    // },
 
 
 
@@ -286,8 +357,8 @@ module.exports = {
             // model:"Businesses",
             match: query,
             select: 'eventAddress duration  eventImage eventName eventDescription period eventPrice ',
-
-        }).sort({ created_At: -1 }).limit(limit).skip(limit * (page - 1)).exec((error, result) => {
+           
+        }).sort({ createdAt: -1 }).limit(limit).skip(limit * (page - 1)).exec((error, result) => {
             if (error) {
                 console.log("err-->" + error)
                 response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR)
@@ -359,7 +430,7 @@ module.exports = {
             populate: [{ path: "eventId", select: "status eventStatus  eventCreated_At _id period eventName eventAddress eventDescription eventImage eventPrice createdAt" },
             { path: "userId", select: "profilePic name" }],
             //select: 'status eventStatus duration eventCreated_At _id userId period eventName eventAddress eventDescription eventImage createdAt updatedAt',
-            limit: req.body.limit || 10,
+            limit: req.body.limit || 50,
             sort: { eventCreated_At: -1 },
             lean: false
         }
@@ -390,7 +461,7 @@ module.exports = {
             populate: [{ path: "eventId", select: "status eventStatus  eventCreated_At _id period eventName eventAddress eventDescription eventPrice eventImage " },
             { path: "userId", select: "profilePic name" }],
             //select: 'status eventStatus duration eventCreated_At _id userId period eventName eventAddress eventDescription eventImage createdAt updatedAt',
-            limit: req.body.limit || 10,
+            limit: req.body.limit || 50,
             sort: { eventCreated_At: -1 },
             lean: false
         }
@@ -427,7 +498,7 @@ module.exports = {
         booking.paginate(query, options, (err_1, result) => {
             if (err_1)
                 return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
-            if (result==false)
+            if (result==undefined)
                 return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found")
             else{
                 // for(let data of result){
@@ -461,7 +532,7 @@ module.exports = {
         booking.paginate(query, options, (err_1, result) => {
             if (err_1)
                 return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
-            if (result==false)
+            if (result==false || result==undefined)
                 return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found")
             else {
                 response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result)
