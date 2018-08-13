@@ -47,21 +47,7 @@ function validateEvent(duration,offset) {
         return true;
     }
 }
-// function validateLatestEvent(duration) {
-//     var eventShowTimeArr = [];
-//     duration.map(x =>
-//         x.times.map(y => eventShowTimeArr.push(joinDateTime(x.date.formatted, y.time)))
-//     )
 
-//     var currentTime = new Date().getTime();
-//     var index = eventShowTimeArr.findIndex(z => (z.dateTime - currentTime) <= 0);
-
-//     if (index != -1) {
-//         return false;
-//     } else {
-//         return true;
-//     }
-// }
 
 
 module.exports = {
@@ -340,13 +326,14 @@ module.exports = {
     'latestEvents': (req, res) => {
         //console.log("get al customer")
         var durationArr = [];
-        var query = {};
+        var query = {status:"ACTIVE"};
         let options = {
         // page: req.params.pageNumber,
-        select: 'period eventAddress eventCreated_At eventImage duration eventName status eventDescription eventPrice ',
+        select: 'period eventAddress eventCreated_At eventImage offset duration eventName status eventDescription eventPrice ',
         limit: 5,
+        // match:{query},
         sort: { eventCreated_At: -1 },
-        populate: { path: 'userId', select: 'profilePic name' },
+        populate: { path: 'userId', select: 'profilePic name' ,match:{status:"ACTIVE"}},
         lean: false
         }
         //success
@@ -410,7 +397,7 @@ module.exports = {
 
     //------------------------------------------------------------------------------- API for Filter location in app   -----------------------------------------------------------------//
     "eventLocation": (req, res) => {
-        eventSchema.distinct("eventAddress", (error, result) => {
+        eventSchema.distinct("eventAddress",{status:"ACTIVE"}, (error, result) => {
             console.log("==", result.length)
             var jsonObj = [];
             for (var i = 0; i < result.length; i++) {
@@ -432,7 +419,7 @@ module.exports = {
         var temp_data = {};
         console.log("array=====>>>", req.body)
         let list = req.body.eventAddress.map((x) => x.eventAddress)
-        let query = { eventAddress: { $in: list } }
+        let query = { eventAddress: { $in: list } ,status:"ACTIVE"}
         eventSchema.find(query).populate("userId", { name: 1, profilePic: 1 }).exec((error, result) => {
             if (error)
                 response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)

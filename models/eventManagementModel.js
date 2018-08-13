@@ -61,6 +61,10 @@ const business = mongoose.Schema({
         type:String
     },
 
+    offset:{
+     type:Number
+    },
+    
     bookingId:{
         type: Schema.Types.ObjectId
     }

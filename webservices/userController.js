@@ -43,7 +43,7 @@ module.exports = {
                                 } else {
                                     var result = result.toObject();
                                     delete result.password;
-                                    Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "You have successfully signup.",result)
+                                    Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "You have successfully signup.", result)
                                     //  message.sendemail(result.email, "Your account for AQUA_LUDUS is created.", "Your email id is "+result.email+" and password is"+retVal, (err,success)=>{
                                     //     if(success)
                                     //     {
@@ -251,7 +251,50 @@ module.exports = {
         })
     },
 
-    //...............................................................Block/Active User Api for both................................................................................//
+    // "blockUser": (req, res) => {
+    //     userSchema.findById({ _id: req.body._id }).exec(function (err, data) {
+    //         if (err) {
+    //             console.log("@@@@@@@", err)
+    //             Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
+    //         }
+    //         else if (!data)
+    //             Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
+    //         else {
+    //             if (data.status == 'ACTIVE') {
+    //                 userSchema.findByIdAndUpdate({ _id: req.body._id }, { $set: { status: "BLOCK" } }, { new: true }, (error, result) => {
+    //                     if (error) {
+    //                         console.log("@@@@@@@", error)
+    //                       return  Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
+    //                     }
+    //                     else if (!result)
+    //                        return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
+    //                     else {
+
+    //                         Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "User is successfully blocked. ", result)
+    //                     }
+    //                 })
+    //             }
+    //             else if (data.status == 'BLOCK') {
+    //                 userSchema.findByIdAndUpdate({ _id: req.body._id }, { $set: { status: "ACTIVE" } }, { new: true }, (errr, result1) => {
+    //                     if (errr) {
+    //                         Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
+    //                     }
+    //                     else if (!result1)
+    //                         Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
+    //                     else {
+    //                         Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "User is active successfully . ", result1)
+    //                     }
+    //                 })
+    //             }
+
+    //         }
+
+    //     })
+
+
+    // },
+
+    // ...............................................................Block/Active User Api for both................................................................................//
 
     "blockUser": (req, res) => {
         userSchema.findById({ _id: req.body._id }).exec(function (err, data) {
@@ -266,11 +309,28 @@ module.exports = {
                     userSchema.findByIdAndUpdate({ _id: req.body._id }, { $set: { status: "BLOCK" } }, { new: true }, (error, result) => {
                         if (error) {
                             console.log("@@@@@@@", error)
-                            Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
+                            return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
                         }
                         else if (!result)
-                            Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
+                            return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, " NOT_FOUND")
                         else {
+
+                            userSchema.findOne({})
+                                .populate({ path: "services[0].eventId" },
+                                    { $set: { status: "BLOCK" } }),
+                                { new: true }, (err2, result2) => {
+                                    if (err2) {
+                                        console.log("@@@@@@@", error)
+                                        return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
+                                    }
+                                    // else if (!result2)
+                                    //     return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
+                                    else
+                                    consolelog("eventBlock>>>>>>>>>>>>>>>>>>>",result2)
+                                        return Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "User is successfully blocked. ", result2)
+
+                                }
+
                             Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "User is successfully blocked. ", result)
                         }
                     })
@@ -283,7 +343,23 @@ module.exports = {
                         else if (!result1)
                             Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
                         else {
-                            Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "User is active successfully . ", result1)
+
+                            userSchema.findOne({ _id: req.body._id })
+                                .populate({ path: "services.eventId" },
+                                    { $set: { status: "ACTIVE" } }),
+
+                                { new: true }, (err3, result3) => {
+                                    if (err3) {
+                                        console.log("@@@@@@@", error)
+                                        return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
+                                    }
+
+                                    if (result)
+                                        return Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "User is successfully blocked. ", result2)
+
+                                }
+
+                            return Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "User is active successfully . ", result1)
                         }
                     })
                 }
@@ -311,7 +387,7 @@ module.exports = {
                     console.log("Replace password is >>", hash);
                     var newvalues = { $set: { password: hash } };
                     console.log("hass>>>>>>", hash);
-                    userSchema.findOneAndUpdate({ email: req.body.email,status: "ACTIVE" }, newvalues, (err, success) => {
+                    userSchema.findOneAndUpdate({ email: req.body.email, status: "ACTIVE" }, newvalues, (err, success) => {
                         if (err)
                             return Response.sendResponseWithoutData(res, resCode.BAD_REQUEST.resMessage.WENT_WRONG);
                         if (!success)
@@ -429,59 +505,59 @@ module.exports = {
     },
 
 
-    
+
     "searchCustomerFilter": (req, res) => {
- 
+
         var value = new RegExp('^' + req.body.search, "i")
         var obj
         if (req.body.search && req.body.status) {
             obj = {
-                $or: [{ $and: [{ status: req.body.status }, { userType: req.body.userType }, { name: value }] }, { $and: [{ status: req.body.status }, {  userType: req.body.userType }, { email: value }] }]
+                $or: [{ $and: [{ status: req.body.status }, { userType: req.body.userType }, { name: value }] }, { $and: [{ status: req.body.status }, { userType: req.body.userType }, { email: value }] }]
             }
         }
 
         else if (!req.body.search && req.body.status) {
             obj = {
-                $and: [{ status: req.body.status }, {  userType: req.body.userType }]
+                $and: [{ status: req.body.status }, { userType: req.body.userType }]
             }
         }
-        else if(req.body.userType && !req.body.status && !req.body.search) {
+        else if (req.body.userType && !req.body.status && !req.body.search) {
             console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% ")
-            obj = {status:{$in:["ACTIVE", "BLOCK"]},userType:req.body.userType}
+            obj = { status: { $in: ["ACTIVE", "BLOCK"] }, userType: req.body.userType }
             //    {"status":"ACTIVE" || "BLOCK"}
-                // $and: [{ name: req.body.search},{email: req.body.search} ,{userType: 'CUSTOMER' }]
+            // $and: [{ name: req.body.search},{email: req.body.search} ,{userType: 'CUSTOMER' }]
 
         }
-        else if(req.body.userType && req.body.search) {
+        else if (req.body.userType && req.body.search) {
             console.log("&&&&&&&&&&&&&&&&&&&& ")
-            obj =  { 
-                $or: [ {status:{$in:["ACTIVE", "BLOCK"]},userType:req.body.userType, name: value }, { status:{$in:["ACTIVE", "BLOCK"]},userType:req.body.userType, email: value }]
+            obj = {
+                $or: [{ status: { $in: ["ACTIVE", "BLOCK"] }, userType: req.body.userType, name: value }, { status: { $in: ["ACTIVE", "BLOCK"] }, userType: req.body.userType, email: value }]
             }
-    }
+        }
         else {
-            obj = {                           
-                $or: [{ $and: [{  userType: req.body.userType }, { name: value }] }, { $and: [{  userType: req.body.userType }, { email: value }] }]
+            obj = {
+                $or: [{ $and: [{ userType: req.body.userType }, { name: value }] }, { $and: [{ userType: req.body.userType }, { email: value }] }]
                 // $and: [{ name: req.body.search},{email: req.body.search} ,{userType: 'CUSTOMER' }]
             }
         }
         let options = {
-            page: req.body.pageNumber ||1 ,
-           // select: 'userType email name status businessName gender  country',
+            page: req.body.pageNumber || 1,
+            // select: 'userType email name status businessName gender  country',
             limit: 10,
             sort: { created_At: -1 },
             select: 'userType email name status mobile_no address businessName gender',
             lean: false
         }
-        userSchema.paginate(obj,options,(err, data)=> {
+        userSchema.paginate(obj, options, (err, data) => {
             if (err) {
                 return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.INTERNAL_SERVER_ERROR);
-            } 
-            if(!data){
-                return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND);     
             }
-              // console.log("dat", data)
-              Response.sendResponseWithPagination(res, resCode.EVERYTHING_IS_OK, resMessage.SUCCESSFULLY_DONE, data.docs, { total: data.total, limit: data.limit, currentPage: data.page, totalPage: data.pages });
-            
+            if (!data) {
+                return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND);
+            }
+            // console.log("dat", data)
+            Response.sendResponseWithPagination(res, resCode.EVERYTHING_IS_OK, resMessage.SUCCESSFULLY_DONE, data.docs, { total: data.total, limit: data.limit, currentPage: data.page, totalPage: data.pages });
+
         })
     },
 
