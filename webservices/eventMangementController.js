@@ -13,7 +13,7 @@ const waterfall = require('async-waterfall')
 //var userSchema = require("../models/userModel");
 moment().format();
 
-function joinDateTime(d, t,offset) {
+function joinDateTime(d, t, offset) {
     // console.log('d==>>', d + " t==>>>"+t);
     var dateString = d + " " + t,
         dateTimeParts = dateString.split(' '),
@@ -28,14 +28,16 @@ function joinDateTime(d, t,offset) {
 
     //     console.log(date.getTime()); //1379426880000
     //     console.log(date);
-    var finalObj = { dateTime:(date.getTime()) + offset}
+    var n = (new Date().getTimezoneOffset())*60000;
+    offset = n - offset;
+    var finalObj = { dateTime: (date.getTime()) - offset }
     return finalObj;
 }
 
-function validateEvent(duration,offset) {
+function validateEvent(duration, offset) {
     var eventShowTimeArr = [];
     duration.map(x =>
-        x.times.map(y => eventShowTimeArr.push(joinDateTime(x.date.formatted, y.time,offset)))
+        x.times.map(y => eventShowTimeArr.push(joinDateTime(x.date.formatted, y.time, offset)))
     )
 
     var currentTime = new Date().getTime();
@@ -55,7 +57,7 @@ module.exports = {
 
     'addEvent': (req, res) => {
         // console.log("addddddddddddd", req.body);
-        console.log("***@@@@@@@@@@@@@@@@",req.body);
+        console.log("***@@@@@@@@@@@@@@@@", req.body);
 
         if (!req.body) {
             return response.sendResponseWithoutData(res, responseCode.SOMETHING_WENT_WRONG, responseMessage.REQUIRED_DATA);
@@ -80,7 +82,7 @@ module.exports = {
                     var business = new eventSchema(req.body)
 
                     var durationArr = business.duration;
-                    var valid = validateEvent(durationArr,req.body.offset);
+                    var valid = validateEvent(durationArr, req.body.offset);
                     if (!valid) {
                         // console.log("@@@@@@@@@@@@@@@@@.")
                         return response.sendResponseWithData(res, responseCode.NOT_FOUND, "Please provide correct duration time");
@@ -158,7 +160,7 @@ module.exports = {
             lean: false,
             //populate: { path: 'userId', select: 'profilePic name' },
         }
-       
+
         eventSchema.paginate(query, options, (error, result) => {
             if (error)
                 response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR)
@@ -216,142 +218,41 @@ module.exports = {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     },
 
     //-------------------------------------------------------------------------------alllatestEvent for app site as well as business website----------------------------------------------------------------//
 
 
-    // 'latestEvents': (req, res) => {
-    //     var durationArr=[];
-    //     var current_time = new Date().getTime()/1000;
-    //     console.log("#########",current_time);
-    //     //console.log("get al customer")
-    //     // var query = {'duration.date.epoc':{
-    //     //     $gte:current_time
-    //     // }};
-    //     var TempDate=Date.now();
-    //     var date = new Date();
-    //     var newDate = date.toJSON()
-    //     var array = newDate.split("T")[0];
-    //     var newDate1 = array + " 00:00:00"//2018-08-11
-    //     var d = new Date(newDate1)
-    //     var Time_stamp = d.getTime(); //1533925800000
-    //     var query={};
-    //     let options = {
-    //         // page: req.params.pageNumber,
-    //         select: 'period eventAddress eventCreated_At eventImage duration eventName status eventDescription eventPrice ',
-    //         limit: 5,
-    //         sort: { eventCreated_At: -1 },
-    //         populate: { path: 'userId', select: 'profilePic name' },
-    //         lean: false
-    //     }
-    //     //success
-    //     eventSchema.paginate(query, options, (error, result) => {
-    //         if (error)
-    //             response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR)
-    //         else if (result.docs.length == 0)
-    //             response.sendResponseWithData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND)
-    //         else {
-              
-
-    //             // console.log("result is" + JSON.stringify(result))
-    //             // result.docs.map(x => delete x['password'])
-    //             // response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result);
-    //             waterfall([
-    //                 function (callback) {
-    //                     console.log('result is =======================================>',result);
-    //                 for (var i = 0; i < result.docs.length;) {
-    //                     var event_date=(result.docs[i].date.epoc)*1000;
-    //                     var current_date=Time_stamp;
-
-    //                     if(event_date>=current_date)
-    //                     {
-    //                         for(var j=0;j<result.docs[i].times.length;)
-    //                         {
-    //                         let date = result.docs[i].times[j];
-    //                         let newDate = date.toJSON()
-    //                         let array = newDate.split("T")[1];
-    //                         var temp_value=temp_array.split(".")["0"]
-    //                         var a=temp_value.split(":")[0]
-    //                         var b=temp_value.split(":")[1]
-    //                         var c=String(a+":"+b);
-    //                         console.log('Current date in ISO',c);
-    //                         var final_date=array+' '+c;
-    //                         console.log('Final Date is',final_date);
-    //                         if(TempDate>=final_date)
-    //                         {
-    //                             durationArr.push(result.docs[i].times[j]);
-    //                             j++;
-    //                         }    
-    //                         else
-    //                         j++;
-
-
-                                
-
-    //                         }
-    //                     }
-                        
-
-    //                 }
-    //                 callback();
-    //                 }
-    //                 ], (err, result) => {
-    //                 response.sendResponseWithData(res, responseCode.SUCCESSFULLY_DONE, durationArr);
-    //                 })
-    //         }
-    //     })
-    //     // })
-    // },
-
 
     'latestEvents': (req, res) => {
         //console.log("get al customer")
-        var durationArr = [];
-        var query = {status:"ACTIVE"};
+        //var durationArr = [];
+        var query = { status: "ACTIVE" };
         let options = {
-        // page: req.params.pageNumber,
-        select: 'period eventAddress eventCreated_At eventImage offset duration eventName status eventDescription eventPrice ',
-        limit: 5,
-        // match:{query},
-        sort: { eventCreated_At: -1 },
-        populate: { path: 'userId', select: 'profilePic name' ,match:{status:"ACTIVE"}},
-        lean: false
+            // page: req.params.pageNumber,
+            select: 'period eventAddress eventCreated_At eventImage offset duration eventName status eventDescription eventPrice ',
+            // limit: 5,
+            // match:{query},
+            sort: { eventCreated_At: -1 },
+            populate: { path: 'userId', select: 'profilePic name status' },
+            lean: false
         }
         //success
         eventSchema.paginate(query, options, (error, result) => {
-        if (error)
-        response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR)
-        else if (result.docs.length == 0)
-        response.sendResponseWithData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND)
-        else {
-        console.log("result is" + JSON.stringify(result))
-        response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result)
+            if (error)
+                response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR)
+            else if (result.docs.length == 0)
+                response.sendResponseWithData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND)
+            else {
+                console.log("result is" + JSON.stringify(result))
+                response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result)
 
-        }
+            }
         })
-        },
+    },
 
 
-    //-------------------------------------------------------------------------------My Event at business site after login for myBooking App -----------------------------------------------------------------//
+    //-------------------------------------------------------------------------------My Event at business site after login  -----------------------------------------------------------------//
 
 
     'myAllEvents': (req, res) => {
@@ -371,7 +272,7 @@ module.exports = {
             // model:"Businesses",
             match: query,
             select: 'eventAddress duration  eventImage eventName eventDescription period eventPrice ',
-           
+
         }).sort({ createdAt: -1 }).limit(limit).skip(limit * (page - 1)).exec((error, result) => {
             if (error) {
                 console.log("err-->" + error)
@@ -397,7 +298,7 @@ module.exports = {
 
     //------------------------------------------------------------------------------- API for Filter location in app   -----------------------------------------------------------------//
     "eventLocation": (req, res) => {
-        eventSchema.distinct("eventAddress",{status:"ACTIVE"}, (error, result) => {
+        eventSchema.distinct("eventAddress", { status: "ACTIVE" }, (error, result) => {
             console.log("==", result.length)
             var jsonObj = [];
             for (var i = 0; i < result.length; i++) {
@@ -419,7 +320,7 @@ module.exports = {
         var temp_data = {};
         console.log("array=====>>>", req.body)
         let list = req.body.eventAddress.map((x) => x.eventAddress)
-        let query = { eventAddress: { $in: list } ,status:"ACTIVE"}
+        let query = { eventAddress: { $in: list }, status: "ACTIVE" }
         eventSchema.find(query).populate("userId", { name: 1, profilePic: 1 }).exec((error, result) => {
             if (error)
                 response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
@@ -499,37 +400,38 @@ module.exports = {
 
 
     "myBooking": (req, res) => {
-        var query = {userId: req.body.userId}
+        var query = { userId: req.body.userId }
         let options = {
             page: req.params.pagenumber || 1,
             // select: 'status  eventPrice  eventStatus  eventCreated_At  _id   eventName eventAddress eventDescription eventImage  ',
             limit: 10,
             sort: { eventCreated_At: -1 },
             lean: true,
-            populate: [{ path: 'businessManId', select: 'profilePic  name' },{path:"eventId",select: "status  eventCreated_At _id eventName eventAddress eventDescription eventPrice eventImage createdAt"}]
+            populate: [{ path: 'businessManId', select: 'profilePic  name' }, { path: "eventId", select: "status  eventCreated_At _id eventName eventAddress eventDescription eventPrice eventImage createdAt" }]
 
         }
         booking.paginate(query, options, (err_1, result) => {
             if (err_1)
                 return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
-            if (result==undefined)
+            if (result == undefined)
                 return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found")
-            else{
+            else {
                 // for(let data of result){
                 //     data.userId=data.businessManId;
                 //     delete result["businessManId"];
                 // }
-                
-                
+
+
                 // eventSchema.paginate(query, options, (error, result) => {
                 //     if (error)
                 //         return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
                 //     else if (!result)
                 //         return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND)
                 //     else
-                        response.sendResponseWithPagination(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result.docs, { total: result.total, limit: result.limit, currentPage: result.page, totalPage: result.pages });
-                
-        }})
+                response.sendResponseWithPagination(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result.docs, { total: result.total, limit: result.limit, currentPage: result.page, totalPage: result.pages });
+
+            }
+        })
     },
 
     "filterEventsPending": (req, res) => {
@@ -546,7 +448,7 @@ module.exports = {
         booking.paginate(query, options, (err_1, result) => {
             if (err_1)
                 return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
-            if (result==false || result==undefined)
+            if (result == false || result == undefined)
                 return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found")
             else {
                 response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result)
@@ -606,7 +508,7 @@ module.exports = {
 
     "rejectEventStatus": (req, res) => {
         console.log("event status request " + req.body.bookingId)
-        booking.findByIdAndUpdate({_Id: req.body.bookingId }, { $set: { bookingStatus: "REJECTED" } }, { new: true }, (error, result) => {
+        booking.findByIdAndUpdate({ _Id: req.body.bookingId }, { $set: { bookingStatus: "REJECTED" } }, { new: true }, (error, result) => {
             if (error)
                 response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
             else if (!result)
@@ -654,6 +556,7 @@ module.exports = {
                     return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "User not found.");
                 else {
                     //  console.log(success)
+                      //=========================FOR DAILY=============================
                     if (req.body.period == "DAILY") {
                         for (let x = 0; x < success.services.length; x++)
                             if (success.services[x].eventId) {
@@ -701,6 +604,7 @@ module.exports = {
 
                             }
                     }
+                      //=========================FOR MONTHLY=============================
                     else if (req.body.period == "MONTHLY") {
 
                         var current_date = new Date();
@@ -753,7 +657,7 @@ module.exports = {
         let weekArray = [];
         let monthlyArray = [];
 
-        eventSchema.findOne({ _id: req.body.userId ,status:"ACTIVE" }, (err, success) => {
+        eventSchema.findOne({ _id: req.body.userId, status: "ACTIVE" }, (err, success) => {
             if (err)
                 return response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.");
             if (!success)
@@ -836,7 +740,7 @@ module.exports = {
 
     /////////////////////////////////////////////////////////////////////////////------APP booking--------------\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
     'booking': (req, res) => {
-        if (!req.body) { 
+        if (!req.body) {
             return response.sendResponseWithoutData(res, responseCode.SOMETHING_WENT_WRONG, responseMessage.REQUIRED_DATA);
         }
         User.findOne({ _id: req.body.userId, userType: "CUSTOMER", status: "ACTIVE" }, (err4, succ) => {
@@ -856,7 +760,7 @@ module.exports = {
                     array = req.body.duration[0].times;
                     if (array.length == 1) {
                         if (validateEvent(req.body.duration)) {
-                            booking.findOne({ eventId: req.body.eventId, userId: req.body.userId, businessManId: req.body.businessManId ,period:req.body.period }, (err, success) => {
+                            booking.findOne({ eventId: req.body.eventId, userId: req.body.userId, businessManId: req.body.businessManId, period: req.body.period }, (err, success) => {
                                 if (err)
                                     return response.sendResponseWithData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.", err)
                                 else {
@@ -895,7 +799,7 @@ module.exports = {
     },
 
 
-   
+
 
 }
 

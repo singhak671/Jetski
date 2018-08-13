@@ -251,6 +251,81 @@ module.exports = {
         })
     },
 
+    // ...............................................................Block/Active User Api for both by Admin Panel................................................................................//
+
+
+    "blockUser": (req, res) => {
+        userSchema.findById({ _id: req.body._id }).exec(function (err, data) {
+            console.log(" iam aID********************>>",req.body._id)
+            if (err) {
+                console.log("@@@@@@@", err)
+                Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
+            }
+            else if (!data)
+                Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
+            else {
+                if (data.status == 'ACTIVE') {
+                    userSchema.findByIdAndUpdate({ _id: req.body._id }, { $set: { status: "BLOCK" } }, (error, result) => {
+                        if (error) {
+                            console.log("@@@@@@@", error)
+                          return  Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
+                        }
+                        else if (!result)
+                           return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
+                        else {
+                            eventSchema.update({userId:req.body._id},{status:"BLOCK"},{multi:true},(err1,success)=>{
+                                if (err1) {
+                                   // console.log("@@@@@@@", error)
+                                  return  Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
+                                }
+                                else if (!success)
+                                   return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
+                                else
+                                {
+                                    Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "User is blocked successfully . ", success)
+                                }
+
+                            })
+
+                          //  Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "User is successfully blocked. ", result)
+                        }
+                    })
+                }
+                else if (data.status == 'BLOCK') {
+                    userSchema.findByIdAndUpdate({ _id: req.body._id }, { $set: { status: "ACTIVE" } }, { new: true }, (errr, result1) => {
+                        if (errr) {
+                            Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
+                        }
+                        else if (!result1)
+                            Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
+                        else {
+                            eventSchema.update({userId:req.body._id},{status:"ACTIVE"},{multi:true},(err1,success)=>{
+                                if (err1) {
+                                   // console.log("@@@@@@@", error)
+                                  return  Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
+                                }
+                                else if (!success)
+                                   return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
+                                else
+                                {
+                                    Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "User is now actived... ", success)
+                                }
+
+                            })
+                            //Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "User is active successfully . ", result1)
+                        }
+                    })
+                }
+
+            }
+
+        })
+
+
+    },
+
+    // ...............................................................Block/Active User Api for both................................................................................//
+
     // "blockUser": (req, res) => {
     //     userSchema.findById({ _id: req.body._id }).exec(function (err, data) {
     //         if (err) {
@@ -264,11 +339,27 @@ module.exports = {
     //                 userSchema.findByIdAndUpdate({ _id: req.body._id }, { $set: { status: "BLOCK" } }, { new: true }, (error, result) => {
     //                     if (error) {
     //                         console.log("@@@@@@@", error)
-    //                       return  Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
+    //                         return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
     //                     }
     //                     else if (!result)
-    //                        return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
+    //                         return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, " NOT_FOUND")
     //                     else {
+
+    //                         userSchema.findOne({})
+    //                             .populate({ path: "services[0].eventId" },
+    //                                 { $set: { status: "BLOCK" } }),
+    //                             { new: true }, (err2, result2) => {
+    //                                 if (err2) {
+    //                                     console.log("@@@@@@@", error)
+    //                                     return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
+    //                                 }
+    //                                 // else if (!result2)
+    //                                 //     return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
+    //                                 else
+    //                                 consolelog("eventBlock>>>>>>>>>>>>>>>>>>>",result2)
+    //                                     return Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "User is successfully blocked. ", result2)
+
+    //                             }
 
     //                         Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "User is successfully blocked. ", result)
     //                     }
@@ -282,7 +373,23 @@ module.exports = {
     //                     else if (!result1)
     //                         Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
     //                     else {
-    //                         Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "User is active successfully . ", result1)
+
+    //                         userSchema.findOne({ _id: req.body._id })
+    //                             .populate({ path: "services.eventId" },
+    //                                 { $set: { status: "ACTIVE" } }),
+
+    //                             { new: true }, (err3, result3) => {
+    //                                 if (err3) {
+    //                                     console.log("@@@@@@@", error)
+    //                                     return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
+    //                                 }
+
+    //                                 if (result)
+    //                                     return Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "User is successfully blocked. ", result2)
+
+    //                             }
+
+    //                         return Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "User is active successfully . ", result1)
     //                     }
     //                 })
     //             }
@@ -293,83 +400,6 @@ module.exports = {
 
 
     // },
-
-    // ...............................................................Block/Active User Api for both................................................................................//
-
-    "blockUser": (req, res) => {
-        userSchema.findById({ _id: req.body._id }).exec(function (err, data) {
-            if (err) {
-                console.log("@@@@@@@", err)
-                Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
-            }
-            else if (!data)
-                Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
-            else {
-                if (data.status == 'ACTIVE') {
-                    userSchema.findByIdAndUpdate({ _id: req.body._id }, { $set: { status: "BLOCK" } }, { new: true }, (error, result) => {
-                        if (error) {
-                            console.log("@@@@@@@", error)
-                            return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
-                        }
-                        else if (!result)
-                            return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, " NOT_FOUND")
-                        else {
-
-                            userSchema.findOne({})
-                                .populate({ path: "services[0].eventId" },
-                                    { $set: { status: "BLOCK" } }),
-                                { new: true }, (err2, result2) => {
-                                    if (err2) {
-                                        console.log("@@@@@@@", error)
-                                        return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
-                                    }
-                                    // else if (!result2)
-                                    //     return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
-                                    else
-                                    consolelog("eventBlock>>>>>>>>>>>>>>>>>>>",result2)
-                                        return Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "User is successfully blocked. ", result2)
-
-                                }
-
-                            Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "User is successfully blocked. ", result)
-                        }
-                    })
-                }
-                else if (data.status == 'BLOCK') {
-                    userSchema.findByIdAndUpdate({ _id: req.body._id }, { $set: { status: "ACTIVE" } }, { new: true }, (errr, result1) => {
-                        if (errr) {
-                            Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
-                        }
-                        else if (!result1)
-                            Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
-                        else {
-
-                            userSchema.findOne({ _id: req.body._id })
-                                .populate({ path: "services.eventId" },
-                                    { $set: { status: "ACTIVE" } }),
-
-                                { new: true }, (err3, result3) => {
-                                    if (err3) {
-                                        console.log("@@@@@@@", error)
-                                        return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
-                                    }
-
-                                    if (result)
-                                        return Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "User is successfully blocked. ", result2)
-
-                                }
-
-                            return Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "User is active successfully . ", result1)
-                        }
-                    })
-                }
-
-            }
-
-        })
-
-
-    },
 
 
 
