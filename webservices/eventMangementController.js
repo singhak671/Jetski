@@ -196,7 +196,7 @@ module.exports = {
                 })
             },
             function (arg1, callback) {
-                eventSchema.find({}).limit(5).exec((err, succ) => {
+                eventSchema.find({}).sort({ eventCreated_At: -1 }).limit(5).exec((err, succ) => {
                     if (err)
                         response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR)
                     else if (succ) {
