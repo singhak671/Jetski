@@ -234,7 +234,7 @@ module.exports = {
             // limit: 5,
             // match:{query},
             sort: { eventCreated_At: -1 },
-            populate: { path: 'userId', select: 'profilePic name status' },
+            populate: { path: 'userId', select: 'profilePic name status',match:{status:"ACTIVE"} },
             lean: false
         }
         //success
@@ -250,8 +250,7 @@ module.exports = {
             }
         })
     },
-
-
+// __________API______//
     //-------------------------------------------------------------------------------My Event at business site after login  -----------------------------------------------------------------//
 
 
@@ -798,7 +797,7 @@ module.exports = {
         })
     },
 
-
+// ========================API=======//
 
 
 }
