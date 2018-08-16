@@ -11,6 +11,7 @@ router.post('/addEvent',Business.addEvent);
  router.post('/myBooking',Business.myBooking);
  router.post('/eventsPending',Business.eventsPending);
  router.post('/eventsConfirmed',Business.eventsConfirmed);
+ router.post('/eventsCancelled',Business.eventsCancelled);
  router.post('/confirmEventStatus',Business.confirmEventStatus);
  router.post('/rejectEventStatus',Business.confirmEventStatus);
  router.post('/bookingEvent',Business.bookingEvent);
