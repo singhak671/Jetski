@@ -27,6 +27,14 @@ const booking = mongoose.Schema({
         type: String,
         default: "PENDING"
     },
+    
+    feedbackDescription: {
+        type:String
+    },
+
+    starsCount: {
+        type: Number
+    },
     businessManId:{
         type: Schema.Types.ObjectId,
         ref: 'User'

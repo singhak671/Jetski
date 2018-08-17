@@ -34,7 +34,7 @@ const business = mongoose.Schema({
 
     eventStatus:{
         type:String,
-        enum:["PENDING","CONFIRMED","REJECTED"],
+        enum:["PENDING","CONFIRMED","CANCELLED","COMPLETED"],
       //  default:"PENDING"
         },
 

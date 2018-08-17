@@ -269,10 +269,11 @@ module.exports = {
         User.find({ $or: [{ _id: req.body.userId, period: req.body.period, status: "ACTIVE" }, { _id: req.body.userId, status: "ACTIVE" }] }, { services: 1 }).populate({
             path: 'services.eventId',
             // model:"Businesses",
+             sort:{ eventCreated_At: -1 },
             match: query,
-            select: 'eventAddress duration  eventImage eventName eventDescription period eventPrice ',
+            select: 'eventAddress duration  eventImage eventCreated_At  eventName eventDescription period eventPrice ',
 
-        }).sort({ createdAt: -1 }).limit(limit).skip(limit * (page - 1)).exec((error, result) => {
+        }).limit(limit).skip(limit * (page - 1)).exec((error, result) => {
             if (error) {
                 console.log("err-->" + error)
                 response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR)
@@ -291,8 +292,13 @@ module.exports = {
             //}
         })
 
-
     },
+
+
+
+   
+
+
 
 
     //------------------------------------------------------------------------------- API for Filter location in app   -----------------------------------------------------------------//
@@ -395,6 +401,41 @@ module.exports = {
 
 
 
+
+    //------------------------------------------------------------------------------- API for AllCancel in business site   -----------------------------------------------------------------//
+
+
+    "eventsCancelled": (req, res) => {
+        var arr = []
+        var query = { businessManId: req.body.userId, bookingStatus: "CANCEL" }
+        let options = {
+            page: req.body.pageNumber || 1,
+            populate: [{ path: "eventId", select: "status eventStatus  eventCreated_At _id period eventName eventAddress eventDescription eventPrice eventImage " },
+            { path: "userId", select: "profilePic name" }],
+            //select: 'status eventStatus duration eventCreated_At _id userId period eventName eventAddress eventDescription eventImage createdAt updatedAt',
+            limit: req.body.limit || 50,
+            sort: { eventCreated_At: -1 },
+            lean: false
+        }
+        booking.paginate(query, options, (err_1, result) => {
+            if (err_1)
+                return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
+            if (!result)
+                return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found")
+            else {
+                response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result)
+            }
+        })
+
+
+
+    },
+
+
+
+
+
+
     //------------------------------------------------------------------------------- API for myAllBooking for APP   -----------------------------------------------------------------//
 
 
@@ -433,6 +474,9 @@ module.exports = {
         })
     },
 
+    //------------------------------------------------------------------------------- API for filter >>PENDING for business   -----------------------------------------------------------------//
+
+
     "filterEventsPending": (req, res) => {
         // var arr = []
         var query = { businessManId: req.body.userId, bookingStatus: "PENDING", period: req.body.period }
@@ -456,6 +500,7 @@ module.exports = {
     },
 
 
+    //------------------------------------------------------------------------------- API for filter >>CONFIRM for business   -----------------------------------------------------------------//
 
     "filterEventsConfirm": (req, res) => {
         var arr = []
@@ -507,19 +552,19 @@ module.exports = {
 
     "rejectEventStatus": (req, res) => {
         console.log("event status request " + req.body.bookingId)
-        booking.findByIdAndUpdate({ _Id: req.body.bookingId }, { $set: { bookingStatus: "REJECTED" } }, { new: true }, (error, result) => {
+        booking.findByIdAndUpdate({ _Id: req.body.bookingId }, { $set: { bookingStatus: "CANCELLED" } }, { new: true }, (error, result) => {
             if (error)
                 response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
             else if (!result)
                 response.sendResponseWithoutData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND)
             else
-                response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Event status is rejected")
+                response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Event status is cancelled")
         })
     },
 
 
 
-    //------------------------------------------------------------------------------- Filter DAILY/WEEKLY/MONTHLY for Business Website  -----------------------------------------------------------------//
+    //------------------------------------------------------------------------------- Filter DAILY/WEEKLY/MONTHLY for APP (BookNow &&& Reschedule Booking)  -----------------------------------------------------------------//
 
 
     "filterEvent": (req, res) => {
@@ -541,7 +586,7 @@ module.exports = {
             limit: req.body.limit || 10
         }
 
-        User.findOne({ _id: req.body.userId })
+        User.findOne({ _id: req.body.userId , status: "ACTIVE"})
             .populate({
                 path: "services.eventId",
                 match: { period: req.body.period }
@@ -552,7 +597,7 @@ module.exports = {
                 if (err)
                     return response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.");
                 if (!success)
-                    return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "User not found.");
+                    return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found.");
                 else {
                     //  console.log(success)
                       //=========================FOR DAILY=============================
@@ -634,6 +679,22 @@ module.exports = {
                 }
             })
     },
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -797,7 +858,35 @@ module.exports = {
         })
     },
 
-// ========================API=======//
+ //********************************************************************************************  API for addCustomerFeedback  for App **************************************************************************  */
+
+ "addCustomerFeedback": (req, res) => {
+    if (!req.body.userId)
+    response.sendResponseWithoutData(res, responseCode.SOMETHING_WENT_WRONG, responseMessage.REQUIRED_DATA)
+    else {
+        booking.findByIdAndUpdate({ eventId:req.body.eventId, status: "ACTIVE" },req.body,{new:true}, (err, result) => {
+            if (err)
+            response.sendResponseWithData(res, responseCode.SOMETHING_WENT_WRONG, "Error Occured !!!!", err)
+            else if (!result)
+            response.sendResponseWithData(res, responseCode.SOMETHING_WENT_WRONG, "No result !!!!")
+            else {
+                    response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, "Feedback is successfully send.",result)                 
+            }
+        })
+    }
+},
+//=======================================================View Customer Feedback Api=====================================================================
+"viewCustomerFeedback": (req, res) => {
+    booking.find({}, { feedbackDescription: 1, feedbackDescription: 1,  starsCount: 1 }, (error, result) => {
+        if (error)
+        response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
+        else if (result.length == 0)
+        response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "No data found...")
+        else
+        response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result)
+    })
+},
+
 
 
 }
