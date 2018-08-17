@@ -1,4 +1,4 @@
-var current_env  = "development";
+var current_env  = "staging";
 
 function config_function(){
     var config = {};    

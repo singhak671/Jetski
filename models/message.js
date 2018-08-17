@@ -4,7 +4,7 @@ const mongoosePaginate = require('mongoose-paginate');
 const Schema = mongoose.Schema;
 var eventSchema = require('../models/eventManagementModel');
 const messageSchema = mongoose.Schema({
-    businesssManId:{
+    businessManId:{
         type:Schema.Types.ObjectId,
         ref: 'User'
     },

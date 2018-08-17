@@ -26,14 +26,17 @@ module.exports = {
                             else if (!success2)
                                     return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "EventId Not found");
                                 else
-                                    chatSchema.findOneAndUpdate({eventId:req.body.eventId,businesssManId:req.body.businesssManId,customerId:req.body.customerId},{$push:{message:req.body.message}},{new:true,upsert:true})
+                                console.log("eventId>>",req.body.eventId,"business>>",req.body.businesssManId,"req.body.>>>>>",req.body.customerId)
+                                    chatSchema.findOneAndUpdate({eventId:req.body.eventId,businessManId:req.body.businesssManId,customerId:req.body.customerId},{$push:{message:req.body.message}},{new:true,upsert:true})
                                     .populate("message.senderId","_id name profilePic")
                                     .exec((err,success3)=>{
+                                        console.log("i am here>>>>",err,success3)
                                         if (err)
                                             return response.sendResponseWithData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG,err);
                                         else if (!success3)
                                                 return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Cannot send message !");
                                             else
+
                                                 response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, success3);
                                     })
                         })
