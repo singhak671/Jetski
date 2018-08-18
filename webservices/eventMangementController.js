@@ -801,10 +801,10 @@ module.exports = {
     //********************************************************************************************  API for addCustomerFeedback  for App **************************************************************************  */
 
     "addCustomerFeedback": (req, res) => {
-        if (!req.body.eventId || !req.body.businessManId)
+        if (!req.body.eventId || !req.body.businessManId || !req.body.customerId)
             return response.sendResponseWithoutData(res, responseCode.BAD_REQUEST, "Please provide all required fields !");
         else
-            User.findOne({ _id: req.body.businessManId, status: "ACTIVE" }, (err, success) => {
+            User.findOne({ _id: req.body.businessManId ,_id:req.body.customerId , status: "ACTIVE" }, (err, success) => {
                 if (err)
                     return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG);
                 else if (success == false)
@@ -816,8 +816,8 @@ module.exports = {
                         else if (!success2)
                             return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "EventId Not found");
                         else
-                            feedback.findOneAndUpdate({ eventId: req.body.eventId, businessManId: req.body.businessManId }, { $push: { feedback: req.body.feedback } }, { new: true, upsert: true })
-                                .populate("feedback.customerId", "name profilePic")
+                            feedback.findOneAndUpdate({ eventId: req.body.eventId,customerId:req.body.customerId,  businessManId: req.body.businessManId }, { $push: { feedback: req.body.feedback } }, { new: true, upsert: true })
+                                .populate("customerId", "name address profilePic").populate("eventId","eventPrice")
                                 .exec((err, success3) => {
                                     if (err)
                                         return response.sendResponseWithData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG, err);
@@ -835,7 +835,23 @@ module.exports = {
         if (!req.body.eventId || !req.body.businessManId)
             return response.sendResponseWithoutData(res, responseCode.BAD_REQUEST, "Please provide all required fields !");
         else
-            feedback.find({ businessManId: req.body.businessManId, eventId: req.body.eventId }).select('-customerId').populate("feedback.customerId", "_id name profilePic").exec((err, succ) => {
+            feedback.find({ businessManId: req.body.businessManId, eventId: req.body.eventId }).select('-customerId').populate("feedback.customerId", "_id name address profilePic").populate("eventId","eventPrice").exec((err, succ) => {
+                if (err)
+                    return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG);
+                if (succ.length == 0)
+                    return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found!");
+                else if (succ) {
+                    response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, succ);
+                }
+
+            })
+    },
+
+
+    //********************************************************************************************  API for viewCustomerFeedback  for website **************************************************************************  */
+
+    "allFeedbackViews": (req, res) => {
+            feedback.find({ }).populate("customerId", "_id name address profilePic").populate("eventId","eventPrice").exec((err, succ) => {
                 if (err)
                     return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG);
                 if (succ.length == 0)
@@ -851,16 +867,17 @@ module.exports = {
 
 
     'getAllEvents': (req, res) => {
-        var query = {bookingStatus:"CONFIRMED" };
+        var query = {userType:"BUSINESS",status:"ACTIVE" };
         let options = {
             page: req.params.pageNumber || 1,
-            select: 'businessManId eventId userId transactionDate bookingStatus',
-            populate: [{ path: "eventId", select: "eventName eventImage eventPrice", match:{status:"ACTIVE"}}, { path: "businessManId", select: "name", match: { userType: "BUSINESS",status:"ACTIVE" } }, { path: "userId", select: "name", match: { userType: "CUSTOMER",status:"ACTIVE" } }],
+            select: 'businessName name',
+            populate: [{ path: "services.eventId", select: "_id eventName eventImage eventPrice", match:{status:"ACTIVE"}}],
+            // match:{status:"ACTIVE"},
             limit:  10,
             sort: { createdAt: -1 },
             lean: false
         }     
-        booking.paginate(query,options,(err, result) => {
+        User.paginate(query,options,(err, result) => {
             if (err)
                 return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
             if (result.docs.length==0)
@@ -869,6 +886,31 @@ module.exports = {
                 response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result)
         })
     },
+
+//     let options = {
+//         page: req.params.pageNumber || 1,
+//         select: 'userType email name status mobile_no  address',
+//         limit: 10,
+//         sort: { created_At: -1 },
+//         //password:0,
+//         lean: false
+//     }
+//     userSchema.paginate({ $and: [{ userType: "CUSTOMER" }, { $or: [{ status: "ACTIVE" }, { status: "BLOCK" }] }] }, options, (error, result) => {
+//         if (error)
+//             Response.sendResponseWithoutData(res, resCode.INTERNAL_SERVER_ERROR, resMessage.INTERNAL_SERVER_ERROR)
+//         else if (result.docs.length == 0)
+//             Response.sendResponseWithData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
+//         else {
+//             console.log("result is" + JSON.stringify(result))
+//             result.docs.map(x => delete x['password'])
+//             Response.sendResponseWithPagination(res, resCode.EVERYTHING_IS_OK, resMessage.SUCCESSFULLY_DONE, result.docs, { total: result.total, limit: result.limit, currentPage: result.page, totalPage: result.pages });
+//         }
+//     })
+// },
+
+
+
+
     ////////////////////////////////////////////////////
     // 'eventManagementDelete': (req, res) => {
     //     var query = { transactionDate: req.body.transactionDate, transactionTime: req.body.transactionTime };

@@ -33,3 +33,6 @@ module.exports = config_function;
 // https://www.flinto.com/p/2651545d
 
 
+// 1.API for view event management
+// 2.API for feedback for particular
+// 3.Admin panel UI integration modify

@@ -6,17 +6,17 @@ const userFeedbackSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Businesses'
     },
-    // customerId: {
-    //     type: Schema.Types.ObjectId,
-    //     ref: 'User'
-    // },
+    customerId: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    },
 
     feedback: [
         {
-            customerId:{
-                type:Schema.Types.ObjectId,
-                ref: 'User'
-            },
+            // customerId:{
+            //     type:Schema.Types.ObjectId,
+            //     ref: 'User'
+            // },
             feedbackDescription: {
                 type: String
             },
