@@ -14,6 +14,10 @@ const booking = mongoose.Schema({
         type: Schema.Types.ObjectId,
         ref: 'User'
     },
+    businessManId:{
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    },
 
     period:{
         type:String,
@@ -28,17 +32,18 @@ const booking = mongoose.Schema({
         default: "PENDING"
     },
     
-    feedbackDescription: {
-        type:String
-    },
+    // feedbackDescription: {
+    //     type:String
+    // },
 
-    starsCount: {
-        type: Number
-    },
-    businessManId:{
-        type: Schema.Types.ObjectId,
-        ref: 'User'
-    }
+    transactionDate:{
+        type:String
+               },
+
+    // starsCount: {
+    //     type: Number
+    // },
+   
 },
     {
         timestamps: true

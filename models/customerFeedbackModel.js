@@ -6,10 +6,10 @@ const userFeedbackSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Businesses'
     },
-    customerId: {
-        type: Schema.Types.ObjectId,
-        ref: 'User'
-    },
+    // customerId: {
+    //     type: Schema.Types.ObjectId,
+    //     ref: 'User'
+    // },
 
     feedback: [
         {
@@ -26,7 +26,7 @@ const userFeedbackSchema = new Schema({
                 default:0
             },
            
-            createdAt: {
+            feedbackTime: {
                 type: Date,
                 default: Date.now()
             }

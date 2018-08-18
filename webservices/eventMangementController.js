@@ -801,10 +801,10 @@ module.exports = {
     //********************************************************************************************  API for addCustomerFeedback  for App **************************************************************************  */
 
     "addCustomerFeedback": (req, res) => {
-        if (!req.body.eventId || !req.body.businessManId || !req.body.customerId)
+        if (!req.body.eventId || !req.body.businessManId)
             return response.sendResponseWithoutData(res, responseCode.BAD_REQUEST, "Please provide all required fields !");
         else
-            User.findOne({ _id: req.body.customerId, _id: req.body.businessManId, status: "ACTIVE" }, (err, success) => {
+            User.findOne({ _id: req.body.businessManId, status: "ACTIVE" }, (err, success) => {
                 if (err)
                     return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG);
                 else if (success == false)
@@ -816,12 +816,12 @@ module.exports = {
                         else if (!success2)
                             return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "EventId Not found");
                         else
-                            feedback.findOneAndUpdate({ eventId: req.body.eventId, businessManId: req.body.businessManId, customerId: req.body.customerId }, { $push: { feedback: req.body.feedback } }, { new: true, upsert: true })
+                            feedback.findOneAndUpdate({ eventId: req.body.eventId, businessManId: req.body.businessManId }, { $push: { feedback: req.body.feedback } }, { new: true, upsert: true })
                                 .populate("feedback.customerId", "name profilePic")
                                 .exec((err, success3) => {
                                     if (err)
                                         return response.sendResponseWithData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG, err);
-                                    else if (success3.length==0)
+                                    else if (success3.length == 0)
                                         return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Something went wrong....");
                                     else
                                         response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, "Feedback is successfully send.", success3);
@@ -829,24 +829,62 @@ module.exports = {
                     })
             })
     },
+    //********************************************************************************************  API for viewCustomerFeedback  for App **************************************************************************  */
 
     "viewCustomerFeedback": (req, res) => {
-        if(!req.body.eventId || !req.body.businessManId )
-        return response.sendResponseWithoutData(res, responseCode.BAD_REQUEST, "Please provide all required fields !");
-            else
-            feedback.find({ businessManId: req.body.businessManId, eventId: req.body.eventId  }).select('-customerId').populate("feedback.customerId","_id name profilePic").exec((err, succ) => {
+        if (!req.body.eventId || !req.body.businessManId)
+            return response.sendResponseWithoutData(res, responseCode.BAD_REQUEST, "Please provide all required fields !");
+        else
+            feedback.find({ businessManId: req.body.businessManId, eventId: req.body.eventId }).select('-customerId').populate("feedback.customerId", "_id name profilePic").exec((err, succ) => {
+                if (err)
+                    return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG);
+                if (succ.length == 0)
+                    return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found!");
+                else if (succ) {
+                    response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, succ);
+                }
+
+            })
+    },
+
+    //********************************************************************************************  API for getting all events for Admin panel **************************************************************************  */
+
+
+    'getAllEvents': (req, res) => {
+        var query = {bookingStatus:"CONFIRMED" };
+        let options = {
+            page: req.params.pageNumber || 1,
+            select: 'businessManId eventId userId transactionDate bookingStatus',
+            populate: [{ path: "eventId", select: "eventName eventImage eventPrice", match:{status:"ACTIVE"}}, { path: "businessManId", select: "name", match: { userType: "BUSINESS",status:"ACTIVE" } }, { path: "userId", select: "name", match: { userType: "CUSTOMER",status:"ACTIVE" } }],
+            limit:  10,
+            sort: { createdAt: -1 },
+            lean: false
+        }     
+        booking.paginate(query,options,(err, result) => {
             if (err)
-                return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG);
-            if (succ.length==0)
-                return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found!");
-            else if (succ) {
-                response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, succ);
-            }
-
+                return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
+            if (result.docs.length==0)
+                return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found")
+            else
+                response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result)
         })
-    }
+    },
+    ////////////////////////////////////////////////////
+    // 'eventManagementDelete': (req, res) => {
+    //     var query = { transactionDate: req.body.transactionDate, transactionTime: req.body.transactionTime };
+    //     booking.find(query, { $set: { bookingStatus: "CANCELLED" } }, { new: true }, (err, result) => {
+    //         if (err)
+    //             return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
+    //         if (!result)
+    //             return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found")
+    //         else {
+    //             response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result)
+    //         }
+    //     })
+    // },
 
-   
+
+    //********************************************************************************************  API for getting all events for Admin panel **************************************************************************  */
 
 }
 

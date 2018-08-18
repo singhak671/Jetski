@@ -24,4 +24,5 @@ router.post('/addEvent',Business.addEvent);
  //router.post('/bookingEvent',Business.bookingEvent);
  router.post('/addCustomerFeedback',Business.addCustomerFeedback);
  router.post('/viewCustomerFeedback',Business.viewCustomerFeedback);
+ router.get('/getAllEvents/:pageNumber',Business.getAllEvents);
 module.exports = router;
