@@ -20,6 +20,9 @@ router.get('/getAllCustomer/:pageNumber',authHandler.verifyToken,User.getAllCust
 router.get('/getAllBusiness/:pageNumber',authHandler.verifyToken,User.getAllBusiness);//by Admin panel
 router.post('/searchCustomerFilter',authHandler.verifyToken,User.searchCustomerFilter);//by Admin panel
 
+router.post('/postReviews',User.postReviews);
+router.get('/viewReviews',User.viewReviews);
+
  
 
 

@@ -10,6 +10,9 @@ const userFeedbackSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'User'
     },
+    businessName:{
+        type: String
+    },
 
     feedback: [
         {

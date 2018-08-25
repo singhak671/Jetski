@@ -39,6 +39,10 @@ const booking = mongoose.Schema({
     transactionDate:{
         type:String
                },
+    transactionStatus:{
+                type:String,
+                default:"pending"
+                       },
 
     // starsCount: {
     //     type: Number

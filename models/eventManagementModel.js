@@ -67,7 +67,11 @@ const business = mongoose.Schema({
     
     bookingId:{
         type: Schema.Types.ObjectId
-    }
+    },
+    businessName:{
+        type:String
+    },
+
 
 },
     {

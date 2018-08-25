@@ -92,11 +92,26 @@ socialId:{type: String},
     deviceToken:{
         type:String
     },
+    deviceType:{
+        type:String,
+        enum:["IOS","WEBSITE","ANDROID"]
+    },
+    reviews:{
+        type: String
+    },
+    pushSubscription :{
+        endpoint:  {type:String},
+        keys: {
+            p256dh:{type:String},
+            auth: {type:String}
+        }
+    },
 
     addAccountInfo:{
         cardName:{ type:String},
         cvv:{type:String},
-        expiryDate:{Date}
+        expiryDate:{Date},
+        stripeToken:{type:String}
     },
 
     profilePic:{

@@ -12,6 +12,8 @@ const cloudinary = require('../common_functions/uploadImage');
 const mongoose = require('mongoose')
 const jwt = require('jsonwebtoken');
 var mongoosePaginate = require('mongoose-paginate');
+const notification = require('../common_functions/notification');
+const Noti = require('../models/notificationModel');
 // var waterfall = require("async-waterfall");
 
 module.exports = {
@@ -99,7 +101,7 @@ module.exports = {
 
                                 if (!success)
                                     return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, "Data doesn't exist")
-
+                                    console.log("Login----------dfdghdfghfdgdfgfdgdfghfdgdfghfdghfd",success)
                                 return Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, resMessage.LOGIN_SUCCESS, success1, token);
 
                             })
@@ -136,7 +138,7 @@ module.exports = {
 
                         // })
                         delete result['password']
-
+                        console.log("login-----------dfdghdfghfdgdfgfdgdfghfdgdfghfdghfd",res1)
                         return Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, resMessage.LOGIN_SUCCESS, result, token)
                     }
                     else
@@ -456,7 +458,41 @@ module.exports = {
             }
         })
     },
+//........................................................Save reviews...........................................................
+'postReviews':(req,res)=>{
+    console.log('Request for postReviews',req.body)
+    userSchema.findByIdAndUpdate({_id:req.body._id,userType: "CUSTOMER"},{$set:{reviews:req.body.reviews}},{new:true},(err,result)=>{
+        if(err)
+            Response.sendResponseWithoutData(res, resCode.INTERNAL_SERVER_ERROR, resMessage.INTERNAL_SERVER_ERROR)
+        else{
+            console.log("result of post reviews",result)
+          //  notification.single_notification(result.deviceToken, 'Review Posted!!','You are successfully placed your review regarding app', result.businessManId,result._id,result.profilePic,result.name)
+            return Response.sendResponseWithoutData(res, resCode.EVERYTHING_IS_OK, 'Your Review  is updated Successfully.');
+        }
+    }
+)},
+//...................................................View Reviews..............................................................
+'viewReviews':(req,res)=>{
+    console.log(`request for view Reviews ${JSON.stringify(req.body)}`)
+    // let options = {
+    //     page: req.params.pageNumber ,
+    //     select:{reviews:1,name:1,address:1},
+    //     limit: 10,
+    //     //password:0,//,createdAt:1,updatedAt:1
+    //     lean: false
+    // }
+    userSchema.find({userType: "CUSTOMER", "reviews": { $exists: true, $ne: null  }},{reviews:1,name:1,address:1,profilePic:1}).sort({updatedAt:-1}).limit(5).exec((err,result)=>{
+        console.log("result of post reviews",result,err)
+        if(err)
+        Response.sendResponseWithoutData(res, resCode.INTERNAL_SERVER_ERROR, resMessage.INTERNAL_SERVER_ERROR)
+        else{
+          
+         //   return Response.sendResponseWithData(res, resCode.BAD_REQUEST, "Customer's reviews list found successfully",result);
+            Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "Customer's reviews list found successfully", result);
+        }
+    })
 
+},
 
 
     "searchCustomerFilter": (req, res) => {

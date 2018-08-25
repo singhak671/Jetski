@@ -145,12 +145,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _pages_content_management_edit_content_management_edit_component__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./pages/content-management-edit/content-management-edit.component */ "./src/app/pages/content-management-edit/content-management-edit.component.ts");
 /* harmony import */ var _pages_content_management_view_content_management_view_component__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./pages/content-management-view/content-management-view.component */ "./src/app/pages/content-management-view/content-management-view.component.ts");
 /* harmony import */ var ngx_cookie_service__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ngx-cookie-service */ "./node_modules/ngx-cookie-service/index.js");
+/* harmony import */ var _pages_event_management_event_management_component__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./pages/event-management/event-management.component */ "./src/app/pages/event-management/event-management.component.ts");
+/* harmony import */ var _pages_transaction_management_transaction_management_component__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./pages/transaction-management/transaction-management.component */ "./src/app/pages/transaction-management/transaction-management.component.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
+
 
 
 
@@ -196,6 +200,8 @@ var AppModule = /** @class */ (function () {
                 _pages_content_management_content_management_component__WEBPACK_IMPORTED_MODULE_22__["ContentManagementComponent"],
                 _pages_content_management_edit_content_management_edit_component__WEBPACK_IMPORTED_MODULE_23__["ContentManagementEditComponent"],
                 _pages_content_management_view_content_management_view_component__WEBPACK_IMPORTED_MODULE_24__["ContentManagementViewComponent"],
+                _pages_event_management_event_management_component__WEBPACK_IMPORTED_MODULE_26__["EventManagementComponent"],
+                _pages_transaction_management_transaction_management_component__WEBPACK_IMPORTED_MODULE_27__["TransactionManagementComponent"],
             ],
             imports: [
                 _angular_platform_browser__WEBPACK_IMPORTED_MODULE_0__["BrowserModule"],
@@ -241,6 +247,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _pages_content_management_content_management_component__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./pages/content-management/content-management.component */ "./src/app/pages/content-management/content-management.component.ts");
 /* harmony import */ var _pages_content_management_edit_content_management_edit_component__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./pages/content-management-edit/content-management-edit.component */ "./src/app/pages/content-management-edit/content-management-edit.component.ts");
 /* harmony import */ var _pages_content_management_view_content_management_view_component__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./pages/content-management-view/content-management-view.component */ "./src/app/pages/content-management-view/content-management-view.component.ts");
+/* harmony import */ var _pages_event_management_event_management_component__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./pages/event-management/event-management.component */ "./src/app/pages/event-management/event-management.component.ts");
+/* harmony import */ var _pages_transaction_management_transaction_management_component__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./pages/transaction-management/transaction-management.component */ "./src/app/pages/transaction-management/transaction-management.component.ts");
+
+
 
 
 
@@ -265,7 +275,9 @@ var routes = [
     { path: 'editBusinessDetail', component: _pages_edit_business_detail_edit_business_detail_component__WEBPACK_IMPORTED_MODULE_6__["EditBusinessDetailComponent"] },
     { path: 'content-management', component: _pages_content_management_content_management_component__WEBPACK_IMPORTED_MODULE_8__["ContentManagementComponent"] },
     { path: 'content-edit', component: _pages_content_management_edit_content_management_edit_component__WEBPACK_IMPORTED_MODULE_9__["ContentManagementEditComponent"] },
-    { path: 'content-view', component: _pages_content_management_view_content_management_view_component__WEBPACK_IMPORTED_MODULE_10__["ContentManagementViewComponent"] }
+    { path: 'content-view', component: _pages_content_management_view_content_management_view_component__WEBPACK_IMPORTED_MODULE_10__["ContentManagementViewComponent"] },
+    { path: 'event-management', component: _pages_event_management_event_management_component__WEBPACK_IMPORTED_MODULE_11__["EventManagementComponent"] },
+    { path: 'transactions', component: _pages_transaction_management_transaction_management_component__WEBPACK_IMPORTED_MODULE_12__["TransactionManagementComponent"] }
 ];
 
 
@@ -1410,6 +1422,79 @@ var EditUserDetailComponent = /** @class */ (function () {
 
 /***/ }),
 
+/***/ "./src/app/pages/event-management/event-management.component.css":
+/*!***********************************************************************!*\
+  !*** ./src/app/pages/event-management/event-management.component.css ***!
+  \***********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = ""
+
+/***/ }),
+
+/***/ "./src/app/pages/event-management/event-management.component.html":
+/*!************************************************************************!*\
+  !*** ./src/app/pages/event-management/event-management.component.html ***!
+  \************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<div class=\"mainbox main-modify\">\n    <app-side-menu></app-side-menu>\n    <div class=\"right-section\">\n        <div class=\"copyrights\">Copyright © 2018 Aqua Ludus All Rights Reserved.</div>\n        <div class=\"right-inner\">\n\n            <h1 class=\"heading\">EVENT MANAGEMENT</h1>\n            <div class=\"filter-block\">\n                <fieldset class=\"global-fieldset\">\n                    <legend>User Board</legend>\n                    <div class=\"filter-content\">\n                        <div class=\"row\">\n                            <div class=\"col-sm-6\">\n                                <form [formGroup]=\"eventForm\">\n                                    <div class=\"form-group\">\n                                        <div class=\"search-icon pull-left\" align=\"left\">\n                                            <input type=\"text\" class=\"form-control max-wt-300 search-input\" placeholder=\"Search by Event/Business\" formControlName=\"search\">\n                                            <i class=\"fa fa-search\" aria-hidden=\"true\"></i>\n                                        </div>\n\n\n                                    </div>\n                                </form>\n                            </div>\n                            <div class=\"col-sm-6\">\n                                <!-- <div class=\"btn-right\">\n                            <a class=\"btn btn-red btn-common\" href=\"add-user.html\">Add</a>\n                         </div> -->\n                            </div>\n                        </div>\n<br>\n\n                        <div class=\"box box-blue\">\n                            <div class=\"box-body\">\n                                <div class=\"custom-table table-responsive\">\n                                    <table class=\"table table-striped table-border\">\n                                        <thead>\n                                            <tr>\n                                                <th>SNo.</th>\n                                                <th>Event Name</th>\n                                                <th>Business Name</th>\n                                                <th>Name</th>\n                                               \n\n                                            </tr>\n                                        </thead>\n                                        <tbody>\n\n                                            <tr *ngFor=\"let item of modified | paginate: { itemsPerPage: paginationData.limit, currentPage: pageNo, totalItems: paginationData.total };index as i\">\n                                                <td>{{(i+1)+srNo}}</td>\n                                                <td>{{item.eventName}}</td>\n                                                <td>{{item.businessName}}</td>\n                                                <td>{{item.transactionDate}}</td>\n                                            </tr>\n                                        </tbody>\n                                    </table>\n                                    <!-- <label type=\"date\" class=\"col-sm-4 label-right label-top\">From:<label> -->\n                                    <!-- <input type=\"date\"  class=\"form-control max-wt-300 search-input\" placeholder=\"Search by date\"> </label> -->\n\n                                </div>\n\n                            </div>\n                        </div>\n                    </div>\n                </fieldset>\n            </div>\n\n\n            <ul class=\"pagination\">\n                <li *ngIf=\"paginationData.total > paginationData.limit\"></li>\n            </ul>\n            <pagination-controls (pageChange)=\"changePage($event)\"></pagination-controls>\n\n        </div>\n    </div>\n</div>\n\n<!-- Modal-blocked -->\n<div id=\"delete\" class=\"modal fade\" data-easein=\"bounceIn\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"costumModalLabel\"\n    aria-hidden=\"true\">\n    <div class=\"modal-dialog\">\n        <div class=\"modal-content common-detail-modal\">\n            <div class=\"modal-header\">\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">\n                    ×\n                </button>\n            </div>\n            <div class=\"modal-body\">\n                <p class=\"modal-inner-text\">\n                    Are you sure you want to delete user ?\n                </p>\n\n                <div class=\"button-box mt20\">\n                    <a class=\"btn btn-red mr10\">Yes</a>\n                    <a class=\"btn btn-danger\" data-dismiss=\"modal\">No</a>\n                </div>\n            </div>\n            <div class=\"modal-footer\">\n\n            </div>\n        </div>\n    </div>\n</div>"
+
+/***/ }),
+
+/***/ "./src/app/pages/event-management/event-management.component.ts":
+/*!**********************************************************************!*\
+  !*** ./src/app/pages/event-management/event-management.component.ts ***!
+  \**********************************************************************/
+/*! exports provided: EventManagementComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EventManagementComponent", function() { return EventManagementComponent; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+// import {IMyDpOptions, IMyDateModel} from 'mydatepicker';
+var EventManagementComponent = /** @class */ (function () {
+    // public myDatePickerOptions: IMyDpOptions = { 
+    //   dateFormat: 'yyyy-mm-dd', 
+    //   editableDateField:false, 
+    //   openSelectorOnInputClick:false,
+    //   disableSince: {year: 0, month: 0, day: 0}
+    //   };
+    function EventManagementComponent() {
+        this.trans = '';
+        this.paginationData = {};
+        this.modified = [];
+    }
+    EventManagementComponent.prototype.ngOnInit = function () {
+    };
+    EventManagementComponent = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
+            selector: 'app-event-management',
+            template: __webpack_require__(/*! ./event-management.component.html */ "./src/app/pages/event-management/event-management.component.html"),
+            styles: [__webpack_require__(/*! ./event-management.component.css */ "./src/app/pages/event-management/event-management.component.css")]
+        }),
+        __metadata("design:paramtypes", [])
+    ], EventManagementComponent);
+    return EventManagementComponent;
+}());
+
+
+
+/***/ }),
+
 /***/ "./src/app/pages/forgot-password/forgot-password.component.css":
 /*!*********************************************************************!*\
   !*** ./src/app/pages/forgot-password/forgot-password.component.css ***!
@@ -1675,7 +1760,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"headeres\">\n    <nav class=\"navbar navbar-default\">\n      <!-- Brand and toggle get grouped for better mobile display -->\n      <div class=\"navbar-headeres\">\n        <button type=\"button\" class=\"navbar-toggle collapsed\" data-toggle=\"collapse\" data-target=\"#profile-collapse\" aria-expanded=\"false\">\n        <span class=\"sr-only\">Toggle navigation</span>\n        <span class=\"icon-bar\"></span>\n        <span class=\"icon-bar\"></span>\n        <span class=\"icon-bar\"></span>\n        </button>\n      </div>\n    </nav>\t\n  </div>\n  <div class=\"left-section\">\n    <div class=\"menubox\">\n      <div class=\"mobmenu\">\n        <span></span>\n        <span></span>\n        <span></span>\n      </div>\n    </div>\n    <div class=\"left-headeres\">\n      <div class=\"logo\"><a><img src=\"../assets/img/jetski.jpg\"></a></div>\n    </div>\n        <div class=\"user-panel\">\n  \n            <span class=\"view-inline user_name\">Admin Panel</span>\n        </div>\n    <div class=\"left-menu\">\n      <ul class=\"nav\">\n        <li><a [ngClass]=\"{'active': isActive == 'dashboard'}\" (click)=\"tabManag('dashboard')\"><i class=\"fa fa-users\"></i>USER MANAGEMENT</a></li>\n        <li><a [ngClass]=\"{'active': isActive == 'business-management'}\" (click)=\"tabManag('business-management')\"><i class=\"fa fa-angellist\"></i>BUSINESS MANAGEMENT</a></li>\n        <li><a [ngClass]=\"{'active': isActive == 'transactions'}\" ><i class=\"fa fa-product-hunt\"></i>TRANSACTIONS</a></li>\n        <li><a [ngClass]=\"{'active': isActive == 'event-management' }\" ><i class=\"fa fa-lastfm\"></i>EVENT MANAGEMENT</a></li>\n        <li><a [ngClass]=\"{'active': isActive == 'content-management' }\" (click)=\"tabManag('content-management')\"><i class=\"fa fa-lastfm\"></i>CONTENT MANAGEMENT</a></li>\n        <li><a [ngClass]=\"{'active': isActive == 'logout'}\" data-toggle=\"modal\" data-target=\"#logout\"  ><i class=\"fa fa-sign-out\"></i>LOGOUT</a></li>\n      </ul>\n    </div>\n  </div>\n  \n\n\n\n<!-- Modal-blocked -->\n<div id=\"logout\" class=\"modal fade\" data-easein=\"bounceIn\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"costumModalLabel\"\n    aria-hidden=\"true\">\n    <div class=\"modal-dialog\">\n        <div class=\"modal-content common-detail-modal\">\n            <div class=\"modal-header\">\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">\n                    ×\n                </button>\n            </div>\n            <div class=\"modal-body\">\n                <p class=\"modal-inner-text\">\n                    Are you sure you want to logout ?\n                </p>\n\n                <div class=\"button-box mt20\">\n                    <a class=\"btn btn-red mr10\" (click)=\"logoutYes()\">yes</a>\n                    <a class=\"btn btn-danger\" data-dismiss=\"modal\">No</a>\n                </div>\n            </div>\n            <div class=\"modal-footer\">\n\n            </div>\n        </div>\n    </div>\n</div>\n\n\n\n\n\n\n"
+module.exports = "<div class=\"headeres\">\n    <nav class=\"navbar navbar-default\">\n      <!-- Brand and toggle get grouped for better mobile display -->\n      <div class=\"navbar-headeres\">\n        <button type=\"button\" class=\"navbar-toggle collapsed\" data-toggle=\"collapse\" data-target=\"#profile-collapse\" aria-expanded=\"false\">\n        <span class=\"sr-only\">Toggle navigation</span>\n        <span class=\"icon-bar\"></span>\n        <span class=\"icon-bar\"></span>\n        <span class=\"icon-bar\"></span>\n        </button>\n      </div>\n    </nav>\t\n  </div>\n  <div class=\"left-section\">\n    <div class=\"menubox\">\n      <div class=\"mobmenu\">\n        <span></span>\n        <span></span>\n        <span></span>\n      </div>\n    </div>\n    <div class=\"left-headeres\">\n      <div class=\"logo\"><a><img src=\"../assets/img/jetski.jpg\"></a></div>\n    </div>\n        <div class=\"user-panel\">\n  \n            <span class=\"view-inline user_name\">Admin Panel</span>\n        </div>\n    <div class=\"left-menu\">\n      <ul class=\"nav\">\n        <li><a [ngClass]=\"{'active': isActive == 'dashboard'}\" (click)=\"tabManag('dashboard')\"><i class=\"fa fa-users\"></i>USER MANAGEMENT</a></li>\n        <li><a [ngClass]=\"{'active': isActive == 'business-management'}\" (click)=\"tabManag('business-management')\"><i class=\"fa fa-angellist\"></i>BUSINESS MANAGEMENT</a></li>\n        <li><a [ngClass]=\"{'active': isActive == 'transactions'}\" (click)=\"tabManag('transactions')\"><i class=\"fa fa-product-hunt\"></i>TRANSACTIONS</a></li>\n        <li><a [ngClass]=\"{'active': isActive == 'event-management' }\" (click)=\"tabManag('event-management')\"><i class=\"fa fa-lastfm\"></i>EVENT MANAGEMENT</a></li>\n        <li><a [ngClass]=\"{'active': isActive == 'content-management' }\" (click)=\"tabManag('content-management')\"><i class=\"fa fa-lastfm\"></i>CONTENT MANAGEMENT</a></li>\n        <li><a [ngClass]=\"{'active': isActive == 'logout'}\" data-toggle=\"modal\" data-target=\"#logout\"  ><i class=\"fa fa-sign-out\"></i>LOGOUT</a></li>\n      </ul>\n    </div>\n  </div>\n  \n\n\n\n<!-- Modal-blocked -->\n<div id=\"logout\" class=\"modal fade\" data-easein=\"bounceIn\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"costumModalLabel\"\n    aria-hidden=\"true\">\n    <div class=\"modal-dialog\">\n        <div class=\"modal-content common-detail-modal\">\n            <div class=\"modal-header\">\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">\n                    ×\n                </button>\n            </div>\n            <div class=\"modal-body\">\n                <p class=\"modal-inner-text\">\n                    Are you sure you want to logout ?\n                </p>\n\n                <div class=\"button-box mt20\">\n                    <a class=\"btn btn-red mr10\" (click)=\"logoutYes()\">yes</a>\n                    <a class=\"btn btn-danger\" data-dismiss=\"modal\">No</a>\n                </div>\n            </div>\n            <div class=\"modal-footer\">\n\n            </div>\n        </div>\n    </div>\n</div>\n\n\n\n\n\n\n"
 
 /***/ }),
 
@@ -1740,6 +1825,71 @@ var SideMenuComponent = /** @class */ (function () {
         __metadata("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_1__["Router"]])
     ], SideMenuComponent);
     return SideMenuComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/pages/transaction-management/transaction-management.component.css":
+/*!***********************************************************************************!*\
+  !*** ./src/app/pages/transaction-management/transaction-management.component.css ***!
+  \***********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = ""
+
+/***/ }),
+
+/***/ "./src/app/pages/transaction-management/transaction-management.component.html":
+/*!************************************************************************************!*\
+  !*** ./src/app/pages/transaction-management/transaction-management.component.html ***!
+  \************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<div class=\"mainbox main-modify\">\n  <app-side-menu></app-side-menu>\n  <div class=\"right-section\">\n      <div class=\"copyrights\">Copyright © 2018 Aqua Ludus All Rights Reserved.</div>\n      <div class=\"right-inner\">\n\n          <h1 class=\"heading\">Transaction Lists</h1>\n          <div class=\"filter-block\">\n              <fieldset class=\"global-fieldset\">\n                  <legend>Transaction Board</legend>\n                  <div class=\"filter-content\">\n                      <div class=\"row\">\n                          <div class=\"col-sm-6\">\n                            <form [formGroup]=\"transantionForm\" > \n                              <div class=\"form-group\">\n                                  <div class=\"search-icon pull-left\" align=\"left\">\n                                      <input type=\"text\"  class=\"form-control max-wt-300 search-input\" placeholder=\"Search by Event/Business/Customer\" formControlName=\"search\">\n                                      <i class=\"fa fa-search\" aria-hidden=\"true\"></i>\n                                  </div>\n                                  <div class=\"pull-left\">\n                                      <div class=\"col-sm-6\">\n                                          <div class=\"form-group d-inline-block\">\n                                              <div class=\"show-entries mb0\">\n                                                  <select class=\"form-control\"  formControlName=\"sort\">\n                                                      <option value=''>STATUS</option>\n                                                      <option value=''>Cancelled</option>\n                                                      <option value=''>Confirmed</option>\n                                                  </select>\n                                              </div>\n                                          </div>\n                                      </div>\n                                  </div>\n                               \n                              </div>\n                              </form>\n                          </div>\n                          <div class=\"col-sm-6\">\n                              <!-- <div class=\"btn-right\">\n                            <a class=\"btn btn-red btn-common\" href=\"add-user.html\">Add</a>\n                         </div> -->\n                          </div>\n                      </div>\n\n                      <div class=\"box box-blue\">\n                          <div class=\"box-body\">\n                              <div class=\"custom-table table-responsive\">\n                                  <table class=\"table table-striped table-border\">\n                                      <thead>\n                                          <tr>\n                                              <th>SNo.</th>\n                                              <th>Event Name</th>\n                                              <th>Business Name</th>\n                                              <th>Customer Name</th>\n                                              <th>Transaction Date</th>\n                                              <th>Transaction time</th>\n                                              <th>status</th>\n                                              <th>Amount(USD)</th>\n                                             \n                                          </tr>\n                                      </thead>\n                                      <tbody>\n\n                                          <tr *ngFor=\"let item of modified | paginate: { itemsPerPage: paginationData.limit, currentPage: pageNo, totalItems: paginationData.total };index as i\">\n                                              <td>{{(i+1)+srNo}}</td>\n                                              <td>{{item.eventName}}</td>\n                                              <td>{{item.businessName}}</td>\n                                              <td>{{item.customerName}}</td>\n                                              <td>{{item.transactionDate}}</td>    \n                                              <td>{{item.transactionTime}}</td>  \n                                              <td>{{item.status}}</td>   \n                                              <td>{{item.eventPrice}}</td>                                                                                 \n                                          </tr>\n                                      </tbody>\n                                  </table>\n                              </div>\n\n                          </div>\n                      </div>\n                  </div>\n              </fieldset>\n          </div>\n\n\n          <ul class=\"pagination\">\n              <li *ngIf=\"paginationData.total > paginationData.limit\"></li>\n          </ul>\n          <pagination-controls (pageChange)=\"changePage($event)\"></pagination-controls>\n\n      </div>\n  </div>\n</div>\n\n<!-- Modal-blocked -->\n<div id=\"delete\" class=\"modal fade\" data-easein=\"bounceIn\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"costumModalLabel\"\n  aria-hidden=\"true\">\n  <div class=\"modal-dialog\">\n      <div class=\"modal-content common-detail-modal\">\n          <div class=\"modal-header\">\n              <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">\n                  ×\n              </button>\n          </div>\n          <div class=\"modal-body\">\n              <p class=\"modal-inner-text\">\n                  Are you sure you want to delete user ?\n              </p>\n\n              <div class=\"button-box mt20\">\n                  <a class=\"btn btn-red mr10\" >Yes</a>\n                  <a class=\"btn btn-danger\" data-dismiss=\"modal\">No</a>\n              </div>\n          </div>\n          <div class=\"modal-footer\">\n\n          </div>\n      </div>\n  </div>\n</div>"
+
+/***/ }),
+
+/***/ "./src/app/pages/transaction-management/transaction-management.component.ts":
+/*!**********************************************************************************!*\
+  !*** ./src/app/pages/transaction-management/transaction-management.component.ts ***!
+  \**********************************************************************************/
+/*! exports provided: TransactionManagementComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TransactionManagementComponent", function() { return TransactionManagementComponent; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+var TransactionManagementComponent = /** @class */ (function () {
+    function TransactionManagementComponent() {
+        this.paginationData = {};
+        this.modified = [];
+    }
+    TransactionManagementComponent.prototype.ngOnInit = function () {
+    };
+    TransactionManagementComponent = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
+            selector: 'app-transaction-management',
+            template: __webpack_require__(/*! ./transaction-management.component.html */ "./src/app/pages/transaction-management/transaction-management.component.html"),
+            styles: [__webpack_require__(/*! ./transaction-management.component.css */ "./src/app/pages/transaction-management/transaction-management.component.css")]
+        }),
+        __metadata("design:paramtypes", [])
+    ], TransactionManagementComponent);
+    return TransactionManagementComponent;
 }());
 
 
@@ -1998,7 +2148,8 @@ var MainService = /** @class */ (function () {
         this.http = http;
         this.toastr = toastr;
         //  baseUrl =  'http://172.16.6.74:8000/api/v1/';
-        this.baseUrl = 'http://ec2-52-76-162-65.ap-southeast-1.compute.amazonaws.com:1406/api/v1/';
+        //    >>>>staging URL>>
+        this.baseUrl = 'http://162.222.32.20:1406/api/v1/';
     }
     MainService.prototype.postApi = function (url, data, isHeader) {
         console.log("entered in post api ");

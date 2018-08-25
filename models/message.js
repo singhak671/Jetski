@@ -31,6 +31,15 @@ const messageSchema = mongoose.Schema({
     eventId:{
         type:Schema.Types.ObjectId,
         ref: 'businesses'
+    },
+    noti_type:{
+        type:String,
+        enum:['BUSSINESS','CUSTOMER']
+    },
+    status:{
+        type:String,
+        default:"ACTIVE",
+        enum:['ACTIVE','INACTIVE']
     }
 },
 {

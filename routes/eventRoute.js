@@ -13,7 +13,7 @@ router.post('/addEvent',Business.addEvent);
  router.post('/eventsConfirmed',Business.eventsConfirmed);
  router.post('/eventsCancelled',Business.eventsCancelled);
  router.post('/confirmEventStatus',Business.confirmEventStatus);
- router.post('/rejectEventStatus',Business.confirmEventStatus);
+ router.post('/rejectEventStatus',Business.rejectEventStatus);
  router.post('/bookingEvent',Business.bookingEvent);
  router.post('/booking',Business.booking);
  router.post('/eventDescription',Business.eventDescription);
@@ -25,6 +25,8 @@ router.post('/addEvent',Business.addEvent);
  router.post('/addCustomerFeedback',Business.addCustomerFeedback);
  router.post('/viewCustomerFeedback',Business.viewCustomerFeedback);
  router.get('/allFeedbackViews',Business.allFeedbackViews);
-
+ router.post('/cancelBooking',Business.cancelBooking);
  router.get('/getAllEvents/:pageNumber',Business.getAllEvents);
+
+ router.get('/avgBussinessList',Business.avgBussinessList);
 module.exports = router;
