@@ -192,62 +192,62 @@ module.exports = {
             response.sendResponseWithPagination(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, data);
         })
     },
-//=============================================================cancel booking for app=======================================================
-    'cancelBooking': (req, res) =>{
-        var query = {_id:req.body._id ,bookingStatus:"PENDING" || "CONFIRMED"}
-        booking.findByIdAndUpdate(query, {$set:{bookingStatus:"CANCELLED"}},{new: true},(err, result) => {
-        if (err){
-            console.log("err1,",err)
-            return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
-        }   
-        if (!result)
-        return response.sendResponseWithoutData(res,responseCode.NOT_FOUND,"Data not found")
-        else {
-            var result=result;
-            userSchema.find({_id:result.userId,status:"ACTIVE"},(err_,result_)=>{
-                if(err_)
-                    return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
-                    else{
-                  //  }
+    //=============================================================cancel booking for app=======================================================
+    'cancelBooking': (req, res) => {
+        var query = { _id: req.body._id, bookingStatus: "PENDING" || "CONFIRMED" }
+        booking.findByIdAndUpdate(query, { $set: { bookingStatus: "CANCELLED" } }, { new: true }, (err, result) => {
+            if (err) {
+                console.log("err1,", err)
+                return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
+            }
+            if (!result)
+                return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found")
+            else {
+                var result = result;
+                userSchema.find({ _id: result.userId, status: "ACTIVE" }, (err_, result_) => {
+                    if (err_)
+                        return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
+                    else {
+                        //  }
                         return stripe.refunds.create({
-                                    charge:req.body.charge,
-                                    amount: (0.9*req.body.amount),
-                                  }, function(err, refund) {
-                                      if(err){
-                                          console.log("err in refunds",err)
-                                      }
-                                      else{
-                                        console.log('success refund-->',refund)
-                                          //callback('',refund)
-                                        console.log("Noti data",result_.deviceToken, 'Booking Cancelled!!',' Your booking is Cancelled and your amount will be refunded...!', result.businessManId,result.userId,result_.profilePic,result_.name)
-                                        notification.single_notification(result_.deviceToken, 'Booking Cancelled!!',' Your booking is Cancelled and your amount will be refunded...!', result.businessManId,result.userId,result_.profilePic,result_.name)
-                                        response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK,"booking cancelled successfully and your amount will be refunded...")
-                                      }
-                                  })
-                                //   .then((refund)=>{
-                                //     return  stripe.refunds.retrieve(
-                                //        req.body.refundId,// "re_1D1XeJHvBDdKnKYwXMjS4nTM",
-                                //         function(err, refund1) {
-                                //             if(err)
-                                //                 console.log("error---->",err)
-                                //             else{
-                                //                 console.log("Success refundsss---->",refund1)
-                                //                // callback('',refund1)
-                                //             //    notification.single_notification(result_.deviceToken, 'Booking Cancelled!!',' Your booking is Cancelled and your amount will be refunded...!', result.businessManId,result.userId)
-                                //             //    response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK,"booking cancelled successfully.")
-                                //             }
-                                //           //asynchronously called
-                                //         }
-                                //       );
-                                //   })
-                // notification.single_notification(result_.deviceToken, 'Booking Cancelled!!',' Your booking is Cancelled and your amount will be refunded...!', result.businessManId,result.userId)
-                // response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK,"booking cancelled successfully.")
-                }
-            })
-          
-        }
+                            charge: req.body.charge,
+                            amount: (0.9 * req.body.amount),
+                        }, function (err, refund) {
+                            if (err) {
+                                console.log("err in refunds", err)
+                            }
+                            else {
+                                console.log('success refund-->', refund)
+                                //callback('',refund)
+                                console.log("Noti data", result_.deviceToken, 'Booking Cancelled!!', ' Your booking is Cancelled and your amount will be refunded...!', result.businessManId, result.userId, result_.profilePic, result_.name)
+                                notification.single_notification(result_.deviceToken, 'Booking Cancelled!!', ' Your booking is Cancelled and your amount will be refunded...!', result.businessManId, result.userId, result_.profilePic, result_.name)
+                                response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "booking cancelled successfully and your amount will be refunded...")
+                            }
+                        })
+                        //   .then((refund)=>{
+                        //     return  stripe.refunds.retrieve(
+                        //        req.body.refundId,// "re_1D1XeJHvBDdKnKYwXMjS4nTM",
+                        //         function(err, refund1) {
+                        //             if(err)
+                        //                 console.log("error---->",err)
+                        //             else{
+                        //                 console.log("Success refundsss---->",refund1)
+                        //                // callback('',refund1)
+                        //             //    notification.single_notification(result_.deviceToken, 'Booking Cancelled!!',' Your booking is Cancelled and your amount will be refunded...!', result.businessManId,result.userId)
+                        //             //    response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK,"booking cancelled successfully.")
+                        //             }
+                        //           //asynchronously called
+                        //         }
+                        //       );
+                        //   })
+                        // notification.single_notification(result_.deviceToken, 'Booking Cancelled!!',' Your booking is Cancelled and your amount will be refunded...!', result.businessManId,result.userId)
+                        // response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK,"booking cancelled successfully.")
+                    }
+                })
+
+            }
         })
-        },
+    },
     //-------------------------------------------------------------------------------alllatestEvent for app site as well as business website----------------------------------------------------------------//
 
 
@@ -262,7 +262,7 @@ module.exports = {
             // limit: 5,
             // match:{query},
             sort: { eventCreated_At: -1 },
-            populate: { path: 'userId', select: 'profilePic name status', match: { status: "ACTIVE" } },
+            populate: { path: 'userId', select: 'profilePic businessName name status', match: { status: "ACTIVE" } },
             lean: false
         }
         //success
@@ -277,7 +277,7 @@ module.exports = {
             }
         })
     },
-    
+
     //-------------------------------------------------------------------------------My Event at business site after login  -----------------------------------------------------------------//
 
     'myAllEvents': (req, res) => {
@@ -292,9 +292,11 @@ module.exports = {
             page: req.body.pageNumber || 1,
             // match:{query},
             sort: { eventCreated_At: -1 },
-            populate: { path: 'services.eventId', select: 'eventAddress duration  eventImage eventCreated_At  eventName eventDescription period eventPrice ',
-           
-            match: { status: "ACTIVE" } },
+            populate: {
+                path: 'services.eventId', select: 'eventAddress duration  eventImage eventCreated_At  eventName eventDescription period eventPrice ',
+
+                match: { status: "ACTIVE" }
+            },
             lean: false
 
 
@@ -342,7 +344,7 @@ module.exports = {
         console.log("array=====>>>", req.body)
         let list = req.body.eventAddress.map((x) => x.eventAddress)
         let query = { eventAddress: { $in: list }, status: "ACTIVE" }
-        eventSchema.find(query).populate("userId", { name: 1, profilePic: 1 }).exec((error, result) => {
+        eventSchema.find(query).populate("userId", { name: 1, profilePic: 1, businessName: 1 }).exec((error, result) => {
             if (error)
                 response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
             else if (!result)
@@ -407,8 +409,8 @@ module.exports = {
             if (result.docs.length == 0)
                 return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found")
             else {
-                console.log("result====>",JSON.stringify(result))
-               // notification.single_notification(token, 'Booking Confirmation!!', 'Your Booking is Confirmed...!', req.body.userId,result.userId)
+                console.log("result====>", JSON.stringify(result))
+                // notification.single_notification(token, 'Booking Confirmation!!', 'Your Booking is Confirmed...!', req.body.userId,result.userId)
                 response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result)
             }
         })
@@ -535,30 +537,30 @@ module.exports = {
 
     "confirmEventStatus": (req, res) => {
         console.log("event status request " + req.body.bookingId)
-        booking.findByIdAndUpdate({ _id: req.body.bookingId }, { $set: { bookingStatus: "CONFIRMED" } }, { new: true }).populate({path:"userId",select:"deviceToken name profilePic"}).exec((error, result) => {
+        booking.findByIdAndUpdate({ _id: req.body.bookingId }, { $set: { bookingStatus: "CONFIRMED" } }, { new: true }).populate({ path: "userId", select: "deviceToken name profilePic" }).exec((error, result) => {
             if (error)
                 response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
             else if (!result)
                 response.sendResponseWithoutData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND)
-            else{
-                var result=result
+            else {
+                var result = result
                 console.log(`confirm event status result------------->${JSON.stringify(result)}`)
                 var event;
-                eventSchema.findById({_id:result.eventId,status:"ACTIVE"}).exec((err_,result_)=>{
-                    if(err_)
+                eventSchema.findById({ _id: result.eventId, status: "ACTIVE" }).exec((err_, result_) => {
+                    if (err_)
                         response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
-                    else{
+                    else {
                         console.log(`confirm event status result_------------->${JSON.stringify(result_)}`)
 
-                        event=result_.eventName;
-                        console.log(result.userId.deviceToken, 'Event Confirmation!!', event+' Event is Confirmed...!', result.businessManId,result.userId._id,result.userId.profilePic,result.userId.name)
-                      notification.single_notification(result.deviceToken, 'Event Confirmation!!', event+' Event is Confirmed...!', result.businessManId,result.userId._id,result.userId.profilePic,result.userId.name)
+                        event = result_.eventName;
+                        console.log(result.userId.deviceToken, 'Event Confirmation!!', event + ' Event is Confirmed...!', result.businessManId, result.userId._id, result.userId.profilePic, result.userId.name)
+                        notification.single_notification(result.deviceToken, 'Event Confirmation!!', event + ' Event is Confirmed...!', result.businessManId, result.userId._id, result.userId.profilePic, result.userId.name)
                         response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Event status is confirmed")
                     }
                 })
-              
+
             }
-              
+
         })
     },
 
@@ -572,29 +574,29 @@ module.exports = {
 
     "rejectEventStatus": (req, res) => {
         console.log("event status request for cancel " + req.body.bookingId)
-        booking.findByIdAndUpdate({ _id: req.body.bookingId }, { $set: { bookingStatus: "CANCELLED" } }, { new: true }).populate({path:"userId",select:"deviceToken name profilePic"}).exec((error, result) => {
+        booking.findByIdAndUpdate({ _id: req.body.bookingId }, { $set: { bookingStatus: "CANCELLED" } }, { new: true }).populate({ path: "userId", select: "deviceToken name profilePic" }).exec((error, result) => {
             if (error)
-                response.sendResponseWithData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG,error)
-            else if (!result )
-                response.sendResponseWithData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND,result)
-            else{
-               var result=result
+                response.sendResponseWithData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG, error)
+            else if (!result)
+                response.sendResponseWithData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND, result)
+            else {
+                var result = result
                 console.log(`cancel event status result------------->${JSON.stringify(result)}`)
                 var event;
-                eventSchema.findById({_id:result.eventId,status:"ACTIVE"},(err_,result_)=>{
-                    if(err_)
+                eventSchema.findById({ _id: result.eventId, status: "ACTIVE" }, (err_, result_) => {
+                    if (err_)
                         response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
-                    else{
+                    else {
                         console.log(`cancel event status result_------------->${JSON.stringify(result_.eventName)}`)
-                        event=result_.eventName;
-                        console.log("event0-00---",event)
-                        console.log('noti result==========>',result.deviceToken, 'Event Cancelled!!', event+' Event is Cancelled...!', result.businessManId,result.userId._id,result.userId.profilePic,result.userId.name)
-                        notification.single_notification(result.deviceToken, 'Event Cancelled!!', event+' Event is Cancelled...!', result.businessManId,result.userId._id,result.userId.profilePic,result.userId.name)
+                        event = result_.eventName;
+                        console.log("event0-00---", event)
+                        console.log('noti result==========>', result.deviceToken, 'Event Cancelled!!', event + ' Event is Cancelled...!', result.businessManId, result.userId._id, result.userId.profilePic, result.userId.name)
+                        notification.single_notification(result.deviceToken, 'Event Cancelled!!', event + ' Event is Cancelled...!', result.businessManId, result.userId._id, result.userId.profilePic, result.userId.name)
                         response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Event status is cancelled")
                     }
                 })
-               
-            }     
+
+            }
         })
     },
 
@@ -815,142 +817,146 @@ module.exports = {
 
 
     },
-//====================================================================================================================================================
-'booking': (req, res) => {
-    if (!req.body) {
-        return response.sendResponseWithoutData(res, responseCode.SOMETHING_WENT_WRONG, responseMessage.REQUIRED_DATA);
-    }
-    else {
-       User.findOne({ _id: req.body.userId, userType: "CUSTOMER", status: "ACTIVE" }, (err4, succ) => {
-      //  User.findOne({ "_id": req.body.companyId, "status": "ACTIVE" }, (err_, result_) => {
-        if (err4)
-        return response.sendResponseWithData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.", err3);
-    if (!succ)
-        return response.sendResponseWithData(res, responseCode.NOT_FOUND, "UserId not found");
-            else {//
-                async.waterfall([(callback) => {
-                    eventSchema.findOne({ _id: req.body.eventId }, (err5, succ1) => {//
-                        if (err5)
-                        return response.sendResponseWithData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.", err5);
-                    if (!succ1) {
-                        // console.log("successss>>>>>>>", succ1);
-                        return response.sendResponseWithData(res, responseCode.NOT_FOUND, "eventId Not found");
-                    }
-                        else {
-                            var array = [];
-                            array = req.body.duration[0].times;
-                            if (array.length == 1) {
-                                if (validateEvent(req.body.duration,req.body.offset)) {
-               // transactionDate , transactionTime , transactionTimestamp, buninesNname , eventName, customerName. are required ** //
+    //====================================================================================================================================================
+    'booking': (req, res) => {
+        if (!req.body) {
+            return response.sendResponseWithoutData(res, responseCode.SOMETHING_WENT_WRONG, responseMessage.REQUIRED_DATA);
+        }
+        else {
+            User.findOne({ _id: req.body.userId, userType: "CUSTOMER", status: "ACTIVE" }, (err4, succ) => {
+                //  User.findOne({ "_id": req.body.companyId, "status": "ACTIVE" }, (err_, result_) => {
+                if (err4)
+                    return response.sendResponseWithData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.", err4);
+                if (!succ)
+                    return response.sendResponseWithData(res, responseCode.NOT_FOUND, "UserId not found");
+                else {//
+                    async.waterfall([(callback) => {
+                        eventSchema.findOne({ _id: req.body.eventId }, (err5, succ1) => {//
+                            if (err5)
+                                return response.sendResponseWithData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.", err5);
+                            if (!succ1) {
+                                // console.log("successss>>>>>>>", succ1);
+                                return response.sendResponseWithData(res, responseCode.NOT_FOUND, "eventId Not found");
+                            }
+                            else {
+                                var array = [];
+                                array = req.body.duration[0].times;
+                                if (array.length == 1) {
+                                    if (validateEvent(req.body.duration, req.body.offset)) {
+                                        // transactionDate , transactionTime , transactionTimestamp, buninesNname , eventName, customerName. are required ** //
 
-                                    booking.findOne({ eventId: req.body.eventId, userId: req.body.userId, businessManId: req.body.businessManId, period: req.body.period }, (err, success) => {
-                                      console.log("booking result---------->",err,success)
-                                        if (err)
-                                            return response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.", err)
-                                      if(!success){
+                                        booking.findOne({ eventId: req.body.eventId, userId: req.body.userId, businessManId: req.body.businessManId, period: req.body.period }, (err, success) => {
+                                            console.log("booking result---------->", err, success)
+                                            if (err)
+                                                return response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.", err)
+                                            if (!success) {
 
-                                        return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found")
-                                      }
+                                                return response.sendResponseWithData(res, responseCode.NOT_FOUND, "Data not found", success)
+                                            }
                                             else {
-                                            booking.create(req.body, (err, result) => {
-                                                if (err)
-                                                    return response.sendResponseWithData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.", err);
-                                                else
-                                                    // response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, success);
-                                                   callback(null, result)
-        
-                                            })
-                                        }
-                                    })
+                                                booking.create(req.body, (err, result) => {
+                                                    if (err)
+                                                        return response.sendResponseWithData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.", err);
+                                                    else
+                                                        // response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, success);
+                                                        callback(null, result)
+
+                                                })
+                                            }
+                                        })
+                                    }
+                                    else
+                                        return response.sendResponseWithData(res, responseCode.NOT_FOUND, "Please choose valid time slot");
+
                                 }
                                 else
-                                    return response.sendResponseWithData(res, responseCode.NOT_FOUND, "Please choose valid time slot");
-        
+                                    return response.sendResponseWithData(res, responseCode.NOT_FOUND, "Multiple time slot are not allowed");
                             }
-                            else
-                                return response.sendResponseWithData(res, responseCode.NOT_FOUND, "Multiple time slot are not allowed");
-                        }
-                    })//
-                },  (data, callback) => { 
-                    var charge1;
-                    console.log("34yswqghasgghsghas")
-                    stripe.customers.create({
-                        email: req.body.email, // customer email, which user need to enter while making payment
-                        source: req.body.stripeToken // token for the given card 
-                    })
-                        .then((customer) =>{
-                            console.log("customer stripe")
-                           return stripe.charges.create({ // charge the customer
-                            amount: req.body.eventPrice,
-                                currency: "usd",
-                                customer: customer.id
-                            })
-                            console.log("customer=====>",customer)
+                        })//
+                    }, (data, callback) => {
+                        var charge1;
+                        console.log("34yswqghasgghsghas")
+                        stripe.customers.create({
+                            email: req.body.email, // customer email, which user need to enter while making payment
+                            source: req.body.stripeToken // token for the given card 
                         })
-                        .then((charge) => {
-                            charge1=charge
-                            console.log("charge stripe")
-                            if(!charge1){
-
-                                console.log("Cannot charge a customer that has no active card",charge1.id)
-                                response.sendResponseWithoutData(res, responseCode.WENT_WRONG, "Your card is not active.")
-                            }
-                            else{
-                                console.log("charge1============>",charge1)
-                                // var book=new booking({
-                                //     "transactionDate":charge1.Date,
-                                //     "transactionStatus":charge1.Status
-
-                                // })
-                               // book.save((err_,result_)=>{
-                                    booking.findOneAndUpdate({ eventId: req.body.eventId, userId: req.body.userId, businessManId: req.body.businessManId, period: req.body.period },{$set:{"transactionDate":charge1.Date,
-                                    "transactionStatus":charge1.Status}},{new:true},(err_,result_)=>{
-                                    if(err_)
-                                    console.log("err",err_)
-                                    else{
-                                        console.log(`Charge object is ${JSON.stringify(charge1)}`)
-                                        callback('',result_)
-                                    }
+                            .then((customer) => {
+                                console.log("customer stripe")
+                                return stripe.charges.create({ // charge the customer
+                                    amount: req.body.eventPrice,
+                                    currency: "usd",
+                                    customer: customer.id
                                 })
-                              
-                               // charge=charge;
-                              
-                              //  response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, 'Payment done successfully.')  
-                            }
-                        })//.then(()=>{
-//************************************************--------  Refund Payment  ----*********************************************************************************** */
-                            // if(req.body.refund=="REFUND"){
-                                // console.log("customer id------------->",charge)
-                                // return stripe.refunds.create({
-                                //     charge: "ch_1D1Z4yFvUkcGB9taxetGm3Gd"
-                                //   }, function(err, refund) {
-                                //       if(err){
-                                //           console.log("err in refunds",err)
-                                //       }
-                                //       else{
-                                //           console.log('refund-->',refund)
-                                //           callback('',refund)
-                                //       }
-                                //     // asynchronously called
-                                //   }).then((refund)=>{
-                                //     return  stripe.refunds.retrieve(
-                                //         "re_1D1XeJHvBDdKnKYwXMjS4nTM",
-                                //         function(err, refund1) {
-                                //             if(err)
-                                //                 console.log("error---->",err)
-                                //             else{
-                                //                 console.log("refundsss---->",refund1)
-                                //                 callback('',refund1)
-                                //             }
-                                //           //asynchronously called
-                                //         }
-                                //       );
-    
-                                //   })
-                            //}
-//*********************************************----------  Refund Payment End -----------***************************************************                          
-                             
-                      //  })
+                                console.log("customer=====>", customer)
+                            })
+                            .then((charge) => {
+                                charge1 = charge
+                                console.log("charge stripe")
+                                if (!charge1) {
+
+                                    console.log("Cannot charge a customer that has no active card", charge1.id)
+                                    response.sendResponseWithoutData(res, responseCode.WENT_WRONG, "Your card is not active.")
+                                }
+                                else {
+                                    console.log("charge1============>", charge1)
+                                    // var book=new booking({
+                                    //     "transactionDate":charge1.Date,
+                                    //     "transactionStatus":charge1.Status
+
+                                    // })
+                                    // book.save((err_,result_)=>{
+                                    booking.findOneAndUpdate({ eventId: req.body.eventId, userId: req.body.userId, businessManId: req.body.businessManId, period: req.body.period }, {
+                                        $set: {
+                                            "transactionDate": charge1.Date,
+                                            "transactionStatus": charge1.Status
+                                        }
+                                    }, { new: true }, (err_, result_) => {
+                                        if (err_)
+                                            console.log("err", err_)
+                                        else {
+                                            console.log(`Charge object is ${JSON.stringify(charge1)}`)
+                                            callback('', result_)
+                                        }
+                                    })
+
+                                    // charge=charge;
+
+                                    //  response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, 'Payment done successfully.')  
+                                }
+                            })//.then(()=>{
+                        //************************************************--------  Refund Payment  ----*********************************************************************************** */
+                        // if(req.body.refund=="REFUND"){
+                        // console.log("customer id------------->",charge)
+                        // return stripe.refunds.create({
+                        //     charge: "ch_1D1Z4yFvUkcGB9taxetGm3Gd"
+                        //   }, function(err, refund) {
+                        //       if(err){
+                        //           console.log("err in refunds",err)
+                        //       }
+                        //       else{
+                        //           console.log('refund-->',refund)
+                        //           callback('',refund)
+                        //       }
+                        //     // asynchronously called
+                        //   }).then((refund)=>{
+                        //     return  stripe.refunds.retrieve(
+                        //         "re_1D1XeJHvBDdKnKYwXMjS4nTM",
+                        //         function(err, refund1) {
+                        //             if(err)
+                        //                 console.log("error---->",err)
+                        //             else{
+                        //                 console.log("refundsss---->",refund1)
+                        //                 callback('',refund1)
+                        //             }
+                        //           //asynchronously called
+                        //         }
+                        //       );
+
+                        //   })
+                        //}
+                        //*********************************************----------  Refund Payment End -----------***************************************************                          
+
+                        //  })
                         // .catch((err)=>{
                         //     if(!err){
                         //         console.log("err occur",err) 
@@ -960,24 +966,24 @@ module.exports = {
                         //         callback(err)
                         //        // response.sendResponseWithData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured",err)
                         //     }
-                            
+
                         // })
-                     //   callback(!charge,charge)
-                       
-                }, ], (err, result) => {
-                    if (err) {
-                        console.log("errr6", err)
-                        response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR)
-                    } else{
-                        console.log("*********result final",result)
-                        response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Payment successfully done!")
-                    }
-                      
-                })
-            }//
-        })
-    }
-},
+                        //   callback(!charge,charge)
+
+                    },], (err, result) => {
+                        if (err) {
+                            console.log("errr6", err)
+                            response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR)
+                        } else {
+                            console.log("*********result final", result)
+                            response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Payment successfully done!")
+                        }
+
+                    })
+                }//
+            })
+        }
+    },
 
 
     /////////////////////////////////////////////////////////////////////////////------API for booking in APP--------------\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -1026,7 +1032,7 @@ module.exports = {
     //         })//
     //     })
     // },
-//    ********************************************************************************************** My all booking in app *********************************************************************************
+    //    ********************************************************************************************** My all booking in app *********************************************************************************
     "myBookingShow": (req, res) => {
         var query = { userId: req.body.userId }
         // console.log("++++++++++++++++", query)
@@ -1047,31 +1053,31 @@ module.exports = {
         if (!req.body.eventId || !req.body.businessManId || !req.body.customerId)
             return response.sendResponseWithoutData(res, responseCode.BAD_REQUEST, "Please provide all required fields !");
         else
-            User.findOne({ _id: req.body.businessManId ,businessName:req.body.businessName,_id:req.body.customerId , status: "ACTIVE" }, (err, success) => {
+            User.findOne({ _id: req.body.businessManId, businessName: req.body.businessName, _id: req.body.customerId, status: "ACTIVE" }, (err, success) => {
                 if (err)
                     return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG);
                 else if (success == false)
                     return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "UserId Not found");
                 else
-                    eventSchema.findOne({ _id: req.body.eventId,  businessName:req.body.businessName,status: "ACTIVE" }, (err, success2) => {
+                    eventSchema.findOne({ _id: req.body.eventId, businessName: req.body.businessName, status: "ACTIVE" }, (err, success2) => {
                         if (err)
                             return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG);
                         else if (!success2)
                             return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Events data Not found");
                         else
-                            feedback.findOneAndUpdate({ eventId: req.body.eventId,customerId:req.body.customerId,  businessManId: req.body.businessManId }, { $push: { feedback: req.body.feedback } }, { new: true, upsert: true })
-                                .populate("customerId", "name address profilePic").populate("eventId","eventPrice")
+                            feedback.findOneAndUpdate({ eventId: req.body.eventId, customerId: req.body.customerId, businessManId: req.body.businessManId }, { $push: { feedback: req.body.feedback } }, { new: true, upsert: true })
+                                .populate("customerId", "name address profilePic").populate("eventId", "eventPrice")
                                 .exec((err, success3) => {
                                     if (err)
                                         return response.sendResponseWithData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG, err);
                                     else if (success3.length == 0)
                                         return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Something went wrong....");
-                                    else{
-                                        console.log("noti data===>",success.deviceToken, 'feedback Posted !',' Your feedback is successfully send.',  req.body.businessManId,req.body.customerId,success.profilePic,success.name)
-                                        notification.single_notification(success.deviceToken, 'feedback Posted !',' Your feedback is successfully send.',  req.body.businessManId,req.body.customerId,success.profilePic,success.name)
+                                    else {
+                                        console.log("noti data===>", success.deviceToken, 'feedback Posted !', ' Your feedback is successfully send.', req.body.businessManId, req.body.customerId, success.profilePic, success.name)
+                                        notification.single_notification(success.deviceToken, 'feedback Posted !', ' Your feedback is successfully send.', req.body.businessManId, req.body.customerId, success.profilePic, success.name)
                                         response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, "Feedback is successfully send.", success3);
                                     }
-                                       
+
                                 })
                     })
             })
@@ -1081,8 +1087,8 @@ module.exports = {
     "viewCustomerFeedback": (req, res) => {
         if (!req.body.eventId || !req.body.businessManId)
             return response.sendResponseWithoutData(res, responseCode.BAD_REQUEST, "Please provide all required fields !");
-        else{
-            feedback.find({ businessManId: req.body.businessManId, eventId: req.body.eventId }).select('-customerId').populate("feedback.customerId", "_id name address profilePic").populate("eventId","eventPrice").exec((err, succ) => {
+        else {
+            feedback.find({ businessManId: req.body.businessManId, eventId: req.body.eventId }).select('-customerId').populate("feedback.customerId", "_id name address profilePic").populate("eventId", "eventPrice").exec((err, succ) => {
                 if (err)
                     return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG);
                 if (succ.length == 0)
@@ -1094,53 +1100,53 @@ module.exports = {
         }
     },
     //................................................Average of rating according to paticular bssinessman.....................................
-    'avgBussinessList':(req,res)=>{
+    'avgBussinessList': (req, res) => {
         console.log(`request for avg rating of particular customer ${JSON.stringify(req.body)}`)
         feedback.aggregate(
-            [  
-                { $unwind: "$feedback" }, 
-              {
-                $group:
-                  {
-                    _id:{businessManId:"$businessManId",eventId:"$eventId"},
-                    starsCount: { $avg: "$feedback.starsCount" },
-                    businessName: { "$first": "$businessName"},
-                  }
-              },
-              {
-                $lookup:
-                  {
-                    from: "businesses",
-                    localField: "_id.eventId",
-                    foreignField: "_id",
-                    as: "bussiness"
-                  }
-             },
-              {$unwind:"$bussiness"}, 
-            {$project: {"businessName":"$businessName","starsCount":"$starsCount","eventPrice":"$bussiness.eventPrice","eventDescription":"$bussiness.eventDescription"}}
+            [
+                { $unwind: "$feedback" },
+                {
+                    $group:
+                    {
+                        _id: { businessManId: "$businessManId", eventId: "$eventId" },
+                        starsCount: { $avg: "$feedback.starsCount" },
+                        businessName: { "$first": "$businessName" },
+                    }
+                },
+                {
+                    $lookup:
+                    {
+                        from: "businesses",
+                        localField: "_id.eventId",
+                        foreignField: "_id",
+                        as: "bussiness"
+                    }
+                },
+                { $unwind: "$bussiness" },
+                { $project: { "businessName": "$businessName", "starsCount": "$starsCount", "eventPrice": "$bussiness.eventPrice", "eventDescription": "$bussiness.eventDescription" } }
             ]
-         ).limit(5).exec((err,result)=>{
-             if(err)
+        ).limit(5).exec((err, result) => {
+            if (err)
                 return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG);
-            else{
+            else {
 
                 response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, "List of all bussinessman's Average Rating found successfully.", result);
             }
-         })
+        })
     },
     //********************************************************************************************  API for viewCustomerFeedback  for website **************************************************************************  */
 
     "allFeedbackViews": (req, res) => {
-            feedback.find({ }).populate("customerId", "_id name address profilePic").populate("eventId","eventPrice").exec((err, succ) => {
-                if (err)
-                    return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG);
-                if (succ.length == 0)
-                    return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found!");
-                else if (succ) {
-                    response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, succ);
-                }
+        feedback.find({}).populate("customerId", "_id name address profilePic").populate("eventId", "eventPrice").exec((err, succ) => {
+            if (err)
+                return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG);
+            if (succ.length == 0)
+                return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found!");
+            else if (succ) {
+                response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, succ);
+            }
 
-            })
+        })
     },
 
     //********************************************************************************************  API for getting all events for Admin panel **************************************************************************  */
@@ -1149,77 +1155,37 @@ module.exports = {
     'getAllEvents': (req, res) => {
         var value = new RegExp('^' + req.body.search, "i")
         //     if (req.body.search) {
-    
+
         //     }
-        var query =  {
-            $or: [{ $and: [{ status: "ACTIVE" }, { "businessName": value }] }, { $and: [{ status: "ACTIVE" }, { eventName: value }] }],status:"ACTIVE"}
-            // $and: [{ name: req.body.search},{email: req.body.search} ,{userType: 'CUSTOMER' }] }
+        var query = {
+            $or: [{ $and: [{ status: "ACTIVE" }, { "businessName": value }] }, { $and: [{ status: "ACTIVE" }, { eventName: value }] }], status: "ACTIVE"
+        }
+        // $and: [{ name: req.body.search},{email: req.body.search} ,{userType: 'CUSTOMER' }] }
         let options = {
             page: req.body.pageNumber || 1,
             select: '_id eventName eventImage businessName eventCreated_At eventPrice',
-            populate: [{ path: "userId", select: "name ", match:{status:"ACTIVE"}}],
+            populate: [{ path: "userId", select: "name ", match: { status: "ACTIVE" } }],
             // match:{status:"ACTIVE"},
-            limit:  10,
+            limit: 10,
             sort: { eventCreated_At: -1 },
             lean: false
-        }     
-        eventSchema.paginate(query,options,(err, result) => {
+        }
+        eventSchema.paginate(query, options, (err, result) => {
             if (err)
                 return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
-            if (result.docs.length==0)
+            if (result.docs.length == 0)
                 return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found")
             else
-            response.sendResponseWithPagination(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result.docs, { total: result.total, limit: result.limit, currentPage: result.page, totalPage: result.pages });
-                // response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result)
+                response.sendResponseWithPagination(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result.docs, { total: result.total, limit: result.limit, currentPage: result.page, totalPage: result.pages });
+            // response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result)
         })
     },
-    
-
-    // 'searchEventFilter': (req, res) => {
-
-
-    //     var value = new RegExp('^' + req.body.search, "i")
-    //     if (req.body.search) {
-
-    //     }
-
-    //     let options = {
-    //         page: req.params.pageNumber || 1,
-    //         select: '_id eventName  businessName  eventCreated_At eventPrice userId',
-    //         populate: [{ path: "userId", select: "name  ", match: { status: "ACTIVE" } }],
-    //         //    match:{"userId.name": value },
-    //         limit: 10,
-    //         sort: { eventCreated_At: -1 },
-    //         lean: false
-    //     }
-
-
-    //     let obj = {
-    //         $or: [{ $and: [{ status: "ACTIVE" }, { "businessName": value }] }, { $and: [{ status: "ACTIVE" }, { eventName: value }] }]
-    //         // $and: [{ name: req.body.search},{email: req.body.search} ,{userType: 'CUSTOMER' }]
-    //     }
-
-
-    //     eventSchema.paginate(obj, options, (err, result) => {
-    //         console.log("**********", err, result)
-    //         if (err)
-    //             return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
-    //         if (result.docs.length == 0)
-    //             return response.sendResponseWithData(res, responseCode.NOT_FOUND, "Data not found", result)
-    //         else
-    //             response.sendResponseWithPagination(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result.docs, { total: result.total, limit: result.limit, currentPage: result.page, totalPage: result.pages });
-    //         // response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result)
-    //     })
-    // },
-
-
-
-
 
 
 
     "transactionManagementFilter": (req, res) => {
         console.log("request is-------------->", req.body);
+
         let options = {
             page: req.body.pageNumber || 1,
             populate: [{ path: 'userId', select: "name", match: { userType: "CUSTOMER", status: "ACTIVE" } }, { path: 'eventId', select: "eventName eventPrice", match: { status: "ACTIVE" } }],
@@ -1260,27 +1226,46 @@ module.exports = {
 
 
     "getTransactionManagement": (req, res) => {
+        var matchobj, eventMatchObj;
+        if (req.body.search != '') {
+            var value = new RegExp('^' + req.body.search, "i")
+            matchobj = { status: "ACTIVE", name: value }
+            eventMatchObj = { status: "ACTIVE", eventName: value }
+        } else {
+            matchobj = { status: "ACTIVE" }
+            eventMatchObj = { status: "ACTIVE" }
+        }
+        console.log("value>>>>>>", value
+        )
+        var obj = {};
+        if (req.body.bookingStatus)
+            obj.bookingStatus = req.body.bookingStatus;
+
         let options = {
             page: req.body.pageNumber || 1,
-            populate: [{ path: 'userId', select: "name status", match: { status: "ACTIVE" } }, { path: 'eventId', select: "eventName status eventPrice", match: { status: "ACTIVE" } }, { path: 'businessManId', select: "name status", match: { status: "ACTIVE" } }],
-            limit: req.body.limit || 10,
+            populate: [
+                { path: 'userId', select: "name status", match: matchobj },
+                { path: 'eventId', select: "eventName status eventPrice", match: eventMatchObj },
+                { path: 'businessManId', select: "name status", match: matchobj }
+            ],
+            limit: 10,
             select: "userId eventId businessManId transactionDate transactionStatus bookingStatus transactionTime ",
-            sort: { eventCreated_At: -1 },
+            sort: { 'eventCreated_At': -1 },
             lean: false
             // booking.find({pictures: {$not: {$size: 0}}})
         }
         // var obj = { $or: [{bookingStatus:"CONFIRMED"} ,{bookingStatus:"CANCELLED" }] }     
-        var obj = {}
+
         booking.paginate(obj, options, (err, data) => {
             if (err) {
-                return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.INTERNAL_SERVER_ERROR);
+                return response.sendResponseWithData(res, responseCode.WENT_WRONG, responseMessage.INTERNAL_SERVER_ERROR, err);
             }
-            if (data.docs.lenght == 0) {
+            if (data.docs.length == 0) {
                 return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND);
             }
             else {
-
-                response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, data);
+                //console.log("dfghadfhjgdfhgjk",data)
+                response.sendResponseWithPagination(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, data.docs, { total: data.total, limit: data.limit, currentPage: data.page, totalPage: data.pages });
             }
         })
     }
@@ -1294,3 +1279,53 @@ module.exports = {
 
 
 
+       // charge=charge;
+
+                                    //  response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, 'Payment done successfully.')  
+                            //     }
+                            // })//.then(()=>{
+                        //************************************************--------  Refund Payment  ----*********************************************************************************** */
+                        // if(req.body.refund=="REFUND"){
+                        // console.log("customer id------------->",charge)
+                        // return stripe.refunds.create({
+                        //     charge: "ch_1D1Z4yFvUkcGB9taxetGm3Gd"
+                        //   }, function(err, refund) {
+                        //       if(err){
+                        //           console.log("err in refunds",err)
+                        //       }
+                        //       else{
+                        //           console.log('refund-->',refund)
+                        //           callback('',refund)
+                        //       }
+                        //     // asynchronously called
+                        //   }).then((refund)=>{
+                        //     return  stripe.refunds.retrieve(
+                        //         "re_1D1XeJHvBDdKnKYwXMjS4nTM",
+                        //         function(err, refund1) {
+                        //             if(err)
+                        //                 console.log("error---->",err)
+                        //             else{
+                        //                 console.log("refundsss---->",refund1)
+                        //                 callback('',refund1)
+                        //             }
+                        //           //asynchronously called
+                        //         }
+                        //       );
+
+                        //   })
+                        //}
+                        //*********************************************----------  Refund Payment End -----------***************************************************                          
+
+                        //  })
+                        // .catch((err)=>{
+                        //     if(!err){
+                        //         console.log("err occur",err) 
+                        //     }
+                        //     else{
+                        //         console.log("err occur",err)
+                        //         callback(err)
+                        //        // response.sendResponseWithData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured",err)
+                        //     }
+
+                        // })
+                        //   callback(!charge,charge)

@@ -24,8 +24,8 @@ module.exports = {
                 else{
                     console.log(`Success---->${JSON.stringify(success)}`)
                     var token=success.deviceToken;
-                    var image=sucess.profilePic;
-                    var name=sucess.name;
+                    var image=success.profilePic;
+                    var name=success.name;
                   //  var deviceType=success.deviceType;
                    // var sub=success.pushSubscription;
                     console.log(`token------------>${sub}`)

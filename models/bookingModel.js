@@ -14,14 +14,14 @@ const booking = mongoose.Schema({
         type: Schema.Types.ObjectId,
         ref: 'User'
     },
-    businessManId:{
+    businessManId: {
         type: Schema.Types.ObjectId,
         ref: 'User'
     },
 
-    period:{
-        type:String,
-        enum:["DAILY","MONTHLY","WEEKLY"]
+    period: {
+        type: String,
+        enum: ["DAILY", "MONTHLY", "WEEKLY"]
     },
     duration: {
         type: Array,
@@ -31,27 +31,38 @@ const booking = mongoose.Schema({
         type: String,
         default: "PENDING"
     },
-    
+
     // feedbackDescription: {
     //     type:String
     // },
 
-    transactionDate:{
-        type:String
-               },
-    transactionStatus:{
-                type:String,
-                default:"pending"
-                       },
+    transactionDate: {
+         type: String
+    },
+    transactionTime: {
+        type: String,
+    },
+    transactionTimeStamp: {
+        type: String
+    },
+    eventName: {
+        type: String
+    },
+    businessName: {
+        type: String
+    },
+    customerName: {
+        type: String
+    },
 
     // starsCount: {
     //     type: Number
     // },
-   
+
 },
     {
         timestamps: true
     });
-    booking.plugin(mongoosePaginate);
+booking.plugin(mongoosePaginate);
 
 module.exports = mongoose.model('Booking', booking);
