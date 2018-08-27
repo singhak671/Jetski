@@ -277,87 +277,46 @@ module.exports = {
             }
         })
     },
-    // __________API______//
+    
     //-------------------------------------------------------------------------------My Event at business site after login  -----------------------------------------------------------------//
 
-
     'myAllEvents': (req, res) => {
-        console.log("get all events",req.body)
-        var query = {};
-        var limit = 5;
-        var page = (req.body.page === undefined) ? 1 : req.body.page;
-        console.log("succ in populate")
-        if (req.body.period)
-            query.period = req.body.period
-        // $or: { asdfasdf, asdfasdfadsfds, { $and: { asdfasdfadsf, asdfasdfasdfadsf } } }
-        User.find({ $or: [{ _id: req.body.userId, period: req.body.period, status: "ACTIVE" }, { _id: req.body.userId, status: "ACTIVE" }] }, { services: 1 }).populate({
-            path: 'services.eventId',
-            // model:"Businesses",
-            select: 'eventAddress duration  eventImage eventCreated_At  eventName eventDescription period eventPrice ',
-            sort: {'eventCreated_At': -1 },
-            //.sort({ eventCreated_At: -1 }).sort({'services.eventId.eventCreated_At':-1})
-        }).limit(limit).skip(limit * (page - 1)).exec((error, result) => {
-            if (error) {
-                console.log("err-->" + error)
+        //console.log("get al customer")
+
+
+        var query = { $or: [{ userId: req.body.userId, period: req.body.period, status: "ACTIVE" }, { userId: req.body.userId, status: "ACTIVE" }] }
+        let options = {
+            // page: req.params.pageNumber,
+            select: 'period eventAddress eventCreated_At eventImage offset duration eventName userId status eventDescription eventPrice ',
+            limit: req.body.limit || 10,
+            page: req.body.pageNumber || 1,
+            // match:{query},
+            sort: { eventCreated_At: -1 },
+            populate: { path: 'services.eventId', select: 'eventAddress duration  eventImage eventCreated_At  eventName eventDescription period eventPrice ',
+           
+            match: { status: "ACTIVE" } },
+            lean: false
+
+
+        }
+        eventSchema.paginate(query, options, (error, result) => {
+            if (error)
                 response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR)
-            }
+            else if (result.docs.length == 0)
+                response.sendResponseWithData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND)
+            else {
+                console.log("result is" + JSON.stringify(result))
+                // response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result)
+                response.sendResponseWithPagination(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result.docs, { total: result.total, limit: result.limit, currentPage: result.page, totalPage: result.pages });
 
-            // else if (result.docs.length == 0)
-            //  response.sendResponseWithData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND)
-            else {//.services.eventId.eventCreated_At
-                console.log("i am here>>>>>>>>>>>>", JSON.stringify(result[0].services[0].eventId.eventCreated_At))
-                //result.docs.map(x => delete x['password'])
-                response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result)
-                // response.sendResponseWithPagination(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result.docs, { total: result.total, limit: result.limit, currentPage: result.page, totalPage: result.pages });
             }
-            // })
-
-            //}
         })
-
     },
 
-//==============================================my all events=============================================================================
-// 'myAllEvents': (req, res) => {
-//     console.log("get all events",req.body)
-//     var query = {};
-//     if (req.body.period)
-//         query.period = req.body.period
-//     let options = {
-//         page: req.body.pageNumber,
-//         limit:5,
-//         populate: [{path:'services.eventId',select:'eventAddress duration  eventImage eventCreated_At  eventName eventDescription period eventPrice '}]
-//        // sort:{createdAt: -1}
-//     }
-//     console.log("**************************")
-//     // var query = {};
-//     // var limit = 5;
-//     // var page = (req.body.page === undefined) ? 1 : req.body.page;
-//     // console.log("succ in populate")
-//     // if (req.body.period)
-//     //     query.period = req.body.period
-//     // $or: { asdfasdf, asdfasdfadsfds, { $and: { asdfasdfadsf, asdfasdfasdfadsf } } }
-//     User.paginate({ $or: [{ _id: req.body.userId, period: req.body.period, status: "ACTIVE" }, { _id: req.body.userId, status: "ACTIVE" }] }, { services: 1 },options,(error, result) => {
-//         console.log("error",error,"result,   ",result)
-//         if (error) {
-//             console.log("err-->" + error)
-//             response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR)
-//         }
 
-//         // else if (result.docs.length == 0)
-//         //  response.sendResponseWithData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND)
-//         else {//.services.eventId.eventCreated_At
-//             console.log("i am here>>>>>>>>>>>>", JSON.stringify(result))
-//             //result.docs.map(x => delete x['password'])
-//            // response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result)
-//           response.sendResponseWithPagination(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result.docs, { total: result.total, limit: result.limit, currentPage: result.page, totalPage: result.pages });
-//         }
-//         // })
 
-//         //}
-//     })
 
-// },
+
     //------------------------------------------------------------------------------- API for Filter location in app   -----------------------------------------------------------------//
     "eventLocation": (req, res) => {
         eventSchema.distinct("eventAddress", { status: "ACTIVE" }, (error, result) => {
@@ -882,6 +841,8 @@ module.exports = {
                             array = req.body.duration[0].times;
                             if (array.length == 1) {
                                 if (validateEvent(req.body.duration,req.body.offset)) {
+               // transactionDate , transactionTime , transactionTimestamp, buninesNname , eventName, customerName. are required ** //
+
                                     booking.findOne({ eventId: req.body.eventId, userId: req.body.userId, businessManId: req.body.businessManId, period: req.body.period }, (err, success) => {
                                       console.log("booking result---------->",err,success)
                                         if (err)
@@ -1086,17 +1047,17 @@ module.exports = {
         if (!req.body.eventId || !req.body.businessManId || !req.body.customerId)
             return response.sendResponseWithoutData(res, responseCode.BAD_REQUEST, "Please provide all required fields !");
         else
-            User.findOne({ _id: req.body.businessManId ,_id:req.body.customerId , status: "ACTIVE" }, (err, success) => {
+            User.findOne({ _id: req.body.businessManId ,businessName:req.body.businessName,_id:req.body.customerId , status: "ACTIVE" }, (err, success) => {
                 if (err)
                     return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG);
                 else if (success == false)
                     return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "UserId Not found");
                 else
-                    eventSchema.findOne({ _id: req.body.eventId, status: "ACTIVE" }, (err, success2) => {
+                    eventSchema.findOne({ _id: req.body.eventId,  businessName:req.body.businessName,status: "ACTIVE" }, (err, success2) => {
                         if (err)
                             return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG);
                         else if (!success2)
-                            return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "EventId Not found");
+                            return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Events data Not found");
                         else
                             feedback.findOneAndUpdate({ eventId: req.body.eventId,customerId:req.body.customerId,  businessManId: req.body.businessManId }, { $push: { feedback: req.body.feedback } }, { new: true, upsert: true })
                                 .populate("customerId", "name address profilePic").populate("eventId","eventPrice")
@@ -1186,11 +1147,17 @@ module.exports = {
 
 
     'getAllEvents': (req, res) => {
-        var query = {status:"ACTIVE" };
+        var value = new RegExp('^' + req.body.search, "i")
+        //     if (req.body.search) {
+    
+        //     }
+        var query =  {
+            $or: [{ $and: [{ status: "ACTIVE" }, { "businessName": value }] }, { $and: [{ status: "ACTIVE" }, { eventName: value }] }],status:"ACTIVE"}
+            // $and: [{ name: req.body.search},{email: req.body.search} ,{userType: 'CUSTOMER' }] }
         let options = {
-            page: req.params.pageNumber || 1,
-            select: '_id eventName eventImage eventCreated_At eventPrice',
-            populate: [{ path: "userId", select: "name businessName", match:{status:"ACTIVE"}}],
+            page: req.body.pageNumber || 1,
+            select: '_id eventName eventImage businessName eventCreated_At eventPrice',
+            populate: [{ path: "userId", select: "name ", match:{status:"ACTIVE"}}],
             // match:{status:"ACTIVE"},
             limit:  10,
             sort: { eventCreated_At: -1 },
@@ -1206,7 +1173,122 @@ module.exports = {
                 // response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result)
         })
     },
+    
+
+    // 'searchEventFilter': (req, res) => {
+
+
+    //     var value = new RegExp('^' + req.body.search, "i")
+    //     if (req.body.search) {
+
+    //     }
+
+    //     let options = {
+    //         page: req.params.pageNumber || 1,
+    //         select: '_id eventName  businessName  eventCreated_At eventPrice userId',
+    //         populate: [{ path: "userId", select: "name  ", match: { status: "ACTIVE" } }],
+    //         //    match:{"userId.name": value },
+    //         limit: 10,
+    //         sort: { eventCreated_At: -1 },
+    //         lean: false
+    //     }
+
+
+    //     let obj = {
+    //         $or: [{ $and: [{ status: "ACTIVE" }, { "businessName": value }] }, { $and: [{ status: "ACTIVE" }, { eventName: value }] }]
+    //         // $and: [{ name: req.body.search},{email: req.body.search} ,{userType: 'CUSTOMER' }]
+    //     }
+
+
+    //     eventSchema.paginate(obj, options, (err, result) => {
+    //         console.log("**********", err, result)
+    //         if (err)
+    //             return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
+    //         if (result.docs.length == 0)
+    //             return response.sendResponseWithData(res, responseCode.NOT_FOUND, "Data not found", result)
+    //         else
+    //             response.sendResponseWithPagination(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result.docs, { total: result.total, limit: result.limit, currentPage: result.page, totalPage: result.pages });
+    //         // response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result)
+    //     })
+    // },
+
+
+
+
+
+
+
+    "transactionManagementFilter": (req, res) => {
+        console.log("request is-------------->", req.body);
+        let options = {
+            page: req.body.pageNumber || 1,
+            populate: [{ path: 'userId', select: "name", match: { userType: "CUSTOMER", status: "ACTIVE" } }, { path: 'eventId', select: "eventName eventPrice", match: { status: "ACTIVE" } }],
+            limit: req.body.limit || 10,
+            select: "transactionStatus eventId userId transactionDate",
+            sort: { eventCreated_At: -1 },
+            lean: false
+        }
+        var obj;
+        var date1 = new Date(req.body.fromDate);
+        var date2 = new Date(req.body.toDate);
+        var query = { createdAt: { $gte: date1, $lte: date2 } }
+        if (req.body.transactionStatus && req.body.fromDate && req.body.toDate) {
+            obj = {
+
+                $and: [query, { transactionStatus: req.body.transactionStatus }]
+            }
+        }
+        else if (req.body.fromDate && req.body.toDate && !req.body.transactionStatus) {
+            obj = query;
+        }
+        else if (!req.body.fromDate && !req.body.toDate && req.body.transactionStatus) {
+            obj = req.body.transactionStatus;
+        }
+
+        booking.paginate(obj, options, (err, data) => {
+            if (err) {
+                return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.INTERNAL_SERVER_ERROR);
+            }
+            if (data.docs.lenght == 0) {
+                return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND);
+            }
+            else {
+                response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, data);
+            }
+        })
+    },
+
+
+    "getTransactionManagement": (req, res) => {
+        let options = {
+            page: req.body.pageNumber || 1,
+            populate: [{ path: 'userId', select: "name status", match: { status: "ACTIVE" } }, { path: 'eventId', select: "eventName status eventPrice", match: { status: "ACTIVE" } }, { path: 'businessManId', select: "name status", match: { status: "ACTIVE" } }],
+            limit: req.body.limit || 10,
+            select: "userId eventId businessManId transactionDate transactionStatus bookingStatus transactionTime ",
+            sort: { eventCreated_At: -1 },
+            lean: false
+            // booking.find({pictures: {$not: {$size: 0}}})
+        }
+        // var obj = { $or: [{bookingStatus:"CONFIRMED"} ,{bookingStatus:"CANCELLED" }] }     
+        var obj = {}
+        booking.paginate(obj, options, (err, data) => {
+            if (err) {
+                return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.INTERNAL_SERVER_ERROR);
+            }
+            if (data.docs.lenght == 0) {
+                return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND);
+            }
+            else {
+
+                response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, data);
+            }
+        })
+    }
+
 }
+
+
+
 
 
 

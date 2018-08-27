@@ -26,7 +26,9 @@ router.post('/addEvent',Business.addEvent);
  router.post('/viewCustomerFeedback',Business.viewCustomerFeedback);
  router.get('/allFeedbackViews',Business.allFeedbackViews);
  router.post('/cancelBooking',Business.cancelBooking);
- router.get('/getAllEvents/:pageNumber',Business.getAllEvents);
-
+ router.post('/getAllEvents/',Business.getAllEvents);
+ router.post('/transactionManagementFilter',Business.transactionManagementFilter);
+//  router.post('/searchEventFilter',Business.searchEventFilter);
+ router.get('/getTransactionManagement/:pageNumber',Business.getTransactionManagement);
  router.get('/avgBussinessList',Business.avgBussinessList);
 module.exports = router;
