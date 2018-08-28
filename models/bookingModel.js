@@ -42,6 +42,10 @@ const booking = mongoose.Schema({
     transactionTime: {
         type: String,
     },
+  
+    transactionStatus:{type:String},
+    chargeId:{type:String},
+
     transactionTimeStamp: {
         type: String
     },
@@ -52,6 +56,9 @@ const booking = mongoose.Schema({
         type: String
     },
     customerName: {
+        type: String
+    },
+    chargeId:{
         type: String
     },
     eventPrice: {

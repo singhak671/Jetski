@@ -195,7 +195,7 @@ module.exports = {
     //=============================================================cancel booking for app=======================================================
     'cancelBooking': (req, res) => {
         var query = { _id: req.body._id, bookingStatus: "PENDING" || "CONFIRMED" }
-        booking.findByIdAndUpdate(query, { $set: { bookingStatus: "CANCELLED" } }, { new: true }, (err, result) => {
+        booking.findOneAndUpdate(query, { $set: { bookingStatus: "CANCELLED" } }, { new: true }, (err, result) => {
             if (err) {
                 console.log("err1,", err)
                 return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
@@ -210,8 +210,8 @@ module.exports = {
                     else {
                         //  }
                         return stripe.refunds.create({
-                            charge: req.body.charge,
-                            amount: (0.9 * req.body.amount),
+                            charge: result.chargeId,
+                            amount: (0.9 * result.eventPrice),
                         }, function (err, refund) {
                             if (err) {
                                 console.log("err in refunds", err)
@@ -252,7 +252,7 @@ module.exports = {
 
 
 
-    'latestEvents': (req, res) => {
+     'latestEvents': (req, res) => {
         //console.log("get al customer")
         //var durationArr = [];
         var query = { status: "ACTIVE" };
@@ -274,6 +274,7 @@ module.exports = {
             else {
                 console.log("result is" + JSON.stringify(result))
                 response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result)
+
             }
         })
     },
@@ -830,6 +831,7 @@ module.exports = {
                 if (!succ)
                     return response.sendResponseWithData(res, responseCode.NOT_FOUND, "UserId not found");
                 else {//
+                    var email=succ.email
                     async.waterfall([(callback) => {
                         eventSchema.findOne({ _id: req.body.eventId }, (err5, succ1) => {//
                             if (err5)
@@ -853,17 +855,17 @@ module.exports = {
 
                                                 return response.sendResponseWithData(res, responseCode.NOT_FOUND, "Data not found", success)
                                             }
-                                            else {
-                                                booking.create(req.body, (err, result) => {
-                                                    if (err)
-                                                        return response.sendResponseWithData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.", err);
-                                                    else
-                                                        console.log("booking is done>>>>>>>>>>>>", result)
-                                                    // response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, success);
-                                                    callback(null, result)
+                                            // else {
+                                            //     booking.create(req.body, (err, result) => {
+                                            //         if (err)
+                                            //             return response.sendResponseWithData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.", err);
+                                            //         else
+                                            //             console.log("booking is done>>>>>>>>>>>>", result)
+                                            //         // response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, success);
+                                                   callback(null, success)
 
-                                                })
-                                            }
+                                            //     })
+                                            // }
                                         })
                                     }
                                     else
@@ -878,10 +880,9 @@ module.exports = {
                         var charge1;
                         console.log("34yswqghasgghsghas")
                         stripe.customers.create({
-                            email: req.body.email, // customer email, which user need to enter while making payment
+                            email: email, // customer email, which user need to enter while making payment
                             source: req.body.stripeToken // token for the given card 
-                        })
-                            .then((customer) => {
+                        }) .then((customer) => {
                                 console.log("customer stripe")
                                 return stripe.charges.create({ // charge the customer
                                     amount: req.body.eventPrice,
@@ -899,22 +900,51 @@ module.exports = {
                                     response.sendResponseWithoutData(res, responseCode.WENT_WRONG, "Your card is not active.")
                                 }
                                 else {
-                                    console.log("charge1============>", charge1)
+                                    console.log("charge1============>", charge1.id)
                                     // var book=new booking({
                                     //     "transactionDate":charge1.Date,
                                     //     "transactionStatus":charge1.Status
 
                                     // })
                                     // book.save((err_,result_)=>{
-                                    booking.findOneAndUpdate({ eventId: req.body.eventId, userId: req.body.userId, businessManId: req.body.businessManId, period: req.body.period }, {
-                                        $set: {
-                                            "transactionDate": charge1.Date,
-                                            "transactionStatus": charge1.Status
-                                        }
-                                    }, { new: true }, (err_, result_) => {
+                                    // booking.findOneAndUpdate({ eventId: req.body.eventId, userId: req.body.userId, businessManId: req.body.businessManId, period: req.body.period }, {
+                                    //     $set: {
+                                    //       //  "transactionDate": charge1.Date,
+                                    //         "transactionStatus": charge1.Status,
+                                    //         "chargeId":charge1.id
+                                    //     }
+                                    // }, { multi: true },
+                                
+                              
+                                      
+                                 
+                           
+                              
+                                
+                               
+                                    var obj={
+                                        eventId: req.body.eventId,
+                                         userId: req.body.userId,
+                                          businessManId: req.body.businessManId, 
+                                          period: req.body.period ,
+                                          duration:req.body.duration,
+                                          offset: req.body.offset,
+                                          eventName:req.body.eventName,
+                                          businessName:req.body.businessName,
+                                          customerName:req.body.customerName,
+                                         "transactionDate": req.body.transactionDate,
+                                         "transactionTime":req.body.transactionTime,
+                                         "transactionTimeStamp":req.body.transactionTimeStamp,
+                                                  "transactionStatus": charge1.Status,
+                                                  "chargeId":charge1.id,
+                                                  "bookingStatus":"CONFIRMED",
+                                                "eventPrice":req.body.eventPrice
+                                    }
+                                    booking.create(obj, (err_, result_) => {
                                         if (err_)
                                             console.log("err", err_)
                                         else {
+                                            console.log("*************************result_",JSON.stringify(result_))
                                             console.log(`Charge object is ${JSON.stringify(charge1)}`)
                                             callback('', result_)
                                         }
@@ -976,7 +1006,7 @@ module.exports = {
                             console.log("errr6", err)
                             response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR)
                         } else {
-                            // console.log("*********result final", result)
+                             console.log("*********result final", result)
                             response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Payment successfully done!")
                         }
 
