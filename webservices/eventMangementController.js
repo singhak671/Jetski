@@ -756,7 +756,7 @@ module.exports = {
                         // console.log('SUCCESS +++++++++',success.duration[i].date.epoc * 1000 == Time_stamp);
                         if (success.duration[i].date.epoc * 1000 == Time_stamp) {
                             todayArray.push(success.duration[i])
-                            console.log('ARRAY IS', todayArray);
+                            console.log('ARRAY IS for Today>>>>>', todayArray);
 
                         }
                     }
@@ -784,7 +784,7 @@ module.exports = {
 
                         if (success.duration[i].date.epoc * 1000 < Time_stamp2 && success.duration[i].date.epoc * 1000 >= Time_stamp) {
                             weekArray.push(success.duration[i])
-                            console.log('ARRAY IS', weekArray);
+                            console.log('ARRAY IS for weekly>>>', weekArray);
 
                         }
                     }
@@ -804,7 +804,7 @@ module.exports = {
 
                         if (success.duration[i].date.epoc * 1000 < nextMonth && success.duration[i].date.epoc * 1000 >= Time_stamp) {
                             monthlyArray.push(success.duration[i])
-                            console.log('ARRAY IS', monthlyArray);
+                            console.log('ARRAY IS for monthly>>', monthlyArray);
 
                         }
                     }
@@ -845,7 +845,7 @@ module.exports = {
                                     if (validateEvent(req.body.duration, req.body.offset)) {
                                         // transactionDate , transactionTime , transactionTimestamp, buninesNname , eventName, customerName. are required ** //
 
-                                        booking.findOne({ eventId: req.body.eventId, userId: req.body.userId, businessManId: req.body.businessManId, period: req.body.period }, (err, success) => {
+                                        booking.findOne({ eventId: req.body.eventId, userId: req.body.userId, businessManId: req.body.businessManId }, (err, success) => {
                                             console.log("booking result---------->", err, success)
                                             if (err)
                                                 return response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.", err)
@@ -858,8 +858,9 @@ module.exports = {
                                                     if (err)
                                                         return response.sendResponseWithData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.", err);
                                                     else
-                                                        // response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, success);
-                                                        callback(null, result)
+                                                        console.log("booking is done>>>>>>>>>>>>", result)
+                                                    // response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, success);
+                                                    callback(null, result)
 
                                                 })
                                             }
@@ -975,7 +976,7 @@ module.exports = {
                             console.log("errr6", err)
                             response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR)
                         } else {
-                            console.log("*********result final", result)
+                            // console.log("*********result final", result)
                             response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Payment successfully done!")
                         }
 
@@ -1185,45 +1186,85 @@ module.exports = {
 
     "transactionManagementFilter": (req, res) => {
         console.log("request is-------------->", req.body);
-
         let options = {
             page: req.body.pageNumber || 1,
-            populate: [{ path: 'userId', select: "name", match: { userType: "CUSTOMER", status: "ACTIVE" } }, { path: 'eventId', select: "eventName eventPrice", match: { status: "ACTIVE" } }],
             limit: req.body.limit || 10,
-            select: "transactionStatus eventId userId transactionDate",
-            sort: { eventCreated_At: -1 },
+            select: "bookingStatus eventName eventPrice customerName businessName transactionTime transactionTimeStamp transactionDate",
+            sort: { createdAt: -1 },
             lean: false
         }
         var obj;
-        var date1 = new Date(req.body.fromDate);
-        var date2 = new Date(req.body.toDate);
-        var query = { createdAt: { $gte: date1, $lte: date2 } }
-        if (req.body.transactionStatus && req.body.fromDate && req.body.toDate) {
+        // var date1 = new Date(req.body.fromDate);
+        // var date2 = new Date(req.body.toDate);
+        var query = { transactionDate: { $gte: req.body.fromDate, $lte: req.body.toDate } }
+        console.log("i am here to verify>>>>>>>>",query)
+        var value = new RegExp('^' + req.body.search, "i")
+        if (req.body.bookingStatus && req.body.fromDate && req.body.toDate && req.body.search) {
             obj = {
-
-                $and: [query, { transactionStatus: req.body.transactionStatus }]
+                $or: [{ $and: [query, { bookingStatus: req.body.bookingStatus }, { eventName: value }] }, { $and: [query, { bookingStatus: req.body.bookingStatus }, { customerName: value }] }, { $and: [query, { bookingStatus: req.body.bookingStatus }, { businessName: value }] }]
             }
         }
-        else if (req.body.fromDate && req.body.toDate && !req.body.transactionStatus) {
+
+        else if (!req.body.bookingStatus && req.body.fromDate && req.body.toDate && req.body.search) {
+            obj = {
+                $or: [{ $and: [query, { eventName: value }] }, { $and: [query, { customerName: value }] }, { $and: [query, { businessName: value }] }]
+            }
+        }
+
+        else if (req.body.bookingStatus && req.body.fromDate && req.body.toDate && !req.body.search) {
+            obj = {
+                $or: [{ $and: [query, { bookingStatus: req.body.bookingStatus }] }, { $and: [query, { bookingStatus: req.body.bookingStatus }] }, { $and: [query, { bookingStatus: req.body.bookingStatus }] }]
+            }
+        }
+
+        else if (req.body.bookingStatus && !req.body.fromDate && !req.body.toDate && req.body.search) {
+            obj = {
+                $or: [{ $and: [{ bookingStatus: req.body.bookingStatus }, { eventName: value }] }, { $and: [{ bookingStatus: req.body.bookingStatus }, { customerName: value }] }, { $and: [{ bookingStatus: req.body.bookingStatus }, { businessName: value }] }]
+            }
+        }
+
+
+        else if (!req.body.bookingStatus && !req.body.fromDate && !req.body.toDate && req.body.search) {
+            obj = {
+                $or: [{ $and: [{ eventName: value }] }, { $and: [{ customerName: value }] }, { $and: [{ businessName: value }] }]
+            }
+        }
+        else if (!req.body.bookingStatus && !req.body.fromDate && !req.body.toDate && req.body.search) {
+            obj = {
+                $or: [{ $and: [{ eventName: value }] }, { $and: [{ customerName: value }] }, { $and: [{ businessName: value }] }]
+            }
+        }
+
+
+        else if (req.body.bookingStatus && !req.body.fromDate && !req.body.toDate && !req.body.search) {
+            obj = {
+                bookingStatus: req.body.bookingStatus
+            }
+        }
+
+
+        else if (!req.body.bookingStatus && req.body.fromDate && req.body.toDate && !req.body.search) {
             obj = query;
         }
-        else if (!req.body.fromDate && !req.body.toDate && req.body.transactionStatus) {
-            obj = req.body.transactionStatus;
-        }
+
+        else
+            obj = {};
+
 
         booking.paginate(obj, options, (err, data) => {
             if (err) {
                 return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.INTERNAL_SERVER_ERROR);
             }
-            if (data.docs.lenght == 0) {
+            if (data.docs.length == 0) {
                 return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND);
             }
             else {
-                response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, data);
+                response.sendResponseWithPagination(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, data.docs, { total: data.total, limit: data.limit, currentPage: data.page, totalPage: data.pages });
+
+                // response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, data);
             }
         })
     },
-
 
     "getTransactionManagement": (req, res) => {
         var matchobj, eventMatchObj;
@@ -1249,7 +1290,7 @@ module.exports = {
                 { path: 'businessManId', select: "name status", match: matchobj }
             ],
             limit: 10,
-            select: "userId eventId businessManId transactionDate transactionStatus bookingStatus transactionTime ",
+            select: "userId eventId businessManId transactionDate bookingStatus  transactionTime ",
             sort: { 'eventCreated_At': -1 },
             lean: false
             // booking.find({pictures: {$not: {$size: 0}}})

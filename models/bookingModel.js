@@ -54,6 +54,9 @@ const booking = mongoose.Schema({
     customerName: {
         type: String
     },
+    eventPrice: {
+        type: String
+    },
 
     // starsCount: {
     //     type: Number
