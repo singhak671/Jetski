@@ -29,6 +29,6 @@ router.post('/addEvent',Business.addEvent);
  router.post('/getAllEvents/',Business.getAllEvents);
  router.post('/transactionManagementFilter',Business.transactionManagementFilter);
 //  router.post('/searchEventFilter',Business.searchEventFilter);
- router.post('/getTransactionManagement',Business.getTransactionManagement);
+//  router.post('/getTransactionManagement',Business.getTransactionManagement);
  router.get('/avgBussinessList',Business.avgBussinessList);
 module.exports = router;
