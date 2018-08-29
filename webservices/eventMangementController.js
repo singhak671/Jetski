@@ -17,8 +17,8 @@ const stripe = require("stripe")(keySecret);
 const notification = require('../common_functions/notification');
 const Noti = require('../models/notificationModel');
 var userSchema = require("../models/userModel");
-// const cron = require('node-cron');
-
+const cron = require('node-cron');
+const asyncLoop = require('node-async-loop');
 //var userSchema = require("../models/userModel");
 moment().format();
 
@@ -452,6 +452,37 @@ module.exports = {
 
 
 
+    //------------------------------------------------------------------------------- API for AllCancel in business site   -----------------------------------------------------------------//
+
+
+    "eventsCompleted": (req, res) => {
+        var arr = []
+        var query = { businessManId: req.body.userId, bookingStatus: "COMPLETED" }
+        let options = {
+            page: req.body.pageNumber || 1,
+            populate: [{ path: "eventId", select: "status eventStatus  eventCreated_At _id period eventName eventAddress eventDescription eventPrice eventImage " },
+            { path: "userId", select: "profilePic name" }],
+            //select: 'status eventStatus duration eventCreated_At _id userId period eventName eventAddress eventDescription eventImage createdAt updatedAt',
+            limit: req.body.limit || 10,
+            sort: { eventCreated_At: -1 },
+            lean: false
+        }
+        booking.paginate(query, options, (err_1, result) => {
+            if (err_1)
+                return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
+            if (result.docs.length == 0)
+                return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found")
+            else {
+                response.sendResponseWithPagination(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result.docs, { total: result.total, limit: result.limit, currentPage: result.page, totalPage: result.pages });
+            }
+        })
+
+
+
+    },
+
+
+
 
 
     //------------------------------------------------------------------------------- API for myAllBooking for APP   -----------------------------------------------------------------//
@@ -826,6 +857,7 @@ module.exports = {
         else {
             User.findOne({ _id: req.body.userId, userType: "CUSTOMER", status: "ACTIVE" }, (err4, succ) => {
                 //  User.findOne({ "_id": req.body.companyId, "status": "ACTIVE" }, (err_, result_) => {
+                    console.log("err result--->",err4,succ)
                 if (err4)
                     return response.sendResponseWithData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.", err4);
                 if (!succ)
@@ -847,14 +879,14 @@ module.exports = {
                                     if (validateEvent(req.body.duration, req.body.offset)) {
                                         // transactionDate , transactionTime , transactionTimestamp, buninesNname , eventName, customerName. are required ** //
 
-                                        booking.findOne({ eventId: req.body.eventId, userId: req.body.userId, businessManId: req.body.businessManId }, (err, success) => {
-                                            console.log("booking result---------->", err, success)
-                                            if (err)
-                                                return response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.", err)
-                                            if (!success) {
+                                        // booking.findOne({ eventId: req.body.eventId, userId: req.body.userId, businessManId: req.body.businessManId }, (err, success) => {
+                                        //     console.log("booking result---------->", err, success)
+                                        //     if (err)
+                                        //         return response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.", err)
+                                            // if (!success) {
 
-                                                return response.sendResponseWithData(res, responseCode.NOT_FOUND, "Data not found", success)
-                                            }
+                                            //     return response.sendResponseWithData(res, responseCode.NOT_FOUND, "Data not found", success)
+                                            // }
                                             // else {
                                             //     booking.create(req.body, (err, result) => {
                                             //         if (err)
@@ -862,18 +894,19 @@ module.exports = {
                                             //         else
                                             //             console.log("booking is done>>>>>>>>>>>>", result)
                                             //         // response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, success);
-                                            callback(null, success)
+                                          
 
                                             //     })
                                             // }
-                                        })
+                                        //})
                                     }
                                     else
-                                        return response.sendResponseWithData(res, responseCode.NOT_FOUND, "Please choose valid time slot");
+                                        return response.sendResponseWithData(res, responseCode.NOT_FOUND, "Booking time expired..");
 
                                 }
                                 else
                                     return response.sendResponseWithData(res, responseCode.NOT_FOUND, "Multiple time slot are not allowed");
+                                    callback(null, succ1)
                             }
                         })//
                     }, (data, callback) => {
@@ -884,11 +917,16 @@ module.exports = {
                             source: req.body.stripeToken // token for the given card 
                         }).then((customer) => {
                             console.log("customer stripe")
-                            return stripe.charges.create({ // charge the customer
-                                amount: req.body.eventPrice,
-                                currency: "usd",
-                                customer: customer.id
-                            })
+                            if(!customer)
+                            response.sendResponseWithoutData(res, responseCode.WENT_WRONG, " No such token.... ")
+                            else{
+                                return stripe.charges.create({ // charge the customer
+                                    amount: req.body.eventPrice,
+                                    currency: "usd",
+                                    customer: customer.id
+                                })
+                            }
+                         
                             console.log("customer=====>", customer)
                         })
                             .then((charge) => {
@@ -937,7 +975,7 @@ module.exports = {
                                         "transactionTimeStamp": req.body.transactionTimeStamp,
                                         "transactionStatus": charge1.Status,
                                         "chargeId": charge1.id,
-                                        "bookingStatus": "CONFIRMED",
+                                        "bookingStatus": "PENDING",
                                         "eventPrice": req.body.eventPrice
                                     }
                                     booking.create(obj, (err_, result_) => {
@@ -1007,7 +1045,7 @@ module.exports = {
                             response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR)
                         } else {
                             console.log("*********result final", result)
-
+                            notification.single_notification(succ.deviceToken, 'booking Posted !', ' Your booking is successfully done.', req.body.businessManId, req.body.userId, succ.profilePic, succ.name)
                             response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Payment successfully done!")
                         }
 
@@ -1120,7 +1158,25 @@ module.exports = {
         if (!req.body.eventId || !req.body.businessManId)
             return response.sendResponseWithoutData(res, responseCode.BAD_REQUEST, "Please provide all required fields !");
         else {
-            feedback.find({ businessManId: req.body.businessManId, eventId: req.body.eventId }).select('-customerId').populate("feedback.customerId", "_id name address profilePic").populate("eventId", "eventPrice").exec((err, succ) => {
+            feedback.find({ businessManId: req.body.businessManId, eventId: req.body.eventId }).populate("customerId", "_id name address profilePic").populate("eventId", "eventPrice").exec((err, succ) => {
+                if (err)
+                    return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG);
+                if (succ.length == 0)
+                    return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found!");
+                else if (succ) {
+                    response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, succ);
+                }
+            })
+        }
+    },
+
+
+
+    "myEventFeedback": (req, res) => {
+        if (!req.body.businessManId)
+            return response.sendResponseWithoutData(res, responseCode.BAD_REQUEST, "Please provide all required fields !");
+        else {
+            feedback.find({ businessManId: req.body.businessManId }).populate("customerId", "_id name address profilePic").populate("eventId", "eventPrice").exec((err, succ) => {
                 if (err)
                     return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG);
                 if (succ.length == 0)
@@ -1238,7 +1294,7 @@ module.exports = {
             return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found")
         }
 
-     else{
+        else {
             if (req.body.bookingStatus && req.body.fromDate && req.body.toDate && req.body.search) {
                 obj = {
                     $or: [{ $and: [query, { bookingStatus: req.body.bookingStatus }, { eventName: value }] }, { $and: [query, { bookingStatus: req.body.bookingStatus }, { customerName: value }] }, { $and: [query, { bookingStatus: req.body.bookingStatus }, { businessName: value }] }]
@@ -1289,55 +1345,55 @@ module.exports = {
                 return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND);
             }
             else {
-               response.sendResponseWithPagination(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, data.docs, { total: data.total, limit: data.limit, currentPage: data.page, totalPage: data.pages });
-}
+                response.sendResponseWithPagination(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, data.docs, { total: data.total, limit: data.limit, currentPage: data.page, totalPage: data.pages });
+            }
         })
     },
 
-//     "getTransactionManagement": (req, res) => {
-//         var matchobj, eventMatchObj;
-//         if (req.body.search != '') {
-//             var value = new RegExp('^' + req.body.search, "i")
-//             matchobj = { status: "ACTIVE", name: value }
-//             eventMatchObj = { status: "ACTIVE", eventName: value }
-//         } else {
-//             matchobj = { status: "ACTIVE" }
-//             eventMatchObj = { status: "ACTIVE" }
-//         }
-//         console.log("value>>>>>>", value
-//         )
-//         var obj = {};
-//         if (req.body.bookingStatus)
-//             obj.bookingStatus = req.body.bookingStatus;
+    //     "getTransactionManagement": (req, res) => {
+    //         var matchobj, eventMatchObj;
+    //         if (req.body.search != '') {
+    //             var value = new RegExp('^' + req.body.search, "i")
+    //             matchobj = { status: "ACTIVE", name: value }
+    //             eventMatchObj = { status: "ACTIVE", eventName: value }
+    //         } else {
+    //             matchobj = { status: "ACTIVE" }
+    //             eventMatchObj = { status: "ACTIVE" }
+    //         }
+    //         console.log("value>>>>>>", value
+    //         )
+    //         var obj = {};
+    //         if (req.body.bookingStatus)
+    //             obj.bookingStatus = req.body.bookingStatus;
 
-//         let options = {
-//             page: req.body.pageNumber || 1,
-//             populate: [
-//                 { path: 'userId', select: "name status", match: matchobj },
-//                 { path: 'eventId', select: "eventName status eventPrice", match: eventMatchObj },
-//                 { path: 'businessManId', select: "name status", match: matchobj }
-//             ],
-//             limit: 10,
-//             select: "userId eventId businessManId transactionDate bookingStatus  transactionTime ",
-//             sort: { 'eventCreated_At': -1 },
-//             lean: false
-//             // booking.find({pictures: {$not: {$size: 0}}})
-//         }
-//         // var obj = { $or: [{bookingStatus:"CONFIRMED"} ,{bookingStatus:"CANCELLED" }] }     
+    //         let options = {
+    //             page: req.body.pageNumber || 1,
+    //             populate: [
+    //                 { path: 'userId', select: "name status", match: matchobj },
+    //                 { path: 'eventId', select: "eventName status eventPrice", match: eventMatchObj },
+    //                 { path: 'businessManId', select: "name status", match: matchobj }
+    //             ],
+    //             limit: 10,
+    //             select: "userId eventId businessManId transactionDate bookingStatus  transactionTime ",
+    //             sort: { 'eventCreated_At': -1 },
+    //             lean: false
+    //             // booking.find({pictures: {$not: {$size: 0}}})
+    //         }
+    //         // var obj = { $or: [{bookingStatus:"CONFIRMED"} ,{bookingStatus:"CANCELLED" }] }     
 
-//         booking.paginate(obj, options, (err, data) => {
-//             if (err) {
-//                 return response.sendResponseWithData(res, responseCode.WENT_WRONG, responseMessage.INTERNAL_SERVER_ERROR, err);
-//             }
-//             if (data.docs.length == 0) {
-//                 return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND);
-//             }
-//             else {
-//                 //console.log("dfghadfhjgdfhgjk",data)
-//                 response.sendResponseWithPagination(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, data.docs, { total: data.total, limit: data.limit, currentPage: data.page, totalPage: data.pages });
-//             }
-//         })
-//     }
+    //         booking.paginate(obj, options, (err, data) => {
+    //             if (err) {
+    //                 return response.sendResponseWithData(res, responseCode.WENT_WRONG, responseMessage.INTERNAL_SERVER_ERROR, err);
+    //             }
+    //             if (data.docs.length == 0) {
+    //                 return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND);
+    //             }
+    //             else {
+    //                 //console.log("dfghadfhjgdfhgjk",data)
+    //                 response.sendResponseWithPagination(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, data.docs, { total: data.total, limit: data.limit, currentPage: data.page, totalPage: data.pages });
+    //             }
+    //         })
+    //     }
 
 }
 
@@ -1347,17 +1403,92 @@ module.exports = {
 
 
 
-                        // cron.schedule('* * * * * *',()=>
-                        // {
-                        //     booking.find({}).exec((err,succ)=>
-                        // {
-                        //     var newTime=new Date()
-                        //     var result=result.duration[0].date.formatted+" "+duration[0].times[0].time+":00"
-                        //     var temp=new Date(result).getTime() 
-                        //     var c=temp+19800000
-                        //     var random=new Date(c).toISOString()
-                        //     var a=random.split("T")[0]
-                        //     var data=a+(" ")+random.split("T")[0]
-                        //     var save=data.split(".")[0]
-                        // })
-                        // })
+cron.schedule('0 * * * *', () => {
+
+    booking.find({}).exec((err, succ) => {
+        asyncLoop(succ, (item, next) => {
+            var result = item.duration[0].date.formatted + "T" + item.duration[0].times[0].time + ":00.000Z"
+            // "2018-08-30T15:23:00.000Z"
+            console.log("i am here ....>>>>", result)
+            var newTime = new Date(result)
+            var temp = new Date(result).getTime()
+            // var c=temp+19800000
+            console.log('temp value =>>>', temp);
+            var today_date = Date.now()
+            var today_temp_date = today_date + 19800000;
+            var today_new_date = new Date(today_temp_date).toISOString();
+            var ss = today_new_date.split(/:/g)
+            var text = '';
+            text += ss[0] + ':' + ss[1] + ":00.000Z"
+            var current_time_stamp = new Date(text).getTime();
+            console.log("current timeStamp", current_time_stamp)
+            console.log("@@@@@@@@@@@@@@@@", temp <= current_time_stamp);
+            if (temp <= current_time_stamp) {
+                if (item.bookingStatus == 'CONFIRMED') {
+                    booking.update({ _id: item._id }, { $set: { 'bookingStatus': 'COMPLETED' } }, { multi: true }).exec((err1, succ1) => {
+                        console.log('error ,succes==========>>>>>>', err1, succ1);
+                        if (err1)
+                            console.log('Error is====>>>>>', err1);
+                        else if (succ1) {
+                            console.log('Status updated successfully====>>>>', succ1);
+                            next();
+                        }
+                    })
+                }
+                else if (item.bookingStatus == 'PENDING') {
+                    booking.update({ _id: item._id }, { $set: { 'bookingStatus': 'CANCELLED' } }, { multi: true }).exec((err1, succ1) => {
+                        console.log('error ,succes==========>>>>>>', err1, succ1);
+                        if (err1)
+                            console.log('Error is====>>>>>', err1);
+                        else if (succ1) {
+                            console.log('Status updated successfully====>>>>', succ1);
+                            next();
+                        }
+                    })
+                }
+            }
+            next();
+        })
+
+
+
+
+    })
+
+})
+
+
+
+
+
+// var newTime = new Date()
+
+// var result = succ[j].duration[0].date.formatted + "T" + succ[j].duration[0].times[0].time + ":00.000Z"
+// // "2018-08-30T15:23:00.000Z"
+// console.log("i am here ....>>>>", result)
+// var newTime = new Date(result)
+// var temp = new Date(result).getTime()
+// // var c=temp+19800000
+// console.log('temp value =>>>', temp);
+// var today_date = Date.now()
+// var today_temp_date = today_date + 19800000;
+// var today_new_date = new Date(today_temp_date).toISOString();
+// var ss = today_new_date.split(/:/g)
+// var text = '';
+// text += ss[0] + ':' + ss[1] + ":00.000Z"
+// var current_time_stamp = new Date(text).getTime();
+// console.log("current timeStamp", current_time_stamp)
+// console.log("@@@@@@@@@@@@@@@@", temp >= current_time_stamp);
+// if (temp >= current_time_stamp) {
+//     booking.update({ 'bookingStatus': 'CONFIRMED' }, { $set: { 'bookinStatus': 'COMPLETED' } }, { multi: true }).exec((err1, succ1) => {
+//         console.log('error ,succes==========>>>>>>', err1, succ1);
+//         if (err1)
+//             console.log('Error is====>>>>>', err1);
+//         else if (succ1) {
+//             console.log('Status updated successfully====>>>>', succ1);
+//             callback();
+
+//         }
+//     })
+
+// }

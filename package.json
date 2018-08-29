@@ -27,6 +27,8 @@
     "mongoose": "^5.1.6",
     "mongoose-paginate": "^5.0.3",
     "mongoose-query-paginate": "^1.0.3",
+    "node-async-loop": "^1.2.2",
+    "node-cron": "^1.2.1",
     "node-cron-job": "^0.2.3",
     "node-rest-client": "^3.1.0",
     "nodemailer": "^4.6.7",
