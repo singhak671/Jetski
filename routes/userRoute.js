@@ -16,8 +16,8 @@ router.post('/forgotPassword', User.forgotPassword);
 router.post('/changePassword',authHandler.verifyToken, User.changePassword);
 router.post('/deleteUser',authHandler.verifyToken,User.deleteUser);//by Admin panel
 router.post('/blockUser',authHandler.verifyToken,User.blockUser);//by Admin panel
-router.get('/getAllCustomer/:pageNumber',authHandler.verifyToken,User.getAllCustomer);//by Admin panel
-router.get('/getAllBusiness/:pageNumber',authHandler.verifyToken,User.getAllBusiness);//by Admin panel
+router.get('/getAllCustomer/:pageNumber',User.getAllCustomer);//by Admin panel
+router.get('/getAllBusiness/:pageNumber',User.getAllBusiness);//by Admin panel
 router.post('/searchCustomerFilter',authHandler.verifyToken,User.searchCustomerFilter);//by Admin panel
 
 router.post('/postReviews',User.postReviews);

@@ -302,7 +302,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"mainbox main-modify\">\n    <app-side-menu></app-side-menu>\n    <div class=\"right-section\">\n        <div class=\"copyrights\">Copyright © 2018 Aqua Ludus All Rights Reserved.</div>\n        <div class=\"right-inner\">\n\n            <h1 class=\"heading\">BUSINESS MANAGEMENT</h1>\n            <div class=\"filter-block\">\n                <fieldset class=\"global-fieldset\">\n                    <legend>User Board</legend>\n                    <div class=\"filter-content\">\n                        <div class=\"row\">\n                            <div class=\"col-sm-6\">\n                                    <form [formGroup]=\"BusinessForm\" > \n                                <div class=\"form-group\">\n                                    <div class=\"pull-left\">\n                                        <div class=\"col-sm-6\">\n                                            <div class=\"form-group d-inline-block\">\n                                                <div class=\"show-entries mb0\">\n                                                    <select class=\"form-control\"  (change)='filter()' formControlName=\"sort\">\n                                                        <option value=''>STATUS</option>\n                                                        <option value='ACTIVE'>ACTIVE</option>\n                                                        <option value='BLOCK'>BLOCK</option>\n                                                    </select>\n                                                </div>\n                                            </div>\n                                        </div>\n                                    </div>\n                                    <div class=\"search-icon pull-right\" align=\"right\">\n                                        <input type=\"text\" (keyup)=\"filter()\" class=\"form-control max-wt-300 search-input\" placeholder=\"Search by name/email\" formControlName=\"search\">\n                                        <i class=\"fa fa-search\" aria-hidden=\"true\"></i>\n                                    </div>\n                                </div>\n                                </form>\n                            </div>\n                            <div class=\"col-sm-6\">\n                                <!-- <div class=\"btn-right\">\n                              <a class=\"btn btn-red btn-common\" href=\"add-user.html\">Add</a>\n                           </div> -->\n                            </div>\n                        </div>\n\n                        <div class=\"box box-blue\">\n                            <div class=\"box-body\">\n                                <div class=\"custom-table table-responsive\">\n                                    <table class=\"table table-striped table-border\">\n                                        <thead>\n                                            <tr>\n                                                <th>SNo.</th>\n                                                <th>Full Name</th>\n                                                <th>Business Name</th>\n                                                <th>Email</th>\n                                                <th>Gender</th>\n                                                <th>Country</th>\n                                                <th>Action</th>\n                                                <th>Activate</th>\n                                            </tr>\n                                        </thead>\n                                        <tbody>\n\n                                            <tr *ngFor=\"let item of modified | paginate: { itemsPerPage: paginationData.limit, currentPage: pageNo, totalItems: paginationData.total };index as i\">\n                                                <td>{{(i+1)+srNo}}</td>\n                                                <td>{{item.name}}</td>\n                                                <td>{{item.businessName}}</td>\n                                                <td>{{item.email}}</td>\n                                                <td>{{item.gender}}</td>\n                                                <td>{{item.country}}</td>\n                                                <td>\n                                                    <div class=\"action-btn\">\n                                                        <!-- <a class=\"btn btn-sm btn-success\" (click)=\"view(i)\"><i class=\"fa fa-eye\"></i> View</a> -->\n                                                        <a class=\"btn btn-sm btn-success\" (click)=\"view(i)\">\n                                                            <i class=\"fa fa-eye\"></i> View</a>\n                                                        <a class=\"btn btn-sm btn-primary\" (click)=\"edit(i)\">\n                                                            <i class=\"fa fa-edit\"></i> Edit</a>\n                                                        <a class=\"btn btn-sm btn-danger\" (click)=\"userdel(i)\">\n                                                            <i class=\"fa fa-trash\"></i> Delete</a>\n                                                    </div>\n                                                </td>\n                                                <td>\n                                                        <label class=\"switch\">\n                                                                <input type=\"checkbox\" name=\"active\" (click)=\"userStatus(item)\" value='item.status' [(ngModel)]=\"item.status\">\n                                                                <span class=\"slider round\"></span>\n                                                            </label>\n                                                </td>\n                                            </tr>\n\n                                        </tbody>\n                                    </table>\n                                </div>\n\n                            </div>\n                        </div>\n                    </div>\n                </fieldset>\n            </div>\n\n\n            <ul class=\"pagination\">\n                <li *ngIf=\"paginationData.total > paginationData.limit\"></li>\n            </ul>\n            <pagination-controls (pageChange)=\"changePage($event)\"></pagination-controls>\n\n        </div>\n    </div>\n</div>\n\n<!-- Modal-blocked -->\n<div id=\"delete\" class=\"modal fade\" data-easein=\"bounceIn\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"costumModalLabel\"\n    aria-hidden=\"true\">\n    <div class=\"modal-dialog\">\n        <div class=\"modal-content common-detail-modal\">\n            <div class=\"modal-header\">\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">\n                    ×\n                </button>\n            </div>\n            <div class=\"modal-body\">\n                <p class=\"modal-inner-text\">\n                    Are you sure you want to delete user ?\n                </p>\n\n                <div class=\"button-box mt20\">\n                    <a class=\"btn btn-red mr10\" (click)=delete(i)>Yes</a>\n                    <a class=\"btn btn-danger\" data-dismiss=\"modal\">No</a>\n                </div>\n            </div>\n            <div class=\"modal-footer\">\n\n            </div>\n        </div>\n    </div>\n</div>"
+module.exports = "<div class=\"mainbox main-modify\">\n    <app-side-menu></app-side-menu>\n    <div class=\"right-section\">\n        <div class=\"copyrights\">Copyright © 2018 Aqua Ludus All Rights Reserved.</div>\n        <div class=\"right-inner\">\n\n            <h1 class=\"heading\">BUSINESS MANAGEMENT</h1>\n            <div class=\"filter-block\">\n                <fieldset class=\"global-fieldset\">\n                    <legend>User Board</legend>\n                    <div class=\"filter-content\">\n                        <div class=\"row\">\n                            <div class=\"col-sm-6\">\n                                    <form [formGroup]=\"BusinessForm\" > \n                                <div class=\"form-group\">\n                                    <div class=\"pull-left\">\n                                        <div class=\"col-sm-6\">\n                                            <div class=\"form-group d-inline-block\">\n                                                <div class=\"show-entries mb0\">\n                                                    <select class=\"form-control\"  (change)='filter()' formControlName=\"sort\">\n                                                        <option value=''>STATUS</option>\n                                                        <option value='ACTIVE'>ACTIVE</option>\n                                                        <option value='BLOCK'>BLOCK</option>\n                                                    </select>\n                                                </div>\n                                            </div>\n                                        </div>\n                                    </div>\n                                    <div class=\"search-icon pull-right\" align=\"right\">\n                                        <input type=\"text\" (keyup)=\"filter()\" class=\"form-control max-wt-300 search-input\" placeholder=\"Search by name/email\" formControlName=\"search\">\n                                        <i class=\"fa fa-search\" aria-hidden=\"true\"></i>\n                                    </div>\n                                </div>\n                                </form>\n                            </div>\n                            <div class=\"col-sm-6\">\n                                <!-- <div class=\"btn-right\">\n                              <a class=\"btn btn-red btn-common\" href=\"add-user.html\">Add</a>\n                           </div> -->\n                            </div>\n                        </div>\n\n                        <div class=\"box box-blue\">\n                            <div class=\"box-body\">\n                                <div class=\"custom-table table-responsive\">\n                                    <table class=\"table table-striped table-border\">\n                                        <thead>\n                                            <tr>\n                                                <th>SNo.</th>\n                                                <th>Full Name</th>\n                                                <th>Business Name</th>\n                                                <th>Email</th>\n                                                <th>Gender</th>\n                                                <th>Country</th>\n                                                <th>Action</th>\n                                                <th>Activate</th>\n                                            </tr>\n                                        </thead>\n                                        <tbody>\n\n                                            <tr *ngFor=\"let item of modified | paginate: { itemsPerPage: paginationData.limit, currentPage: pageNo, totalItems: paginationData.total };index as i\">\n                                                <td>{{(i+1)+srNo}}</td>\n                                                <td>{{item.name}}</td>\n                                                <td>{{item.businessName}}</td>\n                                                <td>{{item.email}}</td>\n                                                <td>{{item.gender}}</td>\n                                                <td>{{item.country}}</td>\n                                                <td>\n                                                    <div class=\"action-btn\">\n                                                        <!-- <a class=\"btn btn-sm btn-success\" (click)=\"view(i)\"><i class=\"fa fa-eye\"></i> View</a> -->\n                                                        <a class=\"btn btn-sm btn-success\" (click)=\"view(i)\">\n                                                            <i class=\"fa fa-eye\"></i> View</a>\n                                                        <a class=\"btn btn-sm btn-primary\" (click)=\"edit(i)\">\n                                                            <i class=\"fa fa-edit\"></i> Edit</a>\n                                                        <a class=\"btn btn-sm btn-danger\" (click)=\"userdel(i)\">\n                                                            <i class=\"fa fa-trash\"></i> Delete</a>\n                                                    </div>\n                                                </td>\n                                                <td>\n                                                        <label class=\"switch\">\n                                                                <input type=\"checkbox\" name=\"active\" (click)=\"userStatus(item)\" value='item.status' [(ngModel)]=\"item.status\">\n                                                                <span class=\"slider round\"></span>\n                                                            </label>\n                                                </td>\n                                            </tr>\n                                            <tr *ngIf=\"modified.length==0\">\n                                                <span>No record found</span>\n                                            </tr>\n                                        </tbody>\n                                    </table>\n                                </div>\n\n                            </div>\n                        </div>\n                    </div>\n                </fieldset>\n            </div>\n\n\n            <ul class=\"pagination\">\n                <li *ngIf=\"paginationData.total > paginationData.limit\"></li>\n            </ul>\n            <pagination-controls (pageChange)=\"changePage($event)\"></pagination-controls>\n\n        </div>\n    </div>\n</div>\n\n<!-- Modal-blocked -->\n<div id=\"delete\" class=\"modal fade\" data-easein=\"bounceIn\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"costumModalLabel\"\n    aria-hidden=\"true\">\n    <div class=\"modal-dialog\">\n        <div class=\"modal-content common-detail-modal\">\n            <div class=\"modal-header\">\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">\n                    ×\n                </button>\n            </div>\n            <div class=\"modal-body\">\n                <p class=\"modal-inner-text\">\n                    Are you sure you want to delete user ?\n                </p>\n\n                <div class=\"button-box mt20\">\n                    <a class=\"btn btn-red mr10\" (click)=delete(i)>Yes</a>\n                    <a class=\"btn btn-danger\" data-dismiss=\"modal\">No</a>\n                </div>\n            </div>\n            <div class=\"modal-footer\">\n\n            </div>\n        </div>\n    </div>\n</div>"
 
 /***/ }),
 
@@ -358,40 +358,40 @@ var BusinessComponent = /** @class */ (function () {
     }
     BusinessComponent.prototype.ngOnInit = function () {
         console.log("in business");
-        this.getAllBusiness();
+        // this.getAllBusiness()
+        this.search();
     };
-    BusinessComponent.prototype.getAllBusiness = function () {
-        var _this = this;
-        this.service.getApi("admin/getAllBusiness/" + this.pageNo, 1).subscribe(function (response) {
-            console.log('res');
-            if (response['response_code'] == 200) {
-                console.log('successfully found', response);
-                _this.business = response["result"];
-                console.log("i am here>>>>>>>>>", _this.modified);
-                _this.modified = _this.business;
-                for (var i = 0; i < _this.business.length; i++) {
-                    if (_this.business[i].status == 'ACTIVE') {
-                        _this.modified[i].status = true;
-                    }
-                    else if (_this.business[i].status == 'BLOCK') {
-                        _this.modified[i].status = false;
-                    }
-                }
-                console.log('result of all business--->', JSON.stringify(_this.business));
-                // this.service.showSuccess(response['response_message'])
-                // console.log('result of all business--->', JSON.stringify(this.business))
-                _this.paginationData = response['paginationData'];
-                _this.srNo = (_this.pageNo - 1) * _this.paginationData.limit;
-                // this.service.showSuccess(response['response_message'])
-            }
-            else {
-                _this.service.toastErr(response['response_message']);
-            }
-        }, function (error) {
-            console.log('error =>', error);
-            _this.service.toastErr('Something Went Wrong');
-        });
-    };
+    // getAllBusiness(){
+    //   this.service.getApi(`admin/getAllBusiness/${this.pageNo}`,1).subscribe(response=>{
+    //     console.log('res')
+    //     if(response['response_code']==200){
+    //         console.log('successfully found',response)
+    //         this.business = response[`result`]
+    //         console.log("i am here>>>>>>>>>",this.modified)
+    //         this.modified = this.business
+    //         for(let i=0; i<this.business.length; i++){
+    //           if(this.business[i].status == 'ACTIVE'){
+    //             this.modified[i].status = true
+    //           }
+    //           else if(this.business[i].status == 'BLOCK'){
+    //             this.modified[i].status = false
+    //           }
+    //         }
+    //       console.log('result of all business--->',JSON.stringify(this.business))
+    //         // this.service.showSuccess(response['response_message'])
+    //        // console.log('result of all business--->', JSON.stringify(this.business))
+    //       this.paginationData = response['paginationData']
+    //       this.srNo = (this.pageNo - 1) * this.paginationData.limit
+    //       // this.service.showSuccess(response['response_message'])
+    //     }
+    //       else{
+    //         this.service.toastErr(response['response_message'])
+    //       }
+    //      },error=>{
+    //        console.log('error =>', error)
+    //        this.service.toastErr('Something Went Wrong')
+    //     })
+    // }
     BusinessComponent.prototype.changePage = function (page) {
         console.log('page no--->', page);
         this.pageNo = page;
@@ -427,7 +427,7 @@ var BusinessComponent = /** @class */ (function () {
             if (response['response_code'] == 200) {
                 console.log(' business data delete successfully', response);
                 localStorage.removeItem('_id of business');
-                _this.getAllBusiness();
+                _this.search();
             }
             else {
                 _this.service.toastErr(response['response_message']);
@@ -453,7 +453,8 @@ var BusinessComponent = /** @class */ (function () {
                     // localStorage.removeItem('_id of customer')
                 }
                 else {
-                    _this.service.toastErr(response['response_message']);
+                    _this.modified = [];
+                    console.log('Failure', response['responseMessage']);
                 }
             }, function (error) {
                 console.log('error =>', error);
@@ -479,9 +480,9 @@ var BusinessComponent = /** @class */ (function () {
             }
         }
         this.service.postApi("user/searchCustomerFilter", postData, 1).subscribe(function (response) {
-            console.log("0000000000 search", postData);
+            // console.log("0000000000 search",postData)
             if (response['response_code'] == 200) {
-                console.log('success', response['result']);
+                // console.log('success', response['result'])
                 _this.business = response['result'];
                 _this.modified = _this.business;
                 for (var i = 0; i < _this.business.length; i++) {
@@ -492,7 +493,7 @@ var BusinessComponent = /** @class */ (function () {
                         _this.modified[i].status = false;
                     }
                 }
-                console.log('result of all customer filter API--->', JSON.stringify(_this.business));
+                // console.log('result of all customer filter API--->', JSON.stringify(this.business))
                 _this.paginationData = response['paginationData'];
                 _this.srNo = (_this.pageNo - 1) * _this.paginationData.limit;
             }
@@ -847,7 +848,7 @@ module.exports = "/* \n$height : 40px;\n$width: 70px;\n.switch {\n  position: re
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"mainbox main-modify\">\n    <app-side-menu></app-side-menu>\n    <div class=\"right-section\">\n        <div class=\"copyrights\">Copyright © 2018 Aqua Ludus All Rights Reserved.</div>\n        <div class=\"right-inner\">\n\n            <h1 class=\"heading\">USER MANAGEMENT</h1>\n            <div class=\"filter-block\">\n                <fieldset class=\"global-fieldset\">\n                    <legend>User Board</legend>\n                    <div class=\"filter-content\">\n                        <div class=\"row\">\n                            <div class=\"col-sm-6\">\n                                <form [formGroup]=\"dashboardForm\" > \n                                    <div class=\"form-group\">\n                                        <div class=\"pull-left\">\n                                            <div class=\"col-sm-6\">\n                                                <div class=\"form-group d-inline-block\">\n                                                    <div class=\"show-entries mb0\">\n                                                        <select class=\"form-control\"  (change)='filter()' formControlName=\"sort\">\n                                                            <option value=''>STATUS</option>\n                                                            <option value='ACTIVE'>ACTIVE</option>\n                                                            <option value='BLOCK'>BLOCK</option>\n                                                        </select>\n                                                    </div>\n                                                </div>\n                                            </div>\n                                        </div>\n                                        <div class=\"search-icon pull-right\" align=\"right\">\n                                            <input type=\"text\" (keyup)=\"filter()\" class=\"form-control max-wt-300 search-input\" placeholder=\"Search by name/email\" formControlName=\"search\">\n                                            <i class=\"fa fa-search\" aria-hidden=\"true\"></i>\n                                        </div>\n                                    </div>\n                                </form>\n                            </div>\n                            <div class=\"col-sm-6\">\n                                <!-- <div class=\"btn-right\">\n                              <a class=\"btn btn-red btn-common\" href=\"add-user.html\">Add</a>\n                           </div> -->\n                            </div>\n                        </div>\n\n                        <div class=\"box box-blue\">\n                            <div class=\"box-body\">\n                                <div class=\"custom-table table-responsive\">\n                                    <table class=\"table table-striped table-border\">\n                                        <thead>\n                                            <tr>\n                                                <th>SNo.</th>\n                                                <th>Name</th>\n                                                <th>Email</th>\n                                                <th>MobileNo.</th>\n                                                <th>Address</th>\n                                                <th>Action</th>\n                                                <th>&nbsp;&nbsp;&nbsp;&nbsp;Activate</th>\n                                            </tr>\n                                        </thead>\n                                        <tbody>\n<!-- \n<tr *ngFor=\"let item of customer | paginate: { itemsPerPage: 10, currentPage: p}; let i=index\"> -->\n        <tr *ngFor=\"let item of modified | paginate: { itemsPerPage: paginationData.limit, currentPage: pageNo, totalItems: paginationData.total };index as i\">\n                                                <td>{{(i+1)+srNo}}</td>\n                                                <td>{{item.name}}</td>\n                                                <td>{{item.email}}</td>\n                                                <td>{{item.mobile_no}}</td>\n                                                <td>{{item.address}}</td>\n                                                <td>\n                                                    <div class=\"action-btn\">\n                                                        <a class=\"btn btn-sm btn-success\" (click)=\"view(i)\">\n                                                            <i class=\"fa fa-eye\"></i> View</a>\n                                                        <a class=\"btn btn-sm btn-primary\" (click)=\"edit(i)\">\n                                                            <i class=\"fa fa-edit\"></i> Edit</a>\n                                                        <a class=\"btn btn-sm btn-danger\" (click)=\"userdel(i)\">\n                                                            <i class=\"fa fa-trash\"></i> Delete</a>\n                                                    </div>\n                                                </td>\n                                                <td>\n                                                    <label class=\"switch\">\n                                                        <input type=\"checkbox\" name=\"active\" (click)=\"userStatus(item)\" value='item.status' [(ngModel)]=\"item.status\">\n                                                        <span class=\"slider round\"></span>\n                                                    </label>\n                                                </td>\n                                            </tr>\n\n                                        </tbody>\n                                    </table>\n                                </div>\n\n                            </div>\n                        </div>\n                    </div>\n                </fieldset>\n            </div>\n\n\n            <ul class=\"pagination\">\n                    <li *ngIf=\"paginationData.total > paginationData.limit\"></li>\n                    </ul>\n                    <pagination-controls (pageChange)=\"changePage($event)\"></pagination-controls>\n       \n\n\n        </div>\n    </div>\n</div>\n\n<!-- Modal-blocked -->\n<div id=\"delete\" class=\"modal fade\" data-easein=\"bounceIn\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"costumModalLabel\"\n    aria-hidden=\"true\">\n    <div class=\"modal-dialog\">\n        <div class=\"modal-content common-detail-modal\">\n            <div class=\"modal-header\">\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">\n                    ×\n                </button>\n            </div>\n            <div class=\"modal-body\">\n                <p class=\"modal-inner-text\">\n                    Are you sure you want to delete user ?\n                </p>\n\n                <div class=\"button-box mt20\">\n                    <a class=\"btn btn-red mr10\" (click)=\"delete(i)\">Yes</a>\n                    <a class=\"btn btn-danger\" data-dismiss=\"modal\">No</a>\n                </div>\n            </div>\n            <div class=\"modal-footer\">\n\n            </div>\n        </div>\n    </div>\n</div>"
+module.exports = "<div class=\"mainbox main-modify\">\n    <app-side-menu></app-side-menu>\n    <div class=\"right-section\">\n        <div class=\"copyrights\">Copyright © 2018 Aqua Ludus All Rights Reserved.</div>\n        <div class=\"right-inner\">\n\n            <h1 class=\"heading\">USER MANAGEMENT</h1>\n            <div class=\"filter-block\">\n                <fieldset class=\"global-fieldset\">\n                    <legend>User Board</legend>\n                    <div class=\"filter-content\">\n                        <div class=\"row\">\n                            <div class=\"col-sm-6\">\n                                <form [formGroup]=\"dashboardForm\" > \n                                    <div class=\"form-group\">\n                                        <div class=\"pull-left\">\n                                            <div class=\"col-sm-6\">\n                                                <div class=\"form-group d-inline-block\">\n                                                    <div class=\"show-entries mb0\">\n                                                        <select class=\"form-control\"  (change)='filter()' formControlName=\"sort\">\n                                                            <option value=''>STATUS</option>\n                                                            <option value='ACTIVE'>ACTIVE</option>\n                                                            <option value='BLOCK'>BLOCK</option>\n                                                        </select>\n                                                    </div>\n                                                </div>\n                                            </div>\n                                        </div>\n                                        <div class=\"search-icon pull-right\" align=\"right\">\n                                            <input type=\"text\" (keyup)=\"filter()\" class=\"form-control max-wt-300 search-input\" placeholder=\"Search by name/email\" formControlName=\"search\">\n                                            <i class=\"fa fa-search\" aria-hidden=\"true\"></i>\n                                        </div>\n                                    </div>\n                                </form>\n                            </div>\n                            <div class=\"col-sm-6\">\n                                <!-- <div class=\"btn-right\">\n                              <a class=\"btn btn-red btn-common\" href=\"add-user.html\">Add</a>\n                           </div> -->\n                            </div>\n                        </div>\n\n                        <div class=\"box box-blue\">\n                            <div class=\"box-body\">\n                                <div class=\"custom-table table-responsive\">\n                                    <table class=\"table table-striped table-border\">\n                                        <thead>\n                                            <tr>\n                                                <th>SNo.</th>\n                                                <th>Name</th>\n                                                <th>Email</th>\n                                                <th>MobileNo.</th>\n                                                <th>Address</th>\n                                                <th>Action</th>\n                                                <th>&nbsp;&nbsp;&nbsp;&nbsp;Activate</th>\n                                            </tr>\n                                        </thead>\n                                        <tbody>\n<!-- \n<tr *ngFor=\"let item of customer | paginate: { itemsPerPage: 10, currentPage: p}; let i=index\"> -->\n        <tr *ngFor=\"let item of modified | paginate: { itemsPerPage: paginationData.limit, currentPage: pageNo, totalItems: paginationData.total };index as i\">\n                                                <td>{{(i+1)+srNo}}</td>\n                                                <td>{{item.name}}</td>\n                                                <td>{{item.email}}</td>\n                                                <td>{{item.mobile_no}}</td>\n                                                <td>{{item.address}}</td>\n                                                <td>\n                                                    <div class=\"action-btn\">\n                                                        <a class=\"btn btn-sm btn-success\" (click)=\"view(i)\">\n                                                            <i class=\"fa fa-eye\"></i> View</a>\n                                                        <a class=\"btn btn-sm btn-primary\" (click)=\"edit(i)\">\n                                                            <i class=\"fa fa-edit\"></i> Edit</a>\n                                                        <a class=\"btn btn-sm btn-danger\" (click)=\"userdel(i)\">\n                                                            <i class=\"fa fa-trash\"></i> Delete</a>\n                                                    </div>\n                                                </td>\n                                                <td>\n                                                    <label class=\"switch\">\n                                                        <input type=\"checkbox\" name=\"active\" (click)=\"userStatus(item)\" value='item.status' [(ngModel)]=\"item.status\">\n                                                        <span class=\"slider round\"></span>\n                                                    </label>\n                                                </td>\n                                            </tr>\n                                            <tr *ngIf=\"modified.length==0\">\n                                                <span>No record found</span>\n                                            </tr>\n                                        </tbody>\n                                    </table>\n                                </div>\n\n                            </div>\n                        </div>\n                    </div>\n                </fieldset>\n            </div>\n\n\n            <ul class=\"pagination\">\n                    <li *ngIf=\"paginationData.total > paginationData.limit\"></li>\n                    </ul>\n                    <pagination-controls (pageChange)=\"changePage($event)\"></pagination-controls>\n       \n\n\n        </div>\n    </div>\n</div>\n\n<!-- Modal-blocked -->\n<div id=\"delete\" class=\"modal fade\" data-easein=\"bounceIn\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"costumModalLabel\"\n    aria-hidden=\"true\">\n    <div class=\"modal-dialog\">\n        <div class=\"modal-content common-detail-modal\">\n            <div class=\"modal-header\">\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">\n                    ×\n                </button>\n            </div>\n            <div class=\"modal-body\">\n                <p class=\"modal-inner-text\">\n                    Are you sure you want to delete user ?\n                </p>\n\n                <div class=\"button-box mt20\">\n                    <a class=\"btn btn-red mr10\" (click)=\"delete(i)\">Yes</a>\n                    <a class=\"btn btn-danger\" data-dismiss=\"modal\">No</a>\n                </div>\n            </div>\n            <div class=\"modal-footer\">\n\n            </div>\n        </div>\n    </div>\n</div>"
 
 /***/ }),
 
@@ -904,38 +905,38 @@ var DashboardComponent = /** @class */ (function () {
     }
     DashboardComponent.prototype.ngOnInit = function () {
         console.log("in dashboard");
-        this.getAllCustomer();
+        // this.getAllCustomer();
+        this.search();
     };
-    //****************************GET ALL CUSTOMERS *************************************** */
-    DashboardComponent.prototype.getAllCustomer = function () {
-        var _this = this;
-        this.service.getApi("admin/getAllCustomer/" + this.pageNo, 1).subscribe(function (response) {
-            // console.log('res')
-            if (response['response_code'] == 200) {
-                console.log(' Customer data found successfully', response);
-                _this.customer = response["result"];
-                _this.modified = _this.customer;
-                for (var i = 0; i < _this.customer.length; i++) {
-                    if (_this.customer[i].status == 'ACTIVE') {
-                        _this.modified[i].status = true;
-                    }
-                    else if (_this.customer[i].status == 'BLOCK') {
-                        _this.modified[i].status = false;
-                    }
-                }
-                // console.log('result of all customer--->', JSON.stringify(this.customer))
-                _this.paginationData = response['paginationData'];
-                _this.srNo = (_this.pageNo - 1) * _this.paginationData.limit;
-                // this.service.showSuccess(response['response_message'])
-            }
-            else {
-                _this.service.toastErr(response['response_message']);
-            }
-        }, function (error) {
-            console.log('error =>', error);
-            _this.service.toastErr('Something Went Wrong');
-        });
-    };
+    // //****************************GET ALL CUSTOMERS *************************************** */
+    // getAllCustomer() {
+    //   this.service.getApi(`admin/getAllCustomer/${this.pageNo}`,1).subscribe(response => {
+    //     // console.log('res')
+    //     if (response['response_code'] == 200) {
+    //       console.log(' Customer data found successfully', response)
+    //       this.customer = response[`result`]
+    //       this.modified = this.customer
+    //       for (let i = 0; i < this.customer.length; i++) {
+    //         if (this.customer[i].status == 'ACTIVE') {
+    //           this.modified[i].status = true
+    //         }
+    //         else if (this.customer[i].status == 'BLOCK') {
+    //           this.modified[i].status = false
+    //         }
+    //       }
+    //       // console.log('result of all customer--->', JSON.stringify(this.customer))
+    //       this.paginationData = response['paginationData']
+    //       this.srNo = (this.pageNo - 1) * this.paginationData.limit
+    //       // this.service.showSuccess(response['response_message'])
+    //     }
+    //     else {
+    //       this.service.toastErr(response['response_message'])
+    //     }
+    //   }, error => {
+    //     console.log('error =>', error)
+    //     this.service.toastErr('Something Went Wrong')
+    //   })
+    // }
     DashboardComponent.prototype.view = function (l) {
         console.log('id of customer--->', JSON.stringify(this.customer[l]._id));
         localStorage.setItem('_id of customer', this.customer[l]._id);
@@ -984,7 +985,7 @@ var DashboardComponent = /** @class */ (function () {
             if (response['response_code'] == 200) {
                 console.log(' Customer data delete successfully', response);
                 localStorage.removeItem('_id of customer');
-                _this.getAllCustomer();
+                _this.search();
             }
             else {
                 _this.service.toastErr(response['response_message']);
@@ -1008,16 +1009,16 @@ var DashboardComponent = /** @class */ (function () {
             userType: "CUSTOMER",
             pageNumber: this.pageNo
         };
-        console.log("postData===>", postData);
+        // console.log("postData===>",postData)
         for (var val in postData) {
             if (postData[val] == '') {
                 delete postData[val];
             }
         }
         this.service.postApi("user/searchCustomerFilter", postData, 1).subscribe(function (response) {
-            console.log("0000000000 search", postData);
+            // console.log("0000000000 search", postData)
             if (response['response_code'] == 200) {
-                console.log('success', response['result']);
+                // console.log('success', response['result'])
                 _this.customer = response['result'];
                 _this.modified = _this.customer;
                 for (var i = 0; i < _this.customer.length; i++) {
@@ -1028,11 +1029,12 @@ var DashboardComponent = /** @class */ (function () {
                         _this.modified[i].status = false;
                     }
                 }
-                console.log('result of all customer filter API--->', JSON.stringify(_this.customer));
+                // console.log('result of all customer filter API--->', JSON.stringify(this.customer))
                 _this.paginationData = response['paginationData'];
                 _this.srNo = (_this.pageNo - 1) * _this.paginationData.limit;
             }
             else {
+                _this.modified = [];
                 console.log('Failure', response['responseMessage']);
             }
         }, function (error) {

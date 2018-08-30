@@ -417,7 +417,7 @@ module.exports = {
             page: req.params.pageNumber || 1,
             select: 'userType email name status mobile_no  address',
             limit: 10,
-            sort: { created_At: -1 },
+            sort: { createdAt: -1 },
             //password:0,
             lean: false
         }
@@ -442,7 +442,7 @@ module.exports = {
             page: req.params.pageNumber || 1,
             select: 'userType email name status  businessName gender  country',
             limit: 10,
-            sort: { created_At: -1 },
+            sort: { createdAt: -1 },
             //password:0,
             lean: false
         }
@@ -511,14 +511,14 @@ module.exports = {
             }
         }
         else if (req.body.userType && !req.body.status && !req.body.search) {
-            console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% ")
+            // console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% ")
             obj = { status: { $in: ["ACTIVE", "BLOCK"] }, userType: req.body.userType }
             //    {"status":"ACTIVE" || "BLOCK"}
             // $and: [{ name: req.body.search},{email: req.body.search} ,{userType: 'CUSTOMER' }]
 
         }
         else if (req.body.userType && req.body.search) {
-            console.log("&&&&&&&&&&&&&&&&&&&& ")
+            // console.log("&&&&&&&&&&&&&&&&&&&& ")
             obj = {
                 $or: [{ status: { $in: ["ACTIVE", "BLOCK"] }, userType: req.body.userType, name: value }, { status: { $in: ["ACTIVE", "BLOCK"] }, userType: req.body.userType, email: value }]
             }
@@ -533,8 +533,8 @@ module.exports = {
             page: req.body.pageNumber || 1,
             // select: 'userType email name status businessName gender  country',
             limit: 10,
-            sort: { created_At: -1 },
-            select: 'userType email name status mobile_no address businessName gender',
+            sort: { createdAt: -1 },
+            select: 'userType email name status mobile_no address country businessName gender',
             lean: false
         }
         userSchema.paginate(obj, options, (err, data) => {
