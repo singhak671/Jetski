@@ -620,11 +620,27 @@ module.exports = {
                         response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
                     else {
                         console.log(`cancel event status result_------------->${JSON.stringify(result_.eventName)}`)
+                        console.log("Pppopdfufydfsjuysdfjfdgs", result.chargeId,result.eventPrice)
                         event = result_.eventName;
                         console.log("event0-00---", event)
-                        console.log('noti result==========>', result.deviceToken, 'Event Cancelled!!', event + ' Event is Cancelled...!', result.businessManId, result.userId._id, result.userId.profilePic, result.userId.name)
-                        notification.single_notification(result.deviceToken, 'Event Cancelled!!', event + ' Event is Cancelled...!', result.businessManId, result.userId._id, result.userId.profilePic, result.userId.name)
-                        response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Event status is cancelled")
+                        return stripe.refunds.create({
+                            charge: result.chargeId,
+                            amount: (result.eventPrice),
+                        }, function (err, refund) {
+                            if (err) {
+                                console.log("err in refunds", err)
+                                notification.single_notification(result.deviceToken, 'Payment Issue Occur', event + 'Error occur during payment as the amount has already been refunded. ', result.businessManId, result.userId._id, result.userId.profilePic, result.userId.name)
+                                response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Error occur during payment as the amount has already been refunded.")
+                            }
+                            else {
+                                console.log('success refund-->', refund)
+                                console.log('noti result==========>', result.deviceToken, 'Event Cancelled!!', event + ' Event is Cancelled...!', result.businessManId, result.userId._id, result.userId.profilePic, result.userId.name)
+                                notification.single_notification(result.deviceToken, 'Event Cancelled!!', event + ' Event is Cancelled...!', result.businessManId, result.userId._id, result.userId.profilePic, result.userId.name)
+                                response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Event status is cancelled")
+                            }
+                               
+                        })
+                      
                     }
                 })
 
@@ -634,7 +650,7 @@ module.exports = {
 
 
 
-    //------------------------------------------------------------------------------- Filter DAILY/WEEKLY/MONTHLY for APP (BookNow &&& Reschedule Booking)  -----------------------------------------------------------------//
+    //-------------------------------------------------------------------------------  Business filter at website DAILY/WEEKLY/MONTHLY  -----------------------------------------------------------------//
 
 
     "filterEvent": (req, res) => {
@@ -753,7 +769,7 @@ module.exports = {
 
 
 
-    //------------------------------------------------------------------------------- API for booking Event for App  -----------------------------------------------------------------//
+    //------------------------------------------------------------------------------- Filter DAILY/WEEKLY/MONTHLY for APP (BookNow &&& Reschedule Booking) s  -----------------------------------------------------------------//
 
 
     "bookingEvent": (req, res) => {
@@ -771,14 +787,15 @@ module.exports = {
         let weekArray = [];
         let monthlyArray = [];
 
-        eventSchema.findOne({ _id: req.body.userId, status: "ACTIVE" }, (err, success) => {
+        eventSchema.findOne({ _id: req.body.eventId, status: "ACTIVE" }, (err, success) => {
             if (err)
                 return response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.");
             if (!success)
-                return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found.");
+                return response.sendResponseWithData(res, responseCode.NOT_FOUND, "Data not found.",success);
             else {
                 console.log("success===" + JSON.stringify(success))
-
+  //  console.log(success)
+                    //=========================FOR DAILY=============================
 
                 if (req.body.period == 'DAILY') {
 
@@ -795,11 +812,8 @@ module.exports = {
                     return response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, "Data found successfully", todayArray);
 
 
-
-
-
                 }
-
+ //=========================FOR WEEKLY=============================
                 else if (req.body.period == 'WEEKLY') {
                     var current_date = Date.now();
                     var newDate = nextWeek.toJSON()
@@ -823,6 +837,7 @@ module.exports = {
                     return response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, "Data found successfully", weekArray);
 
                 }
+                // =========================FOR MONTHLY=============================
                 else if (req.body.period == 'MONTHLY') {
                     var current_date = new Date();
                     var current_month = current_date.getMonth() + 1;
@@ -1403,59 +1418,73 @@ module.exports = {
 
 
 
-cron.schedule('0 * * * *', () => {
+// cron.schedule('* * * * *', () => {
 
-    booking.find({}).exec((err, succ) => {
-        asyncLoop(succ, (item, next) => {
-            var result = item.duration[0].date.formatted + "T" + item.duration[0].times[0].time + ":00.000Z"
-            // "2018-08-30T15:23:00.000Z"
-            console.log("i am here ....>>>>", result)
-            var newTime = new Date(result)
-            var temp = new Date(result).getTime()
-            // var c=temp+19800000
-            console.log('temp value =>>>', temp);
-            var today_date = Date.now()
-            var today_temp_date = today_date + 19800000;
-            var today_new_date = new Date(today_temp_date).toISOString();
-            var ss = today_new_date.split(/:/g)
-            var text = '';
-            text += ss[0] + ':' + ss[1] + ":00.000Z"
-            var current_time_stamp = new Date(text).getTime();
-            console.log("current timeStamp", current_time_stamp)
-            console.log("@@@@@@@@@@@@@@@@", temp <= current_time_stamp);
-            if (temp <= current_time_stamp) {
-                if (item.bookingStatus == 'CONFIRMED') {
-                    booking.update({ _id: item._id }, { $set: { 'bookingStatus': 'COMPLETED' } }, { multi: true }).exec((err1, succ1) => {
-                        console.log('error ,succes==========>>>>>>', err1, succ1);
-                        if (err1)
-                            console.log('Error is====>>>>>', err1);
-                        else if (succ1) {
-                            console.log('Status updated successfully====>>>>', succ1);
-                            next();
-                        }
-                    })
-                }
-                else if (item.bookingStatus == 'PENDING') {
-                    booking.update({ _id: item._id }, { $set: { 'bookingStatus': 'CANCELLED' } }, { multi: true }).exec((err1, succ1) => {
-                        console.log('error ,succes==========>>>>>>', err1, succ1);
-                        if (err1)
-                            console.log('Error is====>>>>>', err1);
-                        else if (succ1) {
-                            console.log('Status updated successfully====>>>>', succ1);
-                            next();
-                        }
-                    })
-                }
-            }
-            next();
-        })
+//     booking.find({}).exec((err, succ) => {
+//         asyncLoop(succ, (item, next) => {
+//             var result = item.duration[0].date.formatted + "T" + item.duration[0].times[0].time + ":00.000Z"
+//             // "2018-08-30T15:23:00.000Z"
+//             console.log("i am here ....>>>>", result)
+//             var newTime = new Date(result)
+//             var temp = new Date(result).getTime()
+//             // var c=temp+19800000
+//             console.log('temp value =>>>', temp);
+//             var today_date = Date.now()
+//             var today_temp_date = today_date + 19800000;
+//             var today_new_date = new Date(today_temp_date).toISOString();
+//             var ss = today_new_date.split(/:/g)
+//             var text = '';
+//             text += ss[0] + ':' + ss[1] + ":00.000Z"
+//             var current_time_stamp = new Date(text).getTime();
+//             console.log("current timeStamp", current_time_stamp)
+//             console.log("@@@@@@@@@@@@@@@@", temp <= current_time_stamp);
+//             if (temp <= current_time_stamp) {
+//                 if (item.bookingStatus == 'CONFIRMED') {
+//                     booking.update({ _id: item._id }, { $set: { 'bookingStatus': 'COMPLETED' } }, { multi: true }).exec((err1, succ1) => {
+//                         console.log('error ,succes==========>>>>>>', err1, succ1);
+//                         if (err1)
+//                             console.log('Error is====>>>>>', err1);
+//                         else if (succ1) {
+//                             console.log('Status updated successfully====>>>>', succ1);
+//                             next();
+//                         }
+//                     })
+//                 }
+//                 else if (item.bookingStatus == 'PENDING') {
+//                     booking.findByIdAndUpdate({ _id: item._id }, { $set: { 'bookingStatus': 'CANCELLED' } }, { multi: true }).exec((err1, succ1) => {
+//                         console.log('error ,succes==========>>>>>>', err1, succ1);
+//                         if (err1)
+//                             console.log('Error is====>>>>>', err1);
+//                         else  {
+//                             console.log("succ1------>",succ1)
+//                             return stripe.refunds.create({
+//                                 charge: succ1.chargeId,
+//                                 amount: (succ1.eventPrice),
+//                             }, function (err, refund) {
+//                                 if (err) {
+//                                     console.log("err in refunds", err)
+//                                 }
+//                                 else {
+//                                     console.log('success refund-->', refund)
+//                                     //callback('',refund)
+//                                     next();
+//                                 }
+                                   
+//                             })
+                           
+//                         }
+//                     })
+//                 }
+//             }
+//             next();
+//         })
 
 
 
 
-    })
+//     })
 
-})
+// })
 
 
 

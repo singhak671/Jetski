@@ -33,17 +33,3 @@ module.exports = config_function;
 // https://www.flinto.com/p/2651545d
 
 
-// 1.API for view event management
-// 2.API for feedback for particular
-// 3.Admin panel UI integration modify
-// 1. API for getting All event
-// 2. API for cancelBooking
-// 3.Modification on UI & functionality at event management at admin panel ﻿
-// Publishable key
-// pk_test_NkhYVArGE07qHgai7PuO6Bbm
-// —	Aug 20, 2018	
-
-// Secret key
-// sk_test_4Sht4ZSKz8eUDCaiXP5pGfs6
-
-
