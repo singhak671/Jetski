@@ -10,7 +10,9 @@ const CronJob = require('cron').CronJob;
 const cron = require('node-cron');
 const asyncLoop = require('node-async-loop');
 var booking = require("./models/bookingModel.js")
-
+const keyPublishable = 'pk_test_NkhYVArGE07qHgai7PuO6Bbm';
+const keySecret = 'sk_test_4Sht4ZSKz8eUDCaiXP5pGfs6';
+const stripe = require("stripe")(keySecret);
 
 const cors = require('cors');
 const path = require('path');
@@ -24,15 +26,15 @@ app.use(bodyParser.json({
 
 // var job =new CronJob('* * * * *', function(req,res) {
 //     // for 1 min 
-var job =new CronJob('0 * * * *', function(req,res) {
-    // for 1 hrs
-    console.log("Testing is going ON per 1 hrs*************")
+// var job =new CronJob('0 * * * *', function(req,res) {
+//     // for 1 hrs
+//     console.log("Testing is going ON per 1 hrs*************")
 
- }, function () {
-        console.log(" Payment refund successfully")
-   },
- true
-);
+//  }, function () {
+//         console.log(" Payment refund successfully")
+//    },
+//  true
+// );
 
 app.use('/api/v1/user', require('./routes/userRoute'));
 app.use('/api/v1/admin', require('./routes/userRoute'));
@@ -60,7 +62,7 @@ cron.schedule('0 * * * *', () => {
             var newTime = new Date(result)
             var temp = new Date(result).getTime()
             // var c=temp+19800000
-            console.log('temp value =>>>', temp);
+            // console.log('temp value =>>>', temp);
             var today_date = Date.now()
             var today_temp_date = today_date + 19800000;
             var today_new_date = new Date(today_temp_date).toISOString();
@@ -68,8 +70,8 @@ cron.schedule('0 * * * *', () => {
             var text = '';
             text += ss[0] + ':' + ss[1] + ":00.000Z"
             var current_time_stamp = new Date(text).getTime();
-            console.log("current timeStamp", current_time_stamp)
-            console.log("@@@@@@@@@@@@@@@@", temp <= current_time_stamp);
+            // console.log("current timeStamp", current_time_stamp)
+            // console.log("@@@@@@@@@@@@@@@@", temp <= current_time_stamp);
             if (temp <= current_time_stamp) {
                 if (item.bookingStatus == 'CONFIRMED') {
                     booking.update({ _id: item._id }, { $set: { 'bookingStatus': 'COMPLETED' } }, { multi: true }).exec((err1, succ1) => {

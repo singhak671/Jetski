@@ -90,7 +90,6 @@ var AppComponent = /** @class */ (function () {
                     }
                 }
             }
-            console.log('this.router.url', _this.router.url);
         });
     }
     AppComponent = __decorate([
@@ -181,6 +180,7 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 
 
 
+// import { NgbdDatepickerPopup } from './datepicker-popup';
 var AppModule = /** @class */ (function () {
     function AppModule() {
     }
@@ -194,6 +194,7 @@ var AppModule = /** @class */ (function () {
                 _pages_user_details_user_details_component__WEBPACK_IMPORTED_MODULE_15__["UserDetailsComponent"],
                 _pages_edit_user_detail_edit_user_detail_component__WEBPACK_IMPORTED_MODULE_16__["EditUserDetailComponent"],
                 _pages_business_business_component__WEBPACK_IMPORTED_MODULE_17__["BusinessComponent"],
+                // NgbdDatepickerPopup,
                 _pages_edit_business_detail_edit_business_detail_component__WEBPACK_IMPORTED_MODULE_18__["EditBusinessDetailComponent"],
                 _pages_side_menu_side_menu_component__WEBPACK_IMPORTED_MODULE_20__["SideMenuComponent"],
                 _pages_view_business_detail_view_business_detail_component__WEBPACK_IMPORTED_MODULE_21__["ViewBusinessDetailComponent"],
@@ -1060,39 +1061,6 @@ var DashboardComponent = /** @class */ (function () {
     return DashboardComponent;
 }());
 
-// export class SideMenuComponent implements OnInit {
-//   isActive:any;
-//   constructor(public router: Router) { 
-//     this.isActive = 'user-management';
-//   }
-//   ngOnInit() {
-//   }
-//   tabManag(event) {
-//       this.isActive = event;
-//       let url = window.location.href.split('/')
-//       let page = url[url.length-1]
-//       // this.isActive= page;
-//       if(event == "user-management" ) {
-//         this.router.navigate(['/user-management'])
-//         this.isActive= event;
-//       }
-//       // else if(event == "userManagement") {
-//       //   this.router.navigate(['/user-management'])
-//       //   //this.isActive= event;
-//       // }
-//       // else if(event == "brandManagement") {
-//       //   this.router.navigate(['/brand-management'])
-//       //   //this.isActive= event;
-//       // }
-//       // else if(event == "productManagement") {
-//       //   this.router.navigate(['/product-management'])
-//       //   //this.isActive= event;
-//       // }
-//       // else if(event == "styleManagement") {
-//       //   this.router.navigate(['/style-management'])
-//       // } 
-//   }
-// }
 
 
 /***/ }),
@@ -1440,7 +1408,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"mainbox main-modify\">\n    <app-side-menu></app-side-menu>\n    <div class=\"right-section\">\n        <div class=\"copyrights\">Copyright © 2018 Aqua Ludus All Rights Reserved.</div>\n        <div class=\"right-inner\">\n\n            <h1 class=\"heading\">EVENT MANAGEMENT</h1>\n            <div class=\"filter-block\">\n                <fieldset class=\"global-fieldset\">\n                    <legend>User Board</legend>\n                    <div class=\"filter-content\">\n                        <div class=\"row\">\n                            <div class=\"col-sm-6\">\n                                <form [formGroup]=\"eventForm\">\n                                    <div class=\"form-group\">\n                                        <div class=\"search-icon pull-left\" align=\"left\">\n                                            <input type=\"text\" class=\"form-control max-wt-300 search-input\" placeholder=\"Search by Event/Business\" formControlName=\"search\">\n                                            <i class=\"fa fa-search\" aria-hidden=\"true\"></i>\n                                        </div>\n\n\n                                    </div>\n                                </form>\n                            </div>\n                            <div class=\"col-sm-6\">\n                                <!-- <div class=\"btn-right\">\n                            <a class=\"btn btn-red btn-common\" href=\"add-user.html\">Add</a>\n                         </div> -->\n                            </div>\n                        </div>\n<br>\n\n                        <div class=\"box box-blue\">\n                            <div class=\"box-body\">\n                                <div class=\"custom-table table-responsive\">\n                                    <table class=\"table table-striped table-border\">\n                                        <thead>\n                                            <tr>\n                                                <th>SNo.</th>\n                                                <th>Event Name</th>\n                                                <th>Business Name</th>\n                                                <th>Name</th>\n                                               \n\n                                            </tr>\n                                        </thead>\n                                        <tbody>\n\n                                            <tr *ngFor=\"let item of modified | paginate: { itemsPerPage: paginationData.limit, currentPage: pageNo, totalItems: paginationData.total };index as i\">\n                                                <td>{{(i+1)+srNo}}</td>\n                                                <td>{{item.eventName}}</td>\n                                                <td>{{item.businessName}}</td>\n                                                <td>{{item.transactionDate}}</td>\n                                            </tr>\n                                        </tbody>\n                                    </table>\n                                    <!-- <label type=\"date\" class=\"col-sm-4 label-right label-top\">From:<label> -->\n                                    <!-- <input type=\"date\"  class=\"form-control max-wt-300 search-input\" placeholder=\"Search by date\"> </label> -->\n\n                                </div>\n\n                            </div>\n                        </div>\n                    </div>\n                </fieldset>\n            </div>\n\n\n            <ul class=\"pagination\">\n                <li *ngIf=\"paginationData.total > paginationData.limit\"></li>\n            </ul>\n            <pagination-controls (pageChange)=\"changePage($event)\"></pagination-controls>\n\n        </div>\n    </div>\n</div>\n\n<!-- Modal-blocked -->\n<div id=\"delete\" class=\"modal fade\" data-easein=\"bounceIn\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"costumModalLabel\"\n    aria-hidden=\"true\">\n    <div class=\"modal-dialog\">\n        <div class=\"modal-content common-detail-modal\">\n            <div class=\"modal-header\">\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">\n                    ×\n                </button>\n            </div>\n            <div class=\"modal-body\">\n                <p class=\"modal-inner-text\">\n                    Are you sure you want to delete user ?\n                </p>\n\n                <div class=\"button-box mt20\">\n                    <a class=\"btn btn-red mr10\">Yes</a>\n                    <a class=\"btn btn-danger\" data-dismiss=\"modal\">No</a>\n                </div>\n            </div>\n            <div class=\"modal-footer\">\n\n            </div>\n        </div>\n    </div>\n</div>"
+module.exports = "<div class=\"mainbox main-modify\">\n    <app-side-menu></app-side-menu>\n    <div class=\"right-section\">\n        <div class=\"copyrights\">Copyright © 2018 Aqua Ludus All Rights Reserved.</div>\n        <div class=\"right-inner\">\n\n            <h1 class=\"heading\">EVENT MANAGEMENT</h1>\n            <div class=\"filter-block\">\n                <fieldset class=\"global-fieldset\">\n                    <legend>User Board</legend>\n                    <div class=\"filter-content\">\n                        <div class=\"row\">\n                            <div class=\"col-sm-6\">\n                                <form [formGroup]=\"eventForm\">\n                                    <div class=\"form-group\">\n                                        <div class=\"search-icon pull-left\" align=\"left\">\n                                            <input type=\"text\" (keyup)=\"filter()\" class=\"form-control max-wt-300 search-input\" placeholder=\"Search by Event/Business\"\n                                                formControlName=\"search\">\n                                            <i class=\"fa fa-search\" aria-hidden=\"true\"></i>\n                                        </div>\n\n\n                                    </div>\n                                </form>\n                            </div>\n                            <div class=\"col-sm-6\">\n                                <!-- <div class=\"btn-right\">\n                            <a class=\"btn btn-red btn-common\" href=\"add-user.html\">Add</a>\n                         </div> -->\n                            </div>\n                        </div>\n                        <br>\n\n                        <div class=\"box box-blue\">\n                            <div class=\"box-body\">\n                                <div class=\"custom-table table-responsive\">\n                                    <table class=\"table table-striped table-border\">\n                                        <thead>\n                                            <tr>\n                                                <th>SNo.</th>\n                                                <th>Event Name</th>\n                                                <th>Business Name</th>\n                                                <th>Name</th>\n                                            </tr>\n                                        </thead>\n                                        <tbody>\n                                            <!-- <tr  *ngFor='let item of Event | paginate: { itemsPerPage: totalSize, currentPage: currPage, totalItems: pageSize };index as i'> -->\n                                            <tr *ngFor=\"let item of Event | paginate: { itemsPerPage: paginationData.limit, currentPage: pageNo, totalItems: paginationData.total };index as i\">\n\n                                                <td>{{(i+1)+srNo}}</td>\n                                                <td>{{item.eventName}}</td>\n                                                <td>{{item.businessName}}</td>\n                                                <td>{{item?.userId.name}}</td>\n\n                                            </tr>\n                                            <tr *ngIf=\"Event.length==0\">\n                                                <span>No record found</span>\n                                            </tr>\n                                        </tbody>\n                                    </table>\n                                    <!-- <label type=\"date\" class=\"col-sm-4 label-right label-top\">From:<label> -->\n                                    <!-- <input type=\"date\"  class=\"form-control max-wt-300 search-input\" placeholder=\"Search by date\"> </label> -->\n\n                                </div>\n\n                            </div>\n                        </div>\n                    </div>\n                </fieldset>\n            </div>\n\n\n            <ul class=\"pagination\">\n                <li *ngIf=\"paginationData.total > paginationData.limit\"></li>\n            </ul>\n\n            <pagination-controls (pageChange)=\"changePage($event)\"></pagination-controls>\n        </div>\n    </div>\n</div>\n\n<!-- Modal-blocked -->\n<div id=\"delete\" class=\"modal fade\" data-easein=\"bounceIn\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"costumModalLabel\"\n    aria-hidden=\"true\">\n    <div class=\"modal-dialog\">\n        <div class=\"modal-content common-detail-modal\">\n            <div class=\"modal-header\">\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">\n                    ×\n                </button>\n            </div>\n            <div class=\"modal-body\">\n                <p class=\"modal-inner-text\">\n                    Are you sure you want to delete user ?\n                </p>\n\n                <div class=\"button-box mt20\">\n                    <a class=\"btn btn-red mr10\">Yes</a>\n                    <a class=\"btn btn-danger\" data-dismiss=\"modal\">No</a>\n                </div>\n            </div>\n            <div class=\"modal-footer\">\n\n            </div>\n        </div>\n    </div>\n</div>"
 
 /***/ }),
 
@@ -1455,6 +1423,8 @@ module.exports = "<div class=\"mainbox main-modify\">\n    <app-side-menu></app-
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EventManagementComponent", function() { return EventManagementComponent; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _node_modules_angular_forms__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../../node_modules/@angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
+/* harmony import */ var _providers_mainService__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../providers/mainService */ "./src/app/providers/mainService.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1465,20 +1435,64 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 
+
+
 // import {IMyDpOptions, IMyDateModel} from 'mydatepicker';
 var EventManagementComponent = /** @class */ (function () {
-    // public myDatePickerOptions: IMyDpOptions = { 
-    //   dateFormat: 'yyyy-mm-dd', 
-    //   editableDateField:false, 
-    //   openSelectorOnInputClick:false,
-    //   disableSince: {year: 0, month: 0, day: 0}
-    //   };
-    function EventManagementComponent() {
-        this.trans = '';
+    function EventManagementComponent(fb, service) {
+        this.fb = fb;
+        this.service = service;
         this.paginationData = {};
-        this.modified = [];
+        this.Event = [];
+        // eventData:any=[];
+        this.pageSize = {};
+        this.pageNo = 1;
+        this.eventForm = fb.group({
+            'search': ['']
+        });
     }
     EventManagementComponent.prototype.ngOnInit = function () {
+        this.getAllEvent();
+    };
+    //****************************GET ALL Events *************************************** */
+    EventManagementComponent.prototype.changePage = function (page) {
+        console.log('page no--->', page);
+        this.pageNo = page;
+        this.getAllEvent();
+        // this.search()
+    };
+    EventManagementComponent.prototype.filter = function () {
+        this.pageNo = 1;
+        this.getAllEvent();
+    };
+    EventManagementComponent.prototype.getAllEvent = function () {
+        var _this = this;
+        var postData = {
+            search: this.eventForm.controls['search'].value,
+            pageNumber: this.pageNo,
+        };
+        // for (let val in postData) {
+        //   if (postData[val] == '') {
+        //     delete postData[val]
+        //   }
+        // }  
+        this.service.postApi("event/getAllEvents", postData, 1).subscribe(function (response) {
+            // console.log('res')
+            if (response['response_code'] == 200) {
+                // console.log(' Event data found successfully', response)
+                _this.Event = response["result"];
+                _this.paginationData = response["paginationData"];
+                _this.srNo = (_this.pageNo - 1) * _this.paginationData.limit;
+                console.log("############", _this.paginationData);
+            }
+            else {
+                _this.Event = [];
+                console.log('Failure', response['responseMessage']);
+            }
+        }, function (error) {
+            console.log('error =>', error);
+            _this.service.toastErr('Something Went Wrong');
+        });
     };
     EventManagementComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
@@ -1486,7 +1500,7 @@ var EventManagementComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./event-management.component.html */ "./src/app/pages/event-management/event-management.component.html"),
             styles: [__webpack_require__(/*! ./event-management.component.css */ "./src/app/pages/event-management/event-management.component.css")]
         }),
-        __metadata("design:paramtypes", [])
+        __metadata("design:paramtypes", [_node_modules_angular_forms__WEBPACK_IMPORTED_MODULE_1__["FormBuilder"], _providers_mainService__WEBPACK_IMPORTED_MODULE_2__["MainService"]])
     ], EventManagementComponent);
     return EventManagementComponent;
 }());
@@ -1849,7 +1863,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"mainbox main-modify\">\n  <app-side-menu></app-side-menu>\n  <div class=\"right-section\">\n      <div class=\"copyrights\">Copyright © 2018 Aqua Ludus All Rights Reserved.</div>\n      <div class=\"right-inner\">\n\n          <h1 class=\"heading\">Transaction Lists</h1>\n          <div class=\"filter-block\">\n              <fieldset class=\"global-fieldset\">\n                  <legend>Transaction Board</legend>\n                  <div class=\"filter-content\">\n                      <div class=\"row\">\n                          <div class=\"col-sm-6\">\n                            <form [formGroup]=\"transantionForm\" > \n                              <div class=\"form-group\">\n                                  <div class=\"search-icon pull-left\" align=\"left\">\n                                      <input type=\"text\"  class=\"form-control max-wt-300 search-input\" placeholder=\"Search by Event/Business/Customer\" formControlName=\"search\">\n                                      <i class=\"fa fa-search\" aria-hidden=\"true\"></i>\n                                  </div>\n                                  <div class=\"pull-left\">\n                                      <div class=\"col-sm-6\">\n                                          <div class=\"form-group d-inline-block\">\n                                              <div class=\"show-entries mb0\">\n                                                  <select class=\"form-control\"  formControlName=\"sort\">\n                                                      <option value=''>STATUS</option>\n                                                      <option value=''>Cancelled</option>\n                                                      <option value=''>Confirmed</option>\n                                                  </select>\n                                              </div>\n                                          </div>\n                                      </div>\n                                  </div>\n                               \n                              </div>\n                              </form>\n                          </div>\n                          <div class=\"col-sm-6\">\n                              <!-- <div class=\"btn-right\">\n                            <a class=\"btn btn-red btn-common\" href=\"add-user.html\">Add</a>\n                         </div> -->\n                          </div>\n                      </div>\n\n                      <div class=\"box box-blue\">\n                          <div class=\"box-body\">\n                              <div class=\"custom-table table-responsive\">\n                                  <table class=\"table table-striped table-border\">\n                                      <thead>\n                                          <tr>\n                                              <th>SNo.</th>\n                                              <th>Event Name</th>\n                                              <th>Business Name</th>\n                                              <th>Customer Name</th>\n                                              <th>Transaction Date</th>\n                                              <th>Transaction time</th>\n                                              <th>status</th>\n                                              <th>Amount(USD)</th>\n                                             \n                                          </tr>\n                                      </thead>\n                                      <tbody>\n\n                                          <tr *ngFor=\"let item of modified | paginate: { itemsPerPage: paginationData.limit, currentPage: pageNo, totalItems: paginationData.total };index as i\">\n                                              <td>{{(i+1)+srNo}}</td>\n                                              <td>{{item.eventName}}</td>\n                                              <td>{{item.businessName}}</td>\n                                              <td>{{item.customerName}}</td>\n                                              <td>{{item.transactionDate}}</td>    \n                                              <td>{{item.transactionTime}}</td>  \n                                              <td>{{item.status}}</td>   \n                                              <td>{{item.eventPrice}}</td>                                                                                 \n                                          </tr>\n                                      </tbody>\n                                  </table>\n                              </div>\n\n                          </div>\n                      </div>\n                  </div>\n              </fieldset>\n          </div>\n\n\n          <ul class=\"pagination\">\n              <li *ngIf=\"paginationData.total > paginationData.limit\"></li>\n          </ul>\n          <pagination-controls (pageChange)=\"changePage($event)\"></pagination-controls>\n\n      </div>\n  </div>\n</div>\n\n<!-- Modal-blocked -->\n<div id=\"delete\" class=\"modal fade\" data-easein=\"bounceIn\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"costumModalLabel\"\n  aria-hidden=\"true\">\n  <div class=\"modal-dialog\">\n      <div class=\"modal-content common-detail-modal\">\n          <div class=\"modal-header\">\n              <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">\n                  ×\n              </button>\n          </div>\n          <div class=\"modal-body\">\n              <p class=\"modal-inner-text\">\n                  Are you sure you want to delete user ?\n              </p>\n\n              <div class=\"button-box mt20\">\n                  <a class=\"btn btn-red mr10\" >Yes</a>\n                  <a class=\"btn btn-danger\" data-dismiss=\"modal\">No</a>\n              </div>\n          </div>\n          <div class=\"modal-footer\">\n\n          </div>\n      </div>\n  </div>\n</div>"
+module.exports = "<div class=\"mainbox main-modify\">\n    <app-side-menu></app-side-menu>\n    <div class=\"right-section\">\n        <div class=\"copyrights\">Copyright © 2018 Aqua Ludus All Rights Reserved.</div>\n        <div class=\"right-inner\">\n\n            <h1 class=\"heading\">Transaction Lists</h1>\n            <div class=\"filter-block\">\n                <fieldset class=\"global-fieldset\">\n                    <legend>Transaction Board</legend>\n                    <div class=\"filter-content\">\n                        <div class=\"row\">\n                            <div class=\"col-sm-6\">\n                                <form [formGroup]=\"transantionForm\">\n                                    <div class=\"form-group\">\n                                        <div class=\"search-icon pull-left\" align=\"left\">\n                                            <input type=\"text\" class=\"form-control max-wt-300 search-input\"  placeholder=\"Search by Event/Business/Customer\"\n                                                formControlName=\"search\" (keyup)='filter(1)'>\n                                            <i class=\"fa fa-search\" aria-hidden=\"true\"></i>\n                                        </div>\n                                        <div class=\"pull-left\">\n                                            <div class=\"col-sm-6\">\n                                                <div class=\"form-group d-inline-block\">\n                                                    <div class=\"show-entries mb0\">\n                                                        <!-- <select class=\"form-control\"> -->\n                                                                <select class=\"form-control\" formControlName=\"sort\" (change)='filter(2)' >\n\n                                                            <option value=''>STATUS</option>\n                                                            <option value='PENDING'>PENDING</option>\n                                                            <option value='CANCELLED'>CANCELLED</option>\n                                                            <option value='CONFIRMED'>CONFIRMED</option>\n                                                            <option value='COMPLETED'>COMPLETED</option>\n                                                        </select>\n                                                    </div>\n                                                </div>\n                                            </div>\n                                        </div>\n\n                                        <div class=\"form-group row\">\n                                            <label class=\"col-sm-4 label-left label-top\">From:</label>\n                                           <div class=\"col-sm-4 label-right label-top\"></div>  \n                                               <my-date-picker  placeholder= \"YYYY - MM- DD \" name=\"from\" id=\"from\"  [options]=\"fromDate\"    formControlName='from' (dateChanged)=\"onFromDate($event)\"></my-date-picker>                                             \n                                           </div>\n\n                                           <div class=\"form-group row\">\n                                            <label class=\"col-sm-4 label-left label-top\">To:</label>\n                                           <div class=\"col-sm-4 label-right label-top\"></div>  \n                                               <my-date-picker [disabled]='beDisable' placeholder= \"YYYY - MM- DD \" name=\"to\" id=\"todate\"  [options]=\"toDate\"   formControlName='to' (dateChanged)=\"onToDate($event)\"></my-date-picker>                                           \n                                           </div>\n\n\n\n                                        <!-- <div>From:\n                                            <input type=\"date\" name=\"doj\" max=\"{{currentDay | date:'yyyy-MM-dd'}}\" placeholder=\"YYYY-MM-DD\">\n                                            <!-- <span ng-show=\"registration.dob.$touched && registration.dob.$invalid\" style=\"color:red\">The Date of Birth is required.</span> -->\n                                        <!-- </div>\n                                       <br> <div class=\"form-group row\">\n                                            <div>To:\n                                                <input type=\"date\" name=\"doj\" max=\"{{currentDay | date:'yyyy-MM-dd'}}\" placeholder=\"YYYY-MM-DD\">\n                                            </div>\n                                        </div> --> \n                                    </div>\n                                    \n                                </form>\n                            </div>\n                            <div class=\"col-sm-6\">\n                                <!-- <div class=\"btn-right\">\n                            <a class=\"btn btn-red btn-common\" href=\"add-user.html\">Add</a>\n                         </div> -->\n                            </div>\n                        </div>\n\n                        <div class=\"box box-blue\">\n                            <div class=\"box-body\">\n                                <div class=\"custom-table table-responsive\">\n                                    <table class=\"table table-striped table-border\">\n                                        <thead>\n                                            <tr>\n                                                <th>SNo.</th>\n                                                <th>Event Name</th>\n                                                <th>Business Name</th>\n                                                <th>Customer Name</th>\n                                                <th>Transaction Date</th>\n                                                <th>Transaction time</th>\n                                                <th>status</th>\n                                                <th>Amount(USD)</th>\n\n                                            </tr>\n                                        </thead>\n                                        <tbody>\n\n                                            <tr *ngFor=\"let item of Transaction | paginate: { itemsPerPage: paginationData.limit, currentPage: pageNo, totalItems: paginationData.total };index as i\">\n                                                <td>{{(i+1)+srNo}}</td>\n                                                <td>{{item.eventName}}</td>\n                                                <td>{{item.businessName}}</td>\n                                                <td>{{item.customerName}}</td>\n                                                <td>{{item.transactionDate}}</td>\n                                                <td>{{item.transactionTime}}</td>\n                                                <td>{{item.bookingStatus}}</td>\n                                                <td>{{item.eventPrice}}</td>\n                                            </tr>\n                                            <tr *ngIf=\"Transaction.length==0\">\n                                                    <span>No record found</span>\n                                                </tr>\n                                        </tbody>\n                                    </table>\n                                </div>\n\n                            </div>\n                        </div>\n                    </div>\n                </fieldset>\n            </div>\n\n\n            <ul class=\"pagination\">\n                <li *ngIf=\"paginationData.total > paginationData.limit\"></li>\n            </ul>\n            <pagination-controls (pageChange)=\"changePage($event)\"></pagination-controls>\n\n        </div>\n    </div>\n</div>\n\n<!-- Modal-blocked -->\n<div id=\"delete\" class=\"modal fade\" data-easein=\"bounceIn\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"costumModalLabel\"\n    aria-hidden=\"true\">\n    <div class=\"modal-dialog\">\n        <div class=\"modal-content common-detail-modal\">\n            <div class=\"modal-header\">\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">\n                    ×\n                </button>\n            </div>\n            <div class=\"modal-body\">\n                <p class=\"modal-inner-text\">\n                    Are you sure you want to delete user ?\n                </p>\n\n                <div class=\"button-box mt20\">\n                    <a class=\"btn btn-red mr10\">Yes</a>\n                    <a class=\"btn btn-danger\" data-dismiss=\"modal\">No</a>\n                </div>\n            </div>\n            <div class=\"modal-footer\">\n\n            </div>\n        </div>\n    </div>\n</div>"
 
 /***/ }),
 
@@ -1864,6 +1878,8 @@ module.exports = "<div class=\"mainbox main-modify\">\n  <app-side-menu></app-si
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TransactionManagementComponent", function() { return TransactionManagementComponent; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _node_modules_angular_forms__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../../node_modules/@angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
+/* harmony import */ var _providers_mainService__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../providers/mainService */ "./src/app/providers/mainService.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1874,12 +1890,162 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 
+
+
 var TransactionManagementComponent = /** @class */ (function () {
-    function TransactionManagementComponent() {
+    function TransactionManagementComponent(fb, service) {
+        this.fb = fb;
+        this.service = service;
         this.paginationData = {};
         this.modified = [];
+        this.Transaction = [];
+        // eventData:any=[];
+        this.pageSize = {};
+        this.pageNo = 1;
+        this.beDisable = true;
+        this.fromDate = {
+            dateFormat: 'yyyy-mm-dd',
+            editableDateField: false,
+            openSelectorOnInputClick: false,
+            disableUntil: { year: 0, month: 0, day: 0 }
+        };
+        this.toDate = {
+            dateFormat: 'yyyy-mm-dd',
+            editableDateField: false,
+            openSelectorOnInputClick: false,
+            disableUntil: { year: 0, month: 0, day: 0 }
+        };
+        this.transantionForm = fb.group({
+            'search': [''],
+            'from': [null],
+            'to': [null],
+            'sort': [''],
+        });
     }
     TransactionManagementComponent.prototype.ngOnInit = function () {
+        this.getAllTransaction();
+    };
+    //****************************GET ALL transaction *************************************** */
+    TransactionManagementComponent.prototype.changePage = function (page) {
+        console.log('page no--->', page);
+        this.pageNo = page;
+        this.getAllTransaction();
+        // this.search()
+    };
+    TransactionManagementComponent.prototype.filter = function (num) {
+        var _this = this;
+        this.pageNo = 1;
+        // this.getAllTransaction()
+        setTimeout(function () {
+            _this.getAllTransaction();
+        }, 300);
+        // if(num==1){
+        //   console.log('filter search')
+        // }
+        // else if(num==2){
+        //   console.log('filter by drop down',)
+        // } 
+        // else if(num==3){
+        //   console.log('filter by date',$('#todate').val())
+        //   console.log('filter by date',this.todate)
+        // }
+    };
+    TransactionManagementComponent.prototype.getAllTransaction = function () {
+        var _this = this;
+        if (!(this.transantionForm.value.from && this.transantionForm.value.to)) {
+            this.transantionForm.patchValue({
+                'to': null,
+                'from': null
+            });
+        }
+        var postData = {
+            search: this.transantionForm.controls['search'].value,
+            bookingStatus: this.transantionForm.controls['sort'].value,
+            fromDate: this.transantionForm.value.from ? this.transantionForm.value.from.formatted : '',
+            toDate: this.transantionForm.value.to ? this.transantionForm.value.to.formatted : '',
+            pageNumber: this.pageNo
+        };
+        console.log("BEFORE POSTING DATA===>", postData);
+        // for (let val in postData) {
+        //   if (postData[val] == '') {
+        //     delete postData[val]
+        //   }
+        // }  
+        this.service.postApi("event/transactionManagementFilter", postData, 1).subscribe(function (response) {
+            // console.log('res')
+            if (response['response_code'] == 200) {
+                // console.log(' Event data found successfully', response)
+                _this.modified = response["result"];
+                _this.Transaction = _this.modified;
+                for (var i = 0; i < _this.modified.length; i++) {
+                    if (_this.modified[i].bookingStatus == 'CANCELLED') {
+                        _this.paginationData = response["paginationData"];
+                        _this.srNo = (_this.pageNo - 1) * _this.paginationData.limit;
+                    }
+                    else if (_this.modified[i].bookingStatus == 'CONFIRMED') {
+                        _this.paginationData = response["paginationData"];
+                        _this.srNo = (_this.pageNo - 1) * _this.paginationData.limit;
+                    }
+                }
+                _this.paginationData = response["paginationData"];
+                _this.srNo = (_this.pageNo - 1) * _this.paginationData.limit;
+                console.log("############", _this.paginationData);
+            }
+            else {
+                _this.Transaction = [];
+                console.log('Failure', response['responseMessage']);
+            }
+        }, function (error) {
+            console.log('error =>', error);
+            _this.service.toastErr('Something Went Wrong');
+        });
+    };
+    // filterChange(){
+    //   console.log('FILTER FORM VALUES-->', this.transantionForm.value)
+    // }
+    TransactionManagementComponent.prototype.onFromDate = function (event) {
+        console.log(this.transantionForm.value);
+        // console.log(event)
+        if (event.formatted) {
+            this.beDisable = false;
+            var d = new Date(event.jsdate.getTime());
+            d.setDate(d.getDate() - 1);
+            var copy = this.getCopyOfToDateOpt();
+            copy.disableUntil = { year: d.getFullYear(),
+                month: d.getMonth() + 1,
+                day: d.getDate()
+            };
+            this.toDate = copy;
+        }
+        else {
+            this.beDisable = true;
+            // this.filter(3)
+            this.transantionForm.patchValue({
+                'to': null,
+                'from': null
+            });
+            this.getAllTransaction();
+        }
+    };
+    TransactionManagementComponent.prototype.getCopyOfToDateOpt = function () {
+        return JSON.parse(JSON.stringify(this.toDate));
+    };
+    TransactionManagementComponent.prototype.onToDate = function (event) {
+        var _this = this;
+        console.log('TO DATE EVENT IS--->', event);
+        setTimeout(function () {
+            console.log(_this.transantionForm.controls['to'].value);
+            console.log(_this.transantionForm.controls['from'].value);
+            if (_this.transantionForm.controls['to'].value.formatted && _this.transantionForm.controls['from'].value.formatted) {
+                _this.filter(3);
+            }
+            else {
+                _this.transantionForm.patchValue({
+                    'to': null
+                });
+            }
+        }, 300);
+        // console.log('Form Value is+++++++++++', this.transantionForm.value)
     };
     TransactionManagementComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
@@ -1887,7 +2053,7 @@ var TransactionManagementComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./transaction-management.component.html */ "./src/app/pages/transaction-management/transaction-management.component.html"),
             styles: [__webpack_require__(/*! ./transaction-management.component.css */ "./src/app/pages/transaction-management/transaction-management.component.css")]
         }),
-        __metadata("design:paramtypes", [])
+        __metadata("design:paramtypes", [_node_modules_angular_forms__WEBPACK_IMPORTED_MODULE_1__["FormBuilder"], _providers_mainService__WEBPACK_IMPORTED_MODULE_2__["MainService"]])
     ], TransactionManagementComponent);
     return TransactionManagementComponent;
 }());
@@ -2147,7 +2313,7 @@ var MainService = /** @class */ (function () {
     function MainService(http, toastr) {
         this.http = http;
         this.toastr = toastr;
-        //  baseUrl =  'http://172.16.6.74:8000/api/v1/';
+        //   baseUrl =  'http://172.16.6.74:8000/api/v1/';
         //    >>>>staging URL>>
         this.baseUrl = 'http://162.222.32.20:1406/api/v1/';
     }
