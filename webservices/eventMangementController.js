@@ -252,18 +252,21 @@ module.exports = {
 
 
 
+   
     'latestEvents': (req, res) => {
         //console.log("get al customer")
         //var durationArr = [];
+        var doc_arr = [];
+        var result_new;
         var query = { status: "ACTIVE" };
         let options = {
-            // page: req.params.pageNumber,
+            page: req.body.pageNumber || 1,
             select: 'period eventAddress eventCreated_At eventImage offset duration eventName status eventDescription eventPrice ',
-            // limit: 5,
+            // limit: req.body.limit || 5,
             // match:{query},
             sort: { eventCreated_At: -1 },
             populate: { path: 'userId', select: 'profilePic businessName name status', match: { status: "ACTIVE" } },
-            lean: false
+            lean: true
         }
         //success
         eventSchema.paginate(query, options, (error, result) => {
@@ -272,10 +275,106 @@ module.exports = {
             else if (result.docs.length == 0)
                 response.sendResponseWithData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND)
             else {
-                console.log("result is" + JSON.stringify(result))
-                response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result)
+                waterfall([
+                    function (callback) {
+                        var result_new = result;
+                        if (result.docs.length != 0) {
+
+                            for (var i = 0; i < result.docs.length; i++) {
+
+                                if (result.docs[i].duration.length != 0 || result.docs[i].duration.length != undefined || result.docs[i].duration.length != null) {
+                                    for (var j = 0; j < result.docs[i].duration.length; j++) {
+                                        let timesArr = [];
+                                        let removeBookingExpired = [];
+                                        var array_epoc_value = result.docs[i].duration[j].date.epoc;
+                                        console.log('Array epoc value==>>>>', j, array_epoc_value);
+                                        var date = new Date();
+                                        var newDate = date.toJSON()
+                                        var array = newDate.split("T")[0];
+                                        var newDate1 = array + " 00:00:00"
+                                        var d = new Date(newDate1)
+                                        var current_epoc_value = d.getTime();
+                                        console.log('current_epoc value and ', array_epoc_value * 1000, current_epoc_value)
+                                        if (!((array_epoc_value * 1000) <= current_epoc_value)) {
+                                            console.log('Correct condition');
+                                            removeBookingExpired.push(result.docs[i].duration[j])
+                                        }
+                                        if (j == result.docs[i].duration.length - 1)
+                                            result.docs[i].duration = removeBookingExpired;
+                                        if (result.docs[i].duration[j] != undefined || result.docs[i].duration[j] != null) {
+                                            for (var k = 0; k < result.docs[i].duration[j].times.length; k++) {
+                                                let tempDateObj = result.docs[i].duration[j].date.formatted + ' ' + result.docs[i].duration[j].times[k].time;
+                                                // var n = (new Date().getTimezoneOffset()) * 60000;
+                                                // offset = n - offset;
+                                                if (new Date().getTime() < new Date(tempDateObj).getTime()) {
+                                                    timesArr.push(result.docs[i].duration[j].times[k]);
+                                                }
+                                                if (k == result.docs[i].duration[j].times.length - 1)
+                                                    result.docs[i].duration[j].times = timesArr;
+
+                                            }
+                                            if (result.docs[i].duration[j].times.length == 0) {
+
+                                                result.docs[i].duration.splice(i, 1);
+
+                                            }
+
+
+
+                                        }
+                                    }
+
+                                }
+                                // else {
+                                //     result.docs.splice(i, 1);
+                                // }
+
+                            }
+                        }
+                        else {
+                            callback(null, 'no data');
+                        }   
+
+                        callback(null, result);
+                    },
+                    function (result11, callback) {
+                         
+                        if (result11 != 'no data') {
+                            var newResult = {docs:result11.docs.filter(x => x.duration.length != 0)};
+                            console.log('Result is=====>>>>>',newResult);
+                          
+                            callback(null, newResult);
+                        }
+                        else {
+                            callback(null, result1);
+                        }
+
+                    }
+
+                ], (err, result1) => {
+                    if (result1 == 'no data')
+                        response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result1)
+
+                    response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result1)
+                })
+
 
             }
+            // for(var i=0; i<tempArr.length; i++){
+            //     for(var j=0; j<tempArr[i].duration.length; j++){
+            //         let timesArr = [];
+            //         for(var k=0; k<tempArr[i].duration[j].times.length; k++){
+            //             let tempDateObj = tempArr[i].duration[j].date.formatted+' '+tempArr[i].duration[j].times[k].time;
+            //             if(new Date().getTime() < new Date(tempDateObj).getTime()) {
+            //                 timesArr.push(tempArr[i].duration[j].times[k]);
+            //             }
+            //             if(k == tempArr[i].duration[j].times.length-1){
+            //                 tempArr[i].duration[j].times = timesArr;
+            //             }
+            //         }
+            //     }   
+            //  }
+
         })
     },
 
