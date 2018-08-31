@@ -16,8 +16,7 @@ const auth = {
                 if(err)
                 {
                     console.log("token not verified",err)
-                    Response.sendResponseWithoutData(res, resCode.UNAUTHORIZED, "Authentication failed.")
-                }    
+0                }    
                 else{
                     console.log("token verified")
                     userSchema.findOne({_id:req.headers._id,status:"ACTIVE"},{name:1},(error, result)=>{

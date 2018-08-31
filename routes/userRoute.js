@@ -12,7 +12,7 @@ router.get('/viewUserDetail',authHandler.verifyToken,User.viewUserDetail);
 router.get('/viewDetail/:_id',authHandler.verifyToken,User.viewDetail);//by Admin panel
 router.post('/editUser',authHandler.verifyToken,User.editUser);
 router.post('/edit',authHandler.verifyToken,User.edit)//by Admin panel
-router.post('/forgotPassword', User.forgotPassword);
+router.post('/forgotPassword',User.forgotPassword);
 router.post('/changePassword',authHandler.verifyToken, User.changePassword);
 router.post('/deleteUser',authHandler.verifyToken,User.deleteUser);//by Admin panel
 router.post('/blockUser',authHandler.verifyToken,User.blockUser);//by Admin panel

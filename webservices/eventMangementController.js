@@ -196,22 +196,25 @@ module.exports = {
     'cancelBooking': (req, res) => {
         var query = { _id: req.body._id, bookingStatus: "PENDING" || "CONFIRMED" }
         booking.findOneAndUpdate(query, { $set: { bookingStatus: "CANCELLED" } }, { new: true }, (err, result) => {
+            console.log("**********************", err, result)
             if (err) {
                 console.log("err1,", err)
                 return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
             }
             if (!result)
-                return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found")
+                return response.sendResponseWithData(res, responseCode.NOT_FOUND, "Data not found")
             else {
+               
                 var result = result;
                 userSchema.find({ _id: result.userId, status: "ACTIVE" }, (err_, result_) => {
                     if (err_)
                         return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
                     else {
                         //  }
+                        var amount = ((90 * result.eventPrice) / 100)
                         return stripe.refunds.create({
                             charge: result.chargeId,
-                            amount: (0.9 * result.eventPrice),
+                            amount: Math.round(amount),//((90* result.eventPrice)/100),
                         }, function (err, refund) {
                             if (err) {
                                 console.log("err in refunds", err)
@@ -219,8 +222,8 @@ module.exports = {
                             else {
                                 console.log('success refund-->', refund)
                                 //callback('',refund)
-                                console.log("Noti data", result_.deviceToken, 'Booking Cancelled!!', ' Your booking is Cancelled and your amount will be refunded...!', result.businessManId, result.userId, result_.profilePic, result_.name)
-                                notification.single_notification(result_.deviceToken, 'Booking Cancelled!!', ' Your booking is Cancelled and your amount will be refunded...!', result.businessManId, result.userId, result_.profilePic, result_.name)
+                                // console.log("Noti data", result_.deviceToken, 'Booking Cancelled!!', ' Your booking is Cancelled and your amount will be refunded...!', result.businessManId, result.userId, result_.profilePic, result_.name)
+                                // notification.single_notification(result_.deviceToken, 'Booking Cancelled!!', ' Your booking is Cancelled and your amount will be refunded...!', result.businessManId, result.userId, result_.profilePic, result_.name)
                                 response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "booking cancelled successfully and your amount will be refunded...")
                             }
                         })
@@ -252,7 +255,7 @@ module.exports = {
 
 
 
-   
+
     'latestEvents': (req, res) => {
         //console.log("get al customer")
         //var durationArr = [];
@@ -296,6 +299,7 @@ module.exports = {
                                         var current_epoc_value = d.getTime();
                                         var offset = result.docs[i].offset;
                                         console.log('current_epoc value and ', array_epoc_value * 1000, current_epoc_value)
+
                                         if (!((array_epoc_value * 1000) <= current_epoc_value)) {
                                             console.log('Correct condition');
                                             removeBookingExpired.push(result.docs[i].duration[j])
@@ -307,7 +311,9 @@ module.exports = {
                                                 let tempDateObj = result.docs[i].duration[j].date.formatted + ' ' + result.docs[i].duration[j].times[k].time;
                                                 var n = (new Date().getTimezoneOffset()) * 60000;
                                                 offset = n - offset;
-                                                if (new Date().getTime() < (new Date(tempDateObj).getTime() - offset)) {
+                                                // var current = new Date().getTime();
+                                                // var showTime = new Date(tempDateObj).getTime();
+                                                if (new Date().getTime()  < new Date(tempDateObj).getTime() ) {
                                                     timesArr.push(result.docs[i].duration[j].times[k]);
                                                 }
                                                 if (k == result.docs[i].duration[j].times.length - 1)
@@ -334,16 +340,16 @@ module.exports = {
                         }
                         else {
                             callback(null, 'no data');
-                        }   
+                        }
 
                         callback(null, result);
                     },
                     function (result11, callback) {
-                         
+
                         if (result11 != 'no data') {
-                            var newResult = {docs:result11.docs.filter(x => x.duration.length != 0)};
-                            console.log('Result is=====>>>>>',newResult);
-                          
+                            var newResult = { docs: result11.docs.filter(x => x.duration.length != 0) };
+                            console.log('Result is=====>>>>>', newResult);
+
                             callback(null, newResult);
                         }
                         else {
@@ -361,23 +367,14 @@ module.exports = {
 
 
             }
-            // for(var i=0; i<tempArr.length; i++){
-            //     for(var j=0; j<tempArr[i].duration.length; j++){
-            //         let timesArr = [];
-            //         for(var k=0; k<tempArr[i].duration[j].times.length; k++){
-            //             let tempDateObj = tempArr[i].duration[j].date.formatted+' '+tempArr[i].duration[j].times[k].time;
-            //             if(new Date().getTime() < new Date(tempDateObj).getTime()) {
-            //                 timesArr.push(tempArr[i].duration[j].times[k]);
-            //             }
-            //             if(k == tempArr[i].duration[j].times.length-1){
-            //                 tempArr[i].duration[j].times = timesArr;
-            //             }
-            //         }
-            //     }   
-            //  }
 
         })
     },
+
+
+
+
+
 
     //-------------------------------------------------------------------------------My Event at business site after login  -----------------------------------------------------------------//
 
@@ -591,7 +588,7 @@ module.exports = {
     "myBooking": (req, res) => {
         var query = { userId: req.body.userId }
         let options = {
-            page: req.params.pagenumber || 1,
+            page: req.body.pagenumber || 1,
             // select: 'status  eventPrice  eventStatus  eventCreated_At  _id   eventName eventAddress eventDescription eventImage  ',
             limit: 10,
             sort: { eventCreated_At: -1 },
@@ -605,6 +602,8 @@ module.exports = {
             if (result.docs.length == 0)
                 return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found")
             else {
+                // delete result[0]["id"];
+                //  result.map(x => delete x['id'])
                 response.sendResponseWithPagination(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result.docs, { total: result.total, limit: result.limit, currentPage: result.page, totalPage: result.pages });
 
             }
@@ -720,7 +719,7 @@ module.exports = {
                         response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
                     else {
                         console.log(`cancel event status result_------------->${JSON.stringify(result_.eventName)}`)
-                        console.log("Pppopdfufydfsjuysdfjfdgs", result.chargeId,result.eventPrice)
+                        console.log("Pppopdfufydfsjuysdfjfdgs", result.chargeId, result.eventPrice)
                         event = result_.eventName;
                         console.log("event0-00---", event)
                         return stripe.refunds.create({
@@ -738,9 +737,9 @@ module.exports = {
                                 notification.single_notification(result.deviceToken, 'Event Cancelled!!', event + ' Event is Cancelled...!', result.businessManId, result.userId._id, result.userId.profilePic, result.userId.name)
                                 response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Event status is cancelled")
                             }
-                               
+
                         })
-                      
+
                     }
                 })
 
@@ -891,11 +890,11 @@ module.exports = {
             if (err)
                 return response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.");
             if (!success)
-                return response.sendResponseWithData(res, responseCode.NOT_FOUND, "Data not found.",success);
+                return response.sendResponseWithData(res, responseCode.NOT_FOUND, "Data not found.", success);
             else {
                 console.log("success===" + JSON.stringify(success))
-  //  console.log(success)
-                    //=========================FOR DAILY=============================
+                //  console.log(success)
+                //=========================FOR DAILY=============================
 
                 if (req.body.period == 'DAILY') {
 
@@ -913,7 +912,7 @@ module.exports = {
 
 
                 }
- //=========================FOR WEEKLY=============================
+                //=========================FOR WEEKLY=============================
                 else if (req.body.period == 'WEEKLY') {
                     var current_date = Date.now();
                     var newDate = nextWeek.toJSON()
@@ -972,7 +971,7 @@ module.exports = {
         else {
             User.findOne({ _id: req.body.userId, userType: "CUSTOMER", status: "ACTIVE" }, (err4, succ) => {
                 //  User.findOne({ "_id": req.body.companyId, "status": "ACTIVE" }, (err_, result_) => {
-                    console.log("err result--->",err4,succ)
+                console.log("err result--->", err4, succ)
                 if (err4)
                     return response.sendResponseWithData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.", err4);
                 if (!succ)
@@ -998,21 +997,21 @@ module.exports = {
                                         //     console.log("booking result---------->", err, success)
                                         //     if (err)
                                         //         return response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.", err)
-                                            // if (!success) {
+                                        // if (!success) {
 
-                                            //     return response.sendResponseWithData(res, responseCode.NOT_FOUND, "Data not found", success)
-                                            // }
-                                            // else {
-                                            //     booking.create(req.body, (err, result) => {
-                                            //         if (err)
-                                            //             return response.sendResponseWithData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.", err);
-                                            //         else
-                                            //             console.log("booking is done>>>>>>>>>>>>", result)
-                                            //         // response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, success);
-                                          
+                                        //     return response.sendResponseWithData(res, responseCode.NOT_FOUND, "Data not found", success)
+                                        // }
+                                        // else {
+                                        //     booking.create(req.body, (err, result) => {
+                                        //         if (err)
+                                        //             return response.sendResponseWithData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.", err);
+                                        //         else
+                                        //             console.log("booking is done>>>>>>>>>>>>", result)
+                                        //         // response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, success);
 
-                                            //     })
-                                            // }
+
+                                        //     })
+                                        // }
                                         //})
                                     }
                                     else
@@ -1021,7 +1020,7 @@ module.exports = {
                                 }
                                 else
                                     return response.sendResponseWithData(res, responseCode.NOT_FOUND, "Multiple time slot are not allowed");
-                                    callback(null, succ1)
+                                callback(null, succ1)
                             }
                         })//
                     }, (data, callback) => {
@@ -1032,16 +1031,16 @@ module.exports = {
                             source: req.body.stripeToken // token for the given card 
                         }).then((customer) => {
                             console.log("customer stripe")
-                            if(!customer)
-                            response.sendResponseWithoutData(res, responseCode.WENT_WRONG, " No such token.... ")
-                            else{
+                            if (!customer)
+                                response.sendResponseWithoutData(res, responseCode.WENT_WRONG, " No such token.... ")
+                            else {
                                 return stripe.charges.create({ // charge the customer
                                     amount: req.body.eventPrice,
                                     currency: "usd",
                                     customer: customer.id
                                 })
                             }
-                         
+
                             console.log("customer=====>", customer)
                         })
                             .then((charge) => {
@@ -1569,9 +1568,9 @@ module.exports = {
 //                                     //callback('',refund)
 //                                     next();
 //                                 }
-                                   
+
 //                             })
-                           
+
 //                         }
 //                     })
 //                 }
@@ -1589,35 +1588,155 @@ module.exports = {
 
 
 
-
-// var newTime = new Date()
-
-// var result = succ[j].duration[0].date.formatted + "T" + succ[j].duration[0].times[0].time + ":00.000Z"
-// // "2018-08-30T15:23:00.000Z"
-// console.log("i am here ....>>>>", result)
-// var newTime = new Date(result)
-// var temp = new Date(result).getTime()
-// // var c=temp+19800000
-// console.log('temp value =>>>', temp);
-// var today_date = Date.now()
-// var today_temp_date = today_date + 19800000;
-// var today_new_date = new Date(today_temp_date).toISOString();
-// var ss = today_new_date.split(/:/g)
-// var text = '';
-// text += ss[0] + ':' + ss[1] + ":00.000Z"
-// var current_time_stamp = new Date(text).getTime();
-// console.log("current timeStamp", current_time_stamp)
-// console.log("@@@@@@@@@@@@@@@@", temp >= current_time_stamp);
-// if (temp >= current_time_stamp) {
-//     booking.update({ 'bookingStatus': 'CONFIRMED' }, { $set: { 'bookinStatus': 'COMPLETED' } }, { multi: true }).exec((err1, succ1) => {
-//         console.log('error ,succes==========>>>>>>', err1, succ1);
-//         if (err1)
-//             console.log('Error is====>>>>>', err1);
-//         else if (succ1) {
-//             console.log('Status updated successfully====>>>>', succ1);
-//             callback();
-
+// var offset = result.docs[i].offset;
+// console.log('current_epoc value and ', array_epoc_value * 1000, current_epoc_value)
+// if (!((array_epoc_value * 1000) <= current_epoc_value)) {
+//     console.log('Correct condition');
+//     removeBookingExpired.push(result.docs[i].duration[j])
+// }
+// if (j == result.docs[i].duration.length - 1)
+//     result.docs[i].duration = removeBookingExpired;
+// if (result.docs[i].duration[j] != undefined || result.docs[i].duration[j] != null) {
+//     for (var k = 0; k < result.docs[i].duration[j].times.length; k++) {
+//         let tempDateObj = result.docs[i].duration[j].date.formatted + ' ' + result.docs[i].duration[j].times[k].time;
+//         var n = (new Date().getTimezoneOffset()) * 60000;
+//         offset = n - offset;
+//         var current = new Date().getTime();
+//         var showTime = new Date(tempDateObj).getTime();
+//         if (current < showTime + offset) {
+//             timesArr.push(result.docs[i].duration[j].times[k]);
 //         }
-//     })
+//         if (k == result.docs[i].duration[j].times.length - 1)
+//             result.docs[i].duration[j].times = timesArr;
+
+//     }
+//     if (result.docs[i].duration[j].times.length == 0) {
+
+//         result.docs[i].duration.splice(i, 1);
+
+//     }
+
+
 
 // }
+// }
+
+// }
+// // else {
+// //     result.docs.splice(i, 1);
+// // }
+
+// }
+// }
+// else {
+// callback(null, 'no data');
+// }   
+
+// callback(null, result);
+// },
+// function (result11, callback) {
+
+// if (result11 != 'no data') {
+// var newResult = {docs:result11.docs.filter(x => x.duration.length != 0)};
+// console.log('Result is=====>>>>>',newResult);
+
+// callback(null, newResult);
+// }
+// else {
+// callback(null, result1);
+// }
+
+// }
+
+// ], (err, result1) => {
+// if (result1 == 'no data')
+// response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result1)
+
+// response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result1)
+// })
+
+
+// }
+
+// })
+// },
+
+
+
+// console.log('current_epoc value and ', array_epoc_value * 1000, current_epoc_value)
+// if (!((array_epoc_value * 1000) <= current_epoc_value)) {
+//     console.log('Correct condition');
+//     removeBookingExpired.push(result.docs[i].duration[j])
+// }
+// if (j == result.docs[i].duration.length - 1)
+//     result.docs[i].duration = removeBookingExpired;
+// if (result.docs[i].duration[j] != undefined || result.docs[i].duration[j] != null) {
+//     for (var k = 0; k < result.docs[i].duration[j].times.length; k++) {
+//         let tempDateObj = result.docs[i].duration[j].date.formatted + 'T'+ result.docs[i].duration[j].times[k].time+"00.000Z";
+//         var offset = (new Date().getTimezoneOffset()) * 60000;
+//         // offset = n - offset;
+//         var today = new Date().getTime()
+//         var c=today-offset
+//         var current = new Date(c).toJSON()
+//         var todaySplit=current.split(":")
+//         var data=todaySplit[0]+":"+todaySplit[1]+":00.000Z";
+//         var todayTimeStamp=new Date(data).getTime()
+
+//         var showTime = new Date(tempDateObj).getTime();
+//         if (todayTimeStamp > showTime) {
+//             timesArr.push(result.docs[i].duration[j].times[k]);
+//         }
+//         if (k == result.docs[i].duration[j].times.length - 1)
+//             result.docs[i].duration[j].times = timesArr;
+
+//     }
+//     if (result.docs[i].duration[j].times.length == 0) {
+
+//         result.docs[i].duration.splice(i, 1);
+
+//     }
+
+
+
+// }
+// }
+
+// }
+// // else {
+// //     result.docs.splice(i, 1);
+// // }
+
+// }
+// }
+// else {
+// callback(null, 'no data');
+// }   
+
+// callback(null, result);
+// },
+// function (result11, callback) {
+
+// if (result11 != 'no data') {
+// var newResult = {docs:result11.docs.filter(x => x.duration.length != 0)};
+// console.log('Result is=====>>>>>',newResult);
+
+// callback(null, newResult);
+// }
+// else {
+// callback(null, result1);
+// }
+
+// }
+
+// ], (err, result1) => {
+// if (result1 == 'no data')
+// response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result1)
+
+// response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result1)
+// })
+
+
+// }
+
+// })
+// },

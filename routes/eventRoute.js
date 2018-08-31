@@ -8,7 +8,7 @@ router.post('/addEvent',authHandler.verifyToken,Business.addEvent);
  router.post('/myAllEvents',authHandler.verifyToken,Business.myAllEvents);
  router.get('/eventLocation',authHandler.verifyToken,Business.eventLocation);
  router.post('/locationDetail',authHandler.verifyToken,Business.locationDetail);
- router.post('/myBooking',authHandler.verifyToken,Business.myBooking);
+ router.post('/myBooking',Business.myBooking);
  router.post('/eventsPending',authHandler.verifyToken,Business.eventsPending);
  router.post('/eventsConfirmed',authHandler.verifyToken,Business.eventsConfirmed);
  router.post('/eventsCancelled',authHandler.verifyToken,Business.eventsCancelled);
@@ -16,6 +16,7 @@ router.post('/addEvent',authHandler.verifyToken,Business.addEvent);
  router.post('/confirmEventStatus',authHandler.verifyToken,Business.confirmEventStatus);
  router.post('/rejectEventStatus',authHandler.verifyToken,Business.rejectEventStatus);
  router.post('/bookingEvent',authHandler.verifyToken,Business.bookingEvent);
+ //router.post('/booking',authHandler.verifyToken,Business.booking);
  router.post('/booking',authHandler.verifyToken,Business.booking);
  router.post('/eventDescription',authHandler.verifyToken,Business.eventDescription);
  router.post('/filterEvent',authHandler.verifyToken,Business.filterEvent);
@@ -27,7 +28,7 @@ router.post('/addEvent',authHandler.verifyToken,Business.addEvent);
  router.post('/viewCustomerFeedback',authHandler.verifyToken,Business.viewCustomerFeedback);//////////
  router.post('/myEventFeedback',authHandler.verifyToken,Business.myEventFeedback);/////////
  router.get('/allFeedbackViews',authHandler.verifyToken,Business.allFeedbackViews);/////////
- router.post('/cancelBooking',authHandler.verifyToken,Business.cancelBooking);
+ router.post('/cancelBooking',Business.cancelBooking);
  router.post('/getAllEvents/',authHandler.verifyToken,Business.getAllEvents);
  router.post('/transactionManagementFilter',authHandler.verifyToken,Business.transactionManagementFilter);
 //  router.post('/searchEventFilter',Business.searchEventFilter);
