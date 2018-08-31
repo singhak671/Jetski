@@ -25,7 +25,7 @@ const notiApi = {
         if(!req.body)
             response.sendResponseWithoutData(res, resCode.SOMETHING_WENT_WRONG, resMessage.WENT_WRONG);
         else{
-            User.findByIdAndUpdate({_id:req.body._id,status:"ACTIVE"},{$set:{deviceToken:req.body.deviceToken,deviceType:req.body.deviceType}},{new:true},(error,result)=>{
+            User.findOneAndUpdate({email:req.body.email,status:"ACTIVE"},{$set:{deviceToken:req.body.deviceToken,deviceType:req.body.deviceType}},{new:true},(error,result)=>{
                 if(error)
                     response.sendResponseWithoutData(res, resCode.SOMETHING_WENT_WRONG, resMessage.INTERNAL_SERVER_ERROR);
                 else if(!result)

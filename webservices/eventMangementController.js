@@ -1158,8 +1158,8 @@ module.exports = {
                                     else if (success3.length == 0)
                                         return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Something went wrong....");
                                     else {
-                                        console.log("noti data===>", success.deviceToken, 'feedback Posted !', ' Your feedback is successfully send.', req.body.businessManId, req.body.customerId, success.profilePic, success.name)
-                                        notification.single_notification(success.deviceToken, 'feedback Posted !', ' Your feedback is successfully send.', req.body.businessManId, req.body.customerId, success.profilePic, success.name)
+                                        // console.log("noti data===>", success.deviceToken, 'feedback Posted !', ' Your feedback is successfully send.', req.body.businessManId, req.body.customerId, success.profilePic, success.name)
+                                        // notification.single_notification(success.deviceToken, 'feedback Posted !', ' Your feedback is successfully send.', req.body.businessManId, req.body.customerId, success.profilePic, success.name)
                                         response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, "Feedback is successfully send.", success3);
                                     }
 

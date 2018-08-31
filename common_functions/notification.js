@@ -9,10 +9,10 @@ const notification = require('../common_functions/notification');
 const webpush = require('web-push');
 const vapidKeys = webpush.generateVAPIDKeys()
 let subscribers = [];
-console.log("Public key",vapidKeys.publicKey)
+// console.log("Public key",vapidKeys.publicKey)
 //'BDO0P...eoH'
 //api key=========>AIzaSyDGSrq0YF5pF0uhXtZx2D8IMxCkgl2hbO4
-console.log("private key",vapidKeys.privateKey)
+// console.log("private key",vapidKeys.privateKey)
 // const webpush = require('web-push');
 // const vapidKeys = webpush.generateVAPIDKeys()
 
