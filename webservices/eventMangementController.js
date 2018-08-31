@@ -294,6 +294,7 @@ module.exports = {
                                         var newDate1 = array + " 00:00:00"
                                         var d = new Date(newDate1)
                                         var current_epoc_value = d.getTime();
+                                        var offset = result.docs[i].offset;
                                         console.log('current_epoc value and ', array_epoc_value * 1000, current_epoc_value)
                                         if (!((array_epoc_value * 1000) <= current_epoc_value)) {
                                             console.log('Correct condition');
@@ -304,9 +305,9 @@ module.exports = {
                                         if (result.docs[i].duration[j] != undefined || result.docs[i].duration[j] != null) {
                                             for (var k = 0; k < result.docs[i].duration[j].times.length; k++) {
                                                 let tempDateObj = result.docs[i].duration[j].date.formatted + ' ' + result.docs[i].duration[j].times[k].time;
-                                                // var n = (new Date().getTimezoneOffset()) * 60000;
-                                                // offset = n - offset;
-                                                if (new Date().getTime() < new Date(tempDateObj).getTime()) {
+                                                var n = (new Date().getTimezoneOffset()) * 60000;
+                                                offset = n - offset;
+                                                if (new Date().getTime() < (new Date(tempDateObj).getTime() - offset)) {
                                                     timesArr.push(result.docs[i].duration[j].times[k]);
                                                 }
                                                 if (k == result.docs[i].duration[j].times.length - 1)
