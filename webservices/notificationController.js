@@ -65,7 +65,7 @@ const notiApi = {
     // },
 //================================Notification shown in web===============================================================
 'notificationList': (req, res) => {
-    console.log(`Request for notification list ${JSON.stringify(req.body)}`)
+    // console.log(`Request for notification list ${JSON.stringify(req.body)}`)
     let options = {
         page: req.body.pageNumber,
         limit:10,
@@ -81,7 +81,7 @@ const notiApi = {
     })
 },
 'unreadCount': (req, res) =>{
-    console.log(`Request for unread notification count ${req.params.bussinessId}`)
+    // console.log(`Request for unread notification count ${req.params.bussinessId}`)
     Notification.count({"bussinessId.bid":req.params.bussinessId,noti_type:'CUSTOMER',"bussinessId.isRead":false}, (error,result)=>{
         if(error)
             response.sendResponseWithoutData(res, resCode.INTERNAL_SERVER_ERROR, resMessage.INTERNAL_SERVER_ERROR)
@@ -90,7 +90,7 @@ const notiApi = {
     })
 },
 'updateReadStatus': (req, res) => {
-    console.log(`Request for unread notification count -> ${req.params.bussinessId}`)
+    // console.log(`Request for unread notification count -> ${req.params.bussinessId}`)
     Notification.updateMany({"bussinessId.bid":req.params.bussinessId,noti_type:'CUSTOMER'},{$set:{"bussinessId.isRead":true}}, (error,result)=>{
         if(error)
             response.sendResponseWithoutData(res, resCode.INTERNAL_SERVER_ERROR, resMessage.INTERNAL_SERVER_ERROR)

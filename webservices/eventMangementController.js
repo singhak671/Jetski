@@ -37,7 +37,7 @@ function joinDateTime(d, t, offset) {
 
     //     console.log(date.getTime()); //1379426880000
     //     console.log(date);
-    var n = (new Date().getTimezoneOffset()) * 60000;
+    var n = (new Date().getTimezoneOffset()) * 60000;  //-19800000
     offset = n - offset;
     var finalObj = { dateTime: (date.getTime()) - offset }
     return finalObj;
@@ -57,6 +57,31 @@ function validateEvent(duration, offset) {
     } else {
         return true;
     }
+}
+
+function filterFutureEvent(duration, offset){
+    let currentTime = new Date().getTime();
+    //console.log('currenttime==>>>', currentTime)
+    duration.map((x, durIndex) => {
+        if(((new Date(x.date.formatted).getTime() + 84600000) - currentTime) <= 0){
+            // console.log('formatted==>>>', new Date(x.date.formatted).getTime() + 84600000);
+            // console.log('inddddd==>>>', durIndex)
+            x.isExpired = true;
+        }  
+        else{
+            x.isExpired = false;
+            x.times.map((y, timeIndex) => {
+                var obj = joinDateTime(x.date.formatted, y.time, offset)
+                y.epoc = obj.dateTime;
+                if((obj.dateTime - currentTime) <= 0)
+                 y.isExpired = true
+                else
+                    y.isExpired = false                      
+            })
+        }    
+    })
+    //console.log('duration==>>>'+ JSON.stringify(duration))
+    return duration;
 }
 
 
@@ -194,7 +219,7 @@ module.exports = {
     },
     //=============================================================cancel booking for app=======================================================
     'cancelBooking': (req, res) => {
-        var query = { _id: req.body._id, bookingStatus: "PENDING" || "CONFIRMED" }
+        var query = { _id: req.body._id,$or:[{bookingStatus: "PENDING"},{bookingStatus: "CONFIRMED"}] }
         booking.findOneAndUpdate(query, { $set: { bookingStatus: "CANCELLED" } }, { new: true }, (err, result) => {
             console.log("**********************", err, result)
             if (err) {
@@ -282,7 +307,8 @@ module.exports = {
                     function (callback) {
                         var result_new = result;
                         if (result.docs.length != 0) {
-
+                            result.docs.map( x=> x.duration = filterFutureEvent(x.duration, x.offset))
+                            console.log('finalevents==>>>'+ JSON.stringify(result.docs));
                             for (var i = 0; i < result.docs.length; i++) {
 
                                 if (result.docs[i].duration.length != 0 || result.docs[i].duration.length != undefined || result.docs[i].duration.length != null) {
@@ -297,7 +323,7 @@ module.exports = {
                                         var newDate1 = array + " 00:00:00"
                                         var d = new Date(newDate1)
                                         var current_epoc_value = d.getTime();
-                                        var offset = result.docs[i].offset;
+                                        // var offset = result.docs[i].offset;
                                         console.log('current_epoc value and ', array_epoc_value * 1000, current_epoc_value)
 
                                         if (!((array_epoc_value * 1000) <= current_epoc_value)) {
@@ -309,11 +335,11 @@ module.exports = {
                                         if (result.docs[i].duration[j] != undefined || result.docs[i].duration[j] != null) {
                                             for (var k = 0; k < result.docs[i].duration[j].times.length; k++) {
                                                 let tempDateObj = result.docs[i].duration[j].date.formatted + ' ' + result.docs[i].duration[j].times[k].time;
-                                                var n = (new Date().getTimezoneOffset()) * 60000;
-                                                offset = n - offset;
+                                                // var n = (new Date().getTimezoneOffset()) * 60000;
+                                                // offset = n - offset;
                                                 // var current = new Date().getTime();
                                                 // var showTime = new Date(tempDateObj).getTime();
-                                                if (new Date().getTime()  < new Date(tempDateObj).getTime() ) {
+                                                if (new Date().getTime()  > new Date(tempDateObj).getTime() ) {
                                                     timesArr.push(result.docs[i].duration[j].times[k]);
                                                 }
                                                 if (k == result.docs[i].duration[j].times.length - 1)
@@ -591,7 +617,7 @@ module.exports = {
             page: req.body.pagenumber || 1,
             // select: 'status  eventPrice  eventStatus  eventCreated_At  _id   eventName eventAddress eventDescription eventImage  ',
             limit: 10,
-            sort: { eventCreated_At: -1 },
+            sort: { createdAt: -1 },
             lean: true,
             populate: [{ path: 'businessManId', select: 'profilePic  name' }, { path: "eventId", select: "status  eventCreated_At _id eventName eventAddress eventDescription eventPrice eventImage createdAt" }]
 
@@ -1013,7 +1039,7 @@ module.exports = {
                                         //     })
                                         // }
                                         //})
-                                    }
+                                    }    
                                     else
                                         return response.sendResponseWithData(res, responseCode.NOT_FOUND, "Booking time expired..");
 

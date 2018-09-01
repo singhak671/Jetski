@@ -16,21 +16,25 @@ const auth = {
                 if(err)
                 {
                     console.log("token not verified",err)
+                    Response.sendResponseWithoutData(res, 403, "Invalid token provided.")
 0                }    
                 else{
                     console.log("token verified")
-                    userSchema.findOne({_id:req.headers._id,status:"ACTIVE"},{name:1},(error, result)=>{
+                    userSchema.findOne({_id:req.headers._id},(error, result)=>{
                             console.log("result of user "+ JSON.stringify(result))
                             if(error)
-                                Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
+                                Response.sendResponseWithoutData(res, resCode.INTERNAL_SERVER_ERROR, resMessage.INTERNAL_SERVER_ERROR)
                             else if(!result){
                                 console.log("null user entered")
-                               // console.log(decoded)
-                                Response.sendResponseWithoutData(res, resCode.NOT_FOUND, "User not found.")
+                                Response.sendResponseWithoutData(res, resCode.UNAUTHORIZED, "User doesn't exist.")
                             }
                             else{
-                                next();
-                               //Response.sendResponseWithData(res,resCode.EVERYTHING_IS_OK,"Verify_Successfully",result)
+                                if(result.status == "ACTIVE")
+                                 next();
+                                else if(result.status == "INACTIVE") 
+                                 Response.sendResponseWithoutData(res, resCode.UNAUTHORIZED, "User doesn't exist.")
+                                else
+                                Response.sendResponseWithoutData(res, resCode.UNAUTHORIZED, "User blocked by admin.")  
                             }                        
                         })
                 }
