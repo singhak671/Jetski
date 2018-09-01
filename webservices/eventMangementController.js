@@ -1348,43 +1348,80 @@ module.exports = {
     //********************************************************************************************  API for getting all events for Admin panel **************************************************************************  */
 
 
-    'getAllEvents': (req, res) => {
-        var value = new RegExp('^' + req.body.search, "i")
-        //     if (req.body.search) {
+    // 'getAllEvents': (req, res) => {
+    //     var value = new RegExp('^' + req.body.search, "i")
+    //     //     if (req.body.search) {
 
-        //     }
-        var query = {
-            $or: [{ $and: [{ status: "ACTIVE" }, { "businessName": value }] }, { $and: [{ status: "ACTIVE" }, { eventName: value }] }], status: "ACTIVE"
+    //     //     }
+    //     var query = {
+    //         $or: [{ $and: [{ status: "ACTIVE" }, { "businessName": value }] }, { $and: [{ status: "ACTIVE" }, { eventName: value }] }], status: "ACTIVE"
+    //     }
+    //     // $and: [{ name: req.body.search},{email: req.body.search} ,{userType: 'CUSTOMER' }] }
+    //     let options = {
+    //         page: req.body.pageNumber || 1,
+    //         select: '_id eventName eventImage businessName eventCreated_At eventPrice',
+    //         populate: [{ path: "userId", select: "name ", match: { status: "ACTIVE" } }],
+    //         //  match:{userId},
+    //         limit: 10,
+    //         sort: { eventCreated_At: -1 },
+    //         lean: false
+    //     }
+    //     eventSchema.find(query, options, (err, result) => {
+    //         if (err)
+    //             return response.sendResponseWithData(res, responseCode.WENT_WRONG, "not result")
+    //         else if (result.docs.length == 0)
+    //             return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found")
+    //         else {
+    //             console.log('result is=====>>>>', result);
+
+    //             var arr = result.docs.filter((x) => {
+    //                 if (x.userId != null)
+    //                     return x;
+    //             })
+    //             console.log('Array is=====>>>>>>', arr);
+    //             response.sendResponseWithPagination(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, arr, { total: result.total, limit: result.limit, currentPage: result.page, totalPage: result.pages });
+    //             // response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, arr)
+
+    //         }
+    //         //     }
+    //         // }
+    //     })
+    // },
+
+    'getAllEvents': (req, res) => {
+
+
+        var value = new RegExp('^' + req.body.search, "i")
+        if (req.body.search) {
+
         }
-        // $and: [{ name: req.body.search},{email: req.body.search} ,{userType: 'CUSTOMER' }] }
+
         let options = {
-            page: req.body.pageNumber || 1,
-            select: '_id eventName eventImage businessName eventCreated_At eventPrice',
-            populate: [{ path: "userId", select: "name ", match: { status: "ACTIVE" } }],
-            //  match:{userId},
+            page: req.params.pageNumber || 1,
+            select: '_id eventName eventImage status eventCreated_At eventPrice userId',
+            populate: [{ path: "userId", select: "name status businessName", match: { status: "ACTIVE" } }],
+            //    match:{"userId.name": value },
             limit: 10,
             sort: { eventCreated_At: -1 },
-            lean: true
+            lean: false
         }
-        eventSchema.find(query, options, (err, result) => {
+
+
+        let obj = {
+            $or: [{ $and: [{ status: "ACTIVE" }, { "userId.name": value }] }, { $and: [{ status: "ACTIVE" }, { eventName: value }] }]
+            // $and: [{ name: req.body.search},{email: req.body.search} ,{userType: 'CUSTOMER' }]
+        }
+
+
+        eventSchema.paginate(obj, options, (err, result) => {
+            console.log("**********", err, result)
             if (err)
                 return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
-            else if (result.docs.length == 0)
-                return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found")
-            else {
-                console.log('result is=====>>>>', result);
-
-                var arr = result.docs.filter((x) => {
-                    if (x.userId != null)
-                        return x;
-                })
-                console.log('Array is=====>>>>>>', arr);
-                response.sendResponseWithPagination(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, arr, { total: result.total, limit: result.limit, currentPage: result.page, totalPage: result.pages });
-                // response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, arr)
-
-            }
-            //     }
-            // }
+            if (result.docs.length == 0)
+                return response.sendResponseWithData(res, responseCode.NOT_FOUND, "Data not found", result)
+            else
+                response.sendResponseWithPagination(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result.docs, { total: result.total, limit: result.limit, currentPage: result.page, totalPage: result.pages });
+            // response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result)
         })
     },
 

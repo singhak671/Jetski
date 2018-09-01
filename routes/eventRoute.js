@@ -29,7 +29,7 @@ router.post('/addEvent',authHandler.verifyToken,Business.addEvent);
  router.post('/myEventFeedback',authHandler.verifyToken,Business.myEventFeedback);/////////
  router.get('/allFeedbackViews',authHandler.verifyToken,Business.allFeedbackViews);/////////
  router.post('/cancelBooking',Business.cancelBooking);
- router.post('/getAllEvents/',authHandler.verifyToken,Business.getAllEvents);
+ router.post('/getAllEvents/',Business.getAllEvents);
  router.post('/transactionManagementFilter',authHandler.verifyToken,Business.transactionManagementFilter);
 //  router.post('/searchEventFilter',Business.searchEventFilter);
 //  router.post('/getTransactionManagement',Business.getTransactionManagement);
