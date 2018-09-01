@@ -101,7 +101,7 @@ module.exports = {
 
                                 if (!success)
                                     return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, "Data doesn't exist")
-                                    console.log("Login----------dfdghdfghfdgdfgfdgdfghfdgdfghfdghfd",success)
+                                console.log("Login----------dfdghdfghfdgdfgfdgdfghfdgdfghfdghfd", success)
                                 return Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, resMessage.LOGIN_SUCCESS, success1, token);
 
                             })
@@ -138,7 +138,7 @@ module.exports = {
 
                         // })
                         delete result['password']
-                        console.log("login-----------dfdghdfghfdgdfgfdgdfghfdgdfghfdghfd",res1)
+                        console.log("login-----------dfdghdfghfdgdfgfdgdfghfdgdfghfdghfd", res1)
                         return Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, resMessage.LOGIN_SUCCESS, result, token)
                     }
                     else
@@ -241,24 +241,63 @@ module.exports = {
     },
 
     //...............................................................delete User Api for both................................................................................//
+
     "deleteUser": (req, res) => {
         console.log("delete user request" + req.body._id)
-        userSchema.findByIdAndUpdate({ _id: req.body._id }, { $set: { status: "INACTIVE" } }, { new: true }, (error, result) => {
+        userSchema.findById({ _id: req.body._id }).exec((error, result) => {
             if (error)
                 Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
             else if (!result)
                 Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
             else
-                Response.sendResponseWithoutData(res, resCode.EVERYTHING_IS_OK, "User is successfully deleted. ")
+                if (result.status == 'ACTIVE') {
+                    userSchema.findByIdAndUpdate({ _id: req.body._id }, { $set: { status: "INACTIVE" } }, (error, result) => {
+                        if (error) {
+                            return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
+                        }
+                        else if (!result)
+                            return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
+                        else {
+                            eventSchema.update({ userId: req.body._id }, { status: "INACTIVE" }, { multi: true }, (err1, success) => {
+                                if (err1) {
+                                    return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
+                                }
+                                else if (!success)
+                                    return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
+                                else {
+                                    Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "User is deleted successfully ...", success)
+                                }
+
+                            })
+                        }
+                    })
+                }
         })
     },
+
+
+    // "deleteUser": (req, res) => {
+    //     console.log("delete user request" + req.body._id)
+    //     userSchema.findByIdAndUpdate({ _id: req.body._id }, { $set: { status: "INACTIVE" } }, { new: true }, (error, result) => {
+    //         if (error)
+    //             Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
+    //         else if (!result)
+    //             Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
+    //         else           
+    //             Response.sendResponseWithoutData(res, resCode.EVERYTHING_IS_OK, "User is successfully deleted. ")
+    //     })
+    // },
+
+
+
+
 
     // ...............................................................Block/Active User Api for both by Admin Panel................................................................................//
 
 
     "blockUser": (req, res) => {
         userSchema.findById({ _id: req.body._id }).exec(function (err, data) {
-            console.log(" iam aID********************>>",req.body._id)
+            console.log(" iam aID********************>>", req.body._id)
             if (err) {
                 console.log("@@@@@@@", err)
                 Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
@@ -270,26 +309,25 @@ module.exports = {
                     userSchema.findByIdAndUpdate({ _id: req.body._id }, { $set: { status: "BLOCK" } }, (error, result) => {
                         if (error) {
                             console.log("@@@@@@@", error)
-                          return  Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
+                            return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
                         }
                         else if (!result)
-                           return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
+                            return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
                         else {
-                            eventSchema.update({userId:req.body._id},{status:"BLOCK"},{multi:true},(err1,success)=>{
+                            eventSchema.update({ userId: req.body._id }, { status: "BLOCK" }, { multi: true }, (err1, success) => {
                                 if (err1) {
-                                   // console.log("@@@@@@@", error)
-                                  return  Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
+                                    // console.log("@@@@@@@", error)
+                                    return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
                                 }
                                 else if (!success)
-                                   return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
-                                else
-                                {
+                                    return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
+                                else {
                                     Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "User is blocked successfully . ", success)
                                 }
 
                             })
 
-                          //  Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "User is successfully blocked. ", result)
+                            //  Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "User is successfully blocked. ", result)
                         }
                     })
                 }
@@ -301,15 +339,14 @@ module.exports = {
                         else if (!result1)
                             Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
                         else {
-                            eventSchema.update({userId:req.body._id},{status:"ACTIVE"},{multi:true},(err1,success)=>{
+                            eventSchema.update({ userId: req.body._id }, { status: "ACTIVE" }, { multi: true }, (err1, success) => {
                                 if (err1) {
-                                   // console.log("@@@@@@@", error)
-                                  return  Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
+                                    // console.log("@@@@@@@", error)
+                                    return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
                                 }
                                 else if (!success)
-                                   return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
-                                else
-                                {
+                                    return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
+                                else {
                                     Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "User is now actived... ", success)
                                 }
 
@@ -458,41 +495,42 @@ module.exports = {
             }
         })
     },
-//........................................................Save reviews...........................................................
-'postReviews':(req,res)=>{
-    console.log('Request for postReviews',req.body)
-    userSchema.findByIdAndUpdate({_id:req.body._id,userType: "CUSTOMER"},{$set:{reviews:req.body.reviews}},{new:true},(err,result)=>{
-        if(err)
-            Response.sendResponseWithoutData(res, resCode.INTERNAL_SERVER_ERROR, resMessage.INTERNAL_SERVER_ERROR)
-        else{
-            console.log("result of post reviews",result)
-          //  notification.single_notification(result.deviceToken, 'Review Posted!!','You are successfully placed your review regarding app', result.businessManId,result._id,result.profilePic,result.name)
-            return Response.sendResponseWithoutData(res, resCode.EVERYTHING_IS_OK, 'Your Review  is updated Successfully.');
+    //........................................................Save reviews...........................................................
+    'postReviews': (req, res) => {
+        console.log('Request for postReviews', req.body)
+        userSchema.findByIdAndUpdate({ _id: req.body._id, userType: "CUSTOMER" }, { $set: { reviews: req.body.reviews } }, { new: true }, (err, result) => {
+            if (err)
+                Response.sendResponseWithoutData(res, resCode.INTERNAL_SERVER_ERROR, resMessage.INTERNAL_SERVER_ERROR)
+            else {
+                console.log("result of post reviews", result)
+                //  notification.single_notification(result.deviceToken, 'Review Posted!!','You are successfully placed your review regarding app', result.businessManId,result._id,result.profilePic,result.name)
+                return Response.sendResponseWithoutData(res, resCode.EVERYTHING_IS_OK, 'Your Review  is updated Successfully.');
+            }
         }
-    }
-)},
-//...................................................View Reviews..............................................................
-'viewReviews':(req,res)=>{
-    console.log(`request for view Reviews ${JSON.stringify(req.body)}`)
-    // let options = {
-    //     page: req.params.pageNumber ,
-    //     select:{reviews:1,name:1,address:1},
-    //     limit: 10,
-    //     //password:0,//,createdAt:1,updatedAt:1
-    //     lean: false
-    // }
-    userSchema.find({userType: "CUSTOMER", "reviews": { $exists: true, $ne: null  }},{reviews:1,name:1,address:1,profilePic:1}).sort({updatedAt:-1}).limit(5).exec((err,result)=>{
-        console.log("result of post reviews",result,err)
-        if(err)
-        Response.sendResponseWithoutData(res, resCode.INTERNAL_SERVER_ERROR, resMessage.INTERNAL_SERVER_ERROR)
-        else{
-          
-         //   return Response.sendResponseWithData(res, resCode.BAD_REQUEST, "Customer's reviews list found successfully",result);
-            Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "Customer's reviews list found successfully", result);
-        }
-    })
+        )
+    },
+    //...................................................View Reviews..............................................................
+    'viewReviews': (req, res) => {
+        console.log(`request for view Reviews ${JSON.stringify(req.body)}`)
+        // let options = {
+        //     page: req.params.pageNumber ,
+        //     select:{reviews:1,name:1,address:1},
+        //     limit: 10,
+        //     //password:0,//,createdAt:1,updatedAt:1
+        //     lean: false
+        // }
+        userSchema.find({ userType: "CUSTOMER", "reviews": { $exists: true, $ne: null } }, { reviews: 1, name: 1, address: 1, profilePic: 1 }).sort({ updatedAt: -1 }).limit(5).exec((err, result) => {
+            console.log("result of post reviews", result, err)
+            if (err)
+                Response.sendResponseWithoutData(res, resCode.INTERNAL_SERVER_ERROR, resMessage.INTERNAL_SERVER_ERROR)
+            else {
 
-},
+                //   return Response.sendResponseWithData(res, resCode.BAD_REQUEST, "Customer's reviews list found successfully",result);
+                Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "Customer's reviews list found successfully", result);
+            }
+        })
+
+    },
 
 
     "searchCustomerFilter": (req, res) => {

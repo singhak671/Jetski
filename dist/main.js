@@ -1469,6 +1469,7 @@ var EventManagementComponent = /** @class */ (function () {
     };
     EventManagementComponent.prototype.getAllEvent = function () {
         var _this = this;
+        this.Event = [];
         var postData = {
             search: this.eventForm.controls['search'].value,
             pageNumber: this.pageNo,
@@ -1482,7 +1483,12 @@ var EventManagementComponent = /** @class */ (function () {
             // console.log('res')
             if (response['response_code'] == 200) {
                 // console.log(' Event data found successfully', response)
-                _this.Event = response["result"];
+                // this.Event = response[`result`]
+                response["result"].forEach(function (obj) {
+                    if (obj.userId != null) {
+                        _this.Event.push(obj);
+                    }
+                });
                 _this.paginationData = response["paginationData"];
                 _this.srNo = (_this.pageNo - 1) * _this.paginationData.limit;
                 console.log("############", _this.paginationData);

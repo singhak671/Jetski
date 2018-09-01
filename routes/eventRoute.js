@@ -6,8 +6,8 @@ router.post('/addEvent',authHandler.verifyToken,Business.addEvent);
  router.get('/latestEvents',Business.latestEvents);
   router.post('/allEvent',Business.allEvent);
  router.post('/myAllEvents',authHandler.verifyToken,Business.myAllEvents);
- router.get('/eventLocation',authHandler.verifyToken,Business.eventLocation);
- router.post('/locationDetail',authHandler.verifyToken,Business.locationDetail);
+ router.get('/eventLocation',Business.eventLocation);
+ router.post('/locationDetail',Business.locationDetail);
  router.post('/myBooking',Business.myBooking);
  router.post('/eventsPending',authHandler.verifyToken,Business.eventsPending);
  router.post('/eventsConfirmed',authHandler.verifyToken,Business.eventsConfirmed);
@@ -25,7 +25,7 @@ router.post('/addEvent',authHandler.verifyToken,Business.addEvent);
  router.post('/filterEventsConfirm',authHandler.verifyToken,Business.filterEventsConfirm);
  //router.post('/bookingEvent',authHandler.verifyToken,Business.bookingEvent);
  router.post('/addCustomerFeedback',authHandler.verifyToken,Business.addCustomerFeedback);
- router.post('/viewCustomerFeedback',authHandler.verifyToken,Business.viewCustomerFeedback);//////////
+ router.post('/viewCustomerFeedback',Business.viewCustomerFeedback);//////////
  router.post('/myEventFeedback',authHandler.verifyToken,Business.myEventFeedback);/////////
  router.get('/allFeedbackViews',authHandler.verifyToken,Business.allFeedbackViews);/////////
  router.post('/cancelBooking',Business.cancelBooking);

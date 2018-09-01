@@ -27,7 +27,7 @@ module.exports = {
                     var image=success.profilePic;
                     var name=success.name;
                   //  var deviceType=success.deviceType;
-                   // var sub=success.pushSubscription;
+                    var sub=success.pushSubscription;
                     console.log(`token------------>${sub}`)
                     eventSchema.findOne({ _id: req.body.eventId, status: "ACTIVE" }, (err, success2) => {
                         if (err)
