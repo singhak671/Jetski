@@ -883,7 +883,7 @@ module.exports = {
             if (err)
                 return response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.");
             if (!success)
-                return response.sendResponseWithData(res, responseCode.NOT_FOUND, "Event is  not available.", success);
+                return response.sendResponseWithData(res, responseCode.NOT_FOUND, "Data not found.", success);
             else {
                 console.log("success===" + JSON.stringify(success))
                 //  console.log(success)
@@ -1235,8 +1235,9 @@ module.exports = {
                     return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG);
                 else if (success == false)
                     return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "UserId Not found");
-                else
+                else{
                     eventSchema.findOne({ _id: req.body.eventId, businessName: req.body.businessName, status: "ACTIVE" }, (err, success2) => {
+                        console.log("in events------->>",err, success2)
                         if (err)
                             return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG);
                         else if (!success2)
@@ -1257,6 +1258,8 @@ module.exports = {
 
                                 })
                     })
+                }
+                    
             })
     },
     //********************************************************************************************  API for viewCustomerFeedback  for App **************************************************************************  */
@@ -1362,11 +1365,11 @@ module.exports = {
         // $and: [{ name: req.body.search},{email: req.body.search} ,{userType: 'CUSTOMER' }] }
         var options = {
            
-            page: req.body.pageNumber || 1,
+            // page: req.body.pageNumber || 1,
             select: '_id eventName eventImage businessName eventCreated_At eventPrice',
             populate: [{ path: "userId", select: " status name ", match: { status: "ACTIVE" } }],
             //  match:{userId},
-            //  limit: 30,
+              limit: 100000000,
             sort: { eventCreated_At: -1 },
             lean: true
         }
@@ -1384,58 +1387,27 @@ module.exports = {
                         return x;
                 })
 
-                // console.log('Array is=====>>>>>>',JSON.stringify(arr));
+                console.log('Array is=====>>>>>>',JSON.stringify(arr));
                
+                var userList1 = arr.slice((n- 1) * m, n* m)
 
-                var userList1 = arr.slice((1 - 1) * 4, 1 * 4)
-                 console.log("custom pagination>>>>>>>>>>>>>",userList1)
-                  response.sendResponseWithPagination(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, userList1, { total: result.total, limit: result.limit, currentPage: result.page, totalPage: result.pages });
-                //  response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result)
+                //var userList1 = arr.slice((pageNumber - 1) * limit, pageNumber* limit)
+                 console.log("custom pagination>>>>>>>>>>>>>",JSON.stringify(userList1))
+                 var x={"total": arr.length,
+                 "limit": 10,
+                 "currentPage": n,
+                 "totalPage": Math.ceil(arr.length/10)}
+                 console.log("total===.",x)
+                  response.sendResponseWithPagination(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, userList1, x);
 
             }
-            //     }
-            // }
+           
         })
     },
 
-    // 'getAllEvents': (req, res) => {
+   
 
-
-    //     var value = new RegExp('^' + req.body.search, "i")
-    //     if (req.body.search) {
-
-    //     }
-
-    //     let options = {
-    //         page: req.params.pageNumber || 1,
-    //         select: '_id eventName eventImage status eventCreated_At eventPrice userId',
-    //         populate: [{ path: "userId", select: "name status businessName", match: { status: "ACTIVE" } }],
-    //         //    match:{"userId.name": value },
-    //         limit: 10,
-    //         sort: { eventCreated_At: -1 },
-    //         lean: false
-    //     }
-
-
-    //     let obj = {
-    //         $or: [{ $and: [{ status: "ACTIVE" }, { "userId.name": value }] }, { $and: [{ status: "ACTIVE" }, { eventName: value }] }]
-    //         // $and: [{ name: req.body.search},{email: req.body.search} ,{userType: 'CUSTOMER' }]
-    //     }
-
-
-    //     eventSchema.paginate(obj, options, (err, result) => {
-    //         console.log("**********", err, result)
-    //         if (err)
-    //             return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
-    //         if (result.docs.length == 0)
-    //             return response.sendResponseWithData(res, responseCode.NOT_FOUND, "Data not found", result)
-    //         else
-    //             response.sendResponseWithPagination(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result.docs, { total: result.total, limit: result.limit, currentPage: result.page, totalPage: result.pages });
-    //         // response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result)
-    //     })
-    // },
-
-
+    //********************************************************************************************  API transaction management >>> Admin panel **************************************************************************  */
 
     "transactionManagementFilter": (req, res) => {
         console.log("request is-------------->", req.body);
@@ -1516,279 +1488,4 @@ module.exports = {
         })
     },
 
-    //     "getTransactionManagement": (req, res) => {
-    //         var matchobj, eventMatchObj;
-    //         if (req.body.search != '') {
-    //             var value = new RegExp('^' + req.body.search, "i")
-    //             matchobj = { status: "ACTIVE", name: value }
-    //             eventMatchObj = { status: "ACTIVE", eventName: value }
-    //         } else {
-    //             matchobj = { status: "ACTIVE" }
-    //             eventMatchObj = { status: "ACTIVE" }
-    //         }
-    //         console.log("value>>>>>>", value
-    //         )
-    //         var obj = {};
-    //         if (req.body.bookingStatus)
-    //             obj.bookingStatus = req.body.bookingStatus;
-
-    //         let options = {
-    //             page: req.body.pageNumber || 1,
-    //             populate: [
-    //                 { path: 'userId', select: "name status", match: matchobj },
-    //                 { path: 'eventId', select: "eventName status eventPrice", match: eventMatchObj },
-    //                 { path: 'businessManId', select: "name status", match: matchobj }
-    //             ],
-    //             limit: 10,
-    //             select: "userId eventId businessManId transactionDate bookingStatus  transactionTime ",
-    //             sort: { 'eventCreated_At': -1 },
-    //             lean: false
-    //             // booking.find({pictures: {$not: {$size: 0}}})
-    //         }
-    //         // var obj = { $or: [{bookingStatus:"CONFIRMED"} ,{bookingStatus:"CANCELLED" }] }     
-
-    //         booking.paginate(obj, options, (err, data) => {
-    //             if (err) {
-    //                 return response.sendResponseWithData(res, responseCode.WENT_WRONG, responseMessage.INTERNAL_SERVER_ERROR, err);
-    //             }
-    //             if (data.docs.length == 0) {
-    //                 return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND);
-    //             }
-    //             else {
-    //                 //console.log("dfghadfhjgdfhgjk",data)
-    //                 response.sendResponseWithPagination(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, data.docs, { total: data.total, limit: data.limit, currentPage: data.page, totalPage: data.pages });
-    //             }
-    //         })
-    //     }
-
 }
-
-// COMPLETED Status
-
-
-
-
-
-// cron.schedule('* * * * *', () => {
-
-//     booking.find({}).exec((err, succ) => {
-//         asyncLoop(succ, (item, next) => {
-//             var result = item.duration[0].date.formatted + "T" + item.duration[0].times[0].time + ":00.000Z"
-//             // "2018-08-30T15:23:00.000Z"
-//             console.log("i am here ....>>>>", result)
-//             var newTime = new Date(result)
-//             var temp = new Date(result).getTime()
-//             // var c=temp+19800000
-//             console.log('temp value =>>>', temp);
-//             var today_date = Date.now()
-//             var today_temp_date = today_date + 19800000;
-//             var today_new_date = new Date(today_temp_date).toISOString();
-//             var ss = today_new_date.split(/:/g)
-//             var text = '';
-//             text += ss[0] + ':' + ss[1] + ":00.000Z"
-//             var current_time_stamp = new Date(text).getTime();
-//             console.log("current timeStamp", current_time_stamp)
-//             console.log("@@@@@@@@@@@@@@@@", temp <= current_time_stamp);
-//             if (temp <= current_time_stamp) {
-//                 if (item.bookingStatus == 'CONFIRMED') {
-//                     booking.update({ _id: item._id }, { $set: { 'bookingStatus': 'COMPLETED' } }, { multi: true }).exec((err1, succ1) => {
-//                         console.log('error ,succes==========>>>>>>', err1, succ1);
-//                         if (err1)
-//                             console.log('Error is====>>>>>', err1);
-//                         else if (succ1) {
-//                             console.log('Status updated successfully====>>>>', succ1);
-//                             next();
-//                         }
-//                     })
-//                 }
-//                 else if (item.bookingStatus == 'PENDING') {
-//                     booking.findByIdAndUpdate({ _id: item._id }, { $set: { 'bookingStatus': 'CANCELLED' } }, { multi: true }).exec((err1, succ1) => {
-//                         console.log('error ,succes==========>>>>>>', err1, succ1);
-//                         if (err1)
-//                             console.log('Error is====>>>>>', err1);
-//                         else  {
-//                             console.log("succ1------>",succ1)
-//                             return stripe.refunds.create({
-//                                 charge: succ1.chargeId,
-//                                 amount: (succ1.eventPrice),
-//                             }, function (err, refund) {
-//                                 if (err) {
-//                                     console.log("err in refunds", err)
-//                                 }
-//                                 else {
-//                                     console.log('success refund-->', refund)
-//                                     //callback('',refund)
-//                                     next();
-//                                 }
-
-//                             })
-
-//                         }
-//                     })
-//                 }
-//             }
-//             next();
-//         })
-
-
-
-
-//     })
-
-// })
-
-
-
-
-// var offset = result.docs[i].offset;
-// console.log('current_epoc value and ', array_epoc_value * 1000, current_epoc_value)
-// if (!((array_epoc_value * 1000) <= current_epoc_value)) {
-//     console.log('Correct condition');
-//     removeBookingExpired.push(result.docs[i].duration[j])
-// }
-// if (j == result.docs[i].duration.length - 1)
-//     result.docs[i].duration = removeBookingExpired;
-// if (result.docs[i].duration[j] != undefined || result.docs[i].duration[j] != null) {
-//     for (var k = 0; k < result.docs[i].duration[j].times.length; k++) {
-//         let tempDateObj = result.docs[i].duration[j].date.formatted + ' ' + result.docs[i].duration[j].times[k].time;
-//         var n = (new Date().getTimezoneOffset()) * 60000;
-//         offset = n - offset;
-//         var current = new Date().getTime();
-//         var showTime = new Date(tempDateObj).getTime();
-//         if (current < showTime + offset) {
-//             timesArr.push(result.docs[i].duration[j].times[k]);
-//         }
-//         if (k == result.docs[i].duration[j].times.length - 1)
-//             result.docs[i].duration[j].times = timesArr;
-
-//     }
-//     if (result.docs[i].duration[j].times.length == 0) {
-
-//         result.docs[i].duration.splice(i, 1);
-
-//     }
-
-
-
-// }
-// }
-
-// }
-// // else {
-// //     result.docs.splice(i, 1);
-// // }
-
-// }
-// }
-// else {
-// callback(null, 'no data');
-// }   
-
-// callback(null, result);
-// },
-// function (result11, callback) {
-
-// if (result11 != 'no data') {
-// var newResult = {docs:result11.docs.filter(x => x.duration.length != 0)};
-// console.log('Result is=====>>>>>',newResult);
-
-// callback(null, newResult);
-// }
-// else {
-// callback(null, result1);
-// }
-
-// }
-
-// ], (err, result1) => {
-// if (result1 == 'no data')
-// response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result1)
-
-// response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result1)
-// })
-
-
-// }
-
-// })
-// },
-
-
-
-// console.log('current_epoc value and ', array_epoc_value * 1000, current_epoc_value)
-// if (!((array_epoc_value * 1000) <= current_epoc_value)) {
-//     console.log('Correct condition');
-//     removeBookingExpired.push(result.docs[i].duration[j])
-// }
-// if (j == result.docs[i].duration.length - 1)
-//     result.docs[i].duration = removeBookingExpired;
-// if (result.docs[i].duration[j] != undefined || result.docs[i].duration[j] != null) {
-//     for (var k = 0; k < result.docs[i].duration[j].times.length; k++) {
-//         let tempDateObj = result.docs[i].duration[j].date.formatted + 'T'+ result.docs[i].duration[j].times[k].time+"00.000Z";
-//         var offset = (new Date().getTimezoneOffset()) * 60000;
-//         // offset = n - offset;
-//         var today = new Date().getTime()
-//         var c=today-offset
-//         var current = new Date(c).toJSON()
-//         var todaySplit=current.split(":")
-//         var data=todaySplit[0]+":"+todaySplit[1]+":00.000Z";
-//         var todayTimeStamp=new Date(data).getTime()
-
-//         var showTime = new Date(tempDateObj).getTime();
-//         if (todayTimeStamp > showTime) {
-//             timesArr.push(result.docs[i].duration[j].times[k]);
-//         }
-//         if (k == result.docs[i].duration[j].times.length - 1)
-//             result.docs[i].duration[j].times = timesArr;
-
-//     }
-//     if (result.docs[i].duration[j].times.length == 0) {
-
-//         result.docs[i].duration.splice(i, 1);
-
-//     }
-
-
-
-// }
-// }
-
-// }
-// // else {
-// //     result.docs.splice(i, 1);
-// // }
-
-// }
-// }
-// else {
-// callback(null, 'no data');
-// }   
-
-// callback(null, result);
-// },
-// function (result11, callback) {
-
-// if (result11 != 'no data') {
-// var newResult = {docs:result11.docs.filter(x => x.duration.length != 0)};
-// console.log('Result is=====>>>>>',newResult);
-
-// callback(null, newResult);
-// }
-// else {
-// callback(null, result1);
-// }
-
-// }
-
-// ], (err, result1) => {
-// if (result1 == 'no data')
-// response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result1)
-
-// response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result1)
-// })
-
-
-// }
-
-// })
-// },

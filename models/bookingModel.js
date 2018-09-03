@@ -32,6 +32,9 @@ const booking = mongoose.Schema({
         default: "PENDING"
     },
 
+    businessStripeAccount: {
+        type: String
+   },
     // feedbackDescription: {
     //     type:String
     // },

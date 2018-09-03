@@ -23,19 +23,6 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json({
     limit: '50mb'
 }));
-
-// var job =new CronJob('* * * * *', function(req,res) {
-//     // for 1 min 
-// var job =new CronJob('0 * * * *', function(req,res) {
-//     // for 1 hrs
-//     console.log("Testing is going ON per 1 hrs*************")
-
-//  }, function () {
-//         console.log(" Payment refund successfully")
-//    },
-//  true
-// );
-
 app.use('/api/v1/user', require('./routes/userRoute'));
 app.use('/api/v1/admin', require('./routes/userRoute'));
 app.use('/api/v1/static', require('./routes/termsAndPrivacyRoutes'));
@@ -53,7 +40,7 @@ res.sendFile(__dirname + '/dist/index.html')
 //-------------------------------cron started -------------------------------------
 
 cron.schedule('0 * * * *', () => {
-
+console.log(" inside crone)))))))))")
     booking.find({}).exec((err, succ) => {
         asyncLoop(succ, (item, next) => {
             var result = item.duration[0].date.formatted + "T" + item.duration[0].times[0].time + ":00.000Z"
@@ -73,18 +60,30 @@ cron.schedule('0 * * * *', () => {
             // console.log("current timeStamp", current_time_stamp)
             // console.log("@@@@@@@@@@@@@@@@", temp <= current_time_stamp);
             if (temp <= current_time_stamp) {
+                console.log(" inside time stamp)))))))))")
+                console.log("checking of booking status",item.bookingStatus)
                 if (item.bookingStatus == 'CONFIRMED') {
+                    console.log(" inside booking status)))))))))")
                     booking.update({ _id: item._id }, { $set: { 'bookingStatus': 'COMPLETED' } }, { multi: true }).exec((err1, succ1) => {
                         console.log('error ,succes==========>>>>>>', err1, succ1);
                         if (err1)
-                            console.log('Error is====>>>>>', err1);
+                            console.log('Error is====>>>>>', err1); 
                         else if (succ1) {
-                            console.log('Status updated successfully====>>>>', succ1);
+                            console.log('Status updated successfully====>>>>', succ1); 
+                            stripe.transfers.create({
+                                  amount: succ1.eventPrice,
+                                  currency: "usd",
+                                  source_transaction: "acct_1D15riFvUkcGB9ta",
+                                  destination:succ1.businessStripeAccount//"acct_1D6FRDB3m6P1mUHh", 
+                                }).then(function(transfer) {
+                                 console.log("transfer------->>>",transfer)
+                                });
                             next();
                         }
                     })
                 }
                 else if (item.bookingStatus == 'PENDING') {
+                    console.log(" inside pending status)))))))))")
                     booking.findByIdAndUpdate({ _id: item._id }, { $set: { 'bookingStatus': 'CANCELLED' } }, { multi: true }).exec((err1, succ1) => {
                         console.log('error ,succes==========>>>>>>', err1, succ1);
                         if (err1)
@@ -130,8 +129,8 @@ app.listen(environment.port,()=>{
 // stripe.transfers.create({
 //   amount: 1000,
 //   currency: "usd",
-//   source_transaction: "{CHARGE_ID}",
-//   destination: "{CONNECTED_STRIPE_ACCOUNT_ID}",
+//   source_transaction: "{acct_1D15riFvUkcGB9ta}",
+//   destination: "{CONNECTED_STRIPE_ACCOUNT_ID}", 
 // }).then(function(transfer) {
 //   // asynchronously called
 // });
