@@ -7,7 +7,7 @@ router.post('/addEvent',authHandler.verifyToken,Business.addEvent);
   router.post('/allEvent',Business.allEvent);
  router.post('/myAllEvents',authHandler.verifyToken,Business.myAllEvents);
  router.get('/eventLocation',authHandler.verifyToken,Business.eventLocation);
- router.post('/locationDetail',authHandler.verifyToken,Business.locationDetail);
+ router.post('/locationDetail',Business.locationDetail);
  router.post('/myBooking',authHandler.verifyToken,Business.myBooking);
  router.post('/eventsPending',authHandler.verifyToken,Business.eventsPending);
  router.post('/eventsConfirmed',authHandler.verifyToken,Business.eventsConfirmed);
