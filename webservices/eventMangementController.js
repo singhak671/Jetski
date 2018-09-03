@@ -312,7 +312,7 @@ module.exports = {
                                 callback(null, result);
                             else
                                 callback(null, result);
-                        
+
                         } else {
                             callback(null, result);
                         }
@@ -386,19 +386,19 @@ module.exports = {
                 response.sendResponseWithoutData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND)
             else {
 
-                console.log('Result is=====>>>>>',result);
+                console.log('Result is=====>>>>>', result);
                 result.map(x => x.duration = filterFutureEvent(x.duration, x.offset))
                 result.map(x => x.duration = x.duration.filter(y => y.isExpired == false))
                 result.map(x => x.duration.length > 0 ? x.duration.map(z => z.times = z.times.filter(k => k.isExpired == false)) : null);
                 result.map(x => x.duration = x.duration.filter(y => y.times.length != 0))
                 result = result.filter(x => x.duration.length != 0);
-                if(result.length == 0){
+                if (result.length == 0) {
                     response.sendResponseWithoutData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND)
-                }else{
+                } else {
                     let unique = [...new Set(result.map(item => item.eventAddress))];
-                    unique.map(x => eventAddressArr.push({eventAddress: x}))
-                    response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, {eventAddress: eventAddressArr})
-                }                
+                    unique.map(x => eventAddressArr.push({ eventAddress: x }))
+                    response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, { eventAddress: eventAddressArr })
+                }
             }
         })
     },
@@ -416,34 +416,34 @@ module.exports = {
                 response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
             else if (!result)
                 response.sendResponseWithoutData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND)
-                else {
-                    waterfall([
-                        function (callback) {
-                            var result_new = result;
-                            if (result.length != 0) {
-                                result.map(x => x.duration = filterFutureEvent(x.duration, x.offset))
-                                result.map(x => x.duration = x.duration.filter(y => y.isExpired == false))
-                                result.map(x => x.duration.length > 0 ? x.duration.map(z => z.times = z.times.filter(k => k.isExpired == false)) : null);
-                                result.map(x => x.duration = x.duration.filter(y => y.times.length != 0))
-                                result = result.filter(x => x.duration.length != 0);
-                                if (result.length != 0)
-                                    callback(null, result);
-                                else
-                                    callback(null, result);
-                            
-                            } else {
+            else {
+                waterfall([
+                    function (callback) {
+                        var result_new = result;
+                        if (result.length != 0) {
+                            result.map(x => x.duration = filterFutureEvent(x.duration, x.offset))
+                            result.map(x => x.duration = x.duration.filter(y => y.isExpired == false))
+                            result.map(x => x.duration.length > 0 ? x.duration.map(z => z.times = z.times.filter(k => k.isExpired == false)) : null);
+                            result.map(x => x.duration = x.duration.filter(y => y.times.length != 0))
+                            result = result.filter(x => x.duration.length != 0);
+                            if (result.length != 0)
                                 callback(null, result);
-                            }
-    
-                            //callback(null, result);
+                            else
+                                callback(null, result);
+
+                        } else {
+                            callback(null, result);
                         }
-                    ], (err, result) => {
-                        if (result.length == 0)
-                            response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found..")
-                        else
-                            response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result)
-                    })
-                }
+
+                        //callback(null, result);
+                    }
+                ], (err, result) => {
+                    if (result.length == 0)
+                        response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found..")
+                    else
+                        response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result)
+                })
+            }
         })
     },
 
@@ -883,7 +883,7 @@ module.exports = {
             if (err)
                 return response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.");
             if (!success)
-                return response.sendResponseWithData(res, responseCode.NOT_FOUND, "Data not found.", success);
+                return response.sendResponseWithData(res, responseCode.NOT_FOUND, "Event is  not available.", success);
             else {
                 console.log("success===" + JSON.stringify(success))
                 //  console.log(success)
@@ -1242,7 +1242,7 @@ module.exports = {
                         else if (!success2)
                             return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Events data Not found");
                         else
-                            feedback.findOneAndUpdate({ eventId: req.body.eventId, customerId: req.body.customerId, businessManId: req.body.businessManId }, { $push: { feedback: req.body.feedback } }, { new: true, upsert: true })
+                            feedback.findOneAndUpdate({ eventId: req.body.eventId, customerId: req.body.customerId, businessManId: req.body.businessManId }, { $set: { feedback: req.body.feedback } }, { new: true, upsert: true })
                                 .populate("customerId", "name address profilePic").populate("eventId", "eventPrice")
                                 .exec((err, success3) => {
                                     if (err)
@@ -1266,12 +1266,14 @@ module.exports = {
             return response.sendResponseWithoutData(res, responseCode.BAD_REQUEST, "Please provide all required fields !");
         else {
 
-            feedback.find({ businessManId: req.body.businessManId, eventId: req.body.eventId }).populate("customerId", "name address profilePic").populate("eventId", "eventPrice").exec((err, succ) => {
+            feedback.find({ businessManId: req.body.businessManId, eventId: req.body.eventId }).populate("customerId", "name address profilePic").populate("eventId", "eventPrice").lean().exec((err, succ) => {
                 if (err)
                     return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG);
                 if (succ.length == 0)
                     return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found!");
                 else if (succ) {
+                    // succ=succ.feedback.pop()
+                 
                     response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, succ);
                 }
             })
@@ -1348,82 +1350,90 @@ module.exports = {
     //********************************************************************************************  API for getting all events for Admin panel **************************************************************************  */
 
 
-    // 'getAllEvents': (req, res) => {
-    //     var value = new RegExp('^' + req.body.search, "i")
-    //     //     if (req.body.search) {
+    'getAllEvents': (req, res) => {
+        var n=req.body.pageNumber || 1  , m=10
+        var value = new RegExp('^' + req.body.search, "i")
+        //     if (req.body.search) {
+    
+        //     }
+        var query = {
+            $or: [{ $and: [{ status: "ACTIVE" }, { "businessName": value }] }, { $and: [{ status: "ACTIVE" }, { eventName: value }] }], status: "ACTIVE"
+        }
+        // $and: [{ name: req.body.search},{email: req.body.search} ,{userType: 'CUSTOMER' }] }
+        var options = {
+           
+            page: req.body.pageNumber || 1,
+            select: '_id eventName eventImage businessName eventCreated_At eventPrice',
+            populate: [{ path: "userId", select: " status name ", match: { status: "ACTIVE" } }],
+            //  match:{userId},
+            //  limit: 30,
+            sort: { eventCreated_At: -1 },
+            lean: true
+        }
 
-    //     //     }
-    //     var query = {
-    //         $or: [{ $and: [{ status: "ACTIVE" }, { "businessName": value }] }, { $and: [{ status: "ACTIVE" }, { eventName: value }] }], status: "ACTIVE"
+        eventSchema.paginate(query, options, (err, result) => {
+            if (err)
+                return response.sendResponseWithData(res, responseCode.WENT_WRONG, "no result")
+            else if (result.docs.length == 0)
+                return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found")
+            else {
+                // console.log('result is=====>>>>',JSON.stringify(result));
+
+                var arr = result.docs.filter((x) => {
+                    if (x.userId != null)
+                        return x;
+                })
+
+                // console.log('Array is=====>>>>>>',JSON.stringify(arr));
+               
+
+                var userList1 = arr.slice((1 - 1) * 4, 1 * 4)
+                 console.log("custom pagination>>>>>>>>>>>>>",userList1)
+                  response.sendResponseWithPagination(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, userList1, { total: result.total, limit: result.limit, currentPage: result.page, totalPage: result.pages });
+                //  response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result)
+
+            }
+            //     }
+            // }
+        })
+    },
+
+    // 'getAllEvents': (req, res) => {
+
+
+    //     var value = new RegExp('^' + req.body.search, "i")
+    //     if (req.body.search) {
+
     //     }
-    //     // $and: [{ name: req.body.search},{email: req.body.search} ,{userType: 'CUSTOMER' }] }
+
     //     let options = {
-    //         page: req.body.pageNumber || 1,
-    //         select: '_id eventName eventImage businessName eventCreated_At eventPrice',
-    //         populate: [{ path: "userId", select: "name ", match: { status: "ACTIVE" } }],
-    //         //  match:{userId},
+    //         page: req.params.pageNumber || 1,
+    //         select: '_id eventName eventImage status eventCreated_At eventPrice userId',
+    //         populate: [{ path: "userId", select: "name status businessName", match: { status: "ACTIVE" } }],
+    //         //    match:{"userId.name": value },
     //         limit: 10,
     //         sort: { eventCreated_At: -1 },
     //         lean: false
     //     }
-    //     eventSchema.find(query, options, (err, result) => {
+
+
+    //     let obj = {
+    //         $or: [{ $and: [{ status: "ACTIVE" }, { "userId.name": value }] }, { $and: [{ status: "ACTIVE" }, { eventName: value }] }]
+    //         // $and: [{ name: req.body.search},{email: req.body.search} ,{userType: 'CUSTOMER' }]
+    //     }
+
+
+    //     eventSchema.paginate(obj, options, (err, result) => {
+    //         console.log("**********", err, result)
     //         if (err)
-    //             return response.sendResponseWithData(res, responseCode.WENT_WRONG, "not result")
-    //         else if (result.docs.length == 0)
-    //             return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found")
-    //         else {
-    //             console.log('result is=====>>>>', result);
-
-    //             var arr = result.docs.filter((x) => {
-    //                 if (x.userId != null)
-    //                     return x;
-    //             })
-    //             console.log('Array is=====>>>>>>', arr);
-    //             response.sendResponseWithPagination(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, arr, { total: result.total, limit: result.limit, currentPage: result.page, totalPage: result.pages });
-    //             // response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, arr)
-
-    //         }
-    //         //     }
-    //         // }
+    //             return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
+    //         if (result.docs.length == 0)
+    //             return response.sendResponseWithData(res, responseCode.NOT_FOUND, "Data not found", result)
+    //         else
+    //             response.sendResponseWithPagination(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result.docs, { total: result.total, limit: result.limit, currentPage: result.page, totalPage: result.pages });
+    //         // response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result)
     //     })
     // },
-
-    'getAllEvents': (req, res) => {
-
-
-        var value = new RegExp('^' + req.body.search, "i")
-        if (req.body.search) {
-
-        }
-
-        let options = {
-            page: req.params.pageNumber || 1,
-            select: '_id eventName eventImage status eventCreated_At eventPrice userId',
-            populate: [{ path: "userId", select: "name status businessName", match: { status: "ACTIVE" } }],
-            //    match:{"userId.name": value },
-            limit: 10,
-            sort: { eventCreated_At: -1 },
-            lean: false
-        }
-
-
-        let obj = {
-            $or: [{ $and: [{ status: "ACTIVE" }, { "userId.name": value }] }, { $and: [{ status: "ACTIVE" }, { eventName: value }] }]
-            // $and: [{ name: req.body.search},{email: req.body.search} ,{userType: 'CUSTOMER' }]
-        }
-
-
-        eventSchema.paginate(obj, options, (err, result) => {
-            console.log("**********", err, result)
-            if (err)
-                return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
-            if (result.docs.length == 0)
-                return response.sendResponseWithData(res, responseCode.NOT_FOUND, "Data not found", result)
-            else
-                response.sendResponseWithPagination(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result.docs, { total: result.total, limit: result.limit, currentPage: result.page, totalPage: result.pages });
-            // response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result)
-        })
-    },
 
 
 
