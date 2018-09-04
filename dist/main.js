@@ -1465,7 +1465,6 @@ var EventManagementComponent = /** @class */ (function () {
         console.log('page no--->', page);
         this.pageNo = page;
         this.getAllEvent();
-        // this.search()
     };
     EventManagementComponent.prototype.filter = function () {
         this.pageNo = 1;
@@ -1473,26 +1472,15 @@ var EventManagementComponent = /** @class */ (function () {
     };
     EventManagementComponent.prototype.getAllEvent = function () {
         var _this = this;
-        this.Event = [];
         var postData = {
             search: this.eventForm.controls['search'].value,
             pageNumber: this.pageNo,
         };
-        // for (let val in postData) {
-        //   if (postData[val] == '') {
-        //     delete postData[val]
-        //   }
-        // }  
         this.service.postApi("event/getAllEvents", postData, 1).subscribe(function (response) {
             // console.log('res')
             if (response['response_code'] == 200) {
-                // console.log(' Event data found successfully', response)
-                // this.Event = response[`result`]
-                response["result"].forEach(function (obj) {
-                    if (obj.userId != null) {
-                        _this.Event.push(obj);
-                    }
-                });
+                console.log(' Event data found successfully', response);
+                _this.Event = response["result"];
                 _this.paginationData = response["paginationData"];
                 _this.limit = response["paginationData"].limit;
                 console.log('LIMIT IS--->>>', _this.limit);
@@ -2327,7 +2315,7 @@ var MainService = /** @class */ (function () {
     function MainService(http, toastr) {
         this.http = http;
         this.toastr = toastr;
-        // baseUrl =  'http://172.16.6.74:8000/api/v1/';
+        //  baseUrl =  'http://172.16.6.74:8000/api/v1/';
         //    >>>>staging URL>>
         this.baseUrl = 'http://162.222.32.20:1406/api/v1/';
     }
