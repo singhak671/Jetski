@@ -83,23 +83,27 @@ var notifications = {
         };
         
         client.post("https://fcm.googleapis.com/fcm/send", args, function (data, response) {
+            console.log("___________inside client post",data)
             // parsed response body as js object
-            console.log("in post===>",JSON.stringify(data))
-            if(data.success){
-                console.log(`Object of noti ${JSON.stringify(data)}`);
+           // console.log("in post===>",JSON.stringify(data))
+           console.log("data.success------->>",data)
+            if(data){
+                console.log(`Object of noti 1${JSON.stringify(data)}`);
                 let obj = {
-                    customerId:[{cid:customerId},{image:image},{name:name}],
+                    customerId:{cid:customerId,image:image,name:name},
                     bussinessId:{bid:bussinessId},
                     noti_type: 'CUSTOMER', 
                     content: msg
                 };
+                console.log(":::::::::::::::::::::::::",obj)
                 let noti  = new Noti(obj);
+                console.log("******",noti)
                 noti.save((er1,ress)=>{
                     console.log(`Error is ${JSON.stringify(er1)}   result is ${JSON.stringify(ress)}`)
                     //response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, 'Order has been placed successfully and confirmation code send to your mobile number.',result)
                 })
             }else{
-                console.log(`Object of noti ${JSON.stringify(data)}`);
+                console.log(`Object of noti 2${JSON.stringify(data)}`);
             }
             // raw response
             //console.log(response);
@@ -143,7 +147,7 @@ var notifications = {
         if(data.success){
             console.log(`Object of noti ${JSON.stringify(data)}`);
             let obj = {
-                customerId:[{cid:customerId}],
+                customerId:{cid:customerId},
                 bussinessId:{bid:bussinessId},
                 noti_type: 'BUSSINESS', 
                 content: msg

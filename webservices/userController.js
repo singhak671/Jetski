@@ -15,10 +15,20 @@ var mongoosePaginate = require('mongoose-paginate');
 const notification = require('../common_functions/notification');
 const Noti = require('../models/notificationModel');
 // var waterfall = require("async-waterfall");
+const keySecret = 'sk_test_4Sht4ZSKz8eUDCaiXP5pGfs6';
+const stripe = require("stripe")(keySecret);
+const keyPublishable = 'pk_test_NkhYVArGE07qHgai7PuO6Bbm';
+
+
+
+
+
+
 
 module.exports = {
 
     //.................................................................Signup API ..........................................................................//
+ 
     "signup": function (req, res) {
         //   console.log("signup==>>",req.body);
         if (!req.body.email || !req.body.password)
@@ -61,6 +71,72 @@ module.exports = {
             })
         }
     },
+ 
+ 
+    // "signup": function (req, res) {
+    //     //   console.log("signup==>>",req.body);
+    //     if (!req.body.email || !req.body.password)
+    //         Response.sendResponseWithData(res, resCode.INTERNAL_SERVER_ERROR, "email_id and password are required**");
+    //     else {
+    //         userSchema.findOne({ email: req.body.email, status: "ACTIVE" }, (err, result) => {
+    //             if (err)
+    //                 Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.INTERNAL_SERVER_ERROR);
+    //             else if (result)
+    //                 Response.sendResponseWithoutData(res, resCode.ALREADY_EXIST, `EmailId already exists with ${result.userType} account`);
+    //             else {
+    //                 var token = req.body.stripe_token; // Using Express
+    //                 console.log("token------>>",token)
+                  
+    //                 stripe.accounts.create({   country: 'US',
+    //                 type: 'custom',
+    //                 account_token: token},
+    //                 // console.log("***************",account_token)
+    //                 ).then(function (acct) { // asynchronously called })
+    //                // console.log("____________",country, type, account_token)
+    //                 console.log("*******************",acct)
+    //                 console.log("verify strip acc++++>>>>>>>",acct.id)
+    //                 req.body.stripeAccountId=acct.id
+
+    //                 // if (err_) {
+    //                     //     console.log(error)
+    //                     //     Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.INTERNAL_SERVER_ERROR)
+    //                     // }
+    //                     // else{
+                        
+    //                         var retVal = "";
+    //                         const saltRounds = 10;
+    //                         retVal = req.body.password;
+    //                         bcrypt.genSalt(saltRounds, (err, salt) => {
+    //                             bcrypt.hash(retVal, salt, (error, hash) => {
+    //                                 req.body.password = hash;
+    //                                 let user = new userSchema(req.body);
+    //                                 user.save({ lean: true }).then((result) => {
+    //                                     console.log("RESULT AFTER SIGNUP USER======>", result);
+    //                                     if (error) {
+    //                                         console.log(error)
+    //                                         Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.INTERNAL_SERVER_ERROR)
+    //                                     } else {
+    //                                         var result = result.toObject();
+    //                                         delete result.password;
+    //                                         Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "You have successfully signup.", result)
+    //                                         //  message.sendemail(result.email, "Your account for AQUA_LUDUS is created.", "Your email id is "+result.email+" and password is"+retVal, (err,success)=>{
+    //                                         //     if(success)
+    //                                         //     {
+    //                                         //         console.log("emailll",success)
+    //                                         //         Response.sendResponseWithData(res,resCode.EVERYTHING_IS_OK,"Signed up successfully.",result)
+    //                                         //     }                    
+    //                                         //  });
+    //                                     }
+    //                                 })
+    //                             })
+    //                         })
+    //             // }
+    //                 })
+    //             }
+
+    //         })
+    //     }
+    // },
 
     //......................................................................Login API....................................................................... //
     "login": (req, res) => {
@@ -101,7 +177,7 @@ module.exports = {
 
                                 if (!success)
                                     return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, "Data doesn't exist")
-                                console.log("Login----------dfdghdfghfdgdfgfdgdfghfdgdfghfdghfd", success)
+                                console.log("Login----------social login", success)
                                 return Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, resMessage.LOGIN_SUCCESS, success1, token);
 
                             })
@@ -116,7 +192,7 @@ module.exports = {
         else {
             if (!req.body.email || !req.body.password)
                 return Response.sendResponseWithoutData(res, resCode.BAD_REQUEST, "Please provide email_id & password");
-            userSchema.findOne({ email: req.body.email, status: "ACTIVE", userType: req.body.userType }, { email: 0, address: 0, mobile_no: 0 }, { lean: true }, (err, result) => {
+            userSchema.findOneAndUpdate({ email: req.body.email, status: 'ACTIVE', userType: req.body.userType }, { $set: { deviceToken: req.body.deviceToken, deviceType: req.body.deviceType } }, { new: true }).select('-email -address -mobile_no ').lean().exec((err, result) => {
                 console.log("Login success==>>", result)
                 if (err)
                     return Response.sendResponseWithoutData(res, resCode.INTERNAL_SERVER_ERROR, 'INTERNAL SERVER ERROR')
@@ -130,13 +206,6 @@ module.exports = {
                     if (res1) {
                         // console.log("secret key is "+config.secret_key)
                         var token = jwt.sign({ _id: result._id, email: result.email, password: result.password }, config.secret_key);
-                        // userSchema.findOneAndUpdate({email:req.body.email},{$set:{jwtToken:token}},{select:{"password":0},new:true},(err1,res2)=>{
-                        //     if(err1)
-                        //     return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, 'INTERNAL SERVER ERROR')
-                        //     if(!res2)            
-                        //     return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_MATCH);   
-
-                        // })
                         delete result['password']
                         console.log("login-----------dfdghdfghfdgdfgfdgdfghfdgdfghfdghfd", res1)
                         return Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, resMessage.LOGIN_SUCCESS, result, token)
@@ -149,6 +218,17 @@ module.exports = {
         }
     },
 
+
+    // else{
+    //     User.findOneAndUpdate({email:req.body.email,status:"ACTIVE"},{$set:{deviceToken:req.body.deviceToken,deviceType:req.body.deviceType}},{new:true},(error,result)=>{
+    //         if(error)
+    //             response.sendResponseWithoutData(res, resCode.SOMETHING_WENT_WRONG, resMessage.INTERNAL_SERVER_ERROR);
+    //         else if(!result)
+    //             response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.NOT_FOUND)
+    //         else
+    //             response.sendResponseWithoutData(res, resCode.EVERYTHING_IS_OK, 'Token updated successfully.')
+    //     })
+    // }
 
     //..................................................................userDetail API............................................................................... //
     "viewUserDetail": (req, res) => {
@@ -503,7 +583,7 @@ module.exports = {
                 Response.sendResponseWithoutData(res, resCode.INTERNAL_SERVER_ERROR, resMessage.INTERNAL_SERVER_ERROR)
             else {
                 console.log("result of post reviews", result)
-                //  notification.single_notification(result.deviceToken, 'Review Posted!!','You are successfully placed your review regarding app', result.businessManId,result._id,result.profilePic,result.name)
+                notification.single_notification(result.deviceToken, 'Review Posted!!', 'You are successfully placed your review regarding app', result.businessManId, result._id, result.profilePic, result.name)
                 return Response.sendResponseWithoutData(res, resCode.EVERYTHING_IS_OK, 'Your Review  is updated Successfully.');
             }
         }

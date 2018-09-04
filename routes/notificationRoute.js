@@ -3,7 +3,7 @@ const notification = require('../webservices/notificationController');
 //const auth_handler =require('../middleware/auth_handler');
 
 
- router.post('/saveToken',notification.saveToken);
+//  router.post('/saveToken',notification.saveToken);
 
  //************** WEB PUSH *********************************/
  //router.post('/subscribe',notification.subscribe);
@@ -12,9 +12,11 @@ const notification = require('../webservices/notificationController');
 //  router.post('/unsubscribe',notification.unsubscribe);
 //  router.post('/notify',notification.notify);
  //router.post('/push',notification.push);
+ router.post('/customerNotification',notification.customerNotification);
 router.post('/notificationList',notification.notificationList);
 router.get('/unreadCount/:bussinessId',notification.unreadCount)
 router.get('/updateReadStatus/:bussinessId',notification.updateReadStatus)
+
 
 // router.post('/paticularNotificationDetail', auth_handler.auth_func,notification.paticularNotificationDetail);
 // router.post('/notificationListForApp',auth_handler.auth_func, notification.notificationListForApp);

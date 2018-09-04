@@ -21,20 +21,20 @@ let subscribers = [];
 // );
 //'3J303..r4I'
 const notiApi = {
-    'saveToken': (req, res) => {
-        if(!req.body)
-            response.sendResponseWithoutData(res, resCode.SOMETHING_WENT_WRONG, resMessage.WENT_WRONG);
-        else{
-            User.findOneAndUpdate({email:req.body.email,status:"ACTIVE"},{$set:{deviceToken:req.body.deviceToken,deviceType:req.body.deviceType}},{new:true},(error,result)=>{
-                if(error)
-                    response.sendResponseWithoutData(res, resCode.SOMETHING_WENT_WRONG, resMessage.INTERNAL_SERVER_ERROR);
-                else if(!result)
-                    response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.NOT_FOUND)
-                else
-                    response.sendResponseWithoutData(res, resCode.EVERYTHING_IS_OK, 'Token updated successfully.')
-            })
-        }
-    },
+    // 'saveToken': (req, res) => {
+    //     if(!req.body)
+    //         response.sendResponseWithoutData(res, resCode.SOMETHING_WENT_WRONG, resMessage.WENT_WRONG);
+    //     else{
+    //         User.findOneAndUpdate({email:req.body.email,status:"ACTIVE"},{$set:{deviceToken:req.body.deviceToken,deviceType:req.body.deviceType}},{new:true},(error,result)=>{
+    //             if(error)
+    //                 response.sendResponseWithoutData(res, resCode.SOMETHING_WENT_WRONG, resMessage.INTERNAL_SERVER_ERROR);
+    //             else if(!result)
+    //                 response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.NOT_FOUND)
+    //             else
+    //                 response.sendResponseWithoutData(res, resCode.EVERYTHING_IS_OK, 'Token updated successfully.')
+    //         })
+    //     }
+    // },
 
 //=========================================== For web-push ==================================================================
     // 'subscribe':  (req, res)=> {
@@ -72,6 +72,28 @@ const notiApi = {
         sort: { createdAt: -1 }
     };
     Notification.paginate({"bussinessId.bid":req.body.bussinessId,noti_type:'CUSTOMER'}, options, (error, result)=>{
+        if(error)
+            response.sendResponseWithoutData(res, resCode.INTERNAL_SERVER_ERROR, resMessage.INTERNAL_SERVER_ERROR)
+    else  if(result.docs.length==0){
+        response.sendResponseWithoutData(res, resCode.NOT_FOUND, "Data not found")
+    }
+          else{
+            console.log("noti list===>",JSON.stringify(result))
+            response.sendResponseWithPagination(res, resCode.EVERYTHING_IS_OK, 'Notifications found successfully.', result.docs, { total: result.total, limit: result.limit, currentPage: result.page, totalPage: result.pages })
+        }       
+    })
+},
+
+//================================Notification shown in customer===============================================================
+
+'customerNotification': (req, res) => {
+    // console.log(`Request for notification list ${JSON.stringify(req.body)}`)
+    let options = {
+        page: req.body.pageNumber,
+        limit:10,
+        sort: { createdAt: -1 }
+    };
+    Notification.paginate({"customerId.cid":req.body.customerId,noti_type:'CUSTOMER'}, options, (error, result)=>{
         if(error)
             response.sendResponseWithoutData(res, resCode.INTERNAL_SERVER_ERROR, resMessage.INTERNAL_SERVER_ERROR)
         else{

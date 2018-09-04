@@ -243,8 +243,8 @@ module.exports = {
                             else {
                                 console.log('success refund-->', refund)
                                 //callback('',refund)
-                                // console.log("Noti data", result_.deviceToken, 'Booking Cancelled!!', ' Your booking is Cancelled and your amount will be refunded...!', result.businessManId, result.userId, result_.profilePic, result_.name)
-                                // notification.single_notification(result_.deviceToken, 'Booking Cancelled!!', ' Your booking is Cancelled and your amount will be refunded...!', result.businessManId, result.userId, result_.profilePic, result_.name)
+                                console.log("Noti data", result_.deviceToken, 'Booking Cancelled!!', ' Your booking is Cancelled and your amount will be refunded...!', result.businessManId, result.userId, result_.profilePic, result_.name)
+                                notification.single_notification(result_.deviceToken, 'Booking Cancelled!!', ' Your booking is Cancelled and your amount will be refunded...!', result.businessManId, result.userId, result_.profilePic, result_.name)
                                 response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "booking cancelled successfully and your amount will be refunded...")
                             }
                         })
@@ -397,7 +397,7 @@ module.exports = {
                 } else {
                     let unique = [...new Set(result.map(item => item.eventAddress))];
                     unique.map(x => eventAddressArr.push({ eventAddress: x }))
-                    response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE,  {eventAddress:eventAddressArr} )
+                    response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, { eventAddress: eventAddressArr })
                 }
             }
         })
@@ -410,7 +410,7 @@ module.exports = {
         var temp_data = {};
         console.log("array=====>>>", req.body)
         let list = req.body.eventAddress.map((x) => x.eventAddress)
-        let query = { eventAddress: { $in: list }, status: "ACTIVE" }
+        let query = list.length > 0 ? { eventAddress: { $in: list }, status: "ACTIVE" } : { status: "ACTIVE" };
         eventSchema.find(query).populate("userId", { name: 1, profilePic: 1, businessName: 1 }).exec((error, result) => {
             if (error)
                 response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
@@ -488,7 +488,7 @@ module.exports = {
         let options = {
             page: req.body.pageNumber || 1,
             populate: [{ path: "eventId", select: "status eventStatus  eventCreated_At _id period eventName eventAddress eventDescription eventPrice eventImage " },
-            { path: "userId", select: "profilePic name" }],
+            { path: "userId", select: "profilePic name deviceToken" }],
             //select: 'status eventStatus duration eventCreated_At _id userId period eventName eventAddress eventDescription eventImage createdAt updatedAt',
             limit: req.body.limit || 10,
             sort: { createdAt: -1 },
@@ -501,7 +501,7 @@ module.exports = {
                 return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found")
             else {
                 console.log("result====>", JSON.stringify(result))
-                // notification.single_notification(token, 'Booking Confirmation!!', 'Your Booking is Confirmed...!', req.body.userId,result.userId)
+                //  notification.single_notification(result.userId.deviceToken, 'Booking Confirmation!!', 'Your Booking is Confirmed...!', req.body.userId,result.userId)
                 response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result)
             }
         })
@@ -648,6 +648,8 @@ module.exports = {
             if (!result)
                 return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found")
             else {
+                notification.single_notification(result.userId.deviceToken, 'Booking Confirmation!!', 'Your Booking is Confirmed...!', req.body.userId, result.userId)
+
                 response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result)
             }
         })
@@ -678,7 +680,7 @@ module.exports = {
 
                         event = result_.eventName;
                         console.log(result.userId.deviceToken, 'Event Confirmation!!', event + ' Event is Confirmed...!', result.businessManId, result.userId._id, result.userId.profilePic, result.userId.name)
-                        notification.single_notification(result.deviceToken, 'Event Confirmation!!', event + ' Event is Confirmed...!', result.businessManId, result.userId._id, result.userId.profilePic, result.userId.name)
+                        notification.single_notification(result.userId.deviceToken, 'Event Confirmation!!', event + ' Event is Confirmed...!', result.businessManId, result.userId._id, result.userId.profilePic, result.userId.name)
                         response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Event status is confirmed")
                     }
                 })
@@ -698,46 +700,46 @@ module.exports = {
 
     "rejectEventStatus": (req, res) => {
         console.log("event status request for cancel " + req.body.bookingId)
-        booking.findByIdAndUpdate({ _id: req.body.bookingId }, { $set: { bookingStatus: "CANCELLED" } }, { new: true }).populate({ path: "userId", select: "deviceToken name profilePic" }).exec((error, result) => {
-            if (error)
-                response.sendResponseWithData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG, error)
-            else if (!result)
-                response.sendResponseWithData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND, result)
-            else {
-                var result = result
-                console.log(`cancel event status result------------->${JSON.stringify(result)}`)
-                var event;
-                eventSchema.findById({ _id: result.eventId, status: "ACTIVE" }, (err_, result_) => {
-                    if (err_)
-                        response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
+                booking.findByIdAndUpdate({ _id: req.body.bookingId }, { $set: { bookingStatus: "CANCELLED" } }, { new: true }).populate({ path: "userId", select: "deviceToken name profilePic" }).exec((error, result) => {
+                    if (error)
+                        response.sendResponseWithData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG, error)
+                    else if (!result)
+                        response.sendResponseWithData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND, result)
                     else {
-                        console.log(`cancel event status result_------------->${JSON.stringify(result_.eventName)}`)
-                        console.log("Pppopdfufydfsjuysdfjfdgs", result.chargeId, result.eventPrice)
-                        event = result_.eventName;
-                        console.log("event0-00---", event)
-                        return stripe.refunds.create({
-                            charge: result.chargeId,
-                            amount: (result.eventPrice),
-                        }, function (err, refund) {
-                            if (err) {
-                                console.log("err in refunds", err)
-                                notification.single_notification(result.deviceToken, 'Payment Issue Occur', event + 'Error occur during payment as the amount has already been refunded. ', result.businessManId, result.userId._id, result.userId.profilePic, result.userId.name)
-                                response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Error occur during payment as the amount has already been refunded.")
-                            }
+                        var result = result
+                        console.log(`cancel event status result------------->${JSON.stringify(result)}`)
+                        var event;
+                        eventSchema.findById({ _id: result.eventId, status: "ACTIVE" }, (err_, result_) => {
+                            if (err_)
+                                response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
                             else {
-                                console.log('success refund-->', refund)
-                                console.log('noti result==========>', result.deviceToken, 'Event Cancelled!!', event + ' Event is Cancelled...!', result.businessManId, result.userId._id, result.userId.profilePic, result.userId.name)
-                                notification.single_notification(result.deviceToken, 'Event Cancelled!!', event + ' Event is Cancelled...!', result.businessManId, result.userId._id, result.userId.profilePic, result.userId.name)
-                                response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Event status is cancelled")
-                            }
+                                console.log(`cancel event status result_------------->${JSON.stringify(result_.eventName)}`)
+                                console.log("Pppopdfufydfsjuysdfjfdgs", result.chargeId, result.eventPrice)
+                                event = result_.eventName;
+                                console.log("event0-00---", event)
+                                return stripe.refunds.create({
+                                    charge: result.chargeId,
+                                    amount: (result.eventPrice),
+                                }, function (err, refund) {
+                                    if (err) {
+                                        console.log("err in refunds", err)
+                                        notification.single_notification(result.userId.deviceToken, 'Payment Issue Occur', event + 'Error occur during payment as the amount has already been refunded. ', result.businessManId, result.userId._id, result.userId.profilePic, result.userId.name)
+                                        response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Error occur during payment as the amount has already been refunded.")
+                                    }
+                                    else {
+                                        console.log('success refund-->', refund)
+                                        console.log('noti result==========>', result.userId.deviceToken, 'Event Cancelled!!', event + ' Event is Cancelled...!', result.businessManId, result.userId._id, result.userId.profilePic, result.userId.name)
+                                        notification.single_notification(result.userId.deviceToken, 'Event Cancelled!!', event + ' Event is Cancelled...!', result.businessManId, result.userId._id, result.userId.profilePic, result.userId.name)
+                                        response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Event status is cancelled")
+                                    }
 
+                                })
+
+                            }
                         })
 
                     }
                 })
-
-            }
-        })
     },
 
 
@@ -1152,7 +1154,8 @@ module.exports = {
                             response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR)
                         } else {
                             console.log("*********result final", result)
-                            notification.single_notification(succ.deviceToken, 'booking Posted !', ' Your booking is successfully done.', req.body.businessManId, req.body.userId, succ.profilePic, succ.name)
+                            console.log("notificatiopn data--------->>>", succ.deviceToken, 'booking Posted !', ' Your booking is successfully done.', req.body.businessManId, req.body.userId, succ.profilePic, succ.name)
+                            notification.single_notification(succ.deviceToken, 'booking Posted !', ' Your booking is successfully done for the event ' + result.eventName, req.body.businessManId, req.body.userId, succ.profilePic, succ.name)
                             response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Payment successfully done!")
                         }
 
@@ -1235,9 +1238,9 @@ module.exports = {
                     return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG);
                 else if (success == false)
                     return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "UserId Not found");
-                else{
+                else {
                     eventSchema.findOne({ _id: req.body.eventId, businessName: req.body.businessName, status: "ACTIVE" }, (err, success2) => {
-                        console.log("in events------->>",err, success2)
+                        console.log("in events------->>", err, success2)
                         if (err)
                             return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG);
                         else if (!success2)
@@ -1251,15 +1254,15 @@ module.exports = {
                                     else if (success3.length == 0)
                                         return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Something went wrong....");
                                     else {
-                                        // console.log("noti data===>", success.deviceToken, 'feedback Posted !', ' Your feedback is successfully send.', req.body.businessManId, req.body.customerId, success.profilePic, success.name)
-                                        // notification.single_notification(success.deviceToken, 'feedback Posted !', ' Your feedback is successfully send.', req.body.businessManId, req.body.customerId, success.profilePic, success.name)
+                                         console.log("noti data===>", success.deviceToken, 'feedback Posted !', ' Your feedback is successfully send.', req.body.businessManId, req.body.customerId, success.profilePic, success.name)
+                                         notification.single_notification(success.deviceToken, 'feedback Posted !', ' Your feedback is successfully send.', req.body.businessManId, req.body.customerId, success.profilePic, success.name)
                                         response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, "Feedback is successfully send.", success3);
                                     }
 
                                 })
                     })
                 }
-                    
+
             })
     },
     //********************************************************************************************  API for viewCustomerFeedback  for App **************************************************************************  */
@@ -1276,7 +1279,7 @@ module.exports = {
                     return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found!");
                 else if (succ) {
                     // succ=succ.feedback.pop()
-                 
+
                     response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, succ);
                 }
             })
@@ -1354,22 +1357,22 @@ module.exports = {
 
 
     'getAllEvents': (req, res) => {
-        var n=req.body.pageNumber || 1  , m=10
+        var n = req.body.pageNumber || 1, m = 10
         var value = new RegExp('^' + req.body.search, "i")
         //     if (req.body.search) {
-    
+
         //     }
         var query = {
             $or: [{ $and: [{ status: "ACTIVE" }, { "businessName": value }] }, { $and: [{ status: "ACTIVE" }, { eventName: value }] }], status: "ACTIVE"
         }
         // $and: [{ name: req.body.search},{email: req.body.search} ,{userType: 'CUSTOMER' }] }
         var options = {
-           
+
             // page: req.body.pageNumber || 1,
             select: '_id eventName eventImage businessName eventCreated_At eventPrice',
             populate: [{ path: "userId", select: " status name ", match: { status: "ACTIVE" } }],
             //  match:{userId},
-              limit: 100000000,
+            limit: 100000000,
             sort: { eventCreated_At: -1 },
             lean: true
         }
@@ -1387,25 +1390,27 @@ module.exports = {
                         return x;
                 })
 
-                console.log('Array is=====>>>>>>',JSON.stringify(arr));
-               
-                var userList1 = arr.slice((n- 1) * m, n* m)
+                console.log('Array is=====>>>>>>', JSON.stringify(arr));
+
+                var userList1 = arr.slice((n - 1) * m, n * m)
 
                 //var userList1 = arr.slice((pageNumber - 1) * limit, pageNumber* limit)
-                 console.log("custom pagination>>>>>>>>>>>>>",JSON.stringify(userList1))
-                 var x={"total": arr.length,
-                 "limit": 10,
-                 "currentPage": n,
-                 "totalPage": Math.ceil(arr.length/10)}
-                 console.log("total===.",x)
-                  response.sendResponseWithPagination(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, userList1, x);
+                console.log("custom pagination>>>>>>>>>>>>>", JSON.stringify(userList1))
+                var x = {
+                    "total": arr.length,
+                    "limit": 10,
+                    "currentPage": n,
+                    "totalPage": Math.ceil(arr.length / 10)
+                }
+                console.log("total===.", x)
+                response.sendResponseWithPagination(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, userList1, x);
 
             }
-           
+
         })
     },
 
-   
+
 
     //********************************************************************************************  API transaction management >>> Admin panel **************************************************************************  */
 

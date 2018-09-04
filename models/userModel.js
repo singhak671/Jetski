@@ -28,13 +28,7 @@ const user = mongoose.Schema({
     address: {
         type: String
     },
-    // compCount:{
-    //     type:Number
-    // },
-    // status:{
-    //     type:String,
-    //     default:"ACTIVE"
-    // },
+  
     status: {
         type: String,
         enum: ["ACTIVE", "INACTIVE", "BLOCK"],
@@ -45,17 +39,7 @@ const user = mongoose.Schema({
         default: "CUSTOMER",
         enum: ['CUSTOMER', 'SUPERADMIN', 'BUSINESS']
     },
-    // created_At:{
-    //     type:Date,
-    //     default:Date.now()
-    // },
-
-    // jwtToken:
-    // {
-    //     type:String
-    // },
-
-
+ 
 
     socialId: { type: String },
 
@@ -93,6 +77,9 @@ const user = mongoose.Schema({
         enum: ["IOS", "WEBSITE", "ANDROID"]
     },
     reviews: {
+        type: String
+    },
+    stripeAccountId:{
         type: String
     },
     pushSubscription: {

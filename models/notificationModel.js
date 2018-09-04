@@ -3,12 +3,12 @@ const Schema = mongoose.Schema;
 const mongoosePaginate = require('mongoose-paginate');
 
 const notificationSchema = new Schema({
-    customerId: [{
+    customerId: {
         cid:{type:Schema.Types.ObjectId,ref:'Users'},
         image:{type:String},
         name:{type:String},
         isRead:{type:Boolean, default:false}
-    }],
+    },
     bussinessId:{
         bid:{type:Schema.Types.ObjectId,ref:'Users'},
         isRead:{type:Boolean, default:false}
