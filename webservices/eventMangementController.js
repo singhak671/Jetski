@@ -397,7 +397,7 @@ module.exports = {
                 } else {
                     let unique = [...new Set(result.map(item => item.eventAddress))];
                     unique.map(x => eventAddressArr.push({ eventAddress: x }))
-                    response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE,  eventAddressArr )
+                    response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE,  {eventAddress:eventAddressArr} )
                 }
             }
         })

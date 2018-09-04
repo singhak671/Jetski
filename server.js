@@ -73,8 +73,10 @@ console.log(" inside crone)))))))))")
                             stripe.transfers.create({
                                   amount: succ1.eventPrice,
                                   currency: "usd",
-                                  source_transaction: "acct_1D15riFvUkcGB9ta",
-                                  destination:succ1.businessStripeAccount//"acct_1D6FRDB3m6P1mUHh", 
+                                  destination: "acct_195VVsIJdBx802Zf",
+                                  description: "shreya@gmail.com"
+                                //   source_transaction: "acct_1D15riFvUkcGB9ta",
+                                //   destination:'acct_1D6FRDB3m6P1mUHh',//succ1.businessStripeAccount//"acct_1D6FRDB3m6P1mUHh", 
                                 }).then(function(transfer) {
                                  console.log("transfer------->>>",transfer)
                                 });

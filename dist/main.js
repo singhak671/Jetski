@@ -681,7 +681,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"mainbox main-modify\">\n  <app-side-menu></app-side-menu>\n<div class=\"right-section\">\n  <div class=\"copyrights\">Copyright © 2018 App name All Rights Reserved.</div>\n  <div class=\"right-inner\">\n            <div class=\"filter-block\">\n              <fieldset class=\"global-fieldset\">\n                 <legend>{{controls}}</legend>\n                  <div class=\"filter-content\">\n                      \n                       <div class=\"common-detail-box\">\n                         <p [innerHtml]=\"viewData\"></p>\n                        \n                       \n                          <div class=\"table-button text-center mt30\">\n                             <!-- <button (click)=\"editUser()\" class=\"btn btn-red\">Edit </button> -->\n                             <button  class=\"btn btn-danger\" [routerLink]='([\"/content-management\"])' >Back</button>\n                          </div>\n                       </div>\n\n                  </div>\n              </fieldset>\n            </div>        \n        </div>  \n      </div>\n</div>\n\n\n\n\n\n"
+module.exports = "<div class=\"mainbox main-modify\">\n  <app-side-menu></app-side-menu>\n<div class=\"right-section\">\n  <div class=\"copyrights\">Copyright © 2018 App name All Rights Reserved.</div>\n  <div class=\"right-inner\">\n            <div class=\"filter-block\" style=\"font-family: -webkit-body;\">\n              <fieldset class=\"global-fieldset\">\n                 <legend>{{controls}}</legend>\n                  <div class=\"filter-content\">\n                      \n                       <div class=\"common-detail-box\">\n                         <!-- <p [innerHtml]=\"viewData\"></p> -->\n                         <div [innerHtml]=\"viewData\"></div>\n                        \n                       \n                          <div class=\"table-button text-center mt30\">\n                             <!-- <button (click)=\"editUser()\" class=\"btn btn-red\">Edit </button> -->\n                             <button  class=\"btn btn-danger\" [routerLink]='([\"/content-management\"])' >Back</button>\n                          </div>\n                       </div>\n\n                  </div>\n              </fieldset>\n            </div>        \n        </div>  \n      </div>\n</div>\n\n\n\n\n\n"
 
 /***/ }),
 
@@ -697,6 +697,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ContentManagementViewComponent", function() { return ContentManagementViewComponent; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _providers_mainService__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../providers/mainService */ "./src/app/providers/mainService.ts");
+/* harmony import */ var _angular_platform_browser__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/platform-browser */ "./node_modules/@angular/platform-browser/fesm5/platform-browser.js");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -708,9 +709,11 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 };
 
 
+
 var ContentManagementViewComponent = /** @class */ (function () {
-    function ContentManagementViewComponent(service) {
+    function ContentManagementViewComponent(service, sanitizer) {
         this.service = service;
+        this.sanitizer = sanitizer;
     }
     ContentManagementViewComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -731,6 +734,7 @@ var ContentManagementViewComponent = /** @class */ (function () {
                     _this.viewData = response['result'][0].privacyPolicy;
                     console.log('Privacy Policy', _this.viewData);
                 }
+                _this.viewData = _this.sanitizer.bypassSecurityTrustHtml(_this.viewData);
                 // this.viewData = response['result'][0].
             }
             else {
@@ -747,7 +751,7 @@ var ContentManagementViewComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./content-management-view.component.html */ "./src/app/pages/content-management-view/content-management-view.component.html"),
             styles: [__webpack_require__(/*! ./content-management-view.component.css */ "./src/app/pages/content-management-view/content-management-view.component.css")]
         }),
-        __metadata("design:paramtypes", [_providers_mainService__WEBPACK_IMPORTED_MODULE_1__["MainService"]])
+        __metadata("design:paramtypes", [_providers_mainService__WEBPACK_IMPORTED_MODULE_1__["MainService"], _angular_platform_browser__WEBPACK_IMPORTED_MODULE_2__["DomSanitizer"]])
     ], ContentManagementViewComponent);
     return ContentManagementViewComponent;
 }());
@@ -2323,7 +2327,7 @@ var MainService = /** @class */ (function () {
     function MainService(http, toastr) {
         this.http = http;
         this.toastr = toastr;
-        //    baseUrl =  'http://172.16.6.74:8000/api/v1/';
+        // baseUrl =  'http://172.16.6.74:8000/api/v1/';
         //    >>>>staging URL>>
         this.baseUrl = 'http://162.222.32.20:1406/api/v1/';
     }

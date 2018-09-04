@@ -25,7 +25,7 @@ router.post('/addEvent',authHandler.verifyToken,Business.addEvent);
  router.post('/filterEventsConfirm',authHandler.verifyToken,Business.filterEventsConfirm);
  //router.post('/bookingEvent',authHandler.verifyToken,Business.bookingEvent);
  router.post('/addCustomerFeedback',authHandler.verifyToken,Business.addCustomerFeedback);
- router.post('/viewCustomerFeedback',Business.viewCustomerFeedback);//////////
+ router.post('/viewCustomerFeedback',authHandler.verifyToken,Business.viewCustomerFeedback);//////////
  router.post('/myEventFeedback',authHandler.verifyToken,Business.myEventFeedback);/////////
  router.get('/allFeedbackViews',authHandler.verifyToken,Business.allFeedbackViews);/////////
  router.post('/cancelBooking',authHandler.verifyToken,Business.cancelBooking);
