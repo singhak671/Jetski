@@ -45,7 +45,7 @@ console.log(" inside crone)))))))))")
         asyncLoop(succ, (item, next) => {
             var result = item.duration[0].date.formatted + "T" + item.duration[0].times[0].time + ":00.000Z"
             // "2018-08-30T15:23:00.000Z"
-            console.log("i am here ....>>>>", result)
+             console.log("i am here ....>>>>", result)
             var newTime = new Date(result)
             var temp = new Date(result).getTime()
             // var c=temp+19800000
@@ -60,38 +60,39 @@ console.log(" inside crone)))))))))")
             // console.log("current timeStamp", current_time_stamp)
             // console.log("@@@@@@@@@@@@@@@@", temp <= current_time_stamp);
             if (temp <= current_time_stamp) {
-                console.log(" inside time stamp)))))))))")
-                console.log("checking of booking status",item.bookingStatus)
+                // console.log(" inside time stamp)))))))))")
+                // console.log("checking of booking status",item.bookingStatus)
                 if (item.bookingStatus == 'CONFIRMED') {
-                    console.log(" inside booking status)))))))))")
-                    booking.update({ _id: item._id }, { $set: { 'bookingStatus': 'COMPLETED' } }, { multi: true }).exec((err1, succ1) => {
-                        console.log('error ,succes==========>>>>>>', err1, succ1);
+                    // console.log(" inside booking status)))))))))")
+                    booking.findByIdAndUpdate({ _id: item._id }, { $set: { 'bookingStatus': 'COMPLETED' } }, { multi: true }).populate({ path: "businessManId", select: "stripeAccountId" }).exec((err1, succ1) => {
+                         console.log('error ,succes==========>>>>>>', err1, succ1);
                         if (err1)
                             console.log('Error is====>>>>>', err1); 
                         else if (succ1) {
-                            console.log('Status updated successfully====>>>>', succ1); 
+                             console.log('Status updated successfully====>>>>', succ1); 
                             stripe.transfers.create({
-                                  amount: succ1.eventPrice,
+                                  amount: 100,
                                   currency: "usd",
-                                  destination: "acct_195VVsIJdBx802Zf",
-                                  description: "shreya@gmail.com"
-                                //   source_transaction: "acct_1D15riFvUkcGB9ta",
+                                 
+                                  destination: succ1.businessManId.stripeAccountId,
+                                //   description: "admin to business",
+                                   source_transaction: "acct_1D6trWBo1Ono9k1p",
                                 //   destination:'acct_1D6FRDB3m6P1mUHh',//succ1.businessStripeAccount//"acct_1D6FRDB3m6P1mUHh", 
                                 }).then(function(transfer) {
-                                 console.log("transfer------->>>",transfer)
+                                 console.log("transfer------++++++++++->>>",transfer)
                                 });
                             next();
                         }
                     })
                 }
                 else if (item.bookingStatus == 'PENDING') {
-                    console.log(" inside pending status)))))))))")
+                    // console.log(" inside pending status)))))))))")
                     booking.findByIdAndUpdate({ _id: item._id }, { $set: { 'bookingStatus': 'CANCELLED' } }, { multi: true }).exec((err1, succ1) => {
                         console.log('error ,succes==========>>>>>>', err1, succ1);
                         if (err1)
-                            console.log('Error is====>>>>>', err1);
+                             console.log('Error is====>>>>>', err1);
                         else  {
-                            console.log("succ1------>",succ1)
+                            // console.log("succ1------>",succ1)
                             return stripe.refunds.create({
                                 charge: succ1.chargeId,
                                 amount: (succ1.eventPrice)*100,

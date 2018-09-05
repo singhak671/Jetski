@@ -244,8 +244,8 @@ module.exports = {
                                 console.log('success refund-->', refund)
                                 //callback('',refund)
                                 console.log("Noti data", result_.deviceToken, 'Booking Cancelled!!', ' Your booking is Cancelled and your amount will be refunded...!', result.businessManId, result.userId, result_.profilePic, result_.name)
-                                notification.single_notification(result_.deviceToken, 'Booking Cancelled!!', ' Your booking is Cancelled and your amount will be refunded...!', result.businessManId, result.userId, result_.profilePic, result_.name)
-                                response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "booking cancelled successfully and your amount will be refunded...")
+                                notification.single_notification(result_.deviceToken, 'Booking Cancelled!!', ' Your booking is cancelled and your amount will be refunded...!', result.businessManId, result.userId, result_.profilePic, result_.name)
+                                response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Booking cancelled successfully and your amount will be refunded...")
                             }
                         })
                         //   .then((refund)=>{
@@ -1149,14 +1149,16 @@ module.exports = {
                         // })
                         //   callback(!charge,charge)
 
+
+            
                     },], (err, result) => {
                         if (err) {
                             console.log("errr6", err)
                             response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR)
                         } else {
                             console.log("*********result final", result)
-                            console.log("notificatiopn data--------->>>", succ.deviceToken, 'booking Posted !', ' Your booking is successfully done.', req.body.businessManId, req.body.userId, succ.profilePic, succ.name)
-                            notification.single_notification(succ.deviceToken, 'booking Posted !', ' Your booking is successfully done for the event ' + result.eventName, req.body.businessManId, req.body.userId, succ.profilePic, succ.name)
+                            console.log("notificatiopn data--------->>>", succ.deviceToken, 'booking Posted !',  `Your booking is successfully done by ${succ.name} requested for the event ${result.eventName}`, req.body.businessManId, req.body.userId, succ.profilePic, succ.name)
+                            notification.single_notification(succ.deviceToken, 'booking Posted !', `Your booking is successfully done by ${succ.name}, requested for the event ${result.eventName}` , req.body.businessManId, req.body.userId, succ.profilePic, succ.name)
                             response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Payment successfully done!")
                         }
 

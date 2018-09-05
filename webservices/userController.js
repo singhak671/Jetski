@@ -82,67 +82,95 @@ module.exports = {
                 else if (result)
                     Response.sendResponseWithoutData(res, resCode.ALREADY_EXIST, `EmailId already exists with ${result.userType} account`);
                 else {
-                    var retVal = "";
-                    const saltRounds = 10;
-                    retVal = req.body.password;
-                    bcrypt.genSalt(saltRounds, (err, salt) => {
-                        bcrypt.hash(retVal, salt, (error, hash) => {
-                            req.body.password = hash;
-                            let user = new userSchema(req.body);
-                            user.save({ lean: true }).then((result) => {
-                                console.log("RESULT AFTER SIGNUP USER======>", result);
-                                if (error) {
-                                    console.log(error)
-                                    Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.INTERNAL_SERVER_ERROR)
-                                } else {
-                                    var result = result.toObject();
-                                    delete result.password;
-                                    Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "You have successfully signup.", result)
-                                    //  message.sendemail(result.email, "Your account for AQUA_LUDUS is created.", "Your email id is "+result.email+" and password is"+retVal, (err,success)=>{
-                                    //     if(success)
-                                    //     {
-                                    //         console.log("emailll",success)
-                                    //         Response.sendResponseWithData(res,resCode.EVERYTHING_IS_OK,"Signed up successfully.",result)
-                                    //     }                    
-                                    //  });
-                                }
+                  
+                    stripe.accounts.create({
+                        type: 'custom',
+                        country: 'US',
+                        email: req.body.email
+                    }, function (err, account) {
+                        // asynchronously called
+                        if (err) 
+                            return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
+                        else {
+                            console.log(account.id)
+                            req.body.stripeAccountId=account.id
+                            var retVal = "";
+                            const saltRounds = 10;
+                            retVal = req.body.password;
+                            bcrypt.genSalt(saltRounds, (err, salt) => {
+                                bcrypt.hash(retVal, salt, (error, hash) => {
+                                    req.body.password = hash;
+                                    let user = new userSchema(req.body);
+                                    user.save({ lean: true }).then((result) => {
+                                        console.log("RESULT AFTER SIGNUP USER======>", result);
+                                        if (error) {
+                                            console.log(error)
+                                            Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.INTERNAL_SERVER_ERROR)
+                                        } else {
+                                            var result = result.toObject();
+                                            delete result.password;
+                                            Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "You have successfully signup.", result)
+                                            //  message.sendemail(result.email, "Your account for AQUA_LUDUS is created.", "Your email id is "+result.email+" and password is"+retVal, (err,success)=>{
+                                            //     if(success)
+                                            //     {
+                                            //         console.log("emailll",success)
+                                            //         Response.sendResponseWithData(res,resCode.EVERYTHING_IS_OK,"Signed up successfully.",result)
+                                            //     }                    
+                                            //  });
+                                        }
+                                    })
+                                })
                             })
-                        })
+                        }
                     })
                 }
             })
         }
     },
 
-    // "createStripeAccount": (req, res) => {
-    //     // console.log('stripe===>>>', stripe);
-    //     // return;
-    //     stripe.accounts.list(
-    //         // { limit: 3 },
-    //         function(err, accounts) {
-    //             console.log('accounts==>>', accounts);
-    //           // asynchronously called
-    //         }
-    //     );
-    //     stripe.tokens.create({
-    //         // card: {
-    //         //   "number": '378282246310005',
-    //         //   "exp_month": 12,
-    //         //   "exp_year": 2019,
-    //         //   "cvc": '123'
-    //         // },            
-    //     }).then((result) => {
-    //         console.log('token==>>>', result);
-    //         if (result) {
-    //             var token = 'result.id'; // Using Express //////tok_visa
-    //             stripe.accounts.create({type: "custom", account_token: token, })
-    //                 .then(function (acct) {
-    //                     console.log('acct==>>>', acct);
-    //                     // asynchronously called
-    //                 });
-    //         }
-    //     });
-    // },
+    "createStripeAccount": (req, res) => {
+        // console.log('stripe===>>>', stripe);
+        // return;
+        /* stripe.accounts.list(
+            // { limit: 3 },
+            function(err, accounts) {
+                console.log('accounts==>>', accounts);
+              // asynchronously called
+            }
+        );
+        stripe.tokens.create({
+            // card: {
+            //   "number": '378282246310005',
+            //   "exp_month": 12,
+            //   "exp_year": 2019,
+            //   "cvc": '123'
+            // },            
+        }).then((result) => {
+            console.log('token==>>>', result);
+            if (result) {
+                var token = 'result.id'; // Using Express //////tok_visa
+                stripe.accounts.create({type: "custom", account_token: token, })
+                    .then(function (acct) {
+                        console.log('acct==>>>', acct);
+                        // asynchronously called
+                    });
+            }
+        }); */
+
+        stripe.accounts.create({
+            type: 'custom',
+            country: 'US',
+            email: 'bob@example.com'
+        }, function (err, account) {
+            // asynchronously called
+            if (err) return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
+            else {
+                //   console.log(account)
+                console.log(account.id)
+            }
+            //   console.log("error++>>>>>",err ,   "success++++++++>>>>>>>>",account)
+        });
+    },
 
 
 
@@ -504,7 +532,7 @@ module.exports = {
             }
             if (!success)
                 return Response.sendResponseWithData(res, resCode.NOT_FOUND, "USER NOT EXIST");
-                           //   //success
+            //   //success
             {
                 bcrypt.compare(req.body.oldPassword, success.password, (err1, result1) => {
                     console.log("err>>>>>>", err1, "result of change>>>>", result1);
@@ -523,7 +551,7 @@ module.exports = {
 
                             }
 
-                        })                        
+                        })
                     } else {
                         return Response.sendResponseWithoutData(res, resCode.BAD_REQUEST, resMessage.OLD_PASSWORD_INCORRECT);
                     }
