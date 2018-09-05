@@ -11,8 +11,8 @@ var booking = require("../models/bookingModel.js")
 var feedback = require("../models/customerFeedbackModel.js")
 const waterfall = require('async-waterfall')
 const async = require('async');
-const keyPublishable = 'pk_test_NkhYVArGE07qHgai7PuO6Bbm';
-const keySecret = 'sk_test_4Sht4ZSKz8eUDCaiXP5pGfs6';
+const keyPublishable = 'pk_test_NS4RiEEZeWMhQEcxYsEfRH5J';
+const keySecret = 'sk_test_c1fuFQmWKd4OZeCThFOtLFuY';
 const stripe = require("stripe")(keySecret);
 const notification = require('../common_functions/notification');
 const Noti = require('../models/notificationModel');
@@ -232,7 +232,7 @@ module.exports = {
                         return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
                     else {
                         //  }
-                        var amount = ((90 * result.eventPrice) / 100)
+                        var amount = ((90 * result.eventPrice) / 100)*100
                         return stripe.refunds.create({
                             charge: result.chargeId,
                             amount: Math.round(amount),//((90* result.eventPrice)/100),
@@ -1030,8 +1030,9 @@ module.exports = {
                                 response.sendResponseWithoutData(res, responseCode.WENT_WRONG, " No such token.... ")
                             else {
                                 return stripe.charges.create({ // charge the customer
-                                    amount: req.body.eventPrice,
+                                    amount: req.body.eventPrice*100,
                                     currency: "usd",
+                                 
                                     customer: customer.id
                                 })
                             }
@@ -1233,10 +1234,10 @@ module.exports = {
         if (!req.body.eventId || !req.body.businessManId || !req.body.customerId)
             return response.sendResponseWithoutData(res, responseCode.BAD_REQUEST, "Please provide all required fields !");
         else
-            User.findOne({ _id: req.body.businessManId, businessName: req.body.businessName, _id: req.body.customerId, status: "ACTIVE" }, (err, success) => {
+            User.findOne({ $or:[{_id: req.body.businessManId}, {_id: req.body.customerId}], status: "ACTIVE" }, (err, success) => {
                 if (err)
                     return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG);
-                else if (success == false)
+                else if (!success)
                     return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "UserId Not found");
                 else {
                     eventSchema.findOne({ _id: req.body.eventId, businessName: req.body.businessName, status: "ACTIVE" }, (err, success2) => {
@@ -1254,6 +1255,8 @@ module.exports = {
                                     else if (success3.length == 0)
                                         return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Something went wrong....");
                                     else {
+                                        if(success)
+                                        console.log("checking success**********>>>>>>>>>>",success)
                                          console.log("noti data===>", success.deviceToken, 'feedback Posted !', ' Your feedback is successfully send.', req.body.businessManId, req.body.customerId, success.profilePic, success.name)
                                          notification.single_notification(success.deviceToken, 'feedback Posted !', ' Your feedback is successfully send.', req.body.businessManId, req.body.customerId, success.profilePic, success.name)
                                         response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, "Feedback is successfully send.", success3);

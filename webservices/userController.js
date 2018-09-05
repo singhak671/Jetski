@@ -15,26 +15,66 @@ var mongoosePaginate = require('mongoose-paginate');
 const notification = require('../common_functions/notification');
 const Noti = require('../models/notificationModel');
 // var waterfall = require("async-waterfall");
-const keySecret = 'sk_test_4Sht4ZSKz8eUDCaiXP5pGfs6';
+const async = require('async');
+const keySecret = 'sk_test_c1fuFQmWKd4OZeCThFOtLFuY';
 const stripe = require("stripe")(keySecret);
-const keyPublishable = 'pk_test_NkhYVArGE07qHgai7PuO6Bbm';
-
-
-
-
-
-
+const keyPublishable = 'pk_test_NS4RiEEZeWMhQEcxYsEfRH5J';
 
 module.exports = {
 
     //.................................................................Signup API ..........................................................................//
- 
+
+    // "signup": function (req, res) {
+    //     //   console.log("signup==>>",req.body);
+    //     if (!req.body.email || !req.body.password)
+    //         Response.sendResponseWithData(res, resCode.INTERNAL_SERVER_ERROR, "email_id and password are required**");
+    //     else {
+    //         userSchema.findOne({ email: req.body.email, status: "ACTIVE" }, (err, result) => {
+    //             if (err)
+    //                 Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.INTERNAL_SERVER_ERROR);
+    //             else if (result)
+    //                 Response.sendResponseWithoutData(res, resCode.ALREADY_EXIST, `EmailId already exists with ${result.userType} account`);
+    //             else {
+    //                 var retVal = "";
+    //                 const saltRounds = 10;
+    //                 retVal = req.body.password;
+    //                 bcrypt.genSalt(saltRounds, (err, salt) => {
+    //                     bcrypt.hash(retVal, salt, (error, hash) => {
+    //                         req.body.password = hash;
+    //                         let user = new userSchema(req.body);
+    //                         user.save({ lean: true }).then((result) => {
+    //                             console.log("RESULT AFTER SIGNUP USER======>", result);
+    //                             if (error) {
+    //                                 console.log(error)
+    //                                 Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.INTERNAL_SERVER_ERROR)
+    //                             } else {
+    //                                 var result = result.toObject();
+    //                                 delete result.password;
+    //                                 Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "You have successfully signup.", result)
+    //                                 //  message.sendemail(result.email, "Your account for AQUA_LUDUS is created.", "Your email id is "+result.email+" and password is"+retVal, (err,success)=>{
+    //                                 //     if(success)
+    //                                 //     {
+    //                                 //         console.log("emailll",success)
+    //                                 //         Response.sendResponseWithData(res,resCode.EVERYTHING_IS_OK,"Signed up successfully.",result)
+    //                                 //     }                    
+    //                                 //  });
+    //                             }
+    //                         })
+    //                     })
+    //                 })
+    //             }
+    //         })
+    //     }
+    // },
+
+
     "signup": function (req, res) {
-        //   console.log("signup==>>",req.body);
+        console.log("signup==>>", req.body);
+
         if (!req.body.email || !req.body.password)
             Response.sendResponseWithData(res, resCode.INTERNAL_SERVER_ERROR, "email_id and password are required**");
         else {
-            userSchema.findOne({ email: req.body.email, status: "ACTIVE" }, (err, result) => {
+            userSchema.findOne({ email: req.body.email, status: "ACTIVE" }, async (err, result) => {
                 if (err)
                     Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.INTERNAL_SERVER_ERROR);
                 else if (result)
@@ -71,87 +111,38 @@ module.exports = {
             })
         }
     },
- 
- 
-    // "signup":  function (req, res) {
-    //     //   console.log("signup==>>",req.body);
-    //     if (!req.body.email || !req.body.password)
-    //         Response.sendResponseWithData(res, resCode.INTERNAL_SERVER_ERROR, "email_id and password are required**");
-    //     else {
-    //         userSchema.findOne({ email: req.body.email, status: "ACTIVE" }, async (err, result) => {
-    //             if (err)
-    //                 Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.INTERNAL_SERVER_ERROR);
-    //             else if (result)
-    //                 Response.sendResponseWithoutData(res, resCode.ALREADY_EXIST, `EmailId already exists with ${result.userType} account`);
-    //             else {
-    //                 // var token = req.body.stripe_token; // Using Express
-    //                 // Sameer
-    //                 const result = await stripe.createToken('account', {
-    //                     legal_entity: {
-    //                       first_name: 'Pramod',
-    //                       last_name: 'Gauri',
-    //                       address: {
-    //                         line1: 'Varanasi',
-    //                         city: 'dasd',
-    //                         state: 'gorakhpur',
-    //                         postal_code: 22120
-    //                       },
-    //                     },
-    //                     tos_shown_and_accepted: true,
-    //                   });
-    //                   var token = result.token
-    //                   console.log("token------>>",token)
-    //                   // Sameer
-    //                 stripe.accounts.create({   country: 'US',
-    //                 type: 'custom',
-    //                 account_token: token},
-    //                 // console.log("***************",account_token)
-    //                 ).then(function (acct) { // asynchronously called })
-    //                // console.log("____________",country, type, account_token)
-    //                 console.log("*******************",acct)
-    //                 console.log("verify strip acc++++>>>>>>>",acct.id)
-    //                 req.body.stripeAccountId=acct.id
 
-    //                 // if (err_) {
-    //                     //     console.log(error)
-    //                     //     Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.INTERNAL_SERVER_ERROR)
-    //                     // }
-    //                     // else{
-                        
-    //                         var retVal = "";
-    //                         const saltRounds = 10;
-    //                         retVal = req.body.password;
-    //                         bcrypt.genSalt(saltRounds, (err, salt) => {
-    //                             bcrypt.hash(retVal, salt, (error, hash) => {
-    //                                 req.body.password = hash;
-    //                                 let user = new userSchema(req.body);
-    //                                 user.save({ lean: true }).then((result) => {
-    //                                     console.log("RESULT AFTER SIGNUP USER======>", result);
-    //                                     if (error) {
-    //                                         console.log(error)
-    //                                         Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.INTERNAL_SERVER_ERROR)
-    //                                     } else {
-    //                                         var result = result.toObject();
-    //                                         delete result.password;
-    //                                         Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "You have successfully signup.", result)
-    //                                         //  message.sendemail(result.email, "Your account for AQUA_LUDUS is created.", "Your email id is "+result.email+" and password is"+retVal, (err,success)=>{
-    //                                         //     if(success)
-    //                                         //     {
-    //                                         //         console.log("emailll",success)
-    //                                         //         Response.sendResponseWithData(res,resCode.EVERYTHING_IS_OK,"Signed up successfully.",result)
-    //                                         //     }                    
-    //                                         //  });
-    //                                     }
-    //                                 })
-    //                             })
-    //                         })
-    //             // }
-    //                 })
-    //             }
-
-    //         })
-    //     }
+    // "createStripeAccount": (req, res) => {
+    //     // console.log('stripe===>>>', stripe);
+    //     // return;
+    //     stripe.accounts.list(
+    //         // { limit: 3 },
+    //         function(err, accounts) {
+    //             console.log('accounts==>>', accounts);
+    //           // asynchronously called
+    //         }
+    //     );
+    //     stripe.tokens.create({
+    //         // card: {
+    //         //   "number": '378282246310005',
+    //         //   "exp_month": 12,
+    //         //   "exp_year": 2019,
+    //         //   "cvc": '123'
+    //         // },            
+    //     }).then((result) => {
+    //         console.log('token==>>>', result);
+    //         if (result) {
+    //             var token = 'result.id'; // Using Express //////tok_visa
+    //             stripe.accounts.create({type: "custom", account_token: token, })
+    //                 .then(function (acct) {
+    //                     console.log('acct==>>>', acct);
+    //                     // asynchronously called
+    //                 });
+    //         }
+    //     });
     // },
+
+
 
     //......................................................................Login API....................................................................... //
     "login": (req, res) => {
@@ -232,7 +223,6 @@ module.exports = {
             })
         }
     },
-
 
     // else{
     //     User.findOneAndUpdate({email:req.body.email,status:"ACTIVE"},{$set:{deviceToken:req.body.deviceToken,deviceType:req.body.deviceType}},{new:true},(error,result)=>{

@@ -17,14 +17,14 @@ router.post('/addEvent',authHandler.verifyToken,Business.addEvent);
  router.post('/rejectEventStatus',authHandler.verifyToken,Business.rejectEventStatus);
  router.post('/bookingEvent',authHandler.verifyToken,Business.bookingEvent);
  //router.post('/booking',authHandler.verifyToken,Business.booking);
- router.post('/booking',authHandler.verifyToken,Business.booking);
+ router.post('/booking',Business.booking);
  router.post('/eventDescription',authHandler.verifyToken,Business.eventDescription);
  router.post('/filterEvent',authHandler.verifyToken,Business.filterEvent);
  router.post('/myBookingShow',authHandler.verifyToken,Business.myBookingShow);
  router.post('/filterEventsPending',authHandler.verifyToken,Business.filterEventsPending);
  router.post('/filterEventsConfirm',authHandler.verifyToken,Business.filterEventsConfirm);
  //router.post('/bookingEvent',authHandler.verifyToken,Business.bookingEvent);
- router.post('/addCustomerFeedback',authHandler.verifyToken,Business.addCustomerFeedback);
+ router.post('/addCustomerFeedback',Business.addCustomerFeedback);
  router.post('/viewCustomerFeedback',authHandler.verifyToken,Business.viewCustomerFeedback);//////////
  router.post('/myEventFeedback',authHandler.verifyToken,Business.myEventFeedback);/////////
  router.get('/allFeedbackViews',authHandler.verifyToken,Business.allFeedbackViews);/////////

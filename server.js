@@ -10,9 +10,9 @@ const CronJob = require('cron').CronJob;
 const cron = require('node-cron');
 const asyncLoop = require('node-async-loop');
 var booking = require("./models/bookingModel.js")
-const keyPublishable = 'pk_test_NkhYVArGE07qHgai7PuO6Bbm';
-const keySecret = 'sk_test_4Sht4ZSKz8eUDCaiXP5pGfs6';
+const keySecret = 'sk_test_c1fuFQmWKd4OZeCThFOtLFuY';
 const stripe = require("stripe")(keySecret);
+const keyPublishable = 'pk_test_NS4RiEEZeWMhQEcxYsEfRH5J';
 
 const cors = require('cors');
 const path = require('path');
@@ -94,7 +94,7 @@ console.log(" inside crone)))))))))")
                             console.log("succ1------>",succ1)
                             return stripe.refunds.create({
                                 charge: succ1.chargeId,
-                                amount: (succ1.eventPrice),
+                                amount: (succ1.eventPrice)*100,
                             }, function (err, refund) {
                                 if (err) {
                                     console.log("err in refunds", err)
