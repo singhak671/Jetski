@@ -68,13 +68,15 @@ module.exports = {
     // },
 
 
+
     "signup": function (req, res) {
         console.log("signup==>>", req.body);
 
         if (!req.body.email || !req.body.password)
             Response.sendResponseWithData(res, resCode.INTERNAL_SERVER_ERROR, "email_id and password are required**");
         else {
-            userSchema.findOne({ email: req.body.email, status: "ACTIVE" }, async (err, result) => {
+            userSchema.findOne({ $or: [{ status: { $in: ["ACTIVE", "BLOCK"] } }], email: req.body.email }, async (err, result) => {
+                // userSchema.findOne( {$or:[{ status:"ACTIVE"}, {status:"BLOCK"}], email:req.body.email } , async (err, result) => {
                 if (err)
                     Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.INTERNAL_SERVER_ERROR);
                 else if (result)
@@ -498,29 +500,30 @@ module.exports = {
         userSchema.findById(req.headers._id, (err, success) => {
             if (err) {
                 console.log("Data of change pass>>>>>>>>>>>>>>", err)
-                return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.INTERNAL_SERVER_ERROR);
+                return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG);
             }
             if (!success)
                 return Response.sendResponseWithData(res, resCode.NOT_FOUND, "USER NOT EXIST");
-            //   //success
+                           //   //success
             {
-                bcrypt.compare(req.body.oldPassword, success.password, (err, result) => {
-                    console.log("err>>>>>>", err, "result of change>>>>", result);
-                    if (result) {
+                bcrypt.compare(req.body.oldPassword, success.password, (err1, result1) => {
+                    console.log("err>>>>>>", err1, "result of change>>>>", result1);
+                    if (result1) {
                         if (req.body.newPassword != req.body.confirmPassword) {
-                            return Response.sendResponseWithoutData(res, resCode.BAD_REQUEST, resMessage.NEW_CONFIRM_INCORRECT);
+                            return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, "New password and confirmed password should be same");
                         }
                         let salt = bcrypt.genSaltSync(10);
-                        success.password = bcrypt.hashSync(req.body.newPassword, salt)
-                        success.save((err, success) => {
-                            if (err) {
-                                return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.INTERNAL_SERVER_ERROR);
+                        let newPassword = bcrypt.hashSync(req.body.newPassword, salt);
+                        userSchema.update({ _id: req.headers._id }, { $set: { 'password': newPassword } }, { new: true }).exec((err2, succ2) => {
+                            if (err2) {
+                                return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG);
                             } else {
 
                                 Response.sendResponseWithoutData(res, resCode.EVERYTHING_IS_OK, resMessage.PASSWORD_UPDATE_SUCCESS);
 
                             }
-                        })
+
+                        })                        
                     } else {
                         return Response.sendResponseWithoutData(res, resCode.BAD_REQUEST, resMessage.OLD_PASSWORD_INCORRECT);
                     }
