@@ -285,10 +285,10 @@ module.exports = {
         var query = { status: "ACTIVE" };
         let options = {
             page: req.body.pageNumber || 1,
-            select: 'period eventAddress eventCreated_At eventImage offset duration eventName status eventDescription eventPrice ',
+            select: 'period eventAddress createdAt eventImage offset duration eventName status eventDescription eventPrice ',
             // limit: req.body.limit || 5,
             // match:{query},
-            sort: { eventCreated_At: -1 },
+            sort: { createdAt: -1 },
             populate: { path: 'userId', select: 'profilePic businessName name status', match: { status: "ACTIVE" } },
             lean: true
         }
