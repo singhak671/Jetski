@@ -73,20 +73,35 @@ module.exports = {
     },
  
  
-    // "signup": function (req, res) {
+    // "signup":  function (req, res) {
     //     //   console.log("signup==>>",req.body);
     //     if (!req.body.email || !req.body.password)
     //         Response.sendResponseWithData(res, resCode.INTERNAL_SERVER_ERROR, "email_id and password are required**");
     //     else {
-    //         userSchema.findOne({ email: req.body.email, status: "ACTIVE" }, (err, result) => {
+    //         userSchema.findOne({ email: req.body.email, status: "ACTIVE" }, async (err, result) => {
     //             if (err)
     //                 Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.INTERNAL_SERVER_ERROR);
     //             else if (result)
     //                 Response.sendResponseWithoutData(res, resCode.ALREADY_EXIST, `EmailId already exists with ${result.userType} account`);
     //             else {
-    //                 var token = req.body.stripe_token; // Using Express
-    //                 console.log("token------>>",token)
-                  
+    //                 // var token = req.body.stripe_token; // Using Express
+    //                 // Sameer
+    //                 const result = await stripe.createToken('account', {
+    //                     legal_entity: {
+    //                       first_name: 'Pramod',
+    //                       last_name: 'Gauri',
+    //                       address: {
+    //                         line1: 'Varanasi',
+    //                         city: 'dasd',
+    //                         state: 'gorakhpur',
+    //                         postal_code: 22120
+    //                       },
+    //                     },
+    //                     tos_shown_and_accepted: true,
+    //                   });
+    //                   var token = result.token
+    //                   console.log("token------>>",token)
+    //                   // Sameer
     //                 stripe.accounts.create({   country: 'US',
     //                 type: 'custom',
     //                 account_token: token},
