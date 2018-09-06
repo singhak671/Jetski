@@ -149,31 +149,57 @@ module.exports = {
 
     //-------------------------------------------------------------------------------All Event at business site before login-----------------------------------------------------------------//
     'allEvent': (req, res) => {
-        //console.log("get al customer")
-        var query = {};
+       //console.log("get al customer")
+        //var durationArr = [];
+        var doc_arr = [];
+        var result_new;
+        var query = { status: "ACTIVE" };
         let options = {
-            page: req.params.pageNumber,
-            select: 'eventAddress duration  eventImage eventName eventDescription eventPrice ',
-            limit: 5,
-            //sort: ,
-            //password:0,
-            lean: false,
-            //populate: { path: 'userId', select: 'profilePic name' },
+            page: req.body.pageNumber || 1,
+            select: 'period eventAddress createdAt eventImage offset duration eventName status eventDescription eventPrice ',
+             limit: req.body.limit || 5,
+            // match:{query},
+            sort: { createdAt: -1 },
+            populate: { path: 'userId', select: 'profilePic businessName name status', match: { status: "ACTIVE" } },
+            lean: true
         }
-
+        //success
         eventSchema.paginate(query, options, (error, result) => {
             if (error)
                 response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR)
             else if (result.docs.length == 0)
                 response.sendResponseWithData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND)
             else {
-                console.log("result is" + JSON.stringify(result))
-                result.map(x => delete x['password'])
-                response.sendResponseWithPagination(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result);
+                waterfall([
+                    function (callback) {
+                        var result_new = result;
+                        if (result.docs.length != 0) {
+                            result.docs.map(x => x.duration = filterFutureEvent(x.duration, x.offset))
+                            result.docs.map(x => x.duration = x.duration.filter(y => y.isExpired == false))
+                            result.docs.map(x => x.duration.length > 0 ? x.duration.map(z => z.times = z.times.filter(k => k.isExpired == false)) : null);
+                            result.docs.map(x => x.duration = x.duration.filter(y => y.times.length != 0))
+                            result.docs = result.docs.filter(x => x.duration.length != 0);
+                            if (result.docs.length != 0)
+                                callback(null, result);
+                            else
+                                callback(null, result);
+
+                        } else {
+                            callback(null, result);
+                        }
+
+                        //callback(null, result);
+                    }
+                ], (err, result) => {
+                    if (result.docs.length == 0)
+                        response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found..")
+                    else
+                        response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result)
+                })
             }
         })
-        // })
     },
+
 
     //-------------------------------------------------------------------------------Describe  particular event after login-----------------------------------------------------------------//
 
