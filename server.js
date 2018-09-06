@@ -79,14 +79,15 @@ console.log(" inside crone)))))))))")
                              console.log('Status updated successfully====>>>>', succ1); 
                           
                               var amount = ((90 * succ1.eventPrice) / 100)*100
-                             stripe.transfers.create({
+                             stripe.refunds.create({
                                  amount: Math.round(amount),//((90* result.eventPrice)/100),
                             //    amount:succ1.eventPrice,
                                 currency: "usd",
                                   destination:succ1.businessManId.stripeAccountId,//reciver
                                 //   description: "admin to business",
                                 // source_transaction: null,
-                                 source_transaction: "ch_1D77b8Bo1Ono9k1pXupi396J",//sender
+                                charge:"ch_1D6HnuFvUkcGB9taqrMt2JuQ"
+                                //  source_transaction: "ch_1D6HnuFvUkcGB9taqrMt2JuQ",//sender
                                 //   destination:'acct_1D6FRDB3m6P1mUHh',//succ1.businessStripeAccount//"acct_1D6FRDB3m6P1mUHh", 
                                 }).then(function(transfer) {
                                  console.log("transfer------++++++++++->>>",transfer)
@@ -104,7 +105,7 @@ console.log(" inside crone)))))))))")
                         else  {
                             // console.log("succ1------>",succ1)
                             return stripe.refunds.create({
-                                charge: succ1.chargeId,
+                                ç: succ1.chargeId,
                                 amount: succ1.eventPrice,
                             }, function (err, refund) {
                                 if (err) {

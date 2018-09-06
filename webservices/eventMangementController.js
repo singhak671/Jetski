@@ -682,8 +682,10 @@ module.exports = {
                         console.log(`confirm event status result_------------->${JSON.stringify(result_)}`)
 
                         event = result_.eventName;
-                        console.log(result.userId.deviceToken, 'Event Confirmation!!', event + ' Event is Confirmed...!', result.businessManId, result.userId._id, result.userId.profilePic, result.userId.name)
-                        notification.single_notification(result.userId.deviceToken, 'Event Confirmation!!', event + ' Event is Confirmed...!', result.businessManId, result.userId._id, result.userId.profilePic, result.userId.name)
+                        console.log(result.userId.deviceToken, 'Event Confirmation!!', event + ' Event is Confirmed...!',  result.userId._id, result.userId.profilePic, result.userId.name)
+                        notification.single_notificationForWeb(result.userId.deviceToken, 'Event Confirmation!!', event + ' Event is Confirmed...!', result.userId._id, result.userId.profilePic, result.userId.name)
+
+                       // notification.single_notification(result.userId.deviceToken, 'Event Confirmation!!', event + ' Event is Confirmed...!', result.businessManId, result.userId._id, result.userId.profilePic, result.userId.name)
                         response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Event status is confirmed")
                     }
                 })
@@ -726,13 +728,14 @@ module.exports = {
                                 }, function (err, refund) {
                                     if (err) {
                                         console.log("err in refunds", err)
-                                        notification.single_notification(result.userId.deviceToken, 'Payment Issue Occur', event + 'Error occur during payment as the amount has already been refunded. ', result.businessManId, result.userId._id, result.userId.profilePic, result.userId.name)
+                                       // notification.single_notification(result.userId.deviceToken, 'Payment Issue Occur', event + 'Error occur during payment as the amount has already been refunded. ', result.businessManId, result.userId._id, result.userId.profilePic, result.userId.name)
                                         response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Error occur during payment as the amount has already been refunded.")
                                     }
                                     else {
                                         console.log('success refund-->', refund)
-                                        console.log('noti result==========>', result.userId.deviceToken, 'Event Cancelled!!', event + ' Event is Cancelled...!', result.businessManId, result.userId._id, result.userId.profilePic, result.userId.name)
-                                        notification.single_notification(result.userId.deviceToken, 'Event Cancelled!!', event + ' Event is Cancelled...!', result.businessManId, result.userId._id, result.userId.profilePic, result.userId.name)
+                                        console.log('noti result==========>', result.userId.deviceToken, 'Event Cancelled!!', event + ' Event is Cancelled...!',  result.userId._id, result.userId.profilePic, result.userId.name)
+                                    
+                                        notification.single_notificationForWeb(result.userId.deviceToken, 'Event Cancelled!!', event + ' Event is Cancelled...!', result.userId._id, result.userId.profilePic, result.userId.name)
                                         response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Event status is cancelled")
                                     }
 

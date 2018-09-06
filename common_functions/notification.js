@@ -110,7 +110,7 @@ var notifications = {
         });
     },
 //=======================================================Notification by fcm================================================================
-'single_notificationForWeb': (token,title,msg,bussinessId,customerId) => {
+'single_notificationForWeb': (token,title,msg,customerId,image,name) => {
     console.log(`Notification api hit`)
     var client = new Client();
     //var idArr = ['ebdbZ0Zgmkc:APA91bHbHeBbT__0Oor-nZunfGBWCUw23gkBLm1FvhQ7u30dfEdEzFxKDVe71SHkt9_Y68eueGCZ7yVuGdJN_SELrJgfeYf4nz9esINvts9My8-phyFqKuFXispIuCXQq1waroXvMNP7iJz6ORYCFTNlBdp28L55Qg','cOAjo2t143Q:APA91bErtsPQhPEhKeepyMQKihPMkOROAPP3RRduDJKzLLzlUNAATCrIRyW10dUa3JZ8zK1rRaIeeMqeNbNuS4PWy_0p9HcKA41k8MkbeQjdYUy--7_gNV13yIFM93IzHwBh5G3FAwk1LK2-XIzPBEzMVRNdf6ZYcA'];
@@ -127,7 +127,7 @@ var notifications = {
                 "icon":"icon"
               },
               "data":{
-                "param1":bussinessId,
+                "param1":'dsgfdsg',//bussinessId,
                 "param2":"valdfgdfgdfue2",
               },
                 // "to":"ebdbZ0Zgmkc:APA91bHbHeBbT__0Oor-nZunfGBWCUw23gkBLm1FvhQ7u30dfEdEzFxKDVe71SHkt9_Y68eueGCZ7yVuGdJN_SELrJgfeYf4nz9esINvts9My8-phyFqKuFXispIuCXQq1waroXvMNP7iJz6ORYCFTNlBdp28L55Qg",
@@ -144,11 +144,11 @@ var notifications = {
     client.post("https://fcm.googleapis.com/fcm/send", args, function (data, response) {
         // parsed response body as js object
         console.log("in post===>",JSON.stringify(data))
-        if(data.success){
+        if(data){
             console.log(`Object of noti ${JSON.stringify(data)}`);
             let obj = {
-                customerId:{cid:customerId},
-                bussinessId:{bid:bussinessId},
+                customerId:{cid:customerId,image:image,name:name},
+              //  bussinessId:{bid:bussinessId},
                 noti_type: 'BUSSINESS', 
                 content: msg
             };
@@ -167,51 +167,51 @@ var notifications = {
 },
 
 //============================================ Notification for web push ====================================================================
-'push': (title,body,subscription1,email,bussinessId)=> {
-    //console.log("request for push-------->",JSON.stringify(req.body))
-    console.log("inside push")
-    const subscription=subscription1;
-    const message = {
-        title: title,
-       // 'icon': req.body.icon,
-        body: body,
-       // 'url': req.body.link
-      };//req.body.message;
-    // payload: JSON.stringify({
-    //     'title': req.body.title,
-    //     'icon': req.body.icon,
-    //     'body': req.body.body,
-    //     'url': req.body.link
-    //   }),
-    const options = {
-        gcmAPIKey: 'AIzaSyBhBx_hxg8QUCbjo_D3gb-dHFY_APurdl8',
-        TTL: 24 * 60 * 60,
-        vapidDetails: {
-          subject: email,//req.body.email,//'mailto:sender@example.com',
-          publicKey: 'BDqxMfc7QPfi5AFUMvO8ciGMsTSWIVzcPvPUZvEhH33Z8iS2br8lLBIHkQfhcqElyy2GAk11UxIFlVQhJzzK34U',//vapidKeys.publicKey,
-          privateKey: 'yS4QUTovZQASwXRx9IiVBXLnIkFl9-Q70AO3lMgDrs0'//vapidKeys.privateKey
-        },
-      }
-      console.log("%%%%%%%%%%%%%%%%%%",subscription,')))))))))))))))))',message,"^^^^^^^^^^^^^^^^^^",options)
-            let obj = {
-              //  userIds: ids.map(x =>  {let obj={uid:x}; return obj}),
-                bussinessId:{bid:bussinessId},
-                noti_type: 'BUSSINESS', 
-                content: message.body
-            };
-           // let noti  = new Noti(obj);
-            var webNoti=new Noti(obj)
-            webNoti.save((err,result)=>{
-               if(err) 
-               console.log("err occur",err)
-                else{
-                    console.log("result saved",result)
-                    return  webpush.sendNotification(subscription,message,options);
-                    console.log("web api hit............")
-                }
-            })
-            //response.sendResponseWithoutData(res, resCode.EVERYTHING_IS_OK, 'Notification send')       
-    }
+// 'push': (title,body,subscription1,email,bussinessId)=> {
+//     //console.log("request for push-------->",JSON.stringify(req.body))
+//     console.log("inside push")
+//     const subscription=subscription1;
+//     const message = {
+//         title: title,
+//        // 'icon': req.body.icon,
+//         body: body,
+//        // 'url': req.body.link
+//       };//req.body.message;
+//     // payload: JSON.stringify({
+//     //     'title': req.body.title,
+//     //     'icon': req.body.icon,
+//     //     'body': req.body.body,
+//     //     'url': req.body.link
+//     //   }),
+//     const options = {
+//         gcmAPIKey: 'AIzaSyBhBx_hxg8QUCbjo_D3gb-dHFY_APurdl8',
+//         TTL: 24 * 60 * 60,
+//         vapidDetails: {
+//           subject: email,//req.body.email,//'mailto:sender@example.com',
+//           publicKey: 'BDqxMfc7QPfi5AFUMvO8ciGMsTSWIVzcPvPUZvEhH33Z8iS2br8lLBIHkQfhcqElyy2GAk11UxIFlVQhJzzK34U',//vapidKeys.publicKey,
+//           privateKey: 'yS4QUTovZQASwXRx9IiVBXLnIkFl9-Q70AO3lMgDrs0'//vapidKeys.privateKey
+//         },
+//       }
+//       console.log("%%%%%%%%%%%%%%%%%%",subscription,')))))))))))))))))',message,"^^^^^^^^^^^^^^^^^^",options)
+//             let obj = {
+//               //  userIds: ids.map(x =>  {let obj={uid:x}; return obj}),
+//                 bussinessId:{bid:bussinessId},
+//                 noti_type: 'BUSSINESS', 
+//                 content: message.body
+//             };
+//            // let noti  = new Noti(obj);
+//             var webNoti=new Noti(obj)
+//             webNoti.save((err,result)=>{
+//                if(err) 
+//                console.log("err occur",err)
+//                 else{
+//                     console.log("result saved",result)
+//                     return  webpush.sendNotification(subscription,message,options);
+//                     console.log("web api hit............")
+//                 }
+//             })
+//             //response.sendResponseWithoutData(res, resCode.EVERYTHING_IS_OK, 'Notification send')       
+//     }
 
 // 'notificationForWeb': (pushSubscription,title,msg,bussinessId) => {
 //     console.log(`web noti api hit`)

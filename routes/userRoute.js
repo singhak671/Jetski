@@ -24,6 +24,8 @@ router.post('/postReviews',authHandler.verifyToken,User.postReviews);
 router.get('/viewReviews',User.viewReviews);
 
 
+
+router.post('/createStripeAccount',User.createStripeAccount)
  
 
 

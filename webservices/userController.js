@@ -84,7 +84,24 @@ module.exports = {
                 else if (result)
                     Response.sendResponseWithoutData(res, resCode.ALREADY_EXIST, `EmailId already exists with ${result.userType} account`);
                 else {
-                  
+                    // stripe.tokens.create({
+                    //     card: {
+                    //        "number": '378282246310005',
+                    //    "exp_month": 12,
+                    //       "exp_year": 2019,
+                    //        "cvc": '123'
+                    //      },            
+                    // }).then((result) => {
+                    //     console.log('token==>>>', result);
+                    //     if (result) {
+                    //         var token = 'result.id'; // Using Express //////tok_visa
+                    //         stripe.accounts.create({type: "custom", account_token: token, })
+                    //             .then(function (acct) {
+                    //                 console.log('acct==>>>', acct.id);
+                    //                 // asynchronously called
+                    //             });
+                    //     }
+                    // }); 
                     stripe.accounts.create({
                         type: 'custom',
                         country: 'US',
@@ -131,47 +148,70 @@ module.exports = {
     },
 
     "createStripeAccount": (req, res) => {
-        // console.log('stripe===>>>', stripe);
+
+
+    //     var stripe = require('stripe')('sk_test_...');
+
+    //     stripe.customers.create(
+    //       { email: 'customer@example.com' },
+    //       function(err, customer) {
+    //         // asynchronously called
+    //         if (err) return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
+    //         else {
+    //             //   console.log(account)
+    //             console.log("businessdsfghj++++++++",customer)
+    //         }
+    //         //   console.log("error++>>>>>",err ,   "success++++++++>>>>>>>>",account)
+    //     });
+    // },
+
+
+        //  console.log('stripe===>>>', stripe);
         // return;
-        /* stripe.accounts.list(
-            // { limit: 3 },
-            function(err, accounts) {
-                console.log('accounts==>>', accounts);
-              // asynchronously called
-            }
-        );
+        //  stripe.accounts.list(
+        //     // { limit: 3 },
+        //     function(err, accounts) {
+        //         console.log('accounts==>>', accounts);
+        //       // asynchronously called
+        //     }
+        // );
         stripe.tokens.create({
-            // card: {
-            //   "number": '378282246310005',
-            //   "exp_month": 12,
-            //   "exp_year": 2019,
-            //   "cvc": '123'
-            // },            
+            card: {
+               "number": '378282246310005',
+           "exp_month": 12,
+              "exp_year": 2019,
+               "cvc": '123'
+             },            
         }).then((result) => {
-            console.log('token==>>>', result);
+             console.log('token==>>>', result);
             if (result) {
-                var token = 'result.id'; // Using Express //////tok_visa
-                stripe.accounts.create({type: "custom", account_token: token, })
+                var token = result.id;
+              console.log('token==>>>', result.id);     // Using Express //////tok_visa
+                stripe.accounts.create({
+                    country: "US",
+              type: "custom",
+                     account_token: token,
+                     })
                     .then(function (acct) {
                         console.log('acct==>>>', acct);
                         // asynchronously called
                     });
             }
-        }); */
+        }); 
 
-        stripe.accounts.create({
-            type: 'custom',
-            country: 'US',
-            email: 'bob@example.com'
-        }, function (err, account) {
-            // asynchronously called
-            if (err) return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
-            else {
-                //   console.log(account)
-                console.log(account.id)
-            }
-            //   console.log("error++>>>>>",err ,   "success++++++++>>>>>>>>",account)
-        });
+        // stripe.accounts.create({
+        //     type: 'custom',
+        //     country: 'US',
+        //     email: 'bob@example.com'
+        // }, function (err, account) {
+        //     // asynchronously called
+        //     if (err) return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
+        //     else {
+        //         //   console.log(account)
+        //         console.log("_+)(*&^%$#@!",account.id)
+        //     }
+        //     //   console.log("error++>>>>>",err ,   "success++++++++>>>>>>>>",account)
+        // });
     },
 
 
