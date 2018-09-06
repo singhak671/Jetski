@@ -68,9 +68,9 @@ module.exports = {
             chatSchema.findOne({ businessManId: req.body.businesssManId, customerId: req.body.customerId, eventId: req.body.eventId }).populate("message.senderId", "_id name profilePic").exec((err, succ) => {
                 if (err)
                     return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG);
-                if (!succ)
-                    return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found!");
-                else if (succ) {
+                // if (!succ)
+                //     return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found!");
+                else if (succ || !succ ) {
                     response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, succ);
                 }
 

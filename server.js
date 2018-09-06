@@ -10,9 +10,16 @@ const CronJob = require('cron').CronJob;
 const cron = require('node-cron');
 const asyncLoop = require('node-async-loop');
 var booking = require("./models/bookingModel.js")
+// const keySecret = 'sk_test_7OyC78h4UYqhcEiH2N2vcX9O';
+// const stripe = require("stripe")(keySecret);
+// const keyPublishable = 'pk_test_qd08fVES1IsBAD3CZEKs00ng';
 const keySecret = 'sk_test_c1fuFQmWKd4OZeCThFOtLFuY';
 const stripe = require("stripe")(keySecret);
 const keyPublishable = 'pk_test_NS4RiEEZeWMhQEcxYsEfRH5J';
+
+// const keySecret = 'sk_test_c1fuFQmWKd4OZeCThFOtLFuY';
+// const stripe = require("stripe")(keySecret);
+// const keyPublishable = 'pk_test_NS4RiEEZeWMhQEcxYsEfRH5J'
 
 const cors = require('cors');
 const path = require('path');
@@ -70,13 +77,16 @@ console.log(" inside crone)))))))))")
                             console.log('Error is====>>>>>', err1); 
                         else if (succ1) {
                              console.log('Status updated successfully====>>>>', succ1); 
-                            stripe.transfers.create({
-                                  amount: 100,
-                                  currency: "usd",
-                                 
-                                  destination: succ1.businessManId.stripeAccountId,
+                          
+                              var amount = ((90 * succ1.eventPrice) / 100)*100
+                             stripe.transfers.create({
+                                 amount: Math.round(amount),//((90* result.eventPrice)/100),
+                            //    amount:succ1.eventPrice,
+                                currency: "usd",
+                                  destination:succ1.businessManId.stripeAccountId,//reciver
                                 //   description: "admin to business",
-                                   source_transaction: "acct_1D6trWBo1Ono9k1p",
+                                // source_transaction: null,
+                                 source_transaction: "ch_1D77b8Bo1Ono9k1pXupi396J",//sender
                                 //   destination:'acct_1D6FRDB3m6P1mUHh',//succ1.businessStripeAccount//"acct_1D6FRDB3m6P1mUHh", 
                                 }).then(function(transfer) {
                                  console.log("transfer------++++++++++->>>",transfer)
@@ -95,7 +105,7 @@ console.log(" inside crone)))))))))")
                             // console.log("succ1------>",succ1)
                             return stripe.refunds.create({
                                 charge: succ1.chargeId,
-                                amount: (succ1.eventPrice)*100,
+                                amount: succ1.eventPrice,
                             }, function (err, refund) {
                                 if (err) {
                                     console.log("err in refunds", err)

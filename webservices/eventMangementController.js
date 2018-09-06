@@ -11,9 +11,12 @@ var booking = require("../models/bookingModel.js")
 var feedback = require("../models/customerFeedbackModel.js")
 const waterfall = require('async-waterfall')
 const async = require('async');
-const keyPublishable = 'pk_test_NS4RiEEZeWMhQEcxYsEfRH5J';
+// const keySecret = 'sk_test_7OyC78h4UYqhcEiH2N2vcX9O';
+// const stripe = require("stripe")(keySecret);
+// const keyPublishable = 'pk_test_qd08fVES1IsBAD3CZEKs00ng';
 const keySecret = 'sk_test_c1fuFQmWKd4OZeCThFOtLFuY';
 const stripe = require("stripe")(keySecret);
+const keyPublishable = 'pk_test_NS4RiEEZeWMhQEcxYsEfRH5J';
 const notification = require('../common_functions/notification');
 const Noti = require('../models/notificationModel');
 var userSchema = require("../models/userModel");
@@ -286,7 +289,7 @@ module.exports = {
         let options = {
             page: req.body.pageNumber || 1,
             select: 'period eventAddress createdAt eventImage offset duration eventName status eventDescription eventPrice ',
-            // limit: req.body.limit || 5,
+             limit: req.body.limit || 5,
             // match:{query},
             sort: { createdAt: -1 },
             populate: { path: 'userId', select: 'profilePic businessName name status', match: { status: "ACTIVE" } },

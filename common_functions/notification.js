@@ -137,7 +137,7 @@ var notifications = {
                 "restricted_package_name":""
          },
         headers: { "Content-Type": "application/json", 
-                    "Authorization":"key=AAAARpGrUOI:APA91bG8gyXxS6RpMzYKI_O_yCCZsuvy56AYTmzA4Hk1jVamkG_i43EkpH04Is2M9sIvP_rlMZ3i5WVb8xfBlzRQ-Fu-xphIZbey6znFDmLjQKw74P8bwXdpPppOUxe-maDVupUMSo1n"
+                   "Authorization":"key=AAAARpGrUOI:APA91bG8gyXxS6RpMzYKI_O_yCCZsuvy56AYTmzA4Hk1jVamkG_i43EkpH04Is2M9sIvP_rlMZ3i5WVb8xfBlzRQ-Fu-xphIZbey6znFDmLjQKw74P8bwXdpPppOUxe-maDVupUMSo1n"
                  }
     };
     
