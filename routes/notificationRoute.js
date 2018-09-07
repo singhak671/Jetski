@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const notification = require('../webservices/notificationController');
-//const auth_handler =require('../middleware/auth_handler');
+const authHandler = require('../middleware/auth_handler');
 
 
 //  router.post('/saveToken',notification.saveToken);
@@ -12,10 +12,10 @@ const notification = require('../webservices/notificationController');
 //  router.post('/unsubscribe',notification.unsubscribe);
 //  router.post('/notify',notification.notify);
  //router.post('/push',notification.push);
- router.post('/customerNotification',notification.customerNotification);
-router.post('/notificationList',notification.notificationList);
-router.get('/unreadCount/:bussinessId',notification.unreadCount)
-router.get('/updateReadStatus/:bussinessId',notification.updateReadStatus)
+ router.post('/customerNotification',authHandler.verifyToken,notification.customerNotification);
+router.post('/notificationList',authHandler.verifyToken,notification.notificationList);
+router.get('/unreadCount/:bussinessId',authHandler.verifyToken,notification.unreadCount)
+router.get('/updateReadStatus/:bussinessId',authHandler.verifyToken,notification.updateReadStatus)
 
 
 // router.post('/paticularNotificationDetail', auth_handler.auth_func,notification.paticularNotificationDetail);

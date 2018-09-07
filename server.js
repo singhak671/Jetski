@@ -10,16 +10,18 @@ const CronJob = require('cron').CronJob;
 const cron = require('node-cron');
 const asyncLoop = require('node-async-loop');
 var booking = require("./models/bookingModel.js")
-// const keySecret = 'sk_test_7OyC78h4UYqhcEiH2N2vcX9O';
-// const stripe = require("stripe")(keySecret);
-// const keyPublishable = 'pk_test_qd08fVES1IsBAD3CZEKs00ng';
-const keySecret = 'sk_test_c1fuFQmWKd4OZeCThFOtLFuY';
+const keySecret = 'sk_test_7OyC78h4UYqhcEiH2N2vcX9O';//client
 const stripe = require("stripe")(keySecret);
-const keyPublishable = 'pk_test_NS4RiEEZeWMhQEcxYsEfRH5J';
 
-// const keySecret = 'sk_test_c1fuFQmWKd4OZeCThFOtLFuY';
-// const stripe = require("stripe")(keySecret);
-// const keyPublishable = 'pk_test_NS4RiEEZeWMhQEcxYsEfRH5J'
+//  const keySecret = 'sk_test_c1fuFQmWKd4OZeCThFOtLFuY';//pramod
+
+
+// const keySecret = ' sk_test_If8VjcOB09CxnrxnZiUXeM0Q';//////sir sect key
+
+
+// const keySecret = 'sk_test_c1fuFQmWKd4OZeCThFOtLFuY';//pramod
+
+const keyPublishable = 'pk_test_NS4RiEEZeWMhQEcxYsEfRH5J'
 
 const cors = require('cors');
 const path = require('path');
@@ -46,13 +48,13 @@ res.sendFile(__dirname + '/dist/index.html')
 
 //-------------------------------cron started -------------------------------------
 
-cron.schedule('0 * * * *', () => {
+cron.schedule('* * * * *', () => {
 console.log(" inside crone)))))))))")
     booking.find({}).exec((err, succ) => {
         asyncLoop(succ, (item, next) => {
             var result = item.duration[0].date.formatted + "T" + item.duration[0].times[0].time + ":00.000Z"
             // "2018-08-30T15:23:00.000Z"
-             console.log("i am here ....>>>>", result)
+            //  console.log("i am here ....>>>>", result)
             var newTime = new Date(result)
             var temp = new Date(result).getTime()
             // var c=temp+19800000
@@ -81,16 +83,18 @@ console.log(" inside crone)))))))))")
                             //   var amount = ((90 * succ1.eventPrice) / 100)*100
                             stripe.transfers.create({
                                 //  amount: Math.round(amount),//((90* result.eventPrice)/100),
-                                amount:100,
+                                amount:1,
                                 currency: "usd",
                                   destination:"acct_1D7NdbA6i0llgOyk",//reciver
+                                  source_type:"bank_account"
                                 //   description: "admin to business",
                                 // source_transaction: null,
                                 // charge:"ch_1D6HnuFvUkcGB9taqrMt2JuQ"
                                 // source_transaction: "ch_1D6HnuFvUkcGB9taqrMt2JuQ",//sender
                                 //   destination:'acct_1D6FRDB3m6P1mUHh',//succ1.businessStripeAccount//"acct_1D6FRDB3m6P1mUHh", 
-                                }).then(function(transfer) {
-                                 console.log("transfer------++++++++++->>>",transfer)
+                                }).then(function(err, transfer) {
+                                    console.log("err------++++++++++->>>",err)
+                                    console.log("transfer------++++++++++->>>",transfer)
                                 });
                             next();
                         }

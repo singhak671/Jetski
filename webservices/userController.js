@@ -16,12 +16,13 @@ const notification = require('../common_functions/notification');
 const Noti = require('../models/notificationModel');
 // var waterfall = require("async-waterfall");
 const async = require('async');
-// const keySecret = 'sk_test_7OyC78h4UYqhcEiH2N2vcX9O';
-// const stripe = require("stripe")(keySecret);
-// const keyPublishable = 'pk_test_qd08fVES1IsBAD3CZEKs00ng';
-const keySecret = 'sk_test_c1fuFQmWKd4OZeCThFOtLFuY';
+const keySecret = 'sk_test_7OyC78h4UYqhcEiH2N2vcX9O';//client
 const stripe = require("stripe")(keySecret);
-const keyPublishable = 'pk_test_NS4RiEEZeWMhQEcxYsEfRH5J';
+const keyPublishable = 'pk_test_qd08fVES1IsBAD3CZEKs00ng';
+//  const keySecret = 'sk_test_c1fuFQmWKd4OZeCThFOtLFuY';   //pramod
+//  const keySecret = ' sk_test_If8VjcOB09CxnrxnZiUXeM0Q';////sir secret key
+// const stripe = require("stripe")(keySecret);
+// const keyPublishable = 'pk_test_NS4RiEEZeWMhQEcxYsEfRH5J';
 module.exports = {
 
     //.................................................................Signup API ..........................................................................//
@@ -150,54 +151,62 @@ module.exports = {
     "createStripeAccount": (req, res) => {
 
 
-    //     var stripe = require('stripe')('sk_test_...');
+    // //     var stripe = require('stripe')('sk_test_...');
 
-    //     stripe.customers.create(
-    //       { email: 'customer@example.com' },
-    //       function(err, customer) {
-    //         // asynchronously called
-    //         if (err) return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
-    //         else {
-    //             //   console.log(account)
-    //             console.log("businessdsfghj++++++++",customer)
+    // //     stripe.customers.create(
+    // //       { email: 'customer@example.com' },
+    // //       function(err, customer) {
+    // //         // asynchronously called
+    // //         if (err) return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
+    // //         else {
+    // //             //   console.log(account)
+    // //             console.log("businessdsfghj++++++++",customer)
+    // //         }
+    // //         //   console.log("error++>>>>>",err ,   "success++++++++>>>>>>>>",account)
+    // //     });
+    // // },
+
+
+    //     //  console.log('stripe===>>>', stripe);
+    //     // return;
+    //     //  stripe.accounts.list(
+    //     //     // { limit: 3 },
+    //     //     function(err, accounts) {
+    //     //         console.log('accounts==>>', accounts);
+    //     //       // asynchronously called
+    //     //     }
+    //     // );
+    //     stripe.tokens.create({
+    //         card: {
+    //            "number": '378282246310005',
+    //        "exp_month": 12,
+    //           "exp_year": 2019,
+    //            "cvc": '123'
+    //          },            
+    //     }).then((result) => {
+    //          console.log('token==>>>', result);
+    //         if (result) {
+    //             var token = result.id;
+    //           console.log('token==>>>', result.id);     // Using Express //////tok_visa
+    //             stripe.accounts.create({
+    //                 country: "US",
+    //           type: "custom",
+    //                  account_token: token,
+    //                  })
+    //                 .then(function (acct) {
+    //                     console.log('acct==>>>', acct);
+    //                     // asynchronously called
+    //                 });
     //         }
-    //         //   console.log("error++>>>>>",err ,   "success++++++++>>>>>>>>",account)
-    //     });
-    // },
+    //     }); 
+      
+      
+       
 
-
-        //  console.log('stripe===>>>', stripe);
-        // return;
-        //  stripe.accounts.list(
-        //     // { limit: 3 },
-        //     function(err, accounts) {
-        //         console.log('accounts==>>', accounts);
-        //       // asynchronously called
-        //     }
-        // );
-        stripe.tokens.create({
-            card: {
-               "number": '378282246310005',
-           "exp_month": 12,
-              "exp_year": 2019,
-               "cvc": '123'
-             },            
-        }).then((result) => {
-             console.log('token==>>>', result);
-            if (result) {
-                var token = result.id;
-              console.log('token==>>>', result.id);     // Using Express //////tok_visa
-                stripe.accounts.create({
-                    country: "US",
-              type: "custom",
-                     account_token: token,
-                     })
-                    .then(function (acct) {
-                        console.log('acct==>>>', acct);
-                        // asynchronously called
-                    });
-            }
-        }); 
+stripe.balance.retrieve(function(err, balance) {
+  // asynchronously called
+  console.log("show balance>>>>>>>>>>>>>++++++++++",balance)
+});
 
         // stripe.accounts.create({
         //     type: 'custom',

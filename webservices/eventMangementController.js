@@ -11,12 +11,15 @@ var booking = require("../models/bookingModel.js")
 var feedback = require("../models/customerFeedbackModel.js")
 const waterfall = require('async-waterfall')
 const async = require('async');
-// const keySecret = 'sk_test_7OyC78h4UYqhcEiH2N2vcX9O';
-// const stripe = require("stripe")(keySecret);
-// const keyPublishable = 'pk_test_qd08fVES1IsBAD3CZEKs00ng';
-const keySecret = 'sk_test_c1fuFQmWKd4OZeCThFOtLFuY';
+const keySecret = 'sk_test_7OyC78h4UYqhcEiH2N2vcX9O';//client
 const stripe = require("stripe")(keySecret);
-const keyPublishable = 'pk_test_NS4RiEEZeWMhQEcxYsEfRH5J';
+const keyPublishable = 'pk_test_qd08fVES1IsBAD3CZEKs00ng';
+// const keySecret = 'sk_test_c1fuFQmWKd4OZeCThFOtLFuY';//pramod
+
+// const keySecret = ' sk_test_If8VjcOB09CxnrxnZiUXeM0Q';//////sir sect key
+
+// const stripe = require("stripe")(keySecret);
+// const keyPublishable = 'pk_test_NS4RiEEZeWMhQEcxYsEfRH5J';
 const notification = require('../common_functions/notification');
 const Noti = require('../models/notificationModel');
 var userSchema = require("../models/userModel");
@@ -372,13 +375,13 @@ module.exports = {
         var query = { $or: [{ userId: req.body.userId, period: req.body.period, status: "ACTIVE" }, { userId: req.body.userId, status: "ACTIVE" }] }
         let options = {
             // page: req.params.pageNumber,
-            select: 'period eventAddress eventCreated_At eventImage offset duration eventName userId status eventDescription eventPrice ',
+            select: 'period eventAddress createdAt eventImage offset duration eventName userId status eventDescription eventPrice ',
             limit: req.body.limit || 10,
             page: req.body.pageNumber || 1,
             // match:{query},
-            sort: { eventCreated_At: -1 },
+            sort: { createdAt: -1 },
             populate: {
-                path: 'services.eventId', select: 'eventAddress duration  eventImage eventCreated_At  eventName eventDescription period eventPrice ',
+                path: 'services.eventId', select: 'eventAddress duration  eventImage createdAt  eventName eventDescription period eventPrice ',
 
                 match: { status: "ACTIVE" }
             },
