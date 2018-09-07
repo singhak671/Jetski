@@ -11,7 +11,8 @@ var booking = require("../models/bookingModel.js")
 var feedback = require("../models/customerFeedbackModel.js")
 const waterfall = require('async-waterfall')
 const async = require('async');
-const keySecret = 'sk_test_7OyC78h4UYqhcEiH2N2vcX9O';//client
+// const keySecret = 'sk_test_7OyC78h4UYqhcEiH2N2vcX9O';//client
+const keySecret = 'sk_test_RnCHCs3r4NmdEJ1Ex9nLfME5';//avanish
 const stripe = require("stripe")(keySecret);
 const keyPublishable = 'pk_test_qd08fVES1IsBAD3CZEKs00ng';
 // const keySecret = 'sk_test_c1fuFQmWKd4OZeCThFOtLFuY';//pramod
@@ -152,7 +153,7 @@ module.exports = {
 
     //-------------------------------------------------------------------------------All Event at business site before login-----------------------------------------------------------------//
     'allEvent': (req, res) => {
-       //console.log("get al customer")
+        //console.log("get al customer")
         //var durationArr = [];
         var doc_arr = [];
         var result_new;
@@ -160,7 +161,7 @@ module.exports = {
         let options = {
             page: req.body.pageNumber || 1,
             select: 'period eventAddress createdAt eventImage offset duration eventName status eventDescription eventPrice ',
-             limit: req.body.limit || 5,
+            limit: req.body.limit || 5,
             // match:{query},
             sort: { createdAt: -1 },
             populate: { path: 'userId', select: 'profilePic businessName name status', match: { status: "ACTIVE" } },
@@ -215,7 +216,7 @@ module.exports = {
         var data = {};
         waterfall([
             function (callback) {
-                eventSchema.findOne({ '_id': event_id,status:"ACTIVE" }).exec((err, succ) => {
+                eventSchema.findOne({ '_id': event_id, status: "ACTIVE" }).exec((err, succ) => {
                     if (err)
                         response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR)
                     else if (succ) {
@@ -225,7 +226,7 @@ module.exports = {
                 })
             },
             function (arg1, callback) {
-                eventSchema.find({status:"ACTIVE"}).sort({ eventCreated_At: -1 }).limit(5).exec((err, succ) => {
+                eventSchema.find({ status: "ACTIVE" }).sort({ eventCreated_At: -1 }).limit(5).exec((err, succ) => {
                     if (err)
                         response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR)
                     else if (succ) {
@@ -264,7 +265,7 @@ module.exports = {
                         return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
                     else {
                         //  }
-                        var amount = ((90 * result.eventPrice) / 100)*100
+                        var amount = ((90 * result.eventPrice) / 100) * 100
                         return stripe.refunds.create({
                             charge: result.chargeId,
                             amount: Math.round(amount),//((90* result.eventPrice)/100),
@@ -318,7 +319,7 @@ module.exports = {
         let options = {
             page: req.body.pageNumber || 1,
             select: 'period eventAddress createdAt eventImage offset duration eventName status eventDescription eventPrice ',
-             limit: req.body.limit || 5,
+            limit: req.body.limit || 5,
             // match:{query},
             sort: { createdAt: -1 },
             populate: { path: 'userId', select: 'profilePic businessName name status', match: { status: "ACTIVE" } },
@@ -695,7 +696,7 @@ module.exports = {
 
     "confirmEventStatus": (req, res) => {
         console.log("event status request " + req.body.bookingId)
-        booking.findByIdAndUpdate({ _id: req.body.bookingId }, { $set: { bookingStatus: "CONFIRMED" } }, { new: true }).populate({ path: "userId", select: "deviceToken name profilePic" }).exec((error, result) => {
+        booking.findByIdAndUpdate({ _id: req.body.bookingId }, { $set: { bookingStatus: "CONFIRMED" } }, { new: true }).populate({ path: "userId", select: "deviceToken name profilePic deviceType" }).exec((error, result) => {
             if (error)
                 response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
             else if (!result)
@@ -711,10 +712,25 @@ module.exports = {
                         console.log(`confirm event status result_------------->${JSON.stringify(result_)}`)
 
                         event = result_.eventName;
-                        console.log(result.userId.deviceToken, 'Event Confirmation!!', event + ' Event is Confirmed...!',  result.userId._id, result.userId.profilePic, result.userId.name)
-                        notification.single_notificationForWeb(result.userId.deviceToken, 'Event Confirmation!!', event + ' Event is Confirmed...!', result.userId._id, result.userId.profilePic, result.userId.name)
+                        console.log(result.userId.deviceToken, 'Event Confirmation!!', event + ' Event is Confirmed...!', result.userId._id, result.userId.profilePic, result.userId.name)
+                        var notiObj = {
+                            userId: result.userId._id,
+                            profilePic: result.userId.profilePic,
+                            name: result.userId.name
 
-                       // notification.single_notification(result.userId.deviceToken, 'Event Confirmation!!', event + ' Event is Confirmed...!', result.businessManId, result.userId._id, result.userId.profilePic, result.userId.name)
+                        }
+                        if (deviceType && deviceToken) {
+                            if (result.userId.deviceType == 'IOS') {
+                                notification.sendNotification(result.userId.deviceToken, `Booking Confirmation:`, `Your booking has been confirmed for ${event}`, { type: ' event' }, notiObj)
+                            }
+
+                            else if (result.userId.deviceType == 'ANDROID') {
+                                notification.sendNotification(result.userId.deviceToken, `Booking Confirmation:`, `Your booking has been confirmed for ${event}`, { type: ' event' }, notiObj)
+                            }
+                        }
+                        // else
+                        //     notification.single_notification(result.userId.deviceToken, 'Event Confirmation!!', event + ' Event is Confirmed...!', result.businessManId, result.userId._id, result.userId.profilePic, result.userId.name)
+
                         response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Event status is confirmed")
                     }
                 })
@@ -734,47 +750,66 @@ module.exports = {
 
     "rejectEventStatus": (req, res) => {
         console.log("event status request for cancel " + req.body.bookingId)
-                booking.findByIdAndUpdate({ _id: req.body.bookingId }, { $set: { bookingStatus: "CANCELLED" } }, { new: true }).populate({ path: "userId", select: "deviceToken name profilePic" }).exec((error, result) => {
-                    if (error)
-                        response.sendResponseWithData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG, error)
-                    else if (!result)
-                        response.sendResponseWithData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND, result)
+        booking.findById({ _id: req.body.bookingId }).populate({ path: "userId", select: "deviceToken name profilePic deviceType" }).exec((error, result) => {
+            if (error)
+                response.sendResponseWithData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG, error)
+            else if (!result)
+                response.sendResponseWithData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND, result)
+            else {
+                var result = result
+                console.log(`cancel event status result------------->${JSON.stringify(result)}`)
+                var event;
+                eventSchema.findById({ _id: result.eventId, status: "ACTIVE" }, (err_, result_) => {
+                    if (err_)
+                        response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
                     else {
-                        var result = result
-                        console.log(`cancel event status result------------->${JSON.stringify(result)}`)
-                        var event;
-                        eventSchema.findById({ _id: result.eventId, status: "ACTIVE" }, (err_, result_) => {
-                            if (err_)
-                                response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
+                        console.log(`cancel event status result_------------->${JSON.stringify(result_.eventName)}`)
+                        console.log("Pppopdfufydfsjuysdfjfdgs", result.chargeId, result.eventPrice)
+                        event = result_.eventName;
+                        console.log("event0-00---", event)
+                        return stripe.refunds.create({
+                            charge: result.chargeId,
+                            amount: (result.eventPrice),
+                        }, function (err, refund) {
+                            if (err) {
+                                console.log("err in refunds", err)
+                                // notification.single_notification(result.userId.deviceToken, 'Payment Issue Occur', event + 'Error occur during payment as the amount has already been refunded. ', result.businessManId, result.userId._id, result.userId.profilePic, result.userId.name)
+                                response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Error occur during payment as the amount has already been refunded.")
+                            }
                             else {
-                                console.log(`cancel event status result_------------->${JSON.stringify(result_.eventName)}`)
-                                console.log("Pppopdfufydfsjuysdfjfdgs", result.chargeId, result.eventPrice)
-                                event = result_.eventName;
-                                console.log("event0-00---", event)
-                                return stripe.refunds.create({
-                                    charge: result.chargeId,
-                                    amount: (result.eventPrice),
-                                }, function (err, refund) {
-                                    if (err) {
-                                        console.log("err in refunds", err)
-                                       // notification.single_notification(result.userId.deviceToken, 'Payment Issue Occur', event + 'Error occur during payment as the amount has already been refunded. ', result.businessManId, result.userId._id, result.userId.profilePic, result.userId.name)
-                                        response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Error occur during payment as the amount has already been refunded.")
-                                    }
+                                booking.findByIdAndUpdate({ _id: req.body.bookingId }, { $set: { bookingStatus: "CANCELLED", paymentStatus: "Refund" } }, { new: true }).exec((err_1, result_1) => {
+                                    console.log('success refund-->', refund)
+                                    if (err_1)
+                                        response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Error occur ")
                                     else {
-                                        console.log('success refund-->', refund)
-                                        console.log('noti result==========>', result.userId.deviceToken, 'Event Cancelled!!', event + ' Event is Cancelled...!',  result.userId._id, result.userId.profilePic, result.userId.name)
-                                    
-                                        notification.single_notificationForWeb(result.userId.deviceToken, 'Event Cancelled!!', event + ' Event is Cancelled...!', result.userId._id, result.userId.profilePic, result.userId.name)
+                                        var notiObj = {
+                                            userId: result.userId._id,
+                                            profilePic: result.userId.profilePic,
+                                            name: result.userId.name
+                                        }
+                                        console.log('noti result==========>', result.userId.deviceToken, 'Event Cancelled!!', event + ' Event is Cancelled...!', result.userId._id, result.userId.profilePic, result.userId.name)
+                                        if (deviceType && deviceToken) {
+                                            if (result.userId.deviceType == 'IOS')
+                                                notification.sendNotification(result.userId.deviceToken, `Booking cancelled:`, `Your booking has been cancelled for ${event}`, { type: 'event' }, notiObj)
+                                            else if (result.userId.deviceType == 'ANDROID') {
+                                                notification.sendNotification(result.userId.deviceToken, `Booking cancelled:`, `Your booking has been cancelled for ${event}`, { type: 'event' }, notiObj)
+                                            }
+                                            else
+                                                notification.single_notificationForWeb(result.userId.deviceToken, 'Event cancelled!!', event + ' Event is cancelled...!', result.userId._id, result.userId.profilePic, result.userId.name)
+                                        }
+                                        // notification.single_notificationForWeb(result.userId.deviceToken, 'Event Cancelled!!', event + ' Event is Cancelled...!', result.userId._id, result.userId.profilePic, result.userId.name)
                                         response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Event status is cancelled")
                                     }
-
                                 })
-
                             }
+
                         })
 
                     }
                 })
+
+            }
+        })
     },
 
 
@@ -1009,7 +1044,7 @@ module.exports = {
                 else {//
                     var email = succ.email
                     async.waterfall([(callback) => {
-                        eventSchema.findOne({ _id: req.body.eventId }, (err5, succ1) => {//
+                        eventSchema.findOne({ _id: req.body.eventId }).populate({ path: 'userId', select: 'deviceType deviceToken name profilePic' }).exec((err5, succ1) => {//
                             if (err5)
                                 return response.sendResponseWithData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.", err5);
                             if (!succ1) {
@@ -1065,9 +1100,9 @@ module.exports = {
                                 response.sendResponseWithoutData(res, responseCode.WENT_WRONG, " No such token.... ")
                             else {
                                 return stripe.charges.create({ // charge the customer
-                                    amount: req.body.eventPrice*100,
+                                    amount: req.body.eventPrice * 100,
                                     currency: "usd",
-                                 
+
                                     customer: customer.id
                                 })
                             }
@@ -1076,7 +1111,7 @@ module.exports = {
                         })
                             .then((charge) => {
                                 charge1 = charge
-                                console.log("charge stripe")
+                                console.log("============charge stripe============>>", charge.status)
                                 if (!charge1) {
 
                                     console.log("Cannot charge a customer that has no active card", charge1.id)
@@ -1118,7 +1153,7 @@ module.exports = {
                                         "transactionDate": req.body.transactionDate,
                                         "transactionTime": req.body.transactionTime,
                                         "transactionTimeStamp": req.body.transactionTimeStamp,
-                                        "transactionStatus": charge1.Status,
+                                        "paymentStatus": charge1.status,
                                         "chargeId": charge1.id,
                                         "bookingStatus": "PENDING",
                                         "eventPrice": req.body.eventPrice
@@ -1185,15 +1220,30 @@ module.exports = {
                         //   callback(!charge,charge)
 
 
-            
+
                     },], (err, result) => {
                         if (err) {
                             console.log("errr6", err)
                             response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR)
                         } else {
+
+                            var notiObj = {
+                                userId: req.body.userId,
+                                profilePic: succ.profilePic,
+                                name: succ.name
+                            }
                             console.log("*********result final", result)
-                            console.log("notificatiopn data--------->>>", succ.deviceToken, 'booking Posted !',  `Your booking is successfully done by ${succ.name} requested for the event ${result.eventName}`, req.body.businessManId, req.body.userId, succ.profilePic, succ.name)
-                            notification.single_notification(succ.deviceToken, 'booking Posted !', `Your booking is successfully done by ${succ.name}, requested for the event ${result.eventName}` , req.body.businessManId, req.body.userId, succ.profilePic, succ.name)
+                            console.log("notificatiopn data--------->>>", succ.deviceToken, 'booking Posted !', `Your booking is successfully done by ${succ.name} requested for the event ${result.eventName}`, req.body.businessManId, req.body.userId, succ.profilePic, succ.name)
+                            if (deviceType && deviceToken) {
+                                if (succ.deviceType == 'IOS')
+                                    notification.sendNotification(succ.deviceToken, 'booking Posted !', `Your booking is successfully done , requested for the event ${result.eventName}`, { type: 'event' }, notiObj)
+                                else if (succ.deviceType == 'ANDROID') {
+                                    notification.sendNotification(succ.deviceToken, 'booking Posted !', `Your booking is successfully done by ,requested for the event ${result.eventName}`, { type: 'event' }, notiObj)
+                                }
+                                else
+                                    notification.single_notification(succ.deviceToken, 'booking Posted !', `Your booking is successfully done by ${succ.name} requested for the event ${result.eventName}`, req.body.businessManId, req.body.userId, succ1.userId.profilePic, succ1.userId.name)
+                            }
+                            // notification.single_notification(succ.deviceToken, 'booking Posted !', `Your booking is successfully done by ${succ.name}, requested for the event ${result.eventName}`, req.body.businessManId, req.body.userId, succ.profilePic, succ.name)
                             response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Payment successfully done!")
                         }
 
@@ -1271,7 +1321,7 @@ module.exports = {
         if (!req.body.eventId || !req.body.businessManId || !req.body.customerId)
             return response.sendResponseWithoutData(res, responseCode.BAD_REQUEST, "Please provide all required fields !");
         else
-            User.findOne({ $or:[{_id: req.body.businessManId}, {_id: req.body.customerId}], status: "ACTIVE" }, (err, success) => {
+            User.findOne({ $or: [{ _id: req.body.businessManId }, { _id: req.body.customerId }], status: "ACTIVE" }, (err, success) => {
                 if (err)
                     return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG);
                 else if (!success)
@@ -1292,10 +1342,10 @@ module.exports = {
                                     else if (success3.length == 0)
                                         return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Something went wrong....");
                                     else {
-                                        if(success)
-                                        console.log("checking success**********>>>>>>>>>>",success)
-                                         console.log("noti data===>", success.deviceToken, 'feedback Posted !', ' Your feedback is successfully send.', req.body.businessManId, req.body.customerId, success.profilePic, success.name)
-                                         notification.single_notification(success.deviceToken, 'feedback Posted !', ' Your feedback is successfully send.', req.body.businessManId, req.body.customerId, success.profilePic, success.name)
+                                        if (success)
+                                            console.log("checking success**********>>>>>>>>>>", success)
+                                        console.log("noti data===>", success.deviceToken, 'feedback Posted !', ' Your feedback is successfully send.', req.body.businessManId, req.body.customerId, success.profilePic, success.name)
+                                        notification.single_notification(success.deviceToken, 'feedback Posted !', ' Your feedback is successfully send.', req.body.businessManId, req.body.customerId, success.profilePic, success.name)
                                         response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, "Feedback is successfully send.", success3);
                                     }
 

@@ -1,5 +1,15 @@
-var FCM = require('fcm-push');
-var apn = require('apn');
+var apn = require("apn");
+var FCM = require('fcm-push'); 
+var options = {
+        "cert": "MobiloitteEnterpriseDistribution.pem",
+        "key": "MobiloitteEnterpriseDistribution.pem",
+        "passphrase": "Mobiloitte1", //Acropole
+        "gateway": "gateway.sandbox.push.apple.com",
+        "port": 2195,
+        "enhanced": true,
+        "cacheLength": 5,
+        production:true
+};
 var Client = require('node-rest-client').Client;
 const Noti = require('../models/notificationModel');
 const User = require('../models/userModel');
@@ -9,47 +19,32 @@ const notification = require('../common_functions/notification');
 const webpush = require('web-push');
 const vapidKeys = webpush.generateVAPIDKeys()
 let subscribers = [];
-// console.log("Public key",vapidKeys.publicKey)
-//'BDO0P...eoH'
-//api key=========>AIzaSyDGSrq0YF5pF0uhXtZx2D8IMxCkgl2hbO4
-// console.log("private key",vapidKeys.privateKey)
-// const webpush = require('web-push');
-// const vapidKeys = webpush.generateVAPIDKeys()
 
-// console.log("Public key",vapidKeys.publicKey)
-// //'BDO0P...eoH'
-
-// console.log("private key",vapidKeys.privateKey)
-// //'3J303..r4I'
 
 
 var notifications = {
-    //=====================================Notification for bussiness panel=========================================
-    // 'push': function(req, res) {
-    //     const subscription = req.param('subscription');
-    //     const message = req.param('message');
+    
 
-    //     setTimeout(() => {
-    //       const options = {
-    //         TTL: 24 * 60 * 60,
-    //         vapidDetails: {
-    //           subject: 'mailto:sender@example.com',
-    //           publicKey: process.env.VAPID_PUBLIC_KEY,
-    //           privateKey: process.env.VAPID_PRIVATE_KEY
-    //         },
-    //       }
-
-    //       webpush.sendNotification(
-    //         subscription,
-    //         message,
-    //         options
-    //       );
-
-    //     }, 0);
-    //   console.log("Everything is ok !!!")
-    //     // response.send('OK');
-    //   },
-
+ 'iosPush': (deviceToken, title, message, data)=> {
+    console.log("deviceToken", deviceToken)
+    var apnConnection = new apn.Connection(options);
+    var myDevice = new apn.Device(deviceToken);
+    var note = new apn.Notification();
+    note.expiry = Math.floor(Date.now() / 1000) + 3600; // Expires 1 hour from now.
+    note.badge = 1;
+    note.sound = "ping.aiff";
+    note.alert = title + ' ' + message;
+    note.payload = data
+    try {
+        apnConnection.pushNotification(note, myDevice); //devicIos
+        apnConnection.on('transmitted', function(note, deviceToken) {
+            console.log('APNS: Successfully transmitted message' + JSON.stringify(note));
+        });
+    } catch (ex) {
+        console.log("in Error");
+        console.log(ex);
+    }
+},
     //====================================Notification for app====================================================================
     'single_notification': (token, title, msg, bussinessId, customerId, image, name) => {
         console.log(`Notification api hit`)
@@ -167,98 +162,96 @@ var notifications = {
             //console.log(response);
         });
     },
-}
+
     //============================================ Notification for web push ====================================================================
-    // 'push': (title,body,subscription1,email,bussinessId)=> {
-    //     // //console.log("request for push-------->",JSON.stringify(req.body))
-    //     // console.log("inside push")
-    //     // const subscription=subscription1;
-    //     // const message = {
-    //     //     title: title,
-    //     //    // 'icon': req.body.icon,
-    //     //     body: body,
-    //     //    // 'url': req.body.link
-    //     //   };//req.body.message;
-    //     // // payload: JSON.stringify({
-    //     // //     'title': req.body.title,
-    //     // //     'icon': req.body.icon,
-    //     // //     'body': req.body.body,
-    //     // //     'url': req.body.link
-    //     // //   }),
-    //     // const options = {
-    //     //     gcmAPIKey: 'AIzaSyBhBx_hxg8QUCbjo_D3gb-dHFY_APurdl8',
-    //     //     TTL: 24 * 60 * 60,
-    //     //     vapidDetails: {
-    //     //       subject: email,//req.body.email,//'mailto:sender@example.com',
-    //     //       publicKey: 'BDqxMfc7QPfi5AFUMvO8ciGMsTSWIVzcPvPUZvEhH33Z8iS2br8lLBIHkQfhcqElyy2GAk11UxIFlVQhJzzK34U',//vapidKeys.publicKey,
-    //     //       privateKey: 'yS4QUTovZQASwXRx9IiVBXLnIkFl9-Q70AO3lMgDrs0'//vapidKeys.privateKey
-    //     //     },
-    //     //   }
-    //     //   console.log("%%%%%%%%%%%%%%%%%%",subscription,')))))))))))))))))',message,"^^^^^^^^^^^^^^^^^^",options)
-    //     //         let obj = {
-    //     //           //  userIds: ids.map(x =>  {let obj={uid:x}; return obj}),
-    //     //             bussinessId:{bid:bussinessId},
-    //     //             noti_type: 'BUSSINESS', 
-    //     //             content: message.body
-    //     //         };
-    //     //        // let noti  = new Noti(obj);
-    //     //         var webNoti=new Noti(obj)
-    //     //         webNoti.save((err,result)=>{
-    //     //            if(err) 
-    //     //            console.log("err occur",err)
-    //     //             else{
-    //     //                 console.log("result saved",result)
-    //     //                 return  webpush.sendNotification(subscription,message,options);
-    //     //                 console.log("web api hit............")
-    //     //             }
-    //     //         })
-    //     //         //response.sendResponseWithoutData(res, resCode.EVERYTHING_IS_OK, 'Notification send') 
+    'sendNotification': (deviceToken, title, message, data,notiObj) => {
+        console.log(`Device token is ${deviceToken}`)
+        var serverKey = 'AAAAdtyNEC0:APA91bFeZPCM-fslejcqzZHNrXE_fExyhkjqn5FzuXj4mJ3X9pkClFG9Hs0I76-pnIRmw512uEVBkhrMBzYF7FbqEirrVS6anw0uEuu8o3gzZG48hhCKlQrIEIZs36os5qTZiRU9b02r';
+        var fcm = new FCM(serverKey);
 
-    //         var serverKey = 'eq39uIDH0dk:APA91bF5shc7X5GhK3_GQwHjQ5_B1LQPprtjOb1NB-Dz157RyyvLGpMyipWAlidozNve8uXReWHpxajAF6-AlayacVq9GhzvAILrdhTpAWdCxOJE1qSxqtL5Q63aGJZ5SVpZAf7Tefal';
-    //         var fcm = new FCM(serverKey);
+        var payload = {
 
-    //         var message = {
-    //             to: tokenArray[0], // required fill with device token or topics
-    //             //registration_ids: tokenArray,
-    //             collapse_key: 'your_collapse_key', 
-    //             data: {
-    //                 your_custom_data_key: 'your_custom_data_value'
-    //             },
-    //             notification: {
-    //                 title: 'Title of your push notification',
-    //                 body: 'Body of your push notification'
-    //             }
-    //         };
+            to: deviceToken, // required fill with device token or topics
+            //registration_ids: tokenArray,
+            collapse_key: 'your_collapse_key',
+            notification: {
+                title: title,
+                body: message
+            }
+        };
+        if(data != '')
+            payload.data = data;
 
-    //         //callback style
-    //         fcm.send(message, function(err, response){
-    //             if (err) {
-    //                 console.log("Something has gone wrong!");
-    //             } else {
-    //                 console.log("Successfully sent with response: ", response);
-    //             }
-    //         });
+        //callback style
+        fcm.send(payload, function (err, response) {
+            if (err) {
+                console.log("Something has gone wrong!",err);
+            } else {
+                console.log("Successfully sent with response: ", response);
+                let obj = {
+                    customerId: { cid: notiObj.customerId, image: notiObj.image, name: notiObj.name },
+                    //  bussinessId:{bid:bussinessId},
+                    noti_type: 'CUSTOMER',
+                    content: message
+                };
+                let noti = new Noti(obj);
+                console.log("******", noti)
+                noti.save((er1, ress) => {
+                    console.log(`Error is ${JSON.stringify(er1)}   result is ${JSON.stringify(ress)}`)
+                    //response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, 'Order has been placed successfully and confirmation code send to your mobile number.',result)
+                })
 
-    //     },
+            }
+        });
 
-    // 'notificationForWeb': (pushSubscription,title,msg,bussinessId) => {
-    //     console.log(`web noti api hit`)
-    //     console.log("request for push-------->",JSON.stringify(req.body))
-    //         console.log("inside push")
-    //         const message = 'Notificartion for bussiness',//req.body.message;
-    //         //  var subscription;
-    //         var options = {
-    //             gcmAPIKey: 'AIzaSyBhBx_hxg8QUCbjo_D3gb-dHFY_APurdl8',
-    //             TTL: 24 * 60 * 60,
-    //             vapidDetails: {
-    //               subject: req.body.email,//'mailto:sender@example.com',
-    //               publicKey: 'BDqxMfc7QPfi5AFUMvO8ciGMsTSWIVzcPvPUZvEhH33Z8iS2br8lLBIHkQfhcqElyy2GAk11UxIFlVQhJzzK34U',//vapidKeys.publicKey,
-    //               privateKey: 'yS4QUTovZQASwXRx9IiVBXLnIkFl9-Q70AO3lMgDrs0'//vapidKeys.privateKey
-    //             },
-    //           }
+    },
 
-    // }, 
+    'notificationForWeb': (pushSubscription, title, msg, bussinessId) => {
+        console.log(`web noti api hit`)
+        console.log("request for push-------->", JSON.stringify(req.body))
+        console.log("inside push")
+        const message = 'Notificartion for bussiness';//req.body.message;
+        //  var subscription;
+        var options = {
+            gcmAPIKey: 'AIzaSyBhBx_hxg8QUCbjo_D3gb-dHFY_APurdl8',
+            TTL: 24 * 60 * 60,
+            vapidDetails: {
+                subject: req.body.email,//'mailto:sender@example.com',
+                publicKey: 'BDqxMfc7QPfi5AFUMvO8ciGMsTSWIVzcPvPUZvEhH33Z8iS2br8lLBIHkQfhcqElyy2GAk11UxIFlVQhJzzK34U',//vapidKeys.publicKey,
+                privateKey: 'yS4QUTovZQASwXRx9IiVBXLnIkFl9-Q70AO3lMgDrs0'//vapidKeys.privateKey
+            },
+        }
 
-    // }
+    },
 
-    module.exports = notifications;
+    testing:()=>{
+        var serverKey = 'AAAAdtyNEC0:APA91bFeZPCM-fslejcqzZHNrXE_fExyhkjqn5FzuXj4mJ3X9pkClFG9Hs0I76-pnIRmw512uEVBkhrMBzYF7FbqEirrVS6anw0uEuu8o3gzZG48hhCKlQrIEIZs36os5qTZiRU9b02r';
+        var fcm = new FCM(serverKey);
+        var deviceToken = "eYATUn5umo8:APA91bHDBFkqQcjaJ1CRxffFjo81BDKBGOj8u5Dbx6mWB6E2Iw8bxJ_aMGX2PF9oO1EwI3EWPSvETWXyebOQT6Q5CGF76-AZa_jp_ylCd1CGO8r1FG_mSVK-EHFgtexG3mYy8lyx3utN";
+        var payload = {
+            to: deviceToken, // required fill with device token or topics
+            //registration_ids: tokenArray,
+            collapse_key: 'your_collapse_key',
+            notification: {
+                title: 'title',
+                body: 'message'
+            }
+        };
+            payload.data = {
+                hf:'gfghfghj',
+                fghf:'hfghfghfgh'
+            };
+
+        //callback style
+        fcm.send(payload, function (err, response) {
+            if (err) {
+                console.log("Something has gone wrong!",err);
+            } else {
+                console.log("Successfully sent with response: ", response);
+            }
+        });
+    }
+
+}
+
+module.exports = notifications;

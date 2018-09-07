@@ -68,9 +68,9 @@ const booking = mongoose.Schema({
         type: String
     },
 
-    // starsCount: {
-    //     type: Number
-    // },
+    paymentStatus: {
+        type: String
+    },
 
 },
     {

@@ -9,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "apn": "^2.2.0",
+    "apn": "^1.7.8",
     "async": "^2.6.1",
     "async-each-series": "^1.1.0",
     "async-waterfall": "^0.1.5",

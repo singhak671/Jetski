@@ -16,7 +16,9 @@ const notification = require('../common_functions/notification');
 const Noti = require('../models/notificationModel');
 // var waterfall = require("async-waterfall");
 const async = require('async');
-const keySecret = 'sk_test_7OyC78h4UYqhcEiH2N2vcX9O';//client
+// const keySecret = 'sk_test_7OyC78h4UYqhcEiH2N2vcX9O';//client
+const keySecret = 'sk_test_RnCHCs3r4NmdEJ1Ex9nLfME5';//avanish
+
 const stripe = require("stripe")(keySecret);
 const keyPublishable = 'pk_test_qd08fVES1IsBAD3CZEKs00ng';
 //  const keySecret = 'sk_test_c1fuFQmWKd4OZeCThFOtLFuY';   //pramod
@@ -109,8 +111,10 @@ module.exports = {
                         email: req.body.email
                     }, function (err, account) {
                         // asynchronously called
-                        if (err) 
+                        if (err){
+                            console.log('err==>>>', err)
                             return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, "errr in strip")
+                        } 
                         else {
                             console.log(account.id)
                             req.body.stripeAccountId=account.id

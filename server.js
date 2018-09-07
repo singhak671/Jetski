@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
-var userSchema =require("./models/userModel");
+var userSchema = require("./models/userModel");
 const environment = require('./config/config')();
 const dbconnection = require('./db_handler/mongodb');
 const mongoose = require('mongoose');
@@ -10,8 +10,10 @@ const CronJob = require('cron').CronJob;
 const cron = require('node-cron');
 const asyncLoop = require('node-async-loop');
 var booking = require("./models/bookingModel.js")
-const keySecret = 'sk_test_7OyC78h4UYqhcEiH2N2vcX9O';//client
+// const keySecret = 'sk_test_7OyC78h4UYqhcEiH2N2vcX9O';//client   
+const keySecret = 'sk_test_RnCHCs3r4NmdEJ1Ex9nLfME5';//avanish
 const stripe = require("stripe")(keySecret);
+var notification = require('./common_functions/notification');
 
 //  const keySecret = 'sk_test_c1fuFQmWKd4OZeCThFOtLFuY';//pramod
 
@@ -25,7 +27,7 @@ const keyPublishable = 'pk_test_NS4RiEEZeWMhQEcxYsEfRH5J'
 
 const cors = require('cors');
 const path = require('path');
-app.use(cors());  
+app.use(cors());
 app.use(bodyParser.urlencoded({
     extended: false
 }));
@@ -35,21 +37,25 @@ app.use(bodyParser.json({
 app.use('/api/v1/user', require('./routes/userRoute'));
 app.use('/api/v1/admin', require('./routes/userRoute'));
 app.use('/api/v1/static', require('./routes/termsAndPrivacyRoutes'));
-app.use('/api/v1/event',require('./routes/eventRoute'));
-app.use('/api/v1/chat',require('./routes/chatRoute'));
-app.use('/api/v1/notification',require('./routes/notificationRoute'));
+app.use('/api/v1/event', require('./routes/eventRoute'));
+app.use('/api/v1/chat', require('./routes/chatRoute'));
+app.use('/api/v1/notification', require('./routes/notificationRoute'));
+
+app.post('/pushTest', (req, res) => {
+    notification.testing()
+})
 
 
 app.use(express.static(path.join(__dirname, 'dist')));
 
 app.get('*', (req, res) => {
-res.sendFile(__dirname + '/dist/index.html')
+    res.sendFile(__dirname + '/dist/index.html')
 });
 
 //-------------------------------cron started -------------------------------------
 
 cron.schedule('* * * * *', () => {
-console.log(" inside crone)))))))))")
+    console.log(" inside crone)))))))))")
     booking.find({}).exec((err, succ) => {
         asyncLoop(succ, (item, next) => {
             var result = item.duration[0].date.formatted + "T" + item.duration[0].times[0].time + ":00.000Z"
@@ -73,40 +79,43 @@ console.log(" inside crone)))))))))")
                 // console.log("checking of booking status",item.bookingStatus)
                 if (item.bookingStatus == 'CONFIRMED') {
                     // console.log(" inside booking status)))))))))")
-                    booking.findByIdAndUpdate({ _id: item._id }, { $set: { 'bookingStatus': 'COMPLETED' } }, { multi: true }).populate({ path: "businessManId", select: "stripeAccountId" }).exec((err1, succ1) => {
-                         console.log('error ,succes==========>>>>>>', err1, succ1);
+                    booking.findById({ _id: item._id }).populate({ path: "businessManId", select: "stripeAccountId" }).exec((err1, succ1) => {
+                        console.log('error ,succes==========>>>>>>', err1, succ1);
                         if (err1)
-                            console.log('Error is====>>>>>', err1); 
+                            console.log('Error is====>>>>>', err1);
                         else if (succ1) {
-                             console.log('Status updated successfully====>>>>', succ1); 
-                          
+                            console.log('Status updated successfully====>>>>', succ1);
+
                             //   var amount = ((90 * succ1.eventPrice) / 100)*100
                             stripe.transfers.create({
                                 //  amount: Math.round(amount),//((90* result.eventPrice)/100),
-                                amount:1,
+                                amount: 1,
                                 currency: "usd",
-                                  destination:"acct_1D7NdbA6i0llgOyk",//reciver
-                                  source_type:"bank_account"
+                                destination: "acct_1D7gqiKnG78Kj8yB",//reciver
+                                //   source_type:"bank_account"
                                 //   description: "admin to business",
                                 // source_transaction: null,
                                 // charge:"ch_1D6HnuFvUkcGB9taqrMt2JuQ"
                                 // source_transaction: "ch_1D6HnuFvUkcGB9taqrMt2JuQ",//sender
                                 //   destination:'acct_1D6FRDB3m6P1mUHh',//succ1.businessStripeAccount//"acct_1D6FRDB3m6P1mUHh", 
-                                }).then(function(err, transfer) {
-                                    console.log("err------++++++++++->>>",err)
-                                    console.log("transfer------++++++++++->>>",transfer)
-                                });
+                            }).then(function (transfer) {
+                                console.log("transfer------++++++++++->>>", transfer)
+                                booking.findByIdAndUpdate({ _id: item._id }, { $set: { 'bookingStatus': 'COMPLETED' } }, { multi: true }).exec((err11, succ11) => {
+                                    console.log('error ,succes==========>>>>>>', err1, succ1);
+
+                                })
+                            });
                             next();
                         }
                     })
                 }
                 else if (item.bookingStatus == 'PENDING') {
                     // console.log(" inside pending status)))))))))")
-                    booking.findByIdAndUpdate({ _id: item._id }, { $set: { 'bookingStatus': 'CANCELLED' } }, { multi: true }).exec((err1, succ1) => {
+                    booking.findById({ _id: item._id }).exec((err1, succ1) => {
                         console.log('error ,succes==========>>>>>>', err1, succ1);
                         if (err1)
-                             console.log('Error is====>>>>>', err1);
-                        else  {
+                            console.log('Error is====>>>>>', err1);
+                        else {
                             // console.log("succ1------>",succ1)
                             return stripe.refunds.create({
                                 ç: succ1.chargeId,
@@ -117,12 +126,30 @@ console.log(" inside crone)))))))))")
                                 }
                                 else {
                                     console.log('success refund-->', refund)
-                                    //callback('',refund)
-                                    next();
+                                    booking.findByIdAndUpdate({ _id: item._id }, { $set: { 'bookingStatus': 'CANCELLED' } }, { multi: true }).populate({ path: 'userId', select: 'deviceToken deviceType name profilePic' }).exec((err1_, succ1_) => {
+                                        console.log("err1========>", err1_, "succ1===============>>", succ1_)
+                                        //callback('',refund)
+                                        var notiObj = {
+                                            userId: succ1_.userId._id,
+                                            profilePic: succ1_.userId.profilePic,
+                                            name: succ1_.userId.name
+                                        }
+                                        if (succ1.userId.deviceType && succ1.userId.deviceToken){
+                                            console.log("notificatiopn data during cron execution--------->>>", succ1.userId.deviceToken, 'booking cancelled !', `Your booking is cancelled done by ${succ1.name} requested for the event ${succ1.eventName}`,  succ1.businessManId, succ1.userId, succ1.userId.profilePic, succ1.userId.name)
+                                            if (succ1.userId.deviceType == 'IOS')
+                                                notification.sendNotification(succ1.userId.deviceToken, 'booking cancelled !', `Your booking is cancelled for ${succ1.eventName}`, { type: 'event' }, notiObj)
+                                            else if (succ1.userId.deviceType == 'ANDROID') {
+                                                notification.sendNotification(succ1.userId.deviceToken, 'booking cancelled !', `Your booking is cancelled for ${succ1.eventName}`, { type: 'event' }, notiObj)
+                                            }
+                                            else
+                                                notification.single_notification(succ1.userId.deviceToken, 'booking cancelled !', `Your booking is cancelled requested for the event ${succ1.eventName}`,succ1.businessManId, succ1.userId, succ1.userId.profilePic, succ1.userId.name)
+                                        }
+                                        next();
+                                    })
                                 }
-                                   
+
                             })
-                           
+
                         }
                     })//
                 }
@@ -136,7 +163,7 @@ console.log(" inside crone)))))))))")
 
 
 
-app.listen(environment.port,()=>{
+app.listen(environment.port, () => {
     console.log(`Server is running on ${environment.port}`)
 })
 

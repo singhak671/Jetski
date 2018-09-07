@@ -11,7 +11,7 @@ const authHandler = require('../middleware/auth_handler');
 
 //  router.post('/unsubscribe',notification.unsubscribe);
 //  router.post('/notify',notification.notify);
- //router.post('/push',notification.push);
+//  router.post('/push',notification.push);
  router.post('/customerNotification',authHandler.verifyToken,notification.customerNotification);
 router.post('/notificationList',authHandler.verifyToken,notification.notificationList);
 router.get('/unreadCount/:bussinessId',authHandler.verifyToken,notification.unreadCount)
