@@ -86,10 +86,10 @@ cron.schedule('* * * * *', () => {
                         else if (succ1) {
                             console.log('Status updated successfully====>>>>', succ1);
 
-                            //   var amount = ((90 * succ1.eventPrice) / 100)*100
+                              var amount = ((90 * succ1.eventPrice) / 100)*100
                             stripe.transfers.create({
-                                //  amount: Math.round(amount),//((90* result.eventPrice)/100),
-                                amount: 1,
+                                  amount: Math.round(amount),//((90* result.eventPrice)/100),
+                                // amount: 1,
                                 currency: "usd",
                                 destination: "acct_1D7gqiKnG78Kj8yB",//reciver
                                 //   source_type:"bank_account"
