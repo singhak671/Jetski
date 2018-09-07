@@ -118,7 +118,7 @@ cron.schedule('* * * * *', () => {
                         else {
                             // console.log("succ1------>",succ1)
                             return stripe.refunds.create({
-                                ç: succ1.chargeId,
+                                charge: succ1.chargeId,
                                 amount: succ1.eventPrice,
                             }, function (err, refund) {
                                 if (err) {
