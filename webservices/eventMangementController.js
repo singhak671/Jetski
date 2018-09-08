@@ -275,7 +275,6 @@ module.exports = {
                             }
                             else {
 
-
                                 var notiObj = {
                                     businessManId: req.body.businessManId,
 // if (deviceType && deviceToken) {
@@ -296,7 +295,7 @@ module.exports = {
                                         notification.sendNotification(result_.deviceToken, `Booking Cancelled!!', ' Your booking is  Cancelled for the event ${result.eventName} and your amount will be refunded...!`, { type: 'event' }, notiObj)
                                     }
                                     
-                                    if(deviceType=='WEBSITE')
+                                    if(result_.deviceType=='WEBSITE')
                                     {
                                         notification.single_notification(`Booking Cancelled!!', ' Booking is  Cancelled for the event ${result.eventName} and your amount will be refunded...!`, result.businessManId, result.userId, result_.profilePic, result_.name)
 
@@ -1230,7 +1229,7 @@ module.exports = {
                                 notification.sendNotification(succ.deviceToken, 'booking Posted !', `Your booking is successfully done by ,requested for the event ${result.eventName}`, { type: 'event' }, notiObj)
                             }
                             //  businessManId:req.body.businessManId,
-                            if (deviceTypeWeb == 'WEBSITE') {
+                            if (succ1.deviceTypeWeb == 'WEBSITE') {
                                 console.log("web----------------", 'booking Posted !', `Booking is successfully done by ${succ.name} requested for the event ${result.eventName}`, req.body.businessManId, req.body.userId, profilePic, name)
                                 notification.single_notification('booking Posted !', ` Booking is successfully done by ${succ.name} requested for the event ${result.eventName}`, req.body.businessManId, req.body.userId, profilePic, name)
                             }
