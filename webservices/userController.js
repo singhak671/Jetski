@@ -271,7 +271,7 @@ module.exports = {
 
                                 if (!success)
                                     return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, "Data doesn't exist")
-                                console.log("Login----------social login", success)
+
                                 return Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, resMessage.LOGIN_SUCCESS, success1, token);
 
                             })
@@ -286,38 +286,46 @@ module.exports = {
         else {
             if (!req.body.email || !req.body.password)
                 return Response.sendResponseWithoutData(res, resCode.BAD_REQUEST, "Please provide email_id & password");
-            userSchema.findOneAndUpdate({ email: req.body.email,  userType: req.body.userType }, { $set: { deviceToken: req.body.deviceToken, deviceType: req.body.deviceType } }, { new: true }).select('-email -address -mobile_no ').lean(true).exec((err, result) => {
+            userSchema.findOne({ email: req.body.email, userType: req.body.userType }, { email: 0, address: 0, mobile_no: 0 }, { lean: true }, (err, result) => {
                 console.log("Login success==>>", result)
                 if (err)
                     return Response.sendResponseWithoutData(res, resCode.INTERNAL_SERVER_ERROR, 'INTERNAL SERVER ERROR')
+                if (!result) {
+                    console.log("i am here", result)
+                    return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, "Please provide valid credentials");
+                }
+                else if (result.status == 'BLOCK')
+                    return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, "User blocked by admin");
+                else if (result.status == 'INACTIVE')
+                    return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, "User doesn't exist.");
                 else {
-                 if (result.status == "INACTIVE")
-                        return Response.sendResponseWithoutData(res, resCode.UNAUTHORIZED, "User doesn't exist.")
-                    if (result.status == "BLOCK")
-                        return Response.sendResponseWithoutData(res, resCode.UNAUTHORIZED, "User blocked by admin.")
-                  else {
+
+
                     bcrypt.compare(req.body.password, result.password, (err, res1) => {
                         if (err)
                             return Response.sendResponseWithoutData(res, resCode.INTERNAL_SERVER_ERROR, 'INTERNAL SERVER ERROR')
                         if (res1) {
                             // console.log("secret key is "+config.secret_key)
                             var token = jwt.sign({ _id: result._id, email: result.email, password: result.password }, config.secret_key);
+                            // userSchema.findOneAndUpdate({email:req.body.email},{$set:{jwtToken:token}},{select:{"password":0},new:true},(err1,res2)=>{
+                            //     if(err1)
+                            //     return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, 'INTERNAL SERVER ERROR')
+                            //     if(!res2)            
+                            //     return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_MATCH);   
+
+                            // })
                             delete result['password']
-                            console.log("login-----------dfdghdfghfdgdfgfdgdfghfdgdfghfdghfd", res1)
+
                             return Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, resMessage.LOGIN_SUCCESS, result, token)
                         }
                         else
                             return Response.sendResponseWithoutData(res, resCode.UNAUTHORIZED, "Please enter correct password.")
 
                     })
-                  }           
-
                 }
-
             })
         }
     },
-
     //..................................................................userDetail API............................................................................... //
     "viewUserDetail": (req, res) => {
         console.log("requested id is" + req.headers._id);

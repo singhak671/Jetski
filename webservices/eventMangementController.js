@@ -1307,7 +1307,7 @@ module.exports = {
         booking.find({ userId: req.body.userId }, { eventId: 1, duration: 1, _id: 0 }).populate("eventId", { duration: 0, userId: 0 }).populate("userId", { name: 1, profilePic: 1 }).exec((error, result) => {
             if (error)
                 return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
-            else if (!result)
+            else if (result.length==0)
                 return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND)
             else
                 return response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, result)

@@ -4,7 +4,7 @@
 	"base_url" : "http://172.16.6.24:",	
 	"secret_key":"secre@tke@y",
     "token_expiry_time":"10h",
-    "port":8080,
+    "port":1234,
 	"db":{
 		"host":"localhost",
 		"user":"mobiloitte",
