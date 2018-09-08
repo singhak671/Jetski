@@ -718,13 +718,13 @@ module.exports = {
                 response.sendResponseWithoutData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND)
             else {
                 var result = result
-                console.log(`confirm event status result------------->${JSON.stringify(result)}`)
+                // console.log(`confirm event status result------------->${JSON.stringify(result)}`)
                 var event;
                 eventSchema.findById({ _id: result.eventId, status: "ACTIVE" }).exec((err_, result_) => {
                     if (err_)
                         response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
                     else {
-                        console.log(`confirm event status result_------------->${JSON.stringify(result_)}`)
+                        // console.log(`confirm event status result_------------->${JSON.stringify(result_)}`)
 
                         event = result_.eventName;
                         console.log(result.userId.deviceToken, 'Event Confirmation!!', event + ' Event is Confirmed...!', result.userId._id, result.userId.profilePic, result.userId.name)
@@ -734,17 +734,19 @@ module.exports = {
                             name: result.userId.name
 
                         }
-                        if (deviceType && deviceToken) {
+                        if (result.userId.deviceType && result.userId.deviceToken) {
                             if (result.userId.deviceType == 'IOS') {
+                                console.log("notification in confirm for device>>>>>>>",result.userId.deviceType )
                                 notification.sendNotification(result.userId.deviceToken, `Booking Confirmation:`, `Your booking has been confirmed for ${event}`, { type: ' event' }, notiObj)
                             }
 
                             else if (result.userId.deviceType == 'ANDROID') {
+                                console.log("notification in confirm for device>>>>>>>",result.userId.deviceType )
                                 notification.sendNotification(result.userId.deviceToken, `Booking Confirmation:`, `Your booking has been confirmed for ${event}`, { type: ' event' }, notiObj)
                             }
                         }
-                        // else
-                        //     notification.single_notification(result.userId.deviceToken, 'Event Confirmation!!', event + ' Event is Confirmed...!', result.businessManId, result.userId._id, result.userId.profilePic, result.userId.name)
+                        else
+                            notification.single_notification(result.userId.deviceToken, 'Event Confirmation!!', event + ' Event is Confirmed...!',  result.userId._id, result.userId.profilePic, result.userId.name)
 
                         response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Event status is confirmed")
                     }
@@ -803,7 +805,7 @@ module.exports = {
                                             name: result.userId.name
                                         }
                                         console.log('noti result==========>', result.userId.deviceToken, 'Event Cancelled!!', event + ' Event is Cancelled...!', result.userId._id, result.userId.profilePic, result.userId.name)
-                                        if (deviceType && deviceToken) {
+                                        if (result.userId.deviceType && result.userId.deviceToken) {
                                             if (result.userId.deviceType == 'IOS')
                                                 notification.sendNotification(result.userId.deviceToken, `Booking cancelled:`, `Your booking has been cancelled for ${event}`, { type: 'event' }, notiObj)
                                             else if (result.userId.deviceType == 'ANDROID') {

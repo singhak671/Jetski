@@ -13,7 +13,7 @@ router.post('/addEvent',authHandler.verifyToken,Business.addEvent);
  router.post('/eventsConfirmed',authHandler.verifyToken,Business.eventsConfirmed);
  router.post('/eventsCancelled',authHandler.verifyToken,Business.eventsCancelled);
  router.post('/eventsCompleted',authHandler.verifyToken,Business.eventsCompleted);
- router.post('/confirmEventStatus',authHandler.verifyToken,Business.confirmEventStatus);
+ router.post('/confirmEventStatus',Business.confirmEventStatus);
  router.post('/rejectEventStatus',Business.rejectEventStatus);
  router.post('/bookingEvent',authHandler.verifyToken,Business.bookingEvent);
  //router.post('/booking',authHandler.verifyToken,Business.booking);
