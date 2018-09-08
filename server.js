@@ -91,7 +91,7 @@ cron.schedule('* * * * *', () => {
                                   amount: Math.round(amount),//((90* result.eventPrice)/100),
                                 // amount: 1,
                                 currency: "usd",
-                                destination: "acct_1D7gqiKnG78Kj8yB",//reciver
+                                destination: succ1.businessManId.stripeAccountId,//reciver
                                 //   source_type:"bank_account"
                                 //   description: "admin to business",
                                 // source_transaction: null,

@@ -111,13 +111,13 @@ module.exports = {
                         email: req.body.email
                     }, function (err, account) {
                         // asynchronously called
-                        if (err){
+                        if (err) {
                             console.log('err==>>>', err)
                             return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, "errr in strip")
-                        } 
+                        }
                         else {
                             console.log(account.id)
-                            req.body.stripeAccountId=account.id
+                            req.body.stripeAccountId = account.id
                             var retVal = "";
                             const saltRounds = 10;
                             retVal = req.body.password;
@@ -155,62 +155,62 @@ module.exports = {
     "createStripeAccount": (req, res) => {
 
 
-    // //     var stripe = require('stripe')('sk_test_...');
+        // //     var stripe = require('stripe')('sk_test_...');
 
-    // //     stripe.customers.create(
-    // //       { email: 'customer@example.com' },
-    // //       function(err, customer) {
-    // //         // asynchronously called
-    // //         if (err) return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
-    // //         else {
-    // //             //   console.log(account)
-    // //             console.log("businessdsfghj++++++++",customer)
-    // //         }
-    // //         //   console.log("error++>>>>>",err ,   "success++++++++>>>>>>>>",account)
-    // //     });
-    // // },
+        // //     stripe.customers.create(
+        // //       { email: 'customer@example.com' },
+        // //       function(err, customer) {
+        // //         // asynchronously called
+        // //         if (err) return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
+        // //         else {
+        // //             //   console.log(account)
+        // //             console.log("businessdsfghj++++++++",customer)
+        // //         }
+        // //         //   console.log("error++>>>>>",err ,   "success++++++++>>>>>>>>",account)
+        // //     });
+        // // },
 
 
-    //     //  console.log('stripe===>>>', stripe);
-    //     // return;
-    //     //  stripe.accounts.list(
-    //     //     // { limit: 3 },
-    //     //     function(err, accounts) {
-    //     //         console.log('accounts==>>', accounts);
-    //     //       // asynchronously called
-    //     //     }
-    //     // );
-    //     stripe.tokens.create({
-    //         card: {
-    //            "number": '378282246310005',
-    //        "exp_month": 12,
-    //           "exp_year": 2019,
-    //            "cvc": '123'
-    //          },            
-    //     }).then((result) => {
-    //          console.log('token==>>>', result);
-    //         if (result) {
-    //             var token = result.id;
-    //           console.log('token==>>>', result.id);     // Using Express //////tok_visa
-    //             stripe.accounts.create({
-    //                 country: "US",
-    //           type: "custom",
-    //                  account_token: token,
-    //                  })
-    //                 .then(function (acct) {
-    //                     console.log('acct==>>>', acct);
-    //                     // asynchronously called
-    //                 });
-    //         }
-    //     }); 
-      
-      
-       
+        //     //  console.log('stripe===>>>', stripe);
+        //     // return;
+        //     //  stripe.accounts.list(
+        //     //     // { limit: 3 },
+        //     //     function(err, accounts) {
+        //     //         console.log('accounts==>>', accounts);
+        //     //       // asynchronously called
+        //     //     }
+        //     // );
+        //     stripe.tokens.create({
+        //         card: {
+        //            "number": '378282246310005',
+        //        "exp_month": 12,
+        //           "exp_year": 2019,
+        //            "cvc": '123'
+        //          },            
+        //     }).then((result) => {
+        //          console.log('token==>>>', result);
+        //         if (result) {
+        //             var token = result.id;
+        //           console.log('token==>>>', result.id);     // Using Express //////tok_visa
+        //             stripe.accounts.create({
+        //                 country: "US",
+        //           type: "custom",
+        //                  account_token: token,
+        //                  })
+        //                 .then(function (acct) {
+        //                     console.log('acct==>>>', acct);
+        //                     // asynchronously called
+        //                 });
+        //         }
+        //     }); 
 
-stripe.balance.retrieve(function(err, balance) {
-  // asynchronously called
-  console.log("show balance>>>>>>>>>>>>>++++++++++",balance)
-});
+
+
+
+        stripe.balance.retrieve(function (err, balance) {
+            // asynchronously called
+            console.log("show balance>>>>>>>>>>>>>++++++++++", balance)
+        });
 
         // stripe.accounts.create({
         //     type: 'custom',
@@ -286,42 +286,37 @@ stripe.balance.retrieve(function(err, balance) {
         else {
             if (!req.body.email || !req.body.password)
                 return Response.sendResponseWithoutData(res, resCode.BAD_REQUEST, "Please provide email_id & password");
-            userSchema.findOneAndUpdate({ email: req.body.email, status: 'ACTIVE', userType: req.body.userType }, { $set: { deviceToken: req.body.deviceToken, deviceType: req.body.deviceType } }, { new: true }).select('-email -address -mobile_no ').lean().exec((err, result) => {
+            userSchema.findOneAndUpdate({ email: req.body.email,  userType: req.body.userType }, { $set: { deviceToken: req.body.deviceToken, deviceType: req.body.deviceType } }, { new: true }).select('-email -address -mobile_no ').lean(true).exec((err, result) => {
                 console.log("Login success==>>", result)
                 if (err)
                     return Response.sendResponseWithoutData(res, resCode.INTERNAL_SERVER_ERROR, 'INTERNAL SERVER ERROR')
-                if (!result) {
-                    console.log("i am here", result)
-                    return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, "Please provide valid credentials");
-                }
-                bcrypt.compare(req.body.password, result.password, (err, res1) => {
-                    if (err)
-                        return Response.sendResponseWithoutData(res, resCode.INTERNAL_SERVER_ERROR, 'INTERNAL SERVER ERROR')
-                    if (res1) {
-                        // console.log("secret key is "+config.secret_key)
-                        var token = jwt.sign({ _id: result._id, email: result.email, password: result.password }, config.secret_key);
-                        delete result['password']
-                        console.log("login-----------dfdghdfghfdgdfgfdgdfghfdgdfghfdghfd", res1)
-                        return Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, resMessage.LOGIN_SUCCESS, result, token)
-                    }
-                    else
-                        return Response.sendResponseWithoutData(res, resCode.UNAUTHORIZED, "Please enter correct password.")
+                else {
+                 if (result.status == "INACTIVE")
+                        return Response.sendResponseWithoutData(res, resCode.UNAUTHORIZED, "User doesn't exist.")
+                    if (result.status == "BLOCK")
+                        return Response.sendResponseWithoutData(res, resCode.UNAUTHORIZED, "User blocked by admin.")
+                  else {
+                    bcrypt.compare(req.body.password, result.password, (err, res1) => {
+                        if (err)
+                            return Response.sendResponseWithoutData(res, resCode.INTERNAL_SERVER_ERROR, 'INTERNAL SERVER ERROR')
+                        if (res1) {
+                            // console.log("secret key is "+config.secret_key)
+                            var token = jwt.sign({ _id: result._id, email: result.email, password: result.password }, config.secret_key);
+                            delete result['password']
+                            console.log("login-----------dfdghdfghfdgdfgfdgdfghfdgdfghfdghfd", res1)
+                            return Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, resMessage.LOGIN_SUCCESS, result, token)
+                        }
+                        else
+                            return Response.sendResponseWithoutData(res, resCode.UNAUTHORIZED, "Please enter correct password.")
 
-                })
+                    })
+                  }           
+
+                }
+
             })
         }
     },
-
-    // else{
-    //     User.findOneAndUpdate({email:req.body.email,status:"ACTIVE"},{$set:{deviceToken:req.body.deviceToken,deviceType:req.body.deviceType}},{new:true},(error,result)=>{
-    //         if(error)
-    //             response.sendResponseWithoutData(res, resCode.SOMETHING_WENT_WRONG, resMessage.INTERNAL_SERVER_ERROR);
-    //         else if(!result)
-    //             response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.NOT_FOUND)
-    //         else
-    //             response.sendResponseWithoutData(res, resCode.EVERYTHING_IS_OK, 'Token updated successfully.')
-    //     })
-    // }
 
     //..................................................................userDetail API............................................................................... //
     "viewUserDetail": (req, res) => {
