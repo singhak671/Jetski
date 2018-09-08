@@ -71,7 +71,7 @@ const notiApi = {
         limit:10,
         sort: { createdAt: -1 }
     };
-    Notification.paginate({"bussinessId.bid":req.body.bussinessId,noti_type:'BUSSINESS'}, options, (error, result)=>{
+    Notification.paginate({"bussinessId.bid":req.body.bussinessId,noti_type:'CUSTOMER'}, options, (error, result)=>{
         if(error)
             response.sendResponseWithoutData(res, resCode.INTERNAL_SERVER_ERROR, resMessage.INTERNAL_SERVER_ERROR)
     else  if(result.docs.length==0){
