@@ -249,7 +249,11 @@ module.exports = {
     //=============================================================cancel booking for app=======================================================
     'cancelBooking': (req, res) => {
         var query = { _id: req.body._id, $or: [{ bookingStatus: "PENDING" }, { bookingStatus: "CONFIRMED" }] }
-        booking.findOneAndUpdate(query, { $set: { bookingStatus: "CANCELLED" } }), { new: true }.populate("businessManId", "deviceType deviceTokec profilePic name").exec((err, result) => {
+       
+       
+       
+        booking.findOneAndUpdate(query, { $set: { bookingStatus: "CANCELLED" } }, { new: true })
+        .populate("businessManId", "deviceType deviceTokec profilePic name").exec((err, result) => {
             console.log("**********************", err, result)
             if (err) {
                 console.log("err1,", err)
