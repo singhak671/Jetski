@@ -1503,6 +1503,8 @@ module.exports = {
             page: req.body.pageNumber || 1,
             limit: req.body.limit || 10,
             select: "transactionStatus bookingStatus eventName  eventPrice customerName businessName transactionDate transactionTime",
+            populate: { path: 'userId', select: ' name status', match: { status: "ACTIVE" } },
+            
             sort: { createdAt: -1 },
             lean: false
         }
