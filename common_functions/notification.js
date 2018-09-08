@@ -88,7 +88,10 @@ var notifications = {
                 let obj = {
                     customerId: { cid: customerId, image: image, name: name },
                     bussinessId: { bid: bussinessId },
-                    noti_type: 'CUSTOMER',
+                  
+                    // noti_type: 'CUSTOMER',//.......
+                   
+                    noti_type: 'BUSINESS',
                     content: msg
                 };
                 console.log(":::::::::::::::::::::::::", obj)

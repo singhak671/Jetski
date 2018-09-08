@@ -287,13 +287,25 @@ module.exports = {
                                 if (result_.deviceType && result_.deviceToken) {
                                     // if (deviceType && deviceToken) {
                                     if (result_.deviceType == 'IOS')
+                                    {
                                         notification.sendNotification(result_.deviceToken, `Booking Cancelled!!', ' Your booking is  Cancelled for the event ${result.eventName} and your amount will be refunded...!`, { type: 'event' }, notiObj)
+                                    }
+                                      
                                     else if (result_.deviceType == 'ANDROID') {
                                         notification.sendNotification(result_.deviceToken, `Booking Cancelled!!', ' Your booking is  Cancelled for the event ${result.eventName} and your amount will be refunded...!`, { type: 'event' }, notiObj)
                                     }
-                                    notification.single_notification(result_.deviceToken, `Booking Cancelled!!', ' Your booking is  Cancelled for the event ${result.eventName} and your amount will be refunded...!`, result.businessManId, result.userId, result_.profilePic, result_.name)
+                                    else{
+                                        notification.single_notification(result_.deviceToken, `Booking Cancelled!!', ' Your booking is  Cancelled for the event ${result.eventName} and your amount will be refunded...!`, result.businessManId, result.userId, result_.profilePic, result_.name)
+                                      
+                                    }
+                                    response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Booking cancelled successfully and your amount will be refunded...")
+                                   
+                                }
+                                else{
                                     response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Booking cancelled successfully and your amount will be refunded...")
                                 }
+                               
+                                
                             }
                         })
                         //   .then((refund)=>{
