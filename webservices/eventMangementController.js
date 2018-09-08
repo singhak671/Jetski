@@ -1230,23 +1230,23 @@ module.exports = {
                                 name: succ.name
                             }
                             console.log("*********result final", result)
-                            console.log("notificatiopn data--------->>>", succ.deviceToken, 'booking Posted !', `Your booking is successfully done by ${succ.name} requested for the event ${result.eventName}`, req.body.businessManId, req.body.userId, succ.profilePic, succ.name)
+                            console.log("notificatiopn data--------->>>", succ.deviceToken, 'booking Posted !', `Your booking is successfully done by ${name} requested for the event ${result.eventName}`, req.body.businessManId, req.body.userId, succ.profilePic, succ.name)
                             // if (succ.deviceType || succ.deviceToken) {
                             // if (deviceType && deviceToken) {
                             if (succ.deviceType == 'IOS') {
                                 console.log("noti obj--------------<<<<<", notiObj)
-                                console.log('ios---------------', succ.deviceToken, 'booking Posted !', `Your booking is successfully done by ${succ1.userId.name} , requested for the event ${result.eventName}`, { type: 'event' }, notiObj)
-                                notification.sendNotification(succ.deviceToken, 'booking Posted !', `Your booking is successfully done , requested for the event ${result.eventName}`, { type: 'event' }, notiObj)
+                                console.log('ios---------------', succ.deviceToken, 'booking Posted !', `Your booking is successfully done by ${name} , requested for the event ${result.eventName}`, { type: 'event' }, notiObj)
+                                notification.sendNotification(succ.deviceToken, 'booking Posted !', `Your booking is successfully done by ${name} , requested for the event ${result.eventName}`, { type: 'event' }, notiObj)
                             }
 
                             if (succ.deviceType == 'ANDROID') {
-                                console.log("and--------------", succ.deviceToken, 'booking Posted !', `Your booking is successfully done by ${succ1.userId.name} ,requested for the event ${result.eventName}`, { type: 'event' }, notiObj)
-                                notification.sendNotification(succ.deviceToken, 'booking Posted !', `Your booking is successfully done by ${succ1.userId.name} ,requested for the event ${result.eventName}`, { type: 'event' }, notiObj)
+                                console.log("and--------------", succ.deviceToken, 'booking Posted !', `Your booking is successfully done by ${name} ,requested for the event ${result.eventName}`, { type: 'event' }, notiObj)
+                                notification.sendNotification(succ.deviceToken, 'booking Posted !', `Your booking is successfully done by ${name} ,requested for the event ${result.eventName}`, { type: 'event' }, notiObj)
                             }
                             //  businessManId:req.body.businessManId,
                             if (deviceTypeWeb == 'WEBSITE') {
-                                console.log("web----------------", 'booking Posted !', `Booking is successfully done by ${succ1.userId.name} requested for the event ${result.eventName}`, req.body.businessManId, req.body.userId, profilePic, name)
-                                notification.single_notification('booking Posted !', ` Booking is successfully done by ${succ1.userId.name} requested for the event ${result.eventName}`, req.body.businessManId, req.body.userId, profilePic, name)
+                                console.log("web----------------", 'booking Posted !', `Booking is successfully done by ${name} requested for the event ${result.eventName}`, req.body.businessManId, req.body.userId, profilePic, name)
+                                notification.single_notification('booking Posted !', ` Booking is successfully done by ${name} requested for the event ${result.eventName}`, req.body.businessManId, req.body.userId, profilePic, name)
                             }
                         }
 
