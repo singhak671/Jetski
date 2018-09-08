@@ -16,7 +16,7 @@ const notificationSchema = new Schema({
     
     noti_type:{
         type:String,
-        enum:['BUSSINESS','CUSTOMER',]
+        enum:['BUSINESS','CUSTOMER',]
     },
     content:{
         type: String

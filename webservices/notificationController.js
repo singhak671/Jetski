@@ -71,7 +71,7 @@ const notiApi = {
         limit:10,
         sort: { createdAt: -1 }
     };
-    Notification.paginate({"bussinessId.bid":req.body.bussinessId,noti_type:'CUSTOMER'}, options, (error, result)=>{
+    Notification.paginate({"bussinessId.bid":req.body.bussinessId,noti_type:'BUSSINESS'}, options, (error, result)=>{
         if(error)
             response.sendResponseWithoutData(res, resCode.INTERNAL_SERVER_ERROR, resMessage.INTERNAL_SERVER_ERROR)
     else  if(result.docs.length==0){
@@ -83,7 +83,28 @@ const notiApi = {
         }       
     })
 },
-
+'unreadCount': (req, res) =>{
+    // console.log(`Request for unread notification count ${req.params.bussinessId}`)
+    Notification.count({"bussinessId.bid":req.params.bussinessId,noti_type:'BUSINESS',"bussinessId.isRead":false}, (error,result)=>{
+        if(error)
+            response.sendResponseWithoutData(res, resCode.INTERNAL_SERVER_ERROR, resMessage.INTERNAL_SERVER_ERROR)
+        else    
+            response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, 'Unread count found successfully.', result);
+    })
+},
+'updateReadStatus': (req, res) => {
+    // console.log(`Request for unread notification count -> ${req.params.bussinessId}`)
+    Notification.updateMany({"bussinessId.bid":req.params.bussinessId,noti_type:'BUSINESS'},{$set:{"bussinessId.isRead":true}}, (error,result)=>{
+        if(error)
+            response.sendResponseWithoutData(res, resCode.INTERNAL_SERVER_ERROR, resMessage.INTERNAL_SERVER_ERROR)
+        else if(result.matchedCount == result.modifiedCount) {
+            console.log("***************************",result.matchedCount,result.modifiedCount)
+            response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, 'Read status updated successfully.', 0);
+        }   
+        else
+            response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, 'Read status updated successfully.', result.matchedCount-result.modifiedCount);
+    })
+},
 //================================Notification shown in customer===============================================================
 
 'customerNotification': (req, res) => {
@@ -102,18 +123,18 @@ const notiApi = {
         }       
     })
 },
-'unreadCount': (req, res) =>{
+'unreadCountWebApp': (req, res) =>{
     // console.log(`Request for unread notification count ${req.params.bussinessId}`)
-    Notification.count({"bussinessId.bid":req.params.bussinessId,noti_type:'CUSTOMER',"bussinessId.isRead":false}, (error,result)=>{
+    Notification.count({"customerId.cid":req.params.customerId,noti_type:'CUSTOMER',"customerId.isRead":false}, (error,result)=>{
         if(error)
             response.sendResponseWithoutData(res, resCode.INTERNAL_SERVER_ERROR, resMessage.INTERNAL_SERVER_ERROR)
         else    
             response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, 'Unread count found successfully.', result);
     })
 },
-'updateReadStatus': (req, res) => {
+'updateReadStatusApp': (req, res) => {
     // console.log(`Request for unread notification count -> ${req.params.bussinessId}`)
-    Notification.updateMany({"bussinessId.bid":req.params.bussinessId,noti_type:'CUSTOMER'},{$set:{"bussinessId.isRead":true}}, (error,result)=>{
+    Notification.updateMany({"customerId.cid":req.params.customerId,noti_type:'CUSTOMER'},{$set:{"customerId.isRead":true}}, (error,result)=>{
         if(error)
             response.sendResponseWithoutData(res, resCode.INTERNAL_SERVER_ERROR, resMessage.INTERNAL_SERVER_ERROR)
         else if(result.matchedCount == result.modifiedCount) {
@@ -124,6 +145,7 @@ const notiApi = {
             response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, 'Read status updated successfully.', result.matchedCount-result.modifiedCount);
     })
 },
+
   //=======================================push=================================================  
     // 'push': function(req, res) {
     //     console.log("request for push-------->",JSON.stringify(req.body))

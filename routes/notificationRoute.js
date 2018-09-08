@@ -17,6 +17,9 @@ router.post('/notificationList',authHandler.verifyToken,notification.notificatio
 router.get('/unreadCount/:bussinessId',authHandler.verifyToken,notification.unreadCount)
 router.get('/updateReadStatus/:bussinessId',authHandler.verifyToken,notification.updateReadStatus)
 
+router.get('/unreadCountWebApp/:customerId',authHandler.verifyToken,notification.unreadCountWebApp)
+router.get('/updateReadStatusApp/:customerId',authHandler.verifyToken,notification.updateReadStatusApp)
+
 
 // router.post('/paticularNotificationDetail', auth_handler.auth_func,notification.paticularNotificationDetail);
 // router.post('/notificationListForApp',auth_handler.auth_func, notification.notificationListForApp);

@@ -241,8 +241,9 @@ module.exports = {
             obj = {
                 "socialId": req.body.socialId,
                 name: req.body.name,
+                deviceToken:req.body.deviceToken,
+                deviceType:req.body.deviceType,
                 email: req.body.email,
-                profilePic:req.body.profilePic,
                 status: "ACTIVE",
                 userType: "CUSTOMER"
             };
@@ -252,10 +253,18 @@ module.exports = {
                     return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG);
                 }
                 if (result) {
-                    console.log("res>>>>>.", result);
-                    var token = jwt.sign({ _id: (result._id), socialId: req.body.socialId }, config.secret_key);
-                    return Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, resMessage.LOGIN_SUCCESS, result, token);
 
+                    cloudinary.uploadImage(req.body.profilePic, (err, result) => {
+                        console.log("login result On controller", result, "err", err);
+                        if (err)
+                            return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, "Picture not uploaded successfully");
+                        if (result)
+                            req.body.profilePic = result;
+                        console.log("res>>>>>.", result);
+                        var token = jwt.sign({ _id: (result._id), socialId: req.body.socialId }, config.secret_key);
+                        return Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, resMessage.LOGIN_SUCCESS, result, token);
+
+                    })
                 }
 
                 if (!result) {

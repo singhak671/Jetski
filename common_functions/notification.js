@@ -98,7 +98,7 @@ var notifications = {
                 let noti = new Noti(obj);
                 console.log("******", noti)
                 noti.save((er1, ress) => {
-                    console.log(`Error is ${JSON.stringify(er1)}   result is ${JSON.stringify(ress)}`)
+                    console.log(`Error is ${JSON.stringify(er1)}   result is noti ${JSON.stringify(ress)}`)
                     //response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, 'Order has been placed successfully and confirmation code send to your mobile number.',result)
                 })
             } else {
@@ -148,7 +148,7 @@ var notifications = {
                 console.log(`Object of noti ${JSON.stringify(data)}`);
                 let obj = {
                     customerId: { cid: customerId, image: image, name: name },
-                    //  bussinessId:{bid:bussinessId},
+                      //bussinessId:{bid:bussinessId},
                     noti_type: 'BUSSINESS',
                     content: msg
                 };
@@ -192,8 +192,8 @@ var notifications = {
             } else {
                 console.log("Successfully sent with response: ", response);
                 let obj = {
-                    customerId: { cid: notiObj.customerId, image: notiObj.image, name: notiObj.name },
-                    //  bussinessId:{bid:bussinessId},
+                    customerId: { cid: notiObj.userId, image: notiObj.image, name: notiObj.name },
+                    bussinessId: { bid: notiObj.businessManId },
                     noti_type: 'CUSTOMER',
                     content: message
                 };

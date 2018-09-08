@@ -86,9 +86,9 @@ cron.schedule('0 * * * *', () => {
                         else if (succ1) {
                             console.log('Status updated successfully====>>>>', succ1);
 
-                              var amount = ((90 * succ1.eventPrice) / 100)*100
+                            var amount = ((90 * succ1.eventPrice) / 100) * 100
                             stripe.transfers.create({
-                                  amount: Math.round(amount),//((90* result.eventPrice)/100),
+                                amount: Math.round(amount),//((90* result.eventPrice)/100),
                                 // amount: 1,
                                 currency: "usd",
                                 destination: succ1.businessManId.stripeAccountId,//reciver
@@ -130,20 +130,25 @@ cron.schedule('0 * * * *', () => {
                                         console.log("err1========>", err1_, "succ1===============>>", succ1_)
                                         //callback('',refund)
                                         var notiObj = {
+                                            businessManId: req.body.businessManId,
                                             userId: succ1_.userId._id,
                                             profilePic: succ1_.userId.profilePic,
                                             name: succ1_.userId.name
                                         }
-                                        if (succ1.userId.deviceType || succ1.userId.deviceToken){
-                                            console.log("notificatiopn data during cron execution--------->>>", succ1.userId.deviceToken, 'booking cancelled !', `Your booking is cancelled done by ${succ1.name} requested for the event ${succ1.eventName}`,  succ1.businessManId, succ1.userId, succ1.userId.profilePic, succ1.userId.name)
+                                        // if (succ1.userId.deviceType || succ1.userId.deviceToken) {
+                                            console.log("notificatiopn data during cron execution--------->>>", succ1.userId.deviceToken, 'booking cancelled !', `Your booking is cancelled done by ${succ1.name} requested for the event ${succ1.eventName}`, succ1.businessManId, succ1.userId, succ1.userId.profilePic, succ1.userId.name)
                                             if (succ1.userId.deviceType == 'IOS')
-                                                notification.sendNotification(succ1.userId.deviceToken, 'booking cancelled !', `Your booking is cancelled for ${succ1.eventName}`, { type: 'event' }, notiObj)
-                                            else if (succ1.userId.deviceType == 'ANDROID') {
+                                                return notification.sendNotification(succ1.userId.deviceToken, 'booking cancelled !', `Your booking is cancelled for ${succ1.eventName}`, { type: 'event' }, notiObj)
+
+                                            if (succ1.userId.deviceType == 'ANDROID') {
                                                 notification.sendNotification(succ1.userId.deviceToken, 'booking cancelled !', `Your booking is cancelled for ${succ1.eventName}`, { type: 'event' }, notiObj)
                                             }
-                                            else
-                                                notification.single_notification( 'booking cancelled !', `Your booking is cancelled requested for the event ${succ1.eventName}`,succ1.businessManId, succ1.userId, succ1.userId.profilePic, succ1.userId.name)
-                                        }
+
+                                            if (succ1.deviceType=='WEBSITE') {
+
+                                                notification.single_notification('booking cancelled !', `Booking is cancelled requested for the event ${succ1.eventName}`, succ1.businessManId, succ1.userId, succ1.userId.profilePic, succ1.userId.name)
+                                            }
+                                      //  }
                                         next();
                                     })
                                 }
