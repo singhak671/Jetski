@@ -74,6 +74,7 @@ const user = mongoose.Schema({
     },
     deviceType: {
         type: String,
+        default:"WEBSITE",
         enum: ["IOS", "WEBSITE", "ANDROID"]
     },
     reviews: {

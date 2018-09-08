@@ -284,7 +284,7 @@ module.exports = {
                                 console.log('success refund-->', refund)
 
                                 console.log("notificatiopn data--------->>>", result_.deviceToken, `Booking Cancelled!!', ' Your booking is  Cancelled for the event ${result.eventName} and your amount will be refunded...!`, result.businessManId, result.userId, result_.profilePic, result_.name)
-                                if (result_.deviceType && result_.deviceToken) {
+                                if (result_.deviceType || result_.deviceToken) {
                                     // if (deviceType && deviceToken) {
                                     if (result_.deviceType == 'IOS')
                                     {
@@ -295,7 +295,7 @@ module.exports = {
                                         notification.sendNotification(result_.deviceToken, `Booking Cancelled!!', ' Your booking is  Cancelled for the event ${result.eventName} and your amount will be refunded...!`, { type: 'event' }, notiObj)
                                     }
                                     else{
-                                        notification.single_notification(result_.deviceToken, `Booking Cancelled!!', ' Your booking is  Cancelled for the event ${result.eventName} and your amount will be refunded...!`, result.businessManId, result.userId, result_.profilePic, result_.name)
+                                        notification.single_notification(`Booking Cancelled!!', ' Booking is  Cancelled for the event ${result.eventName} and your amount will be refunded...!`, result.businessManId, result.userId, result_.profilePic, result_.name)
                                       
                                     }
                                     response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Booking cancelled successfully and your amount will be refunded...")
@@ -746,7 +746,7 @@ module.exports = {
                             name: result.userId.name
 
                         }
-                        if (result.userId.deviceType && result.userId.deviceToken) {
+                        if (result.userId.deviceType || result.userId.deviceToken) {
                             if (result.userId.deviceType == 'IOS') {
                                 console.log("notification in confirm for device>>>>>>>",result.userId.deviceType )
                                 notification.sendNotification(result.userId.deviceToken, `Booking Confirmation:`, `Your booking has been confirmed for ${event}`, { type: ' event' }, notiObj)
@@ -758,7 +758,7 @@ module.exports = {
                             }
                         }
                         else
-                            notification.single_notification(result.userId.deviceToken, 'Event Confirmation!!', event + ' Event is Confirmed...!',  result.userId._id, result.userId.profilePic, result.userId.name)
+                            notification.single_notification('Event Confirmation!!', event + ' Event is Confirmed...!',  result.userId._id, result.userId.profilePic, result.userId.name)
 
                         response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Event status is confirmed")
                     }
@@ -817,14 +817,14 @@ module.exports = {
                                             name: result.userId.name
                                         }
                                         console.log('noti result==========>', result.userId.deviceToken, 'Event Cancelled!!', event + ' Event is Cancelled...!', result.userId._id, result.userId.profilePic, result.userId.name)
-                                        if (result.userId.deviceType && result.userId.deviceToken) {
+                                        if (result.userId.deviceType || result.userId.deviceToken) {
                                             if (result.userId.deviceType == 'IOS')
                                                 notification.sendNotification(result.userId.deviceToken, `Booking cancelled:`, `Your booking has been cancelled for ${event}`, { type: 'event' }, notiObj)
                                             else if (result.userId.deviceType == 'ANDROID') {
                                                 notification.sendNotification(result.userId.deviceToken, `Booking cancelled:`, `Your booking has been cancelled for ${event}`, { type: 'event' }, notiObj)
                                             }
                                             else
-                                                notification.single_notificationForWeb(result.userId.deviceToken, 'Event cancelled!!', event + ' Event is cancelled...!', result.userId._id, result.userId.profilePic, result.userId.name)
+                                                notification.single_notificationForWeb( 'Event cancelled!!', event + ' Event is cancelled...!', result.userId._id, result.userId.profilePic, result.userId.name)
                                         }
                                         // notification.single_notificationForWeb(result.userId.deviceToken, 'Event Cancelled!!', event + ' Event is Cancelled...!', result.userId._id, result.userId.profilePic, result.userId.name)
                                         response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Event status is cancelled")
@@ -1263,7 +1263,7 @@ module.exports = {
                             }
                             console.log("*********result final", result)
                             console.log("notificatiopn data--------->>>", succ.deviceToken, 'booking Posted !', `Your booking is successfully done by ${succ.name} requested for the event ${result.eventName}`, req.body.businessManId, req.body.userId, succ.profilePic, succ.name)
-                            if (succ.deviceType && succ.deviceToken) {
+                            if (succ.deviceType || succ.deviceToken) {
                                 // if (deviceType && deviceToken) {
                                 if (succ.deviceType == 'IOS')
                                     notification.sendNotification(succ.deviceToken, 'booking Posted !', `Your booking is successfully done , requested for the event ${result.eventName}`, { type: 'event' }, notiObj)
@@ -1271,7 +1271,7 @@ module.exports = {
                                     notification.sendNotification(succ.deviceToken, 'booking Posted !', `Your booking is successfully done by ,requested for the event ${result.eventName}`, { type: 'event' }, notiObj)
                                 }
                                 else
-                                    notification.single_notification(succ.deviceToken, 'booking Posted !', `Your booking is successfully done by ${succ.name} requested for the event ${result.eventName}`, req.body.businessManId, req.body.userId, succ1.userId.profilePic, succ1.userId.name)
+                                    notification.single_notification( 'booking Posted !', `Your booking is successfully done by ${succ.name} requested for the event ${result.eventName}`, req.body.businessManId, req.body.userId, succ1.userId.profilePic, succ1.userId.name)
                             }
                             // notification.single_notification(succ.deviceToken, 'booking Posted !', `Your booking is successfully done by ${succ.name}, requested for the event ${result.eventName}`, req.body.businessManId, req.body.userId, succ.profilePic, succ.name)
                             response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Payment successfully done!")
@@ -1375,7 +1375,7 @@ module.exports = {
                                         if (success)
                                             console.log("checking success**********>>>>>>>>>>", success)
                                         console.log("noti data===>", success.deviceToken, 'feedback Posted !', ' Your feedback is successfully send.', req.body.businessManId, req.body.customerId, success.profilePic, success.name)
-                                        notification.single_notification(success.deviceToken, 'feedback Posted !', ' Your feedback is successfully send.', req.body.businessManId, req.body.customerId, success.profilePic, success.name)
+                                        notification.single_notification( 'feedback Posted !', ' Your feedback is successfully send.', req.body.businessManId, req.body.customerId, success.profilePic, success.name)
                                         response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, "Feedback is successfully send.", success3);
                                     }
 
