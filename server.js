@@ -54,7 +54,9 @@ app.get('*', (req, res) => {
 
 //-------------------------------cron started -------------------------------------
 
-cron.schedule('0 * * * *', () => {
+// */2 * * * *     //At every 2nd minute.
+
+cron.schedule('*/2 * * * *', () => {
     console.log(" inside crone)))))))))")
     booking.find({}).exec((err, succ) => {
         asyncLoop(succ, (item, next) => {
@@ -130,7 +132,7 @@ cron.schedule('0 * * * *', () => {
                                         console.log("err1========>", err1_, "succ1===============>>", succ1_)
                                         //callback('',refund)
                                         var notiObj = {
-                                            businessManId: req.body.businessManId,
+                                            businessManId: result.businessManId,
                                             userId: succ1_.userId._id,
                                             profilePic: succ1_.userId.profilePic,
                                             name: succ1_.userId.name
