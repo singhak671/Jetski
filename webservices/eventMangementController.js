@@ -274,11 +274,26 @@ module.exports = {
                                 console.log("err in refunds", err)
                             }
                             else {
+
+
+                                var notiObj = {
+                                    userId: result.userId,
+                                    profilePic: result_.profilePic,
+                                    name: result_.name
+                                }
                                 console.log('success refund-->', refund)
-                                //callback('',refund)
-                                console.log("Noti data", result_.deviceToken, 'Booking Cancelled!!', ' Your booking is Cancelled and your amount will be refunded...!', result.businessManId, result.userId, result_.profilePic, result_.name)
-                                notification.single_notification(result_.deviceToken, 'Booking Cancelled!!', ' Your booking is cancelled and your amount will be refunded...!', result.businessManId, result.userId, result_.profilePic, result_.name)
-                                response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Booking cancelled successfully and your amount will be refunded...")
+
+                                console.log("notificatiopn data--------->>>", result_.deviceToken, `Booking Cancelled!!', ' Your booking is  Cancelled for the event ${result.eventName} and your amount will be refunded...!`, result.businessManId, result.userId, result_.profilePic, result_.name)
+                                if (result_.deviceType && result_.deviceToken) {
+                                    // if (deviceType && deviceToken) {
+                                    if (result_.deviceType == 'IOS')
+                                        notification.sendNotification(result_.deviceToken, `Booking Cancelled!!', ' Your booking is  Cancelled for the event ${result.eventName} and your amount will be refunded...!`, { type: 'event' }, notiObj)
+                                    else if (result_.deviceType == 'ANDROID') {
+                                        notification.sendNotification(result_.deviceToken, `Booking Cancelled!!', ' Your booking is  Cancelled for the event ${result.eventName} and your amount will be refunded...!`, { type: 'event' }, notiObj)
+                                    }
+                                    notification.single_notification(result_.deviceToken, `Booking Cancelled!!', ' Your booking is  Cancelled for the event ${result.eventName} and your amount will be refunded...!`, result.businessManId, result.userId, result_.profilePic, result_.name)
+                                    response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Booking cancelled successfully and your amount will be refunded...")
+                                }
                             }
                         })
                         //   .then((refund)=>{
@@ -1234,7 +1249,8 @@ module.exports = {
                             }
                             console.log("*********result final", result)
                             console.log("notificatiopn data--------->>>", succ.deviceToken, 'booking Posted !', `Your booking is successfully done by ${succ.name} requested for the event ${result.eventName}`, req.body.businessManId, req.body.userId, succ.profilePic, succ.name)
-                            if (deviceType && deviceToken) {
+                            if (succ.deviceType && succ.deviceToken) {
+                                // if (deviceType && deviceToken) {
                                 if (succ.deviceType == 'IOS')
                                     notification.sendNotification(succ.deviceToken, 'booking Posted !', `Your booking is successfully done , requested for the event ${result.eventName}`, { type: 'event' }, notiObj)
                                 else if (succ.deviceType == 'ANDROID') {
@@ -1307,7 +1323,7 @@ module.exports = {
         booking.find({ userId: req.body.userId }, { eventId: 1, duration: 1, _id: 0 }).populate("eventId", { duration: 0, userId: 0 }).populate("userId", { name: 1, profilePic: 1 }).exec((error, result) => {
             if (error)
                 return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
-            else if (result.length==0)
+            else if (result.length == 0)
                 return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND)
             else
                 return response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, result)

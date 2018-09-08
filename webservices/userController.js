@@ -242,6 +242,7 @@ module.exports = {
                 "socialId": req.body.socialId,
                 name: req.body.name,
                 email: req.body.email,
+                profilePic:req.body.profilePic,
                 status: "ACTIVE",
                 userType: "CUSTOMER"
             };
