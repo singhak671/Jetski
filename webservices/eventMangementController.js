@@ -1235,18 +1235,18 @@ module.exports = {
                             // if (deviceType && deviceToken) {
                             if (succ.deviceType == 'IOS') {
                                 console.log("noti obj--------------<<<<<", notiObj)
-                                console.log('ios---------------', succ.deviceToken, 'booking Posted !', `Your booking is successfully done , requested for the event ${result.eventName}`, { type: 'event' }, notiObj)
+                                console.log('ios---------------', succ.deviceToken, 'booking Posted !', `Your booking is successfully done by ${succ1.userId.name} , requested for the event ${result.eventName}`, { type: 'event' }, notiObj)
                                 notification.sendNotification(succ.deviceToken, 'booking Posted !', `Your booking is successfully done , requested for the event ${result.eventName}`, { type: 'event' }, notiObj)
                             }
 
                             if (succ.deviceType == 'ANDROID') {
-                                console.log("and--------------", succ.deviceToken, 'booking Posted !', `Your booking is successfully done by ,requested for the event ${result.eventName}`, { type: 'event' }, notiObj)
-                                notification.sendNotification(succ.deviceToken, 'booking Posted !', `Your booking is successfully done by ,requested for the event ${result.eventName}`, { type: 'event' }, notiObj)
+                                console.log("and--------------", succ.deviceToken, 'booking Posted !', `Your booking is successfully done by ${succ1.userId.name} ,requested for the event ${result.eventName}`, { type: 'event' }, notiObj)
+                                notification.sendNotification(succ.deviceToken, 'booking Posted !', `Your booking is successfully done by ${succ1.userId.name} ,requested for the event ${result.eventName}`, { type: 'event' }, notiObj)
                             }
                             //  businessManId:req.body.businessManId,
                             if (deviceTypeWeb == 'WEBSITE') {
-                                console.log("web----------------", 'booking Posted !', `Booking is successfully done by ${succ.name} requested for the event ${result.eventName}`, req.body.businessManId, req.body.userId, profilePic, name)
-                                notification.single_notification('booking Posted !', ` Booking is successfully done by ${succ.name} requested for the event ${result.eventName}`, req.body.businessManId, req.body.userId, profilePic, name)
+                                console.log("web----------------", 'booking Posted !', `Booking is successfully done by ${succ1.userId.name} requested for the event ${result.eventName}`, req.body.businessManId, req.body.userId, profilePic, name)
+                                notification.single_notification('booking Posted !', ` Booking is successfully done by ${succ1.userId.name} requested for the event ${result.eventName}`, req.body.businessManId, req.body.userId, profilePic, name)
                             }
                         }
 
