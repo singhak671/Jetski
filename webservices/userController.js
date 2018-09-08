@@ -324,6 +324,12 @@ module.exports = {
                             //     return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_MATCH);   
 
                             // })
+                            userSchema.findByIdAndUpdate({_id:result._id}, {$set:{deviceToken:req.body.deviceToken, deviceType: req.body.deviceType}}, (err2, res3)=>{
+                                if(err)
+                                    console.log("Token not updated.")
+                                else
+                                    console.log("Token  updated")
+                            })
                             delete result['password']
 
                             return Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, resMessage.LOGIN_SUCCESS, result, token)
