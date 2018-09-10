@@ -246,73 +246,7 @@ module.exports = {
             response.sendResponseWithPagination(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, data);
         })
     },
-    //=============================================================cancel booking for app=======================================================
-    'cancelBooking': (req, res) => {
-        var query = { _id: req.body._id, $or: [{ bookingStatus: "PENDING" }, { bookingStatus: "CONFIRMED" }] }
-        booking.findOneAndUpdate(query, { $set: { bookingStatus: "CANCELLED" } }, { new: true })
-        .populate("businessManId", "deviceType deviceToken profilePic name").exec((err, result) => {
-            console.log("**********************", err, result)
-            if (err) {
-                console.log("err1,", err)
-                return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
-            }
-            if (!result)
-                return response.sendResponseWithData(res, responseCode.NOT_FOUND, "Data not found")
-            else {
-
-                var result = result;
-                User.find({ _id: result.userId, status: "ACTIVE" }, (err_, result_) => {
-                    if (err_)
-                        return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
-                    else {
-                        //  }
-                        console.log('result____===>>>>>', result_);
-                        var amount = ((90 * result.eventPrice) / 100) * 100
-                        return stripe.refunds.create({
-                            charge: result.chargeId,
-                            amount: Math.round(amount),//((90* result.eventPrice)/100),
-                        }, function (err, refund) {
-                            if (err) {
-                                console.log("err in refunds", err)
-                            }
-                            else {
-
-                                var notiObj = {
-                                    businessManId: result.businessManId._id,
-                                    // if (deviceType && deviceToken) {
-                                    userId: result_.userId,
-                                    profilePic: result_.profilePic,
-                                    name: result_.name,
-                                    eventId: result.eventId,
-                                    type:'event',
-                                    eventStatus:'CANCELLED'
-                                }
-                                console.log('success refund-->', refund)
-
-                                console.log("notificatiopn data--------->>>", result_.deviceToken, `Booking Cancelled!!', ' Your booking is  Cancelled for the event ${result.eventName} and your amount will be refunded...!`, result.businessManId, result.userId, result_.profilePic, result_.name)
-
-
-                                if (result_.deviceType == 'IOS') {
-                                    notification.sendNotification(result_.deviceToken, `Booking Cancelled!!', ' Your booking is  Cancelled for the event ${result.eventName} and your amount will be refunded...!`, { type: 'event' }, notiObj)
-                                }
-
-                                if (result_.deviceType == 'ANDROID') {
-                                    notification.sendNotification(result_.deviceToken, `Booking Cancelled!!', ' Your booking is  Cancelled for the event ${result.eventName} and your amount will be refunded...!`, { type: 'event' }, notiObj)
-                                }
-                                
-                                // if (result.businessManId.deviceType == 'WEBSITE') {
-                                    notification.single_notification(`Booking Cancelled!!`, `Booking has been cancelled for ${result.eventName} by ${result_.name} `, result.businessManId._id, result.userId, result_.profilePic, result_.name, 'event', 'CANCELLED',result.eventId)
-                                //}
-                                response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Booking cancelled successfully and your amount will be refunded...")
-
-                            }
-                        })
-                    }
-                })
-
-            }
-        })
-    },
+  
     //-------------------------------------------------------------------------------alllatestEvent for app site as well as business website----------------------------------------------------------------//
 
 
@@ -1212,7 +1146,11 @@ module.exports = {
                             //  businessManId:req.body.businessManId,
                             //if (deviceTypeWeb == 'WEBSITE') { //title, msg, bussinessId, customerId, image, name, type, eventStatus
                                 console.log("web----------------", 'booking Posted !', `Booking is successfully done by ${notiObj.name}  , requested for the event ${result.eventName}`, req.body.businessManId, req.body.userId, profilePic, name)
-                                notification.single_notification('booking Posted !', `Booking is successfully done by ${notiObj.name}  , requested for the event ${result.eventName}`, req.body.businessManId, req.body.userId, profilePic, name, 'event', 'PENDING',req.body.eventId)
+                      
+
+                      
+                      
+                                notification.single_notification(`booking Posted !`, `Booking is successfully done by ${notiObj.name}  , requested for the event ${result.eventName}`, req.body.businessManId, req.body.userId, profilePic, name, 'event', 'PENDING',req.body.eventId)
                             //}
                         }
                         response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Payment successfully done!")
@@ -1224,53 +1162,75 @@ module.exports = {
         }
     },
 
+  //=============================================================cancel booking for app=======================================================
+  'cancelBooking': (req, res) => {
+    var query = { _id: req.body._id, $or: [{ bookingStatus: "PENDING" }, { bookingStatus: "CONFIRMED" }] }
+    booking.findOneAndUpdate(query, { $set: { bookingStatus: "CANCELLED" } }, { new: true })
+    .populate("businessManId", "deviceType deviceToken profilePic name").exec((err, result) => {
+        console.log("**********************", err, result)
+        if (err) {
+            console.log("err1,", err)
+            return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
+        }
+        if (!result)
+            return response.sendResponseWithData(res, responseCode.NOT_FOUND, "Data not found")
+        else {
 
-    /////////////////////////////////////////////////////////////////////////////------API for booking in APP--------------\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-    // 'booking': (req, res) => {
-    //     if (!req.body) {
-    //         return response.sendResponseWithoutData(res, responseCode.SOMETHING_WENT_WRONG, responseMessage.REQUIRED_DATA);
-    //     }
-    //     User.findOne({ _id: req.body.userId, userType: "CUSTOMER", status: "ACTIVE" }, (err4, succ) => {
-    //         if (err4)
-    //             return response.sendResponseWithData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.", err3);
-    //         if (!succ)
-    //             return response.sendResponseWithData(res, responseCode.NOT_FOUND, "UserId not found");
-    //         eventSchema.findOne({ _id: req.body.eventId }, (err5, succ1) => {//
-    //             if (err5)
-    //                 return response.sendResponseWithData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.", err5);
-    //             if (!succ1) {
-    //                 // console.log("successss>>>>>>>", succ1);
-    //                 return response.sendResponseWithData(res, responseCode.NOT_FOUND, "eventId Not found");
-    //             }
-    //             else {
-    //                 var array = [];
-    //                 array = req.body.duration[0].times;
-    //                 if (array.length == 1) {
-    //                     if (validateEvent(req.body.duration,req.body.offset)) {
-    //                         booking.findOne({ eventId: req.body.eventId, userId: req.body.userId, businessManId: req.body.businessManId, period: req.body.period }, (err, success) => {
-    //                             if (err)
-    //                                 return response.sendResponseWithData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.", err)
-    //                             else {
-    //                                 booking.create(req.body, (err, success) => {
-    //                                     if (err)
-    //                                         return response.sendResponseWithData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.", err);
-    //                                     else
-    //                                         response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, success);
+            var result = result;
+            User.find({ _id: result.userId, userType: "CUSTOMER", status: "ACTIVE" }, (err_, result_) => {
+                if (err_)
+                    return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
+                else {
+                    //  }
+                    console.log('result____===>>>>>', result_);
+                    var amount = ((90 * result.eventPrice) / 100) * 100
+                    return stripe.refunds.create({
+                        charge: result.chargeId,
+                        amount: Math.round(amount),//((90* result.eventPrice)/100),
+                    }, function (err, refund) {
+                        if (err) {
+                            console.log("err in refunds", err)
+                        }
+                        else {
 
-    //                                 })
-    //                             }
-    //                         })
-    //                     }
-    //                     else
-    //                         return response.sendResponseWithData(res, responseCode.NOT_FOUND, "Please choose valid time slot");
+                            var notiObj = {
+                                businessManId: result.businessManId._id,
+                                // if (deviceType && deviceToken) {
+                                userId: result_.userId,
+                                profilePic: result_.profilePic,
+                                name: result_.name,
+                                eventId: result.eventId,
+                                type:'event',
+                                eventStatus:'CANCELLED'
+                            }
+                            console.log('success refund-->', refund)
 
-    //                 }
-    //                 else
-    //                     return response.sendResponseWithData(res, responseCode.NOT_FOUND, "Multiple time slot are not allowed");
-    //             }
-    //         })//
-    //     })
-    // },
+                            console.log("notificatiopn data--------->>>", result_.deviceToken, `Booking Cancelled!!', ' Your booking is  Cancelled for the event ${result.eventName} and your amount will be refunded...!`, result.businessManId, result.userId, result_.profilePic, result_.name)
+
+
+                            if (result_.deviceType == 'IOS') {
+                                notification.sendNotification(result_.deviceToken, `Booking Cancelled!!', ' Your booking is  Cancelled for the event ${result.eventName} and your amount will be refunded...!`, { type: 'event' }, notiObj)
+                            }
+
+                            if (result_.deviceType == 'ANDROID') {
+                                notification.sendNotification(result_.deviceToken, `Booking Cancelled!!', ' Your booking is  Cancelled for the event ${result.eventName} and your amount will be refunded...!`, { type: 'event' }, notiObj)
+                            }
+                            
+                            // if (result.businessManId.deviceType == 'WEBSITE') {
+                                notification.single_notification(`Booking Cancelled!!`, `Booking has been cancelled for ${result.eventName} by ${name} `, result.businessManId._id, result.userId,profilePic, name, 'event', 'CANCELLED',result.eventId)
+                            //}
+                            response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Booking cancelled successfully and your amount will be refunded...")
+
+                        }
+                    })
+                }
+            })
+
+        }
+    })
+},
+
+  
     //    ********************************************************************************************** My all booking in app *********************************************************************************
     "myBookingShow": (req, res) => {
         var query = { userId: req.body.userId }
@@ -1316,7 +1276,7 @@ module.exports = {
                                         if (success)
                                             console.log("checking success**********>>>>>>>>>>", success)
                                         console.log("noti data===>", success.deviceToken, 'feedback Posted !', ' Your feedback is successfully send.', req.body.businessManId, req.body.customerId, success.profilePic, success.name)
-                                        notification.single_notification('feedback Posted !', ' Your feedback is successfully send.', req.body.businessManId, req.body.customerId, success.profilePic, success.name, 'feedback', 'COMPLETED',req.body.eventId)
+                                        notification.single_notification(`feedback Posted !`, ' Your feedback is successfully send.', req.body.businessManId, req.body.customerId, success.profilePic, success.name, 'feedback', 'COMPLETED',req.body.eventId)
                                         response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, "Feedback is successfully send.", success3);
                                     }
 
