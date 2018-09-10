@@ -76,7 +76,7 @@ module.exports = {
                                             notification.sendNotification(deviceToken, `${name} has send you message:`, `${req.body.message[0].message}`, { type: 'chat', chatData: req.body }, notiObj)
                                         }
 
-                                            notification.single_notification(`${name}`, `${req.body.message[0].message}` , req.body.businesssManId, req.body.customerId, profilePic, name, 'chat','',eventId)
+                                            notification.single_notification(`${name}`, `${req.body.message[0].message}` , req.body.businesssManId, req.body.customerId, profilePic, name, 'chat', null ,eventId)
                                         
                                     response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, success3);
                                 }
