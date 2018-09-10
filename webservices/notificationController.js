@@ -71,7 +71,7 @@ const notiApi = {
         limit:10,
         sort: { createdAt: -1 }
     };
-    Notification.paginate({"bussinessId.bid":req.body.bussinessId,noti_type:'CUSTOMER'}, options, (error, result)=>{
+    Notification.paginate({"bussinessId.bid":req.body.bussinessId,noti_type:'BUSINESS'}, options, (error, result)=>{
         if(error)
             response.sendResponseWithoutData(res, resCode.INTERNAL_SERVER_ERROR, resMessage.INTERNAL_SERVER_ERROR)
     else  if(result.docs.length==0){
@@ -108,7 +108,7 @@ const notiApi = {
 //================================Notification shown in customer===============================================================
 
 'customerNotification': (req, res) => {
-    // console.log(`Request for notification list ${JSON.stringify(req.body)}`)
+    // console.log(`Request for notification list ${JSON.stringify(req.body)}`)0
     let options = {
         page: req.body.pageNumber,
         limit:10,
