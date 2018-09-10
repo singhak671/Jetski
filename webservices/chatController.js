@@ -46,6 +46,7 @@ module.exports = {
                                         deviceType = success3.customerId.deviceType
                                         deviceToken = success3.customerId.deviceToken
                                         name = success3.businessManId.name
+                                        eventId=req.body.eventId
                                         profilePic = success3.businessManId.profilePic
                                         notiObj = {
                                             userId: req.body.businesssManId,
@@ -54,13 +55,15 @@ module.exports = {
                                         }
                                     } else {
                                         deviceType = success3.businessManId.deviceType
-                                        deviceToken = success3.businessManId.deviceToken
+                                        // deviceToken = success3.businessManId.deviceToken
                                         name = success3.customerId.name
+                                        eventId=req.body.eventId
                                         profilePic = success3.customerId.profilePic
                                         notiObj = {
                                             userId: req.body.customerId,
                                             profilePic: profilePic,
-                                            name: name
+                                            name: name,
+                                            type:'chat'
                                         }
                                     }
                                     console.log(`success3============>${JSON.stringify(success3)}`)
@@ -70,10 +73,10 @@ module.exports = {
                                             notification.sendNotification(deviceToken, `${name} has send you message:`, `${req.body.message[0].message}`, { type: 'chat', chatData: req.body }, notiObj)
                                         else if (deviceType == 'ANDROID') {
                                             notification.sendNotification(deviceToken, `${name} has send you message:`, `${req.body.message[0].message}`, { type: 'chat', chatData: req.body }, notiObj)
+                                        }else{
+                                            notification.single_notification(`${name}`, `${req.body.message[0].message}` , req.body.businessManId, req.body.userId, profilePic, name, 'chat', null,eventId)
                                         }
                                     }
-                                    // else
-                                    //     notification.single_notificationForWeb(deviceToken, 'Event cancelled!!', req.body.message[0].message + ' Event is cancelled...!', result.userId._id, result.userId.profilePic, result.userId.name)
                                     response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, success3);
                                 }
                             })

@@ -16,10 +16,22 @@ const notificationSchema = new Schema({
     
     noti_type:{
         type:String,
-        enum:['BUSINESS','CUSTOMER',]
+        enum:['BUSINESS','CUSTOMER']
     },
     content:{
         type: String
+    },
+    title:{
+        type:String
+    },
+    type:{
+        type:String,
+        enum:['chat', 'event', 'feedback']
+    },
+    eventId:{type:Schema.Types.ObjectId,ref:'Businesses'},
+    eventStatus:{
+        type:String,
+        enum:['PENDING', 'CANCELLED', 'CONFIRMED', 'COMPLETED']
     },
     status:{
         type:String,

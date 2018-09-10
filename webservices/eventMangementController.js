@@ -249,9 +249,6 @@ module.exports = {
     //=============================================================cancel booking for app=======================================================
     'cancelBooking': (req, res) => {
         var query = { _id: req.body._id, $or: [{ bookingStatus: "PENDING" }, { bookingStatus: "CONFIRMED" }] }
-       
-       
-       
         booking.findOneAndUpdate(query, { $set: { bookingStatus: "CANCELLED" } }, { new: true })
         .populate("businessManId", "deviceType deviceToken profilePic name").exec((err, result) => {
             console.log("**********************", err, result)
@@ -285,7 +282,10 @@ module.exports = {
                                     // if (deviceType && deviceToken) {
                                     userId: result.userId,
                                     profilePic: result_.profilePic,
-                                    name: result_.name
+                                    name: result_.name,
+                                    eventId: result.eventId,
+                                    type:'event',
+                                    eventStatus:'CANCELLED'
                                 }
                                 console.log('success refund-->', refund)
 
@@ -300,42 +300,13 @@ module.exports = {
                                     notification.sendNotification(result_.deviceToken, `Booking Cancelled!!', ' Your booking is  Cancelled for the event ${result.eventName} and your amount will be refunded...!`, { type: 'event' }, notiObj)
                                 }
 
-
-                                // if (deviceTypeWeb == 'WEBSITE') {
-                                //     console.log("web----------------", 'booking Posted !', `Booking is successfully done by ${succ.name} requested for the event ${result.eventName}`, req.body.businessManId, req.body.userId, profilePic, name)
-                                //     notification.single_notification('booking Posted !', ` Booking is successfully done by ${succ.name} requested for the event ${result.eventName}`, req.body.businessManId, req.body.userId, profilePic, name)
-                                // }
-
-
-
-
-
-
-                                if (result.businessManId.deviceType == 'WEBSITE') {
-                                    notification.single_notification(`Booking Cancelled!!`, `Booking is  Cancelled for the event ${result.eventName} and your amount will be refunded...!`, result.businessManId._id, result.userId, result_.profilePic, result_.name)
-                                }
+                                // if (result.businessManId.deviceType == 'WEBSITE') {
+                                    notification.single_notification(`Booking Cancelled!!`, `Booking is  Cancelled for the event ${result.eventName} and your amount will be refunded...!`, result.businessManId._id, result.userId, result_.profilePic, result_.name, 'event', 'CANCELLED',result.eventId)
+                                //}
                                 response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Booking cancelled successfully and your amount will be refunded...")
 
                             }
                         })
-                        //   .then((refund)=>{
-                        //     return  stripe.refunds.retrieve(
-                        //        req.body.refundId,// "re_1D1XeJHvBDdKnKYwXMjS4nTM",
-                        //         function(err, refund1) {
-                        //             if(err)
-                        //                 console.log("error---->",err)
-                        //             else{
-                        //                 console.log("Success refundsss---->",refund1)
-                        //                // callback('',refund1)
-                        //             //    notification.single_notification(result_.deviceToken, 'Booking Cancelled!!',' Your booking is Cancelled and your amount will be refunded...!', result.businessManId,result.userId)
-                        //             //    response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK,"booking cancelled successfully.")
-                        //             }
-                        //           //asynchronously called
-                        //         }
-                        //       );
-                        //   })
-                        // notification.single_notification(result_.deviceToken, 'Booking Cancelled!!',' Your booking is Cancelled and your amount will be refunded...!', result.businessManId,result.userId)
-                        // response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK,"booking cancelled successfully.")
                     }
                 })
 
@@ -718,7 +689,7 @@ module.exports = {
             if (!result)
                 return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found")
             else {
-                notification.single_notification(result.userId.deviceToken, 'Booking Confirmation!!', 'Your Booking is Confirmed...!', req.body.userId, result.userId)
+                // notification.single_notification(result.userId.deviceToken, 'Booking Confirmation!!', 'Your Booking is Confirmed...!', req.body.userId, result.userId)
 
                 response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result)
             }
@@ -754,8 +725,10 @@ module.exports = {
                             businessManId: result.businessManId,
                             userId: result.userId._id,
                             profilePic: result.userId.profilePic,
-                            name: result.userId.name
-
+                            name: result.userId.name,
+                            eventId: result.eventId,
+                            type:'event',
+                            eventStatus:'CONFIRMED'
                         }
                         // if (result.userId.deviceType || result.userId.deviceToken) {
                         if (result.userId.deviceType == 'IOS') {
@@ -771,7 +744,7 @@ module.exports = {
                     }
                     // if(deviceType=="WEBSITE")
                     //     notification.single_notification('Event Confirmation!!', event + ' Event is Confirmed...!', result.userId._id, result.userId.profilePic, result.userId.name)
-                    notification.single_notificationForWeb(result.userId.deviceToken, 'Event Cancelled!!', event + ' Event is Cancelled...!', result.userId._id, result.userId.profilePic, result.userId.name)
+                    // notification.single_notificationForWeb(result.userId.deviceToken, 'Event Cancelled!!', event + ' Event is Cancelled...!', result.userId._id, result.userId.profilePic, result.userId.name, '')
 
                     response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Event status is confirmed")
                     // }
@@ -828,7 +801,10 @@ module.exports = {
                                             businessManId: result.businessManId,
                                             userId: result.userId._id,
                                             profilePic: result.userId.profilePic,
-                                            name: result.userId.name
+                                            name: result.userId.name,
+                                            eventId: result.eventId,
+                                            type:'event',
+                                            eventStatus:'CANCELLED'
                                         }
                                         console.log('noti result==========>', result.userId.deviceToken, 'Event Cancelled!!', event + ' Event is Cancelled...!', result.userId._id, result.userId.profilePic, result.userId.name)
 
@@ -840,7 +816,7 @@ module.exports = {
                                         // else
                                         //     notification.single_notificationForWeb('Event cancelled!!', event + ' Event is cancelled...!', result.userId._id, result.userId.profilePic, result.userId.name)
                                     }
-                                     notification.single_notificationForWeb(result.userId.deviceToken, 'Event Cancelled!!', event + ' Event is Cancelled...!', result.userId._id, result.userId.profilePic, result.userId.name)
+                                    //  notification.single_notificationForWeb(result.userId.deviceToken, 'Event Cancelled!!', event + ' Event is Cancelled...!', result.userId._id, result.userId.profilePic, result.userId.name)
                                     response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Event status is cancelled")
                                     //}
                                 })
@@ -1211,7 +1187,10 @@ module.exports = {
                                 businessManId: req.body.businessManId,
                                 userId: req.body.userId,
                                 profilePic: succ.profilePic,
-                                name: succ.name
+                                name: succ.name,
+                                eventId:req.body.eventId,
+                                type:'event',
+                                eventStatus:'PENDING'
                             }
                             console.log("*********result final", result)
                             console.log("notificatiopn data--------->>>", succ.deviceToken, 'booking Posted !', `Your booking is successfully done by ${name} requested for the event ${result.eventName}`, req.body.businessManId, req.body.userId, succ.profilePic, succ.name)
@@ -1224,17 +1203,15 @@ module.exports = {
                             }
 
                             if (succ.deviceType == 'ANDROID') {
-                                console.log("and--------------", succ.deviceToken, 'booking Posted !', `Your booking is successfully done by ${notiObj.name} ,requested for the event ${result.eventName}`, { type: 'event' }, notiObj)
-                                notification.sendNotification(succ.deviceToken, 'booking Posted !', `Your booking is successfully done by ${notiObj.name} ,requested for the event ${result.eventName}`, { type: 'event' }, notiObj)
+                                console.log("and--------------", succ.deviceToken, 'booking Posted !', `Your booking is successfully done by ${notiObj.name} , requested for the event ${result.eventName}`, { type: 'event' }, notiObj)
+                                notification.sendNotification(succ.deviceToken, 'booking Posted !', `Your booking is successfully done by ${notiObj.name} , requested for the event ${result.eventName}`, { type: 'event' }, notiObj)
                             }
                             //  businessManId:req.body.businessManId,
-                            if (deviceTypeWeb == 'WEBSITE') {
-                                console.log("web----------------", 'booking Posted !', `Booking is successfully done by ${notiObj.name} requested for the event ${result.eventName}`, req.body.businessManId, req.body.userId, profilePic, name)
-                                notification.single_notification('booking Posted !', ` Booking is successfully done by ${notiObj.name} requested for the event ${result.eventName}`, req.body.businessManId, req.body.userId, profilePic, name)
-                            }
+                            //if (deviceTypeWeb == 'WEBSITE') { //title, msg, bussinessId, customerId, image, name, type, eventStatus
+                                console.log("web----------------", 'booking Posted !', `Booking is successfully done by ${notiObj.name}  , requested for the event ${result.eventName}`, req.body.businessManId, req.body.userId, profilePic, name)
+                                notification.single_notification('booking Posted !', `Booking is successfully done by ${notiObj.name}  , requested for the event ${result.eventName}`, req.body.businessManId, req.body.userId, profilePic, name, 'event', 'PENDING',req.body.eventId)
+                            //}
                         }
-
-                        // notification.single_notification(succ.deviceToken, 'booking Posted !', `Your booking is successfully done by ${succ.name}, requested for the event ${result.eventName}`, req.body.businessManId, req.body.userId, succ.profilePic, succ.name)
                         response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Payment successfully done!")
                         // }
 
@@ -1336,7 +1313,7 @@ module.exports = {
                                         if (success)
                                             console.log("checking success**********>>>>>>>>>>", success)
                                         console.log("noti data===>", success.deviceToken, 'feedback Posted !', ' Your feedback is successfully send.', req.body.businessManId, req.body.customerId, success.profilePic, success.name)
-                                        notification.single_notification('feedback Posted !', ' Your feedback is successfully send.', req.body.businessManId, req.body.customerId, success.profilePic, success.name)
+                                        notification.single_notification('feedback Posted !', ' Your feedback is successfully send.', req.body.businessManId, req.body.customerId, success.profilePic, success.name, 'feedback', 'COMPLETED',req.body.eventId)
                                         response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, "Feedback is successfully send.", success3);
                                     }
 

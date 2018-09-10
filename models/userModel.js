@@ -28,7 +28,7 @@ const user = mongoose.Schema({
     address: {
         type: String
     },
-  
+
     status: {
         type: String,
         enum: ["ACTIVE", "INACTIVE", "BLOCK"],
@@ -39,9 +39,10 @@ const user = mongoose.Schema({
         default: "CUSTOMER",
         enum: ['CUSTOMER', 'SUPERADMIN', 'BUSINESS']
     },
- 
 
-    socialId: { type: String },
+    socialId: {
+        type: String
+    },
 
 
     country: {
@@ -80,7 +81,7 @@ const user = mongoose.Schema({
     reviews: {
         type: String
     },
-    stripeAccountId:{
+    stripeAccountId: {
         type: String
     },
     pushSubscription: {

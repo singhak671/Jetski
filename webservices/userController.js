@@ -239,7 +239,7 @@ module.exports = {
 
         if (req.body.socialId) {
             obj = {
-                "socialId": req.body.socialId,
+                socialId: req.body.socialId,
                 name: req.body.name,
                 deviceToken:req.body.deviceToken,
                 deviceType:req.body.deviceType,
