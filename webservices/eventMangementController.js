@@ -1211,11 +1211,7 @@ module.exports = {
                       
                       
                       
-                      
-                      
-                      
-                      
-                             // console.log("notificatiopn data--------->>>", result_.deviceToken, `Booking Cancelled!!', ' Your booking is  Cancelled for the event ${result.eventName} and your amount will be refunded...!`, result.businessManId, result.userId, result_.profilePic, result_.name)
+                         ///   //  console.log("notificatiopn data--------->>>", result_.deviceToken, `Booking Cancelled!!', ' Your booking is  Cancelled for the event ${result.eventName} and your amount will be refunded...!`, result.businessManId, result.userId, result_.profilePic, result_.name)
 
 
                             if (result_.deviceType == 'IOS') {
