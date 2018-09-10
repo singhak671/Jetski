@@ -1207,7 +1207,15 @@ module.exports = {
                              console.log('success refund-->', refund)
                              console.log("incoming Data in Cancel booking>>>>>",notiObj)
 
-                            // console.log("notificatiopn data--------->>>", result_.deviceToken, `Booking Cancelled!!', ' Your booking is  Cancelled for the event ${result.eventName} and your amount will be refunded...!`, result.businessManId, result.userId, result_.profilePic, result_.name)
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                             // console.log("notificatiopn data--------->>>", result_.deviceToken, `Booking Cancelled!!', ' Your booking is  Cancelled for the event ${result.eventName} and your amount will be refunded...!`, result.businessManId, result.userId, result_.profilePic, result_.name)
 
 
                             if (result_.deviceType == 'IOS') {
