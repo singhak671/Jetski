@@ -248,7 +248,7 @@ module.exports = {
                 userType: "CUSTOMER"
             };
             var userSchemaData = new userSchema(obj);
-            userSchema.findOne({socialId:req.body.socialId, status: "ACTIVE" },{$set:{'name':req.body.name,'email':req.body.email}}, (err_1, result) => {
+            userSchema.findOneAndUpdate({socialId:req.body.socialId, status: "ACTIVE" },{$set:{'name':req.body.name,'email':req.body.email}}, (err_1, result) => {
                 if (err_1) {
                     return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG);
                 }
@@ -267,7 +267,7 @@ module.exports = {
                     })
                 }
 
-                else  {
+                else if (!result) {
                     userSchemaData.save((err, success) => {
                         if (err)
                             return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG);
