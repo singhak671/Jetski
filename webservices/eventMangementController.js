@@ -1197,7 +1197,7 @@ module.exports = {
                             var notiObj = {
                                 businessManId: result.businessManId._id,
                                 // if (deviceType && deviceToken) {
-                                userId: result_._id,
+                                userId: result.userId,
                                 profilePic: result_.profilePic,
                                 name: result_.name,
                                 eventId: result.eventId,
