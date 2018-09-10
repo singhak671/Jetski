@@ -280,7 +280,7 @@ module.exports = {
                                 var notiObj = {
                                     businessManId: result.businessManId._id,
                                     // if (deviceType && deviceToken) {
-                                    userId: result.userId,
+                                    userId: result_.userId,
                                     profilePic: result_.profilePic,
                                     name: result_.name,
                                     eventId: result.eventId,
@@ -299,9 +299,9 @@ module.exports = {
                                 if (result_.deviceType == 'ANDROID') {
                                     notification.sendNotification(result_.deviceToken, `Booking Cancelled!!', ' Your booking is  Cancelled for the event ${result.eventName} and your amount will be refunded...!`, { type: 'event' }, notiObj)
                                 }
-
+                                
                                 // if (result.businessManId.deviceType == 'WEBSITE') {
-                                    notification.single_notification(`Booking Cancelled!!`, `Booking is  Cancelled for the event ${result.eventName} and your amount will be refunded...!`, result.businessManId._id, result.userId, result_.profilePic, result_.name, 'event', 'CANCELLED',result.eventId)
+                                    notification.single_notification(`Booking Cancelled!!`, `Booking has been cancelled for ${result.eventName} by ${result_.name} `, result.businessManId._id, result.userId, result_.profilePic, result_.name, 'event', 'CANCELLED',result.eventId)
                                 //}
                                 response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Booking cancelled successfully and your amount will be refunded...")
 
@@ -1198,13 +1198,16 @@ module.exports = {
                             // if (deviceType && deviceToken) {
                             if (succ.deviceType == 'IOS') {
                                 console.log("noti obj--------------<<<<<", notiObj)
-                                console.log('ios---------------', succ.deviceToken, 'booking Posted !', `Your booking is successfully done by ${notiObj.name} , requested for the event ${result.eventName}`, { type: 'event' }, notiObj)
-                                notification.sendNotification(succ.deviceToken, 'booking Posted !', `Your booking is successfully done by ${notiObj.name} , requested for the event ${result.eventName}`, { type: 'event' }, notiObj)
+                                console.log('ios---------------', succ.deviceToken, 'booking Posted !', `You have successfully book the event ${result.eventName}`, { type: 'event' }, notiObj)
+                                notification.sendNotification(succ.deviceToken, 'booking Posted !', `You have successfully book the event ${result.eventName}`, { type: 'event' }, notiObj)
                             }
 
+
+
+
                             if (succ.deviceType == 'ANDROID') {
-                                console.log("and--------------", succ.deviceToken, 'booking Posted !', `Your booking is successfully done by ${notiObj.name} , requested for the event ${result.eventName}`, { type: 'event' }, notiObj)
-                                notification.sendNotification(succ.deviceToken, 'booking Posted !', `Your booking is successfully done by ${notiObj.name} , requested for the event ${result.eventName}`, { type: 'event' }, notiObj)
+                                console.log("and--------------", succ.deviceToken, 'booking Posted !', `You have successfully book the event ${result.eventName}`, { type: 'event' }, notiObj)
+                                notification.sendNotification(succ.deviceToken, 'booking Posted !', `You have successfully book the event ${result.eventName}`, { type: 'event' }, notiObj)
                             }
                             //  businessManId:req.body.businessManId,
                             //if (deviceTypeWeb == 'WEBSITE') { //title, msg, bussinessId, customerId, image, name, type, eventStatus
