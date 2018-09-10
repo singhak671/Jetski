@@ -242,6 +242,7 @@ module.exports = {
                 socialId: req.body.socialId,
                 name: req.body.name,
                 deviceToken:req.body.deviceToken,
+                profilePic:req.body.profilePic,
                 deviceType:req.body.deviceType,
                 email: req.body.email,
                 status: "ACTIVE",
@@ -253,7 +254,7 @@ module.exports = {
                     return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG);
                 }
                 else if (result) {
-                    
+
                         var token = jwt.sign({ _id: (result._id), socialId: req.body.socialId }, config.secret_key);
                         return Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, resMessage.LOGIN_SUCCESS, result, token);
 
