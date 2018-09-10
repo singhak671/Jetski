@@ -253,18 +253,11 @@ module.exports = {
                     return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG);
                 }
                 else if (result) {
-
-                    cloudinary.uploadImage(req.body.profilePic, (err, result___) => {
-                        console.log("login result On controller", result___, "err", err);
-                        if (err)
-                            return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, "Picture not uploaded successfully");
-                        if (result___)
-                            req.body.profilePic = result___;
-                        console.log("res>>>>>.", result___);
+                    
                         var token = jwt.sign({ _id: (result._id), socialId: req.body.socialId }, config.secret_key);
                         return Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, resMessage.LOGIN_SUCCESS, result, token);
 
-                    })
+                   
                 }
 
                 else if (!result) {
