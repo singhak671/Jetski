@@ -47,7 +47,7 @@ var notifications = {
 },
     //====================================Notification for app====================================================================
     'single_notification': ( title, msg, bussinessId, customerId, image, name) => {
-        console.log(`Notification api hit`)
+        console.log(`Notification api hit`, title, msg, bussinessId, customerId, image, name);
         var client = new Client();
         //var idArr = ['ebdbZ0Zgmkc:APA91bHbHeBbT__0Oor-nZunfGBWCUw23gkBLm1FvhQ7u30dfEdEzFxKDVe71SHkt9_Y68eueGCZ7yVuGdJN_SELrJgfeYf4nz9esINvts9My8-phyFqKuFXispIuCXQq1waroXvMNP7iJz6ORYCFTNlBdp28L55Qg','cOAjo2t143Q:APA91bErtsPQhPEhKeepyMQKihPMkOROAPP3RRduDJKzLLzlUNAATCrIRyW10dUa3JZ8zK1rRaIeeMqeNbNuS4PWy_0p9HcKA41k8MkbeQjdYUy--7_gNV13yIFM93IzHwBh5G3FAwk1LK2-XIzPBEzMVRNdf6ZYcA'];
         // idArr[0] = token;

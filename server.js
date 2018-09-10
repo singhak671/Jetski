@@ -56,7 +56,7 @@ app.get('*', (req, res) => {
 
 // */2 * * * *     //At every 2nd minute.
 
-cron.schedule('*/2 * * * *', () => {
+cron.schedule('0 * * * *', () => {
     console.log(" inside crone)))))))))")
     booking.find({}).exec((err, succ) => {
         asyncLoop(succ, (item, next) => {
