@@ -1167,7 +1167,7 @@ module.exports = {
     var query = { _id: req.body._id, $or: [{ bookingStatus: "PENDING" }, { bookingStatus: "CONFIRMED" }] }
     booking.findOneAndUpdate(query, { $set: { bookingStatus: "CANCELLED" } }, { new: true })
     .populate("businessManId", "deviceType deviceToken profilePic name").exec((err, result) => {
-        console.log("**********************", err, result)
+        // console.log("**********************", err, result)
         if (err) {
             console.log("err1,", err)
             return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
@@ -1177,7 +1177,8 @@ module.exports = {
         else {
 
             var result = result;
-            User.find({ _id: result.userId, userType: "CUSTOMER", status: "ACTIVE" }, (err_, result_) => {
+            // console.log("result >>>>>",result)
+            User.findById({ _id: result.userId, userType: "CUSTOMER", status: "ACTIVE" }, (err_, result_) => {
                 if (err_)
                     return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
                 else {
@@ -1196,16 +1197,17 @@ module.exports = {
                             var notiObj = {
                                 businessManId: result.businessManId._id,
                                 // if (deviceType && deviceToken) {
-                                userId: result_.userId,
+                                userId: result_._id,
                                 profilePic: result_.profilePic,
                                 name: result_.name,
                                 eventId: result.eventId,
                                 type:'event',
                                 eventStatus:'CANCELLED'
                             }
-                            console.log('success refund-->', refund)
+                             //console.log('success refund-->', refund)
+                             console.log("incoming Data in Cancel booking>>>>>",notiObj)
 
-                            console.log("notificatiopn data--------->>>", result_.deviceToken, `Booking Cancelled!!', ' Your booking is  Cancelled for the event ${result.eventName} and your amount will be refunded...!`, result.businessManId, result.userId, result_.profilePic, result_.name)
+                            // console.log("notificatiopn data--------->>>", result_.deviceToken, `Booking Cancelled!!', ' Your booking is  Cancelled for the event ${result.eventName} and your amount will be refunded...!`, result.businessManId, result.userId, result_.profilePic, result_.name)
 
 
                             if (result_.deviceType == 'IOS') {
@@ -1217,7 +1219,7 @@ module.exports = {
                             }
                             
                             // if (result.businessManId.deviceType == 'WEBSITE') {
-                                notification.single_notification(`Booking Cancelled!!`, `Booking has been cancelled for ${result.eventName} by ${notiObj.name} `, result.businessManId._id, result.userId, notiObj.profilePic, notiObj.name, 'event', 'CANCELLED',result.eventId)
+                                notification.single_notification(`Booking Cancelled!!`, `Booking has been cancelled for ${result.eventName} by ${result_.name} `, result.businessManId._id, result.userId, notiObj.profilePic, result_.name, 'event', 'CANCELLED',result.eventId)
                             //}
                             response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Booking cancelled successfully and your amount will be refunded...")
 

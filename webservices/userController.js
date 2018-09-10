@@ -248,26 +248,26 @@ module.exports = {
                 userType: "CUSTOMER"
             };
             var userSchemaData = new userSchema(obj);
-            userSchema.findOne({ email: req.body.email, status: "ACTIVE" }, { name: 1 }, (err_1, result) => {
+            userSchema.findOne({socialId:req.body.socialId, status: "ACTIVE" },{$set:{'name':req.body.name,'email':req.body.email}}, (err_1, result) => {
                 if (err_1) {
                     return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG);
                 }
-                if (result) {
+                else if (result) {
 
-                    cloudinary.uploadImage(req.body.profilePic, (err, result) => {
-                        console.log("login result On controller", result, "err", err);
+                    cloudinary.uploadImage(req.body.profilePic, (err, result___) => {
+                        console.log("login result On controller", result___, "err", err);
                         if (err)
                             return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, "Picture not uploaded successfully");
-                        if (result)
-                            req.body.profilePic = result;
-                        console.log("res>>>>>.", result);
+                        if (result___)
+                            req.body.profilePic = result___;
+                        console.log("res>>>>>.", result___);
                         var token = jwt.sign({ _id: (result._id), socialId: req.body.socialId }, config.secret_key);
                         return Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, resMessage.LOGIN_SUCCESS, result, token);
 
                     })
                 }
 
-                if (!result) {
+                else  {
                     userSchemaData.save((err, success) => {
                         if (err)
                             return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG);
