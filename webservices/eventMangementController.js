@@ -667,13 +667,13 @@ module.exports = {
                         // if (result.userId.deviceType || result.userId.deviceToken) {
                         if (result.userId.deviceType == 'IOS') {
                             console.log("notification in confirm for device>>>>>>>", result.userId.deviceType)
-                            notification.sendNotification(result.userId.deviceToken, `Booking Confirmation:`, `Your booking has been confirmed for ${event}`, { type: ' event' }, notiObj)
+                            notification.sendNotification(result.userId.deviceToken, `Booking Confirmation:`, `Your booking has been confirmed for the event ${event}`, { type: ' event' }, notiObj)
                         }
 
 
                         if (result.userId.deviceType == 'ANDROID') {
                             console.log("notification in confirm for device>>>>>>>", result.userId.deviceType)
-                            notification.sendNotification(result.userId.deviceToken, `Booking Confirmation:`, `Your booking has been confirmed for ${event}`, { type: ' event' }, notiObj)
+                            notification.sendNotification(result.userId.deviceToken, `Booking Confirmation:`, `Your booking has been confirmed for the event ${event}`, { type: ' event' }, notiObj)
                         }
                     }
                     // if(deviceType=="WEBSITE")
@@ -743,9 +743,9 @@ module.exports = {
                                         console.log('noti result==========>', result.userId.deviceToken, 'Event Cancelled!!', event + ' Event is Cancelled...!', result.userId._id, result.userId.profilePic, result.userId.name)
 
                                         if (result.userId.deviceType == 'IOS')
-                                            notification.sendNotification(result.userId.deviceToken, `Booking cancelled:`, `Your booking has been cancelled for ${event}`, { type: 'event' }, notiObj)
+                                            notification.sendNotification(result.userId.deviceToken, `Booking cancelled:`, `Your booking has been cancelled for the event ${event}`, { type: 'event' }, notiObj)
                                         if (result.userId.deviceType == 'ANDROID') {
-                                            notification.sendNotification(result.userId.deviceToken, `Booking cancelled:`, `Your booking has been cancelled for ${event}`, { type: 'event' }, notiObj)
+                                            notification.sendNotification(result.userId.deviceToken, `Booking cancelled:`, `Your booking has been cancelled for the event ${event}`, { type: 'event' }, notiObj)
                                         }
                                         // else
                                         //     notification.single_notificationForWeb('Event cancelled!!', event + ' Event is cancelled...!', result.userId._id, result.userId.profilePic, result.userId.name)
