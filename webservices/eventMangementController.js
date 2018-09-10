@@ -1217,7 +1217,7 @@ module.exports = {
                             }
                             
                             // if (result.businessManId.deviceType == 'WEBSITE') {
-                                notification.single_notification(`Booking Cancelled!!`, `Booking has been cancelled for ${result.eventName} by ${name} `, result.businessManId._id, result.userId,profilePic, name, 'event', 'CANCELLED',result.eventId)
+                                notification.single_notification(`Booking Cancelled!!`, `Booking has been cancelled for ${result.eventName} by ${notiObj.name} `, result.businessManId._id, result.userId,profilePic, name, 'event', 'CANCELLED',result.eventId)
                             //}
                             response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Booking cancelled successfully and your amount will be refunded...")
 
