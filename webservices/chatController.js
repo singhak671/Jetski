@@ -68,15 +68,16 @@ module.exports = {
                                     }
                                     console.log(`success3============>${JSON.stringify(success3)}`)
                                     console.log("*******noti data***********************", deviceToken, deviceType, req.body.businesssManId, req.body.customerId, profilePic, name, notiObj)
-                                    if (deviceType && deviceToken) {
+                                   
                                         if (deviceType == 'IOS')
                                             notification.sendNotification(deviceToken, `${name} has send you message:`, `${req.body.message[0].message}`, { type: 'chat', chatData: req.body }, notiObj)
-                                        else if (deviceType == 'ANDROID') {
+                                     
+                                       if (deviceType == 'ANDROID') {
                                             notification.sendNotification(deviceToken, `${name} has send you message:`, `${req.body.message[0].message}`, { type: 'chat', chatData: req.body }, notiObj)
-                                        }else{
-                                            notification.single_notification(`${name}`, `${req.body.message[0].message}` , req.body.businessManId, req.body.userId, profilePic, name, 'chat', null,eventId)
                                         }
-                                    }
+
+                                            notification.single_notification(`${name}`, `${req.body.message[0].message}` , req.body.businessManId, req.body.userId, profilePic, name, 'chat', null,eventId)
+                                        
                                     response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, success3);
                                 }
                             })
