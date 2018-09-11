@@ -2,8 +2,8 @@ const router = require('express').Router();
 const chat= require('../webservices/chatController');
 const authHandler = require('../middleware/auth_handler');
 
-router.post('/chatAPI',chat.chatAPI);
-router.post('/chatHistory',chat.chatHistory);
+router.post('/chatAPI',authHandler.verifyToken,chat.chatAPI);
+router.post('/chatHistory',authHandler.verifyToken,chat.chatHistory);
 
 // router.post('/notificationList',chat.notificationList);
 // router.get('/unreadCount/:bussinessId',chat.unreadCount)

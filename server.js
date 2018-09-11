@@ -25,6 +25,7 @@ var notification = require('./common_functions/notification');
 
 const keyPublishable = 'pk_test_NS4RiEEZeWMhQEcxYsEfRH5J'
 
+
 const cors = require('cors');
 const path = require('path');
 app.use(cors());
@@ -173,6 +174,13 @@ cron.schedule('0 * * * *', () => {
 app.listen(environment.port, () => {
     console.log(`Server is running on ${environment.port}`)
 })
+
+
+
+
+
+
+
 
 //************************For transfer the amount************************************************************************/
 //https://stripe.com/docs/connect/charges-transfers

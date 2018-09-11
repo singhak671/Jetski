@@ -1,20 +1,20 @@
 var userSchema = require("../models/userModel");
 const eventSchema = require('../models/eventManagementModel')
-var nodemailer = require('nodemailer');
+ var nodemailer = require('nodemailer');
 const Response = require('../common_functions/response_handler');
-const imageUpload = require('../common_functions/uploadImage');
+ const imageUpload = require('../common_functions/uploadImage');
 const resCode = require('../helper/httpResponseCode');
 const resMessage = require('../helper/httpResponseMessage');
 const message = require('../common_functions/message');
 const bcrypt = require('bcryptjs');
 const config = require('../config/config')();
 const cloudinary = require('../common_functions/uploadImage');
-const mongoose = require('mongoose')
+ const mongoose = require('mongoose')
 const jwt = require('jsonwebtoken');
-var mongoosePaginate = require('mongoose-paginate');
+ var mongoosePaginate = require('mongoose-paginate');
 const notification = require('../common_functions/notification');
 const Noti = require('../models/notificationModel');
-// var waterfall = require("async-waterfall");
+ var waterfall = require("async-waterfall");
 const async = require('async');
 // const keySecret = 'sk_test_7OyC78h4UYqhcEiH2N2vcX9O';//client
 const keySecret = 'sk_test_RnCHCs3r4NmdEJ1Ex9nLfME5';//avanish
@@ -241,24 +241,24 @@ module.exports = {
             obj = {
                 socialId: req.body.socialId,
                 name: req.body.name,
-                deviceToken:req.body.deviceToken,
-                profilePic:req.body.profilePic,
-                deviceType:req.body.deviceType,
+                deviceToken: req.body.deviceToken,
+                profilePic: req.body.profilePic,
+                deviceType: req.body.deviceType,
                 email: req.body.email,
                 status: "ACTIVE",
                 userType: "CUSTOMER"
             };
             var userSchemaData = new userSchema(obj);
-            userSchema.findOneAndUpdate({socialId:req.body.socialId, status: "ACTIVE" },{$set:{'name':req.body.name,'email':req.body.email}}, (err_1, result) => {
+            userSchema.findOneAndUpdate({ socialId: req.body.socialId, status: "ACTIVE" },req.body, { new: true, select: { "password": 0 }} , (err_1, result) => {
                 if (err_1) {
                     return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG);
                 }
                 else if (result) {
 
-                        var token = jwt.sign({ _id: (result._id), socialId: req.body.socialId }, config.secret_key);
-                        return Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, resMessage.LOGIN_SUCCESS, result, token);
+                    var token = jwt.sign({ _id: (result._id), socialId: req.body.socialId }, config.secret_key);
+                    return Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, resMessage.LOGIN_SUCCESS, result, token);
 
-                   
+
                 }
 
                 else if (!result) {
@@ -318,8 +318,8 @@ module.exports = {
                             //     return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_MATCH);   
 
                             // })
-                            userSchema.findByIdAndUpdate({_id:result._id}, {$set:{deviceToken:req.body.deviceToken, deviceType: req.body.deviceType}}, (err2, res3)=>{
-                                if(err)
+                            userSchema.findByIdAndUpdate({ _id: result._id }, { $set: { deviceToken: req.body.deviceToken, deviceType: req.body.deviceType } }, (err2, res3) => {
+                                if (err)
                                     console.log("Token not updated.")
                                 else
                                     console.log("Token  updated")
@@ -417,6 +417,7 @@ module.exports = {
                     return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, "Picture not uploaded successfully");
                 if (result)
                     req.body.profilePic = result;
+
                 userSchema.findByIdAndUpdate({ _id: req.body._id, status: "ACTIVE" }, req.body, { new: true, select: { "password": 0 } }, (err2, final) => {
                     if (err2 || !final)
                         return Response.sendResponseWithData(res, resCode.INTERNAL_SERVER_ERROR, "Error Occured.", err2)
@@ -774,6 +775,26 @@ module.exports = {
 
         })
     },
+
+    'logOut': (req,res) => {
+        console.log("req for logout is "+JSON.stringify(req.body))
+        if(!req.body)
+            Response.sendResponseWithoutData(res, resCode.BAD_REQUEST, "Please give userId.")
+        else{
+            userSchema.update({_id:req.body._id},{$set:{jwtToken:'',socialId:''}},(error,result)=>{
+                if(error){
+                    console.log("error of logout "+JSON.stringify(error))
+                    Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.INTERNAL_SERVER_ERROR)
+                }else if(!result){
+                    Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
+                }
+                else{
+                    console.log("result of logout "+JSON.stringify(result))
+                    Response.sendResponseWithoutData(res, resCode.EVERYTHING_IS_OK, "User logged out successfully.")
+                }
+            })
+        }
+    }  
 
 
 

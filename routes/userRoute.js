@@ -1,9 +1,6 @@
 const router = require('express').Router();
-const jwt = require('jsonwebtoken');
 const User= require('../webservices/userController');
- const authHandler = require('../middleware/auth_handler');
-
-
+const authHandler = require('../middleware/auth_handler');
 
 
 router.post('/signup',User.signup);
@@ -19,13 +16,12 @@ router.post('/blockUser',authHandler.verifyToken,User.blockUser);//by Admin pane
 router.get('/getAllCustomer/:pageNumber',authHandler.verifyToken,User.getAllCustomer);//by Admin panel
 router.get('/getAllBusiness/:pageNumber',authHandler.verifyToken,User.getAllBusiness);//by Admin panel
 router.post('/searchCustomerFilter',authHandler.verifyToken,User.searchCustomerFilter);//by Admin panel
-
 router.post('/postReviews',authHandler.verifyToken,User.postReviews);
 router.get('/viewReviews',User.viewReviews);
+router.post('/logOut',authHandler.verifyToken,User.logOut);
 
 
-
-router.post('/createStripeAccount',User.createStripeAccount)
+router.post('/createStripeAccount',User.createStripeAccount)// Testing purpose
  
 
 
