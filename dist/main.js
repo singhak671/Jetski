@@ -80,7 +80,7 @@ var AppComponent = /** @class */ (function () {
             if (x instanceof _angular_router__WEBPACK_IMPORTED_MODULE_2__["NavigationEnd"]) {
                 window.scroll(0, 0);
                 if (localStorage.getItem('adminId') === null) {
-                    if (!(_this.router.url === '/login')) {
+                    if (!((_this.router.url === '/login') || (_this.router.url === '/forgotPassword'))) {
                         _this.router.navigate(['/login']);
                     }
                 }
@@ -1529,7 +1529,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<!-- <p>\n  forgot-password works!\n</p> -->\n\n\n\n<header class=\"beforelogin\">\n\t\t<div class=\"logo\"><a href=\"javascript:void(0)\"><img src=\"assets/img/logo.png\"></a></div>\n\t</header>\n\t  <div class=\"before-login-wrapper\">\n       <div class=\"inner-content clearfix\">\n       \t  <div class=\"login-main-content\">\n\t\t       \t <div class=\"before-login-logo\">\n\t\t \t        \n               </div>\n               <form class=\"login_box_outer\" [formGroup]=\"forgotForm\" (ngSubmit)=\"forgot(forgotForm.value)\">\n\t\t \t        <div class=\"login-content-box\">\n\t\t \t        \t  <h2 class=\"heading\">Login</h2>\n\t\t \t        \t   <div class=\"form-group\">\n\t\t \t        \t   \t<label>Email Address </label>\n\t\t \t        \t   \t <input type=\"text\"  class=\"form-control\" placeholder=\"Email\" [formControl]=\"forgotForm.controls['email']\" maxlength=\"50\">\n                    <div class=\"error-block\" *ngIf=\"forgotForm.controls['email'].dirty && forgotForm.controls['email'].invalid\">\n                    <span *ngIf=\"forgotForm.controls['email'].hasError('required')\">*Please enter an email.</span>\n                    <span *ngIf=\"forgotForm.controls['email'].hasError('pattern')\">*Please enter valid email.</span>\n                    </div> \n                    </div> \n                    <div></div>\n                    \n                       <!-- <label class=\"error\">Please enter your Id</label> -->\n\t\t \t        \t \n\t\t \t        \t  \n                       <!-- <label class=\"error\">Please enter your password</label> -->\n                     \n                       <div class=\"button-box\" align=\"center\">\n                         <button type=\"submit\" class=\"btn btn-red width100\" [disabled]=\"forgotForm.invalid\">SEND</button>\n                          <!-- <a type=\"submit\" class=\"btn btn-red width100\" href=\"javascript:void(0)\">Login</a>\n                       </div> -->\n                   </div>\n\t\t \t        \t   </div> \n\t\t \t        \t  \n            \n            </form>\n        </div>\n      </div>\n      </div>\n    \n\t<div class=\"copyrights\">Copyright © 2018 App name All Rights Reserved.</div>\n  <!-- <script src=\"assets/js/jquery-2.2.4.min.js\"></script>\n  <script src=\"assets/js/bootstrap.min.js\"></script>\n  <script src=\"assets/js/custom.js\"></script> -->\n\n  \n    \n  \n"
+module.exports = "<!-- <p>\n  forgot-password works!\n</p> -->\n\n\n\n<header class=\"beforelogin\">\n\t\t<div class=\"logo\"><a href=\"javascript:void(0)\"><img src=\"assets/img/jetski.jpg\"></a></div>\n\t</header>\n\t  <div class=\"before-login-wrapper\">\n       <div class=\"inner-content clearfix\">\n       \t  <div class=\"login-main-content\">\n\t\t       \t <div class=\"before-login-logo\">\n\t\t \t        \n               </div>\n               <form class=\"login_box_outer\" [formGroup]=\"forgotForm\" (ngSubmit)=\"forgot(forgotForm.value)\">\n\t\t \t        <div class=\"login-content-box\">\n\t\t \t        \t  <h2 class=\"heading\">Login</h2>\n\t\t \t        \t   <div class=\"form-group\">\n\t\t \t        \t   \t<label>Email Address\n                        <span class=\"require\">*</span>\n                       </label>\n                       <input type=\"text\"  class=\"form-control\" placeholder=\"Email\" [formControl]=\"forgotForm.controls['email']\" maxlength=\"50\">\n                       \n\n\n                       <div class=\"error-block\" *ngIf=\"forgotForm.controls['email'].dirty && forgotForm.controls['email'].invalid\">\n\n                          <span style='color:red' [ngClass]=\"{error:forgotForm.controls['email'].hasError('required')}\" *ngIf=\"forgotForm.controls['email'].hasError('required')\">*Please enter an email.</span>\n                          <span style='color:red' [ngClass]=\"{error: forgotForm.controls['email'].hasError('pattern')}\" *ngIf=\"forgotForm.controls['email'].hasError('pattern')\">*Please enter valid email.</span>\n                          <span style='color:red' [ngClass]=\"{error: forgotForm.controls['email'].hasError('maxlength') && forgotForm.controls['email'].dirty}\"\n                            *ngIf=\"forgotForm.controls['email'].hasError('maxlength') && ! forgotForm.controls['email'].hasError('pattern')\">*Please enter valid email.</span>\n        \n        \n                        </div>\n\n\n\n                    <!-- <div class=\"error-block\" *ngIf=\"forgotForm.controls['email'].dirty && forgotForm.controls['email'].invalid\">\n                    <span *ngIf=\"forgotForm.controls['email'].hasError('required')\">*Please enter an email.</span>\n                    <span *ngIf=\"forgotForm.controls['email'].hasError('pattern')\">*Please enter valid email.</span>\n                    </div>  -->\n                    </div> \n                    <div></div>\n                    \n                       <!-- <label class=\"error\">Please enter your Id</label> -->\n\t\t \t        \t \n\t\t \t        \t  \n                       <!-- <label class=\"error\">Please enter your password</label> -->\n                     \n                       <div class=\"button-box\" align=\"center\">\n                         <button type=\"submit\" class=\"btn btn-red width100\" [disabled]=\"forgotForm.invalid\">SEND</button>\n                          <!-- <a type=\"submit\" class=\"btn btn-red width100\" href=\"javascript:void(0)\">Login</a>\n                       </div> -->\n                   </div>\n\t\t \t        \t   </div> \n\t\t \t        \t  \n            \n            </form>\n        </div>\n      </div>\n      </div>\n    \n\t<div class=\"copyrights\">Copyright © 2018 App name All Rights Reserved.</div>\n  <!-- <script src=\"assets/js/jquery-2.2.4.min.js\"></script>\n  <script src=\"assets/js/bootstrap.min.js\"></script>\n  <script src=\"assets/js/custom.js\"></script> -->\n\n  \n    \n  \n"
 
 /***/ }),
 
@@ -1568,7 +1568,13 @@ var ForgotPasswordComponent = /** @class */ (function () {
     }
     ForgotPasswordComponent.prototype.ngOnInit = function () {
         this.forgotForm = this.formBuilder.group({
-            'email': ['', [_angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required, _angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].pattern("[^ @]*@[^ @]*")]]
+            'email': ['', _angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].compose([_angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required, _angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].pattern(/^[A-Z0-9_]+([\.][A-Z0-9_]+)*@[A-Z0-9-]+(\.[a-zA-Z]{2,3})+$/i), _angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].maxLength(50)])],
+        });
+        $(function () {
+            $('#email,#pass').on('keypress', function (e) {
+                if (e.which == 32)
+                    return true;
+            });
         });
     };
     ForgotPasswordComponent.prototype.forgot = function (val) {
@@ -2315,7 +2321,7 @@ var MainService = /** @class */ (function () {
     function MainService(http, toastr) {
         this.http = http;
         this.toastr = toastr;
-        //  baseUrl =  'http://172.16.6.74:8000/api/v1/';
+        //   baseUrl =  'http://172.16.6.74:8000/api/v1/';
         //    >>>>staging URL>>
         this.baseUrl = 'http://162.222.32.20:1406/api/v1/';
     }
