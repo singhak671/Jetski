@@ -232,154 +232,11 @@ module.exports = {
 
 
 
-    "login": (req, res) => {
-        console.log("login request====++", req.body)
-        let id;
-        if (req.body.socialId) 
-        {
-            obj = {
-                socialId: req.body.socialId,
-                name: req.body.name,
-                deviceToken: req.body.deviceToken,
-                profilePic: req.body.profilePic,
-                deviceType: req.body.deviceType,
-                email: req.body.email,
-                status: "ACTIVE",
-                userType: "CUSTOMER"
-            };
-    
-            var userSchemaData = new userSchema(obj);
-            userSchema.findOne({ $or: [{ status: { $in: ["ACTIVE", "BLOCK"] } }], email: req.body.email }, async (resultErr_1, resultData) => {
-                // userSchema.findOne( {$or:[{ status:"ACTIVE"}, {status:"BLOCK"}], email:req.body.email } , async (err, result) => {
-                if (resultErr_1)
-                    Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.INTERNAL_SERVER_ERROR);
-                else if (resultData) {
-                    if (!resultData.socialId && req.body.email) {
-                        Response.sendResponseWithoutData(res, resCode.ALREADY_EXIST, `EmailId already exists with the @@@ ${resultData.userType} account`);
-                    }
-                    else if (req.body.email && req.body.socialId) {
-    
-                        if (resultData.socialId == req.body.socialId) {
-                            userSchema.findOneAndUpdate({ socialId: req.body.socialId, status: "ACTIVE" }, req.body, { new: true, select: { "password": 0 } }, (err_1, result) => {
-    
-                                if (err_1) {
-                                    return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG);
-                                }
-                                else if (result) {
-    
-                                    var token = jwt.sign({ _id: (result._id), socialId: req.body.socialId }, config.secret_key);
-                                    return Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, resMessage.LOGIN_SUCCESS, result, token);
-                                }
-                            })
-                        }
-                        else
-    
-                      {
-                        Response.sendResponseWithoutData(res, resCode.ALREADY_EXIST, `EmailId already exists with ++++ ${resultData.userType} account`);
-                      }  
-    
-    
-    
-                    }
-    
-    
-                }
-    
-    
-                else if (!resultData) {
-    
-                    userSchemaData.save((err, success) => {
-                        if (err)
-                            return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG);
-                        if (!success)
-                            return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, "Data doesn't save")
-                        else {
-                            var token = jwt.sign({ _id: (success._id), socialId: req.body.socialId }, config.secret_key);
-                            userSchema.findOne({ _id: success._id, status: "ACTIVE" }, { name: 1 }, (err_, success1) => {
-                                if (err_)
-                                    return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG);
-    
-                                if (!success)
-                                    return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, "Data doesn't exist")
-    
-                                return Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, resMessage.LOGIN_SUCCESS, success1, token);
-    
-                            })
-                        }
-    
-    
-                    })
-                }
-    
-            })
-        }
-    
-        else {
-            if (!req.body.email || !req.body.password)
-                return Response.sendResponseWithoutData(res, resCode.BAD_REQUEST, "Please provide email_id & password");
-            userSchema.findOne({ email: req.body.email, userType: req.body.userType }, { email: 0, address: 0, mobile_no: 0 }, { lean: true }, (err, result) => {
-                console.log("Login success==>>", result)
-                if (err)
-                    return Response.sendResponseWithoutData(res, resCode.INTERNAL_SERVER_ERROR, 'INTERNAL SERVER ERROR')
-                if (!result) {
-                    console.log("i am here", result)
-                    return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, "Please provide valid credentials");
-                }
-                else if (result.status == 'BLOCK')
-                    return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, "User blocked by admin");
-                else if (result.status == 'INACTIVE')
-                    return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, "User doesn't exist.");
-                else {
-    
-    
-                    bcrypt.compare(req.body.password, result.password, (err, res1) => {
-                        if (err)
-                            return Response.sendResponseWithoutData(res, resCode.INTERNAL_SERVER_ERROR, 'INTERNAL SERVER ERROR')
-                        if (res1) {
-                            // console.log("secret key is "+config.secret_key)
-                            var token = jwt.sign({ _id: result._id, email: result.email, password: result.password }, config.secret_key);
-                            // userSchema.findOneAndUpdate({email:req.body.email},{$set:{jwtToken:token}},{select:{"password":0},new:true},(err1,res2)=>{
-                            //     if(err1)
-                            //     return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, 'INTERNAL SERVER ERROR')
-                            //     if(!res2)            
-                            //     return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_MATCH);   
-    
-                            // })
-                            userSchema.findByIdAndUpdate({ _id: result._id }, { $set: { deviceToken: req.body.deviceToken, deviceType: req.body.deviceType } }, (err2, res3) => {
-                                if (err)
-                                    console.log("Token not updated.")
-                                else
-                                    console.log("Token  updated")
-                            })
-                            delete result['password']
-    
-                            return Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, resMessage.LOGIN_SUCCESS, result, token)
-                        }
-                        else
-                            return Response.sendResponseWithoutData(res, resCode.UNAUTHORIZED, "Please enter correct password.")
-    
-                    })
-                }
-            })
-        }
-    },
-    
-
-
-
-
-
-
-
-
-
-
-
-    //......................................................................Login API....................................................................... //
     // "login": (req, res) => {
     //     console.log("login request====++", req.body)
     //     let id;
-    //     if (req.body.socialId) {
+    //     if (req.body.socialId) 
+    //     {
     //         obj = {
     //             socialId: req.body.socialId,
     //             name: req.body.name,
@@ -390,18 +247,47 @@ module.exports = {
     //             status: "ACTIVE",
     //             userType: "CUSTOMER"
     //         };
+    
     //         var userSchemaData = new userSchema(obj);
-    //         userSchema.findOneAndUpdate({ socialId: req.body.socialId, status: "ACTIVE" },req.body, { new: true, select: { "password": 0 }} , (err_1, result) => {
-    //             if (err_1) {
-    //                 return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG);
+    //         userSchema.findOne({ $or: [{ status: { $in: ["ACTIVE", "BLOCK"] } }], email: req.body.email }, async (resultErr_1, resultData) => {
+    //             // userSchema.findOne( {$or:[{ status:"ACTIVE"}, {status:"BLOCK"}], email:req.body.email } , async (err, result) => {
+    //             if (resultErr_1)
+    //                 Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.INTERNAL_SERVER_ERROR);
+    //             else if (resultData) {
+    //                 if (!resultData.socialId && req.body.email) {
+    //                     Response.sendResponseWithoutData(res, resCode.ALREADY_EXIST, `EmailId already exists with the @@@ ${resultData.userType} account`);
+    //                 }
+    //                 else if (req.body.email && req.body.socialId) {
+    
+    //                     if (resultData.socialId == req.body.socialId) {
+    //                         userSchema.findOneAndUpdate({ socialId: req.body.socialId, status: "ACTIVE" }, req.body, { new: true, select: { "password": 0 } }, (err_1, result) => {
+    
+    //                             if (err_1) {
+    //                                 return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG);
+    //                             }
+    //                             else if (result) {
+    
+    //                                 var token = jwt.sign({ _id: (result._id), socialId: req.body.socialId }, config.secret_key);
+    //                                 return Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, resMessage.LOGIN_SUCCESS, result, token);
+    //                             }
+    //                         })
+    //                     }
+    //                     else
+    
+    //                   {
+    //                     Response.sendResponseWithoutData(res, resCode.ALREADY_EXIST, `EmailId already exists with ++++ ${resultData.userType} account`);
+    //                   }  
+    
+    
+    
+    //                 }
+    
+    
     //             }
-    //             else if (result) {
-
-    //                 var token = jwt.sign({ _id: (result._id), socialId: req.body.socialId }, config.secret_key);
-    //                 return Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, resMessage.LOGIN_SUCCESS, result, token);
-    //             }
-
-    //             else if (!result) {
+    
+    
+    //             else if (!resultData) {
+    
     //                 userSchemaData.save((err, success) => {
     //                     if (err)
     //                         return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG);
@@ -412,21 +298,22 @@ module.exports = {
     //                         userSchema.findOne({ _id: success._id, status: "ACTIVE" }, { name: 1 }, (err_, success1) => {
     //                             if (err_)
     //                                 return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG);
-
+    
     //                             if (!success)
     //                                 return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, "Data doesn't exist")
-
+    
     //                             return Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, resMessage.LOGIN_SUCCESS, success1, token);
-
+    
     //                         })
     //                     }
-
-
+    
+    
     //                 })
     //             }
+    
     //         })
-
     //     }
+    
     //     else {
     //         if (!req.body.email || !req.body.password)
     //             return Response.sendResponseWithoutData(res, resCode.BAD_REQUEST, "Please provide email_id & password");
@@ -443,8 +330,8 @@ module.exports = {
     //             else if (result.status == 'INACTIVE')
     //                 return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, "User doesn't exist.");
     //             else {
-
-
+    
+    
     //                 bcrypt.compare(req.body.password, result.password, (err, res1) => {
     //                     if (err)
     //                         return Response.sendResponseWithoutData(res, resCode.INTERNAL_SERVER_ERROR, 'INTERNAL SERVER ERROR')
@@ -456,7 +343,7 @@ module.exports = {
     //                         //     return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, 'INTERNAL SERVER ERROR')
     //                         //     if(!res2)            
     //                         //     return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_MATCH);   
-
+    
     //                         // })
     //                         userSchema.findByIdAndUpdate({ _id: result._id }, { $set: { deviceToken: req.body.deviceToken, deviceType: req.body.deviceType } }, (err2, res3) => {
     //                             if (err)
@@ -465,17 +352,130 @@ module.exports = {
     //                                 console.log("Token  updated")
     //                         })
     //                         delete result['password']
-
+    
     //                         return Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, resMessage.LOGIN_SUCCESS, result, token)
     //                     }
     //                     else
     //                         return Response.sendResponseWithoutData(res, resCode.UNAUTHORIZED, "Please enter correct password.")
-
+    
     //                 })
     //             }
     //         })
     //     }
     // },
+    
+
+
+
+
+
+
+
+
+
+
+
+  //......................................................................Login API....................................................................... //
+    "login": (req, res) => {
+        console.log("login request====++", req.body)
+        let id;
+        if (req.body.socialId) {
+            obj = {
+                socialId: req.body.socialId,
+                name: req.body.name,
+                deviceToken: req.body.deviceToken,
+                profilePic: req.body.profilePic,
+                deviceType: req.body.deviceType,
+                email: req.body.email,
+                status: "ACTIVE",
+                userType: "CUSTOMER"
+            };
+            var userSchemaData = new userSchema(obj);
+            userSchema.findOneAndUpdate({ socialId: req.body.socialId, status: "ACTIVE" },req.body, { new: true, select: { "password": 0 }} , (err_1, result) => {
+                if (err_1) {
+                    return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG);
+                }
+                else if (result) {
+
+                    var token = jwt.sign({ _id: (result._id), socialId: req.body.socialId }, config.secret_key);
+                    return Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, resMessage.LOGIN_SUCCESS, result, token);
+                }
+
+                else if (!result) {
+                    userSchemaData.save((err, success) => {
+                        if (err)
+                            return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG);
+                        if (!success)
+                            return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, "Data doesn't save")
+                        else {
+                            var token = jwt.sign({ _id: (success._id), socialId: req.body.socialId }, config.secret_key);
+                            userSchema.findOne({ _id: success._id, status: "ACTIVE" }, { name: 1 }, (err_, success1) => {
+                                if (err_)
+                                    return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG);
+
+                                if (!success)
+                                    return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, "Data doesn't exist")
+
+                                return Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, resMessage.LOGIN_SUCCESS, success1, token);
+
+                            })
+                        }
+
+
+                    })
+                }
+            })
+
+        }
+        else {
+            if (!req.body.email || !req.body.password)
+                return Response.sendResponseWithoutData(res, resCode.BAD_REQUEST, "Please provide email_id & password");
+            userSchema.findOne({ email: req.body.email, userType: req.body.userType }, { email: 0, address: 0, mobile_no: 0 }, { lean: true }, (err, result) => {
+                console.log("Login success==>>", result)
+                if (err)
+                    return Response.sendResponseWithoutData(res, resCode.INTERNAL_SERVER_ERROR, 'INTERNAL SERVER ERROR')
+                if (!result) {
+                    console.log("i am here", result)
+                    return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, "Please provide valid credentials");
+                }
+                else if (result.status == 'BLOCK')
+                    return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, "User blocked by admin");
+                else if (result.status == 'INACTIVE')
+                    return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, "User doesn't exist.");
+                else {
+
+
+                    bcrypt.compare(req.body.password, result.password, (err, res1) => {
+                        if (err)
+                            return Response.sendResponseWithoutData(res, resCode.INTERNAL_SERVER_ERROR, 'INTERNAL SERVER ERROR')
+                        if (res1) {
+                            // console.log("secret key is "+config.secret_key)
+                            var token = jwt.sign({ _id: result._id, email: result.email, password: result.password }, config.secret_key);
+                            // userSchema.findOneAndUpdate({email:req.body.email},{$set:{jwtToken:token}},{select:{"password":0},new:true},(err1,res2)=>{
+                            //     if(err1)
+                            //     return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, 'INTERNAL SERVER ERROR')
+                            //     if(!res2)            
+                            //     return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_MATCH);   
+
+                            // })
+                            userSchema.findByIdAndUpdate({ _id: result._id }, { $set: { deviceToken: req.body.deviceToken, deviceType: req.body.deviceType } }, (err2, res3) => {
+                                if (err)
+                                    console.log("Token not updated.")
+                                else
+                                    console.log("Token  updated")
+                            })
+                            delete result['password']
+
+                            return Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, resMessage.LOGIN_SUCCESS, result, token)
+                        }
+                        else
+                            return Response.sendResponseWithoutData(res, resCode.UNAUTHORIZED, "Please enter correct password.")
+
+                    })
+                }
+            })
+        }
+    },
     //..................................................................userDetail API............................................................................... //
     "viewUserDetail": (req, res) => {
         console.log("requested id is" + req.headers._id);
