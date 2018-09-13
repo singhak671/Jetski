@@ -1,20 +1,20 @@
 var userSchema = require("../models/userModel");
 const eventSchema = require('../models/eventManagementModel')
- var nodemailer = require('nodemailer');
+var nodemailer = require('nodemailer');
 const Response = require('../common_functions/response_handler');
- const imageUpload = require('../common_functions/uploadImage');
+const imageUpload = require('../common_functions/uploadImage');
 const resCode = require('../helper/httpResponseCode');
 const resMessage = require('../helper/httpResponseMessage');
 const message = require('../common_functions/message');
 const bcrypt = require('bcryptjs');
 const config = require('../config/config')();
 const cloudinary = require('../common_functions/uploadImage');
- const mongoose = require('mongoose')
+const mongoose = require('mongoose')
 const jwt = require('jsonwebtoken');
- var mongoosePaginate = require('mongoose-paginate');
+var mongoosePaginate = require('mongoose-paginate');
 const notification = require('../common_functions/notification');
 const Noti = require('../models/notificationModel');
- var waterfall = require("async-waterfall");
+var waterfall = require("async-waterfall");
 const async = require('async');
 // const keySecret = 'sk_test_7OyC78h4UYqhcEiH2N2vcX9O';//client
 const keySecret = 'sk_test_RnCHCs3r4NmdEJ1Ex9nLfME5';//avanish
@@ -89,7 +89,7 @@ module.exports = {
                 else {
                     // stripe.tokens.create({
                     //     card: {
-                    //        "number": '378282246310005',
+                    //        "number": '4242424242424242',
                     //    "exp_month": 12,
                     //       "exp_year": 2019,
                     //        "cvc": '123'
@@ -98,13 +98,14 @@ module.exports = {
                     //     console.log('token==>>>', result);
                     //     if (result) {
                     //         var token = 'result.id'; // Using Express //////tok_visa
-                    //         stripe.accounts.create({type: "custom", account_token: token, })
-                    //             .then(function (acct) {
-                    //                 console.log('acct==>>>', acct.id);
-                    //                 // asynchronously called
-                    //             });
-                    //     }
-                    // }); 
+                    //        console.log("token>>",result.id)
+                    //     return;
+                    // stripe.accounts.create({type: "custom", account_token: token, })
+                    //     .then(function (acct) {
+                    //         console.log('acct==>>>', acct.id);
+                    //         // asynchronously called
+                    //     });
+
                     stripe.accounts.create({
                         type: 'custom',
                         country: 'US',
@@ -116,8 +117,10 @@ module.exports = {
                             return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, "errr in strip")
                         }
                         else {
+
                             console.log(account.id)
-                            req.body.stripeAccountId = account.id
+                            req.body.stripeAccountId = account.id // save stripe account
+
                             var retVal = "";
                             const saltRounds = 10;
                             retVal = req.body.password;
@@ -152,80 +155,119 @@ module.exports = {
         }
     },
 
-    "createStripeAccount": (req, res) => {
+    // "createStripeAccount": (req, res) => {
 
 
-        // //     var stripe = require('stripe')('sk_test_...');
 
-        // //     stripe.customers.create(
-        // //       { email: 'customer@example.com' },
-        // //       function(err, customer) {
-        // //         // asynchronously called
-        // //         if (err) return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
-        // //         else {
-        // //             //   console.log(account)
-        // //             console.log("businessdsfghj++++++++",customer)
-        // //         }
-        // //         //   console.log("error++>>>>>",err ,   "success++++++++>>>>>>>>",account)
-        // //     });
-        // // },
-
-
-        //     //  console.log('stripe===>>>', stripe);
-        //     // return;
-        //     //  stripe.accounts.list(
-        //     //     // { limit: 3 },
-        //     //     function(err, accounts) {
-        //     //         console.log('accounts==>>', accounts);
-        //     //       // asynchronously called
-        //     //     }
-        //     // );
-        //     stripe.tokens.create({
-        //         card: {
-        //            "number": '378282246310005',
-        //        "exp_month": 12,
-        //           "exp_year": 2019,
-        //            "cvc": '123'
-        //          },            
-        //     }).then((result) => {
-        //          console.log('token==>>>', result);
-        //         if (result) {
-        //             var token = result.id;
-        //           console.log('token==>>>', result.id);     // Using Express //////tok_visa
-        //             stripe.accounts.create({
-        //                 country: "US",
-        //           type: "custom",
-        //                  account_token: token,
-        //                  })
-        //                 .then(function (acct) {
-        //                     console.log('acct==>>>', acct);
-        //                     // asynchronously called
-        //                 });
-        //         }
-        //     }); 
+    //     // stripe.tokens.create({
+    //     //     card: {
+    //     //         "number": '378282246310005',
+    //     //         "exp_month": 12,
+    //     //         "exp_year": 2019,
+    //     //         "cvc": '123'
+    //     //     },
+    //     // }).then((result) => {
+    //     //     console.log('token==>>>', result);
+    //     //     if (result) {
+    //     //         var token = result.id;
+    //     //         console.log('token==>>>', result.id); // Using Express //////tok_visa
+    //     //         stripe.accounts.create({
+    //     //             country: "US",
+    //     //             type: "custom",
+    //     //             account_token: token,
+    //     //         })
+    //     //             .then(function (acct) {
+    //     //                 console.log('acct==>>>', acct);
+    //     //                 // asynchronously called
+    //     //             });
+    //     //     }
+    //     // });
 
 
 
 
-        stripe.balance.retrieve(function (err, balance) {
-            // asynchronously called
-            console.log("show balance>>>>>>>>>>>>>++++++++++", balance)
-        });
 
-        // stripe.accounts.create({
-        //     type: 'custom',
-        //     country: 'US',
-        //     email: 'bob@example.com'
-        // }, function (err, account) {
-        //     // asynchronously called
-        //     if (err) return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
-        //     else {
-        //         //   console.log(account)
-        //         console.log("_+)(*&^%$#@!",account.id)
-        //     }
-        //     //   console.log("error++>>>>>",err ,   "success++++++++>>>>>>>>",account)
-        // });
-    },
+
+
+    
+    //           //create account             
+
+    //         stripe.accounts.create({
+    //             type: 'custom',
+    //             country: 'US',
+    //             email: "pramod@mobo.com"
+    //         }, function (err, account) {
+    //             // asynchronously called
+    //             if (err) {
+    //                 // console.log('err==>>>', err)
+    //                 // return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, "errr in strip")
+    //             }
+    //             else {
+    //                  console.log(account)
+    //                 // console.log("account--------->>",account)
+
+    //                 stripe.tokens.create({
+    //                     card: {
+    //                        "number": '4000056655665556',
+    //                        "exp_month": 12,
+    //                       "exp_year": 2019,
+    //                        "cvc": '123',
+    //                        "currency":"usd"
+    //                      },            
+    //                 }).then((result) => {
+    //                     // console.log('token==>>>', result);
+    //                     if (result) {
+    //                         var token = result.id; // Using Express //////tok_visa
+    //                       console.log("token>>",result.id)
+
+    //                 // var token2 =token
+                    
+    //                  var stripe_acc = account.id// save stripe account
+    //                 //  console.log("stripeAccountId>>>>>>>>>>>>>>",stripe_acc)
+
+    //                 try{
+    //                     stripe.accounts.createExternalAccount(
+    //                        stripe_acc,
+    //                    {external_account: token}
+                                             
+    //                 )
+    //                 }catch(err){
+    //                     console.log(`Error of external account ${JSON.stringify(err)}`)
+    //                 }
+    //                  console.log("@@@@@@@@ extnl acc>>>>",)
+
+
+
+
+    //             }
+    //         })
+
+
+
+    //         // stripe.balance.retrieve(function (err, balance) {
+    //         //     // asynchronously called
+    //         //     console.log("show balance>>>>>>>>>>>>>++++++++++", balance)
+    //         // })
+    //     }})
+
+
+    // },
+
+
+
+    // stripe.accounts.create({
+    //     type: 'custom',
+    //     country: 'US',
+    //     email: 'bob@example.com'
+    // }, function (err, account) {
+    //     // asynchronously called
+    //     if (err) return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
+    //     else {
+    //         //   console.log(account)
+    //         console.log("_+)(*&^%$#@!",account.id)
+    //     }
+    //     //   console.log("error++>>>>>",err ,   "success++++++++>>>>>>>>",account)
+    // });
 
 
 
@@ -247,7 +289,7 @@ module.exports = {
     //             status: "ACTIVE",
     //             userType: "CUSTOMER"
     //         };
-    
+
     //         var userSchemaData = new userSchema(obj);
     //         userSchema.findOne({ $or: [{ status: { $in: ["ACTIVE", "BLOCK"] } }], email: req.body.email }, async (resultErr_1, resultData) => {
     //             // userSchema.findOne( {$or:[{ status:"ACTIVE"}, {status:"BLOCK"}], email:req.body.email } , async (err, result) => {
@@ -258,36 +300,36 @@ module.exports = {
     //                     Response.sendResponseWithoutData(res, resCode.ALREADY_EXIST, `EmailId already exists with the @@@ ${resultData.userType} account`);
     //                 }
     //                 else if (req.body.email && req.body.socialId) {
-    
+
     //                     if (resultData.socialId == req.body.socialId) {
     //                         userSchema.findOneAndUpdate({ socialId: req.body.socialId, status: "ACTIVE" }, req.body, { new: true, select: { "password": 0 } }, (err_1, result) => {
-    
+
     //                             if (err_1) {
     //                                 return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG);
     //                             }
     //                             else if (result) {
-    
+
     //                                 var token = jwt.sign({ _id: (result._id), socialId: req.body.socialId }, config.secret_key);
     //                                 return Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, resMessage.LOGIN_SUCCESS, result, token);
     //                             }
     //                         })
     //                     }
     //                     else
-    
+
     //                   {
     //                     Response.sendResponseWithoutData(res, resCode.ALREADY_EXIST, `EmailId already exists with ++++ ${resultData.userType} account`);
     //                   }  
-    
-    
-    
+
+
+
     //                 }
-    
-    
+
+
     //             }
-    
-    
+
+
     //             else if (!resultData) {
-    
+
     //                 userSchemaData.save((err, success) => {
     //                     if (err)
     //                         return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG);
@@ -298,22 +340,22 @@ module.exports = {
     //                         userSchema.findOne({ _id: success._id, status: "ACTIVE" }, { name: 1 }, (err_, success1) => {
     //                             if (err_)
     //                                 return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG);
-    
+
     //                             if (!success)
     //                                 return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, "Data doesn't exist")
-    
+
     //                             return Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, resMessage.LOGIN_SUCCESS, success1, token);
-    
+
     //                         })
     //                     }
-    
-    
+
+
     //                 })
     //             }
-    
+
     //         })
     //     }
-    
+
     //     else {
     //         if (!req.body.email || !req.body.password)
     //             return Response.sendResponseWithoutData(res, resCode.BAD_REQUEST, "Please provide email_id & password");
@@ -330,8 +372,8 @@ module.exports = {
     //             else if (result.status == 'INACTIVE')
     //                 return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, "User doesn't exist.");
     //             else {
-    
-    
+
+
     //                 bcrypt.compare(req.body.password, result.password, (err, res1) => {
     //                     if (err)
     //                         return Response.sendResponseWithoutData(res, resCode.INTERNAL_SERVER_ERROR, 'INTERNAL SERVER ERROR')
@@ -343,7 +385,7 @@ module.exports = {
     //                         //     return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, 'INTERNAL SERVER ERROR')
     //                         //     if(!res2)            
     //                         //     return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_MATCH);   
-    
+
     //                         // })
     //                         userSchema.findByIdAndUpdate({ _id: result._id }, { $set: { deviceToken: req.body.deviceToken, deviceType: req.body.deviceType } }, (err2, res3) => {
     //                             if (err)
@@ -352,18 +394,17 @@ module.exports = {
     //                                 console.log("Token  updated")
     //                         })
     //                         delete result['password']
-    
+
     //                         return Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, resMessage.LOGIN_SUCCESS, result, token)
     //                     }
     //                     else
     //                         return Response.sendResponseWithoutData(res, resCode.UNAUTHORIZED, "Please enter correct password.")
-    
+
     //                 })
     //             }
     //         })
     //     }
     // },
-    
 
 
 
@@ -375,7 +416,8 @@ module.exports = {
 
 
 
-  //......................................................................Login API....................................................................... //
+
+    //......................................................................Login API....................................................................... //
     "login": (req, res) => {
         console.log("login request====++", req.body)
         let id;
@@ -391,7 +433,7 @@ module.exports = {
                 userType: "CUSTOMER"
             };
             var userSchemaData = new userSchema(obj);
-            userSchema.findOneAndUpdate({ socialId: req.body.socialId, status: "ACTIVE" },req.body, { new: true, select: { "password": 0 }} , (err_1, result) => {
+            userSchema.findOneAndUpdate({ socialId: req.body.socialId, status: "ACTIVE" }, req.body, { new: true, select: { "password": 0 } }, (err_1, result) => {
                 if (err_1) {
                     return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG);
                 }
@@ -576,29 +618,28 @@ module.exports = {
                 Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
             else if (!result)
                 Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
-            else
-                {
-                    userSchema.findByIdAndUpdate({ _id: req.body._id }, { $set: { status: "INACTIVE" } }, (error, result) => {
-                        if (error) {
-                            return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
-                        }
-                        else if (!result)
-                            return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
-                        else {
-                            eventSchema.update({ userId: req.body._id }, { status: "INACTIVE" }, { multi: true }, (err1, success) => {
-                                if (err1) {
-                                    return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
-                                }
-                                else if (!success)
-                                    return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
-                                else {
-                                    Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "User is deleted successfully ...", success)
-                                }
+            else {
+                userSchema.findByIdAndUpdate({ _id: req.body._id }, { $set: { status: "INACTIVE" } }, (error, result) => {
+                    if (error) {
+                        return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
+                    }
+                    else if (!result)
+                        return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
+                    else {
+                        eventSchema.update({ userId: req.body._id }, { status: "INACTIVE" }, { multi: true }, (err1, success) => {
+                            if (err1) {
+                                return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
+                            }
+                            else if (!success)
+                                return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
+                            else {
+                                Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "User is deleted successfully ...", success)
+                            }
 
-                            })
-                        }
-                    })
-                }
+                        })
+                    }
+                })
+            }
         })
     },
 
@@ -916,25 +957,25 @@ module.exports = {
         })
     },
 
-    'logOut': (req,res) => {
-        console.log("req for logout is "+JSON.stringify(req.body))
-        if(!req.body)
+    'logOut': (req, res) => {
+        console.log("req for logout is " + JSON.stringify(req.body))
+        if (!req.body)
             Response.sendResponseWithoutData(res, resCode.BAD_REQUEST, "Please give userId.")
-        else{
-            userSchema.update({_id:req.body._id},{$set:{jwtToken:'',socialId:''}},(error,result)=>{
-                if(error){
-                    console.log("error of logout "+JSON.stringify(error))
+        else {
+            userSchema.update({ _id: req.body._id }, { $set: { jwtToken: '', socialId: '' } }, (error, result) => {
+                if (error) {
+                    console.log("error of logout " + JSON.stringify(error))
                     Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.INTERNAL_SERVER_ERROR)
-                }else if(!result){
+                } else if (!result) {
                     Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
                 }
-                else{
-                    console.log("result of logout "+JSON.stringify(result))
+                else {
+                    console.log("result of logout " + JSON.stringify(result))
                     Response.sendResponseWithoutData(res, resCode.EVERYTHING_IS_OK, "User logged out successfully.")
                 }
             })
         }
-    }  
+    }
 
 
 

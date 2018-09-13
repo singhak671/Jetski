@@ -17,10 +17,6 @@ const stripe = require("stripe")(keySecret);
 const keyPublishable = 'pk_test_qd08fVES1IsBAD3CZEKs00ng';
 // const keySecret = 'sk_test_c1fuFQmWKd4OZeCThFOtLFuY';//pramod
 
-// const keySecret = ' sk_test_If8VjcOB09CxnrxnZiUXeM0Q';//////sir sect key
-
-// const stripe = require("stripe")(keySecret);
-// const keyPublishable = 'pk_test_NS4RiEEZeWMhQEcxYsEfRH5J';
 const notification = require('../common_functions/notification');
 const Noti = require('../models/notificationModel');
 
@@ -117,14 +113,8 @@ module.exports = {
                         req.body.eventImage = result;
                     }
                     var business = new eventSchema(req.body)
-
-                    var durationArr = business.duration;
-                    var valid = validateEvent(durationArr, req.body.offset);
-                    if (!valid) {
-                        // console.log("@@@@@@@@@@@@@@@@@.")
-                        return response.sendResponseWithData(res, responseCode.NOT_FOUND, "Please provide correct duration time");
-                    }
-                    else {
+                                
+                     
                         // console.log("&&&&&&&&&&&&&&&&&&&&&.")
                         business.save((err2, createEvent) => {
                             if (err2) {
@@ -133,7 +123,7 @@ module.exports = {
                             }
                             else if (createEvent) {
                                 response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, "Event saved successfully.", createEvent);
-                                User.findByIdAndUpdate({ _id: req.body.userId }, { $push: { services: { eventId: createEvent._id, eventIdStatus: createEvent.eventStatus } } }, { new: true }, (err3, success) => {
+                                User.findByIdAndUpdate({ _id: req.body.userId }, { $push: { services: { eventId: createEvent._id } } }, { new: true }, (err3, success) => {
                                     console.log("success", success)
                                     if (err3)
                                         console.log(err3)
@@ -143,12 +133,47 @@ module.exports = {
                             }
                             else
                                 response.sendResponseWithoutData(res, responseCode.SOMETHING_WENT_WRONG, "Error !!!", err2)
-                        })
-                    }
+                        })                   
                 })
             })
         })
     },
+
+
+
+
+
+    //                 var durationArr = business.duration;
+    //                 var valid = validateEvent(durationArr, req.body.offset);
+    //                 if (!valid) {
+    //                     // console.log("@@@@@@@@@@@@@@@@@.")
+    //                     return response.sendResponseWithData(res, responseCode.NOT_FOUND, "Please provide correct duration time");
+    //                 }
+    //                 else {
+    //                     // console.log("&&&&&&&&&&&&&&&&&&&&&.")
+    //                     business.save((err2, createEvent) => {
+    //                         if (err2) {
+    //                             console.log("business added error>>>>>>>>>>>", err2)
+    //                             response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.", err2)
+    //                         }
+    //                         else if (createEvent) {
+    //                             response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, "Event saved successfully.", createEvent);
+    //                             User.findByIdAndUpdate({ _id: req.body.userId }, { $push: { services: { eventId: createEvent._id } } }, { new: true }, (err3, success) => {
+    //                                 console.log("success", success)
+    //                                 if (err3)
+    //                                     console.log(err3)
+    //                                 if (!success)
+    //                                     console.log("cannot update userId with the event update")
+    //                             })
+    //                         }
+    //                         else
+    //                             response.sendResponseWithoutData(res, responseCode.SOMETHING_WENT_WRONG, "Error !!!", err2)
+    //                     })
+    //                 }
+    //             })
+    //         })
+    //     })
+    // },
 
 
     //-------------------------------------------------------------------------------All Event at business site before login-----------------------------------------------------------------//
