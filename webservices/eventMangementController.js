@@ -931,7 +931,7 @@ module.exports = {
                                 name = succ1.userId.name
                                 var array = [];
                                 array = req.body.duration[0].times;
-                                if (array.length == 1) {
+                                // if (array.length == 1) {
                                     if (validateEvent(req.body.duration, req.body.offset)) {
                                         // transactionDate , transactionTime , transactionTimestamp, buninesNname , eventName, customerName. are required ** //
 
@@ -958,11 +958,11 @@ module.exports = {
                                     }
                                     else
                                         return response.sendResponseWithData(res, responseCode.NOT_FOUND, "Booking time expired..");
-
-                                }
-                                else
-                                    return response.sendResponseWithData(res, responseCode.NOT_FOUND, "Multiple time slot are not allowed");
-                                callback(null, succ1)
+                                       
+                                // }
+                                // else
+                                //     return response.sendResponseWithData(res, responseCode.NOT_FOUND, "Multiple time slot are not allowed");
+                                    callback(null, succ1)
                             }
                         })//
                     }, (data, callback) => {

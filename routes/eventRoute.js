@@ -3,7 +3,7 @@ const Business= require('../webservices/eventMangementController');
 const authHandler = require('../middleware/auth_handler');
 
 router.post('/addEvent',authHandler.verifyToken,Business.addEvent);
- router.get('/latestEvents',authHandler.verifyToken,Business.latestEvents);
+ router.get('/latestEvents',Business.latestEvents);
   router.get('/allEvent',Business.allEvent);
  router.post('/myAllEvents',authHandler.verifyToken,Business.myAllEvents);
  router.get('/eventLocation',authHandler.verifyToken,Business.eventLocation);

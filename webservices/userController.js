@@ -120,68 +120,85 @@ module.exports = {
 
                             console.log(account.id)
                             req.body.stripeAccountId = account.id // save stripe account
+                           
+                            var token = req.body.stripe_token; // Using Express //////tok_visa
+                            console.log("token>>", req.body.stripe_token)
+                            // var token2 =token
+                            var stripe_acc = account.id// save stripe account
+                            //  console.log("stripeAccountId>>>>>>>>>>>>>>",stripe_acc)
+                            try {
+                                stripe.accounts.createExternalAccount(
+                                    stripe_acc,
+                                    { external_account: token }
 
-                            var retVal = "";
-                            const saltRounds = 10;
-                            retVal = req.body.password;
-                            bcrypt.genSalt(saltRounds, (err, salt) => {
-                                bcrypt.hash(retVal, salt, (error, hash) => {
-                                    req.body.password = hash;
-                                    let user = new userSchema(req.body);
-                                    user.save({ lean: true }).then((result) => {
-                                        console.log("RESULT AFTER SIGNUP USER======>", result);
-                                        if (error) {
-                                            console.log(error)
-                                            Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.INTERNAL_SERVER_ERROR)
-                                        } else {
-                                            var result = result.toObject();
-                                            delete result.password;
-                                            Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "You have successfully signup.", result)
-                                            //  message.sendemail(result.email, "Your account for AQUA_LUDUS is created.", "Your email id is "+result.email+" and password is"+retVal, (err,success)=>{
-                                            //     if(success)
-                                            //     {
-                                            //         console.log("emailll",success)
-                                            //         Response.sendResponseWithData(res,resCode.EVERYTHING_IS_OK,"Signed up successfully.",result)
-                                            //     }                    
-                                            //  });
-                                        }
-                                    })
-                                })
+                                )
+                            } catch (err) {
+                                console.log(`Error of external account ${JSON.stringify(err)}`)
+                            }
+                            console.log("@@@@@@@@ external Account Created Successfully >>>>", )
+
+
+                    var retVal = "";
+                    const saltRounds = 10;
+                    retVal = req.body.password;
+                    bcrypt.genSalt(saltRounds, (err, salt) => {
+                        bcrypt.hash(retVal, salt, (error, hash) => {
+                            req.body.password = hash;
+                            let user = new userSchema(req.body);
+                            user.save({ lean: true }).then((result) => {
+                                console.log("RESULT AFTER SIGNUP USER======>", result);
+                                if (error) {
+                                    console.log(error)
+                                    Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.INTERNAL_SERVER_ERROR)
+                                } else {
+                                    var result = result.toObject();
+                                    delete result.password;
+                                    Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "You have successfully signup.", result)
+                                    //  message.sendemail(result.email, "Your account for AQUA_LUDUS is created.", "Your email id is "+result.email+" and password is"+retVal, (err,success)=>{
+                                    //     if(success)
+                                    //     {
+                                    //         console.log("emailll",success)
+                                    //         Response.sendResponseWithData(res,resCode.EVERYTHING_IS_OK,"Signed up successfully.",result)
+                                    //     }                    
+                                    //  });
+                                }
                             })
-                        }
+                        })
                     })
                 }
             })
         }
+    })
+}
     },
 
-    "createStripeAccount": (req, res) => {
+"createStripeAccount": (req, res) => {
 
 
 
-        // stripe.tokens.create({
-        //     card: {
-        //         "number": '378282246310005',
-        //         "exp_month": 12,
-        //         "exp_year": 2019,
-        //         "cvc": '123'
-        //     },
-        // }).then((result) => {
-        //     console.log('token==>>>', result);
-        //     if (result) {
-        //         var token = result.id;
-        //         console.log('token==>>>', result.id); // Using Express //////tok_visa
-        //         stripe.accounts.create({
-        //             country: "US",
-        //             type: "custom",
-        //             account_token: token,
-        //         })
-        //             .then(function (acct) {
-        //                 console.log('acct==>>>', acct);
-        //                 // asynchronously called
-        //             });
-        //     }
-        // });
+    // stripe.tokens.create({
+    //     card: {
+    //         "number": '378282246310005',
+    //         "exp_month": 12,
+    //         "exp_year": 2019,
+    //         "cvc": '123'
+    //     },
+    // }).then((result) => {
+    //     console.log('token==>>>', result);
+    //     if (result) {
+    //         var token = result.id;
+    //         console.log('token==>>>', result.id); // Using Express //////tok_visa
+    //         stripe.accounts.create({
+    //             country: "US",
+    //             type: "custom",
+    //             account_token: token,
+    //         })
+    //             .then(function (acct) {
+    //                 console.log('acct==>>>', acct);
+    //                 // asynchronously called
+    //             });
+    //     }
+    // });
 
 
 
@@ -189,54 +206,54 @@ module.exports = {
 
 
 
-    
-              //create account             
 
-            stripe.accounts.create({
-                type: 'custom',
-                country: 'US',
-                email: "avinash123@mobo.com"
-            }, function (err, account) {
-                // asynchronously called
-                if (err) {
-                    // console.log('err==>>>', err)
-                    // return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, "errr in strip")
-                }
-                else {
-                     console.log(account.id)
-                    // console.log("account--------->>",account)
+    //create account             
 
-                    stripe.tokens.create({
-                        card: {
-                           "number": '4000056655665556',
-                           "exp_month": 12,
-                          "exp_year": 2019,
-                           "cvc": '123',
-                           "currency":"usd"
-                         },            
-                    }).then((result) => {
-                        // console.log('token==>>>', result);
-                        if (result) {
-                            var token = result.id; // Using Express //////tok_visa
-                          console.log("token>>",result.id)
+    stripe.accounts.create({
+        type: 'custom',
+        country: 'US',
+        email: "avinash123@mobo.com"
+    }, function (err, account) {
+        // asynchronously called
+        if (err) {
+            // console.log('err==>>>', err)
+            // return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, "errr in strip")
+        }
+        else {
+            console.log(account.id)
+            // console.log("account--------->>",account)
+
+            stripe.tokens.create({
+                card: {
+                    "number": '4000056655665556',
+                    "exp_month": 12,
+                    "exp_year": 2019,
+                    "cvc": '123',
+                    "currency": "usd"
+                },
+            }).then((result) => {
+                // console.log('token==>>>', result);
+                if (result) {
+                    var token = result.id; // Using Express //////tok_visa
+                    console.log("token>>", result.id)
 
                     // var token2 =token
-                    
-                     var stripe_acc = account.id// save stripe account
+
+                    var stripe_acc = account.id// save stripe account
                     //  console.log("stripeAccountId>>>>>>>>>>>>>>",stripe_acc)
 
-                    try{
+                    try {
                         stripe.accounts.createExternalAccount(
-                           stripe_acc,
-                       {external_account: token}
-                                             
-                    )
-                    }catch(err){
+                            stripe_acc,
+                            { external_account: token }
+
+                        )
+                    } catch (err) {
                         console.log(`Error of external account ${JSON.stringify(err)}`)
                     }
-                     console.log("@@@@@@@@ external Account Created Successfully >>>>",)
+                    console.log("@@@@@@@@ external Account Created Successfully >>>>", )
 
-                  
+
 
                 }
             })
@@ -244,23 +261,24 @@ module.exports = {
 
             stripe.balance.retrieve({
                 stripe_account: "acct_1D88cVKpPoRHeGQX"
-              }, function(err, balance) {
+            }, function (err, balance) {
                 // asynchronously called
-              
-              
-                console.log("show balance of individual connected User>>>>>>>>>>>>>++++++++++",err,  balance)
-              });
-              
 
 
-            // stripe.balance.retrieve(function (err, balance) {
-            //     // asynchronously called
-            //     console.log("show balance>>>>>>>>>>>>>++++++++++", balance)
-            // })
-        }})
+                console.log("show balance of individual connected User>>>>>>>>>>>>>++++++++++", err, balance)
+            });
 
 
-    },
+
+            stripe.balance.retrieve(function (err, balance) {
+                // asynchronously called
+                console.log("show balance of Admin Account>>>>>>>>>>>>>++++++++++", balance)
+            })
+        }
+    })
+
+
+},
 
 
 
@@ -527,464 +545,464 @@ module.exports = {
             })
         }
     },
-    //..................................................................userDetail API............................................................................... //
-    "viewUserDetail": (req, res) => {
-        console.log("requested id is" + req.headers._id);
-        userSchema.findOne({ _id: req.headers._id, status: "ACTIVE" }, { password: 0 }, (error, result) => {
-            if (error)
-                return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
-            if (!result)
-                return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND, result)
-            console.log("SIGNUP RESULT-------->", result)
-            return Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, resMessage.SUCCESSFULLY_DONE, result)
-        })
-    },
-
-    //..................................................................get detail (Customer and Business)API for Admin panel............................................................................... //
-
-    "viewDetail": (req, res) => {
-        console.log("requested id is" + req.params._id);
-        userSchema.findOne({ _id: req.params._id }, { password: 0 }, (error, result) => {
-            if (error)
-                return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
-            else if (!result) {
-                return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND, result)
-            } else {
+        //..................................................................userDetail API............................................................................... //
+        "viewUserDetail": (req, res) => {
+            console.log("requested id is" + req.headers._id);
+            userSchema.findOne({ _id: req.headers._id, status: "ACTIVE" }, { password: 0 }, (error, result) => {
+                if (error)
+                    return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
+                if (!result)
+                    return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND, result)
                 console.log("SIGNUP RESULT-------->", result)
                 return Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, resMessage.SUCCESSFULLY_DONE, result)
-            }
-        })
-    },
-
-    //................................................................editUser API.................................................................................. //
-
-    "editUser": (req, res) => {
-        console.log((req.body));
-        // if(req.body._id!=req.headers._id){
-        // console.log("headerId and UserId not match")
-        // return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, "Provided UserData not match.");
-        // }
-        userSchema.findOne({ _id: req.headers._id, status: "ACTIVE" }, (err, success) => {
-            if (err)
-                return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG);
-            if (!success)
-                return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, "UserId Not found");
-            //success part
-            cloudinary.uploadImage(req.body.profilePic, (err, result) => {
-                console.log("login result On controller", result, "err", err);
-                if (err)
-                    return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, "Picture not uploaded successfully");
-                if (result)
-                    req.body.profilePic = result;
-                userSchema.findByIdAndUpdate({ _id: req.headers._id, status: "ACTIVE" }, req.body, { new: true, select: { "password": 0 } }, (err2, final) => {
-                    if (err2 || !final)
-                        return Response.sendResponseWithData(res, resCode.INTERNAL_SERVER_ERROR, "Error Occured.", err2)
-                    return Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "Your profile updated successfully.", final)
-
-                })
-
             })
+        },
 
+            //..................................................................get detail (Customer and Business)API for Admin panel............................................................................... //
 
-
-        })
-
-    },
-
-
-    //................................................................editCustomer API for AdminPanel.................................................................................. //
-
-    "edit": (req, res) => {
-        console.log((req.body));
-        userSchema.findOne({ _id: req.body._id }, (err, success) => {
-            if (err)
-                return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG);
-            if (!success)
-                return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, "UserId Not found");
-            //success part
-            cloudinary.uploadImage(req.body.profilePic, (err, result) => {
-                console.log("login result On controller", result, "err", err);
-                if (err)
-                    return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, "Picture not uploaded successfully");
-                if (result)
-                    req.body.profilePic = result;
-
-                userSchema.findByIdAndUpdate({ _id: req.body._id, status: "ACTIVE" }, req.body, { new: true, select: { "password": 0 } }, (err2, final) => {
-                    if (err2 || !final)
-                        return Response.sendResponseWithData(res, resCode.INTERNAL_SERVER_ERROR, "Error Occured.", err2)
-                    return Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "Profile updated successfully.", final)
-                })
-            })
-        })
-    },
-
-    //...............................................................delete User Api for both................................................................................//
-
-    "deleteUser": (req, res) => {
-        console.log("delete user request" + req.body._id)
-        userSchema.findById({ _id: req.body._id }).exec((error, result) => {
-            if (error)
-                Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
-            else if (!result)
-                Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
-            else {
-                userSchema.findByIdAndUpdate({ _id: req.body._id }, { $set: { status: "INACTIVE" } }, (error, result) => {
-                    if (error) {
+            "viewDetail": (req, res) => {
+                console.log("requested id is" + req.params._id);
+                userSchema.findOne({ _id: req.params._id }, { password: 0 }, (error, result) => {
+                    if (error)
                         return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
-                    }
-                    else if (!result)
-                        return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
-                    else {
-                        eventSchema.update({ userId: req.body._id }, { status: "INACTIVE" }, { multi: true }, (err1, success) => {
-                            if (err1) {
-                                return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
-                            }
-                            else if (!success)
-                                return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
-                            else {
-                                Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "User is deleted successfully ...", success)
-                            }
-
-                        })
-                    }
-                })
-            }
-        })
-    },
-
-
-    // "deleteUser": (req, res) => {
-    //     console.log("delete user request" + req.body._id)
-    //     userSchema.findByIdAndUpdate({ _id: req.body._id }, { $set: { status: "INACTIVE" } }, { new: true }, (error, result) => {
-    //         if (error)
-    //             Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
-    //         else if (!result)
-    //             Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
-    //         else           
-    //             Response.sendResponseWithoutData(res, resCode.EVERYTHING_IS_OK, "User is successfully deleted. ")
-    //     })
-    // },
-
-
-
-
-
-    // ...............................................................Block/Active User Api for both by Admin Panel................................................................................//
-
-
-    "blockUser": (req, res) => {
-        userSchema.findById({ _id: req.body._id }).exec(function (err, data) {
-            console.log(" iam aID********************>>", req.body._id)
-            if (err) {
-                console.log("@@@@@@@", err)
-                Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
-            }
-            else if (!data)
-                Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
-            else {
-                if (data.status == 'ACTIVE') {
-                    userSchema.findByIdAndUpdate({ _id: req.body._id }, { $set: { status: "BLOCK" } }, (error, result) => {
-                        if (error) {
-                            console.log("@@@@@@@", error)
-                            return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
-                        }
-                        else if (!result)
-                            return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
-                        else {
-                            eventSchema.update({ userId: req.body._id }, { status: "BLOCK" }, { multi: true }, (err1, success) => {
-                                if (err1) {
-                                    // console.log("@@@@@@@", error)
-                                    return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
-                                }
-                                else if (!success)
-                                    return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
-                                else {
-                                    Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "User is blocked successfully . ", success)
-                                }
-
-                            })
-
-                            //  Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "User is successfully blocked. ", result)
-                        }
-                    })
-                }
-                else if (data.status == 'BLOCK') {
-                    userSchema.findByIdAndUpdate({ _id: req.body._id }, { $set: { status: "ACTIVE" } }, { new: true }, (errr, result1) => {
-                        if (errr) {
-                            Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
-                        }
-                        else if (!result1)
-                            Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
-                        else {
-                            eventSchema.update({ userId: req.body._id }, { status: "ACTIVE" }, { multi: true }, (err1, success) => {
-                                if (err1) {
-                                    // console.log("@@@@@@@", error)
-                                    return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
-                                }
-                                else if (!success)
-                                    return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
-                                else {
-                                    Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "User is now actived... ", success)
-                                }
-
-                            })
-                            //Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "User is active successfully . ", result1)
-                        }
-                    })
-                }
-
-            }
-
-        })
-
-
-    },
-
-
-
-    //................................................................forgot password API............................................................................//
-
-    "forgotPassword": (req, res) => {
-        console.log("Forgot password request " + JSON.stringify(req.body))
-        if (!req.body.email)
-            return Response.sendResponseWithData(res, resCode.BAD_REQUEST, "Please provide email");
-        else {
-            var otp = message.getCode();
-            const saltRounds = 10;
-            bcrypt.genSalt(saltRounds, (err, salt) => {
-                bcrypt.hash(otp, salt, (error, hash) => {
-                    console.log("Replace password is >>", hash);
-                    var newvalues = { $set: { password: hash } };
-                    console.log("hass>>>>>>", hash);
-                    userSchema.findOneAndUpdate({ email: req.body.email, status: "ACTIVE" }, newvalues, (err, success) => {
-                        if (err)
-                            return Response.sendResponseWithoutData(res, resCode.BAD_REQUEST.resMessage.WENT_WRONG);
-                        if (!success)
-                            return Response.sendResponseWithData(res, resCode.NOT_FOUND, "Email not found");
-
-                        message.sendemail(success.email, "Updated Password for Aqua_Ludus Account", `Dear ${success.name} , \ 
-                    Your password is `+ otp, (err, result) => {
-                                if (err) {
-                                    console.log("Email not sent")
-                                    Response.sendResponseWithoutData(res, resCode.UNAUTHORIZED, resMessage.UNAUTHORIZED);
-                                }
-                                else {
-                                    console.log("Email for forgotPassword sent successfully");
-                                    Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "Password sent successfully.");
-                                }
-                            });
-
-                    })
-                })
-            })
-        }
-    },
-
-    //......................................................................changePassword API............................................................................//
-
-    "changePassword": (req, res) => {
-        if (!req.body.oldPassword || !req.headers._id || !req.body.newPassword || !req.body.confirmPassword)
-            return Response.sendResponseWithData(res, resCode.BAD_REQUEST, "Please provide all required data.");
-
-        console.log("Change password request " + JSON.stringify(req.body))
-        userSchema.findById(req.headers._id, (err, success) => {
-            if (err) {
-                console.log("Data of change pass>>>>>>>>>>>>>>", err)
-                return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG);
-            }
-            if (!success)
-                return Response.sendResponseWithData(res, resCode.NOT_FOUND, "USER NOT EXIST");
-            //   //success
-            {
-                bcrypt.compare(req.body.oldPassword, success.password, (err1, result1) => {
-                    console.log("err>>>>>>", err1, "result of change>>>>", result1);
-                    if (result1) {
-                        if (req.body.newPassword != req.body.confirmPassword) {
-                            return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, "New password and confirmed password should be same");
-                        }
-                        let salt = bcrypt.genSaltSync(10);
-                        let newPassword = bcrypt.hashSync(req.body.newPassword, salt);
-                        userSchema.update({ _id: req.headers._id }, { $set: { 'password': newPassword } }, { new: true }).exec((err2, succ2) => {
-                            if (err2) {
-                                return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG);
-                            } else {
-
-                                Response.sendResponseWithoutData(res, resCode.EVERYTHING_IS_OK, resMessage.PASSWORD_UPDATE_SUCCESS);
-
-                            }
-
-                        })
+                    else if (!result) {
+                        return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND, result)
                     } else {
-                        return Response.sendResponseWithoutData(res, resCode.BAD_REQUEST, resMessage.OLD_PASSWORD_INCORRECT);
+                        console.log("SIGNUP RESULT-------->", result)
+                        return Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, resMessage.SUCCESSFULLY_DONE, result)
                     }
                 })
-            }
-        })
+            },
 
-    },
+                //................................................................editUser API.................................................................................. //
 
-    //......................................................................getAllCustomer API for Admin............................................................................//
+                "editUser": (req, res) => {
+                    console.log((req.body));
+                    // if(req.body._id!=req.headers._id){
+                    // console.log("headerId and UserId not match")
+                    // return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, "Provided UserData not match.");
+                    // }
+                    userSchema.findOne({ _id: req.headers._id, status: "ACTIVE" }, (err, success) => {
+                        if (err)
+                            return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG);
+                        if (!success)
+                            return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, "UserId Not found");
+                        //success part
+                        cloudinary.uploadImage(req.body.profilePic, (err, result) => {
+                            console.log("login result On controller", result, "err", err);
+                            if (err)
+                                return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, "Picture not uploaded successfully");
+                            if (result)
+                                req.body.profilePic = result;
+                            userSchema.findByIdAndUpdate({ _id: req.headers._id, status: "ACTIVE" }, req.body, { new: true, select: { "password": 0 } }, (err2, final) => {
+                                if (err2 || !final)
+                                    return Response.sendResponseWithData(res, resCode.INTERNAL_SERVER_ERROR, "Error Occured.", err2)
+                                return Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "Your profile updated successfully.", final)
 
-    'getAllCustomer': (req, res) => {
-        //console.log("get al customer")
-        // var query = {};
-        let options = {
-            page: req.params.pageNumber || 1,
-            select: 'userType email name status mobile_no  address',
-            limit: 10,
-            sort: { createdAt: -1 },
-            //password:0,
-            lean: false
-        }
-        userSchema.paginate({ $and: [{ userType: "CUSTOMER" }, { $or: [{ status: "ACTIVE" }, { status: "BLOCK" }] }] }, options, (error, result) => {
-            if (error)
-                Response.sendResponseWithoutData(res, resCode.INTERNAL_SERVER_ERROR, resMessage.INTERNAL_SERVER_ERROR)
-            else if (result.docs.length == 0)
-                Response.sendResponseWithData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
-            else {
-                console.log("result is" + JSON.stringify(result))
-                result.docs.map(x => delete x['password'])
-                Response.sendResponseWithPagination(res, resCode.EVERYTHING_IS_OK, resMessage.SUCCESSFULLY_DONE, result.docs, { total: result.total, limit: result.limit, currentPage: result.page, totalPage: result.pages });
-            }
-        })
-    },
+                            })
 
-    //......................................................................getAllBusiness API for Admin............................................................................//
-    'getAllBusiness': (req, res) => {
-        //console.log("get al customer")
-        // var query = {};
-        let options = {
-            page: req.params.pageNumber || 1,
-            select: 'userType email name status  businessName gender  country',
-            limit: 10,
-            sort: { createdAt: -1 },
-            //password:0,
-            lean: false
-        }
-        userSchema.paginate({ $and: [{ userType: "BUSINESS" }, { $or: [{ status: "ACTIVE" }, { status: "BLOCK" }] }] }, options, (error, result) => {
-            if (error)
-                Response.sendResponseWithoutData(res, resCode.INTERNAL_SERVER_ERROR, resMessage.INTERNAL_SERVER_ERROR)
-            else if (result.docs.length == 0)
-                Response.sendResponseWithData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
-            else {
-                console.log("result is" + JSON.stringify(result))
-                result.docs.map(x => delete x['password'])
-                Response.sendResponseWithPagination(res, resCode.EVERYTHING_IS_OK, resMessage.SUCCESSFULLY_DONE, result.docs, { total: result.total, limit: result.limit, currentPage: result.page, totalPage: result.pages });
-            }
-        })
-    },
-    //........................................................Save reviews...........................................................
-    'postReviews': (req, res) => {
-        console.log('Request for postReviews', req.body)
-        userSchema.findByIdAndUpdate({ _id: req.body._id, userType: "CUSTOMER" }, { $set: { reviews: req.body.reviews } }, { new: true }, (err, result) => {
-            if (err)
-                Response.sendResponseWithoutData(res, resCode.INTERNAL_SERVER_ERROR, resMessage.INTERNAL_SERVER_ERROR)
-            else {
-                console.log("result of post reviews", result)
-                notification.single_notification(result.deviceToken, 'Review Posted!!', 'You are successfully placed your review regarding app', result.businessManId, result._id, result.profilePic, result.name)
-                return Response.sendResponseWithoutData(res, resCode.EVERYTHING_IS_OK, 'Your Review  is updated Successfully.');
-            }
-        }
-        )
-    },
-    //...................................................View Reviews..............................................................
-    'viewReviews': (req, res) => {
-        console.log(`request for view Reviews ${JSON.stringify(req.body)}`)
-        // let options = {
-        //     page: req.params.pageNumber ,
-        //     select:{reviews:1,name:1,address:1},
-        //     limit: 10,
-        //     //password:0,//,createdAt:1,updatedAt:1
-        //     lean: false
-        // }
-        userSchema.find({ userType: "CUSTOMER", "reviews": { $exists: true, $ne: null } }, { reviews: 1, name: 1, address: 1, profilePic: 1 }).sort({ updatedAt: -1 }).limit(5).exec((err, result) => {
-            console.log("result of post reviews", result, err)
-            if (err)
-                Response.sendResponseWithoutData(res, resCode.INTERNAL_SERVER_ERROR, resMessage.INTERNAL_SERVER_ERROR)
-            else {
-
-                //   return Response.sendResponseWithData(res, resCode.BAD_REQUEST, "Customer's reviews list found successfully",result);
-                Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "Customer's reviews list found successfully", result);
-            }
-        })
-
-    },
+                        })
 
 
-    "searchCustomerFilter": (req, res) => {
 
-        var value = new RegExp('^' + req.body.search, "i")
-        var obj
-        if (req.body.search && req.body.status) {
-            obj = {
-                $or: [{ $and: [{ status: req.body.status }, { userType: req.body.userType }, { name: value }] }, { $and: [{ status: req.body.status }, { userType: req.body.userType }, { email: value }] }]
-            }
-        }
+                    })
 
-        else if (!req.body.search && req.body.status) {
-            obj = {
-                $and: [{ status: req.body.status }, { userType: req.body.userType }]
-            }
-        }
-        else if (req.body.userType && !req.body.status && !req.body.search) {
-            // console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% ")
-            obj = { status: { $in: ["ACTIVE", "BLOCK"] }, userType: req.body.userType }
-            //    {"status":"ACTIVE" || "BLOCK"}
-            // $and: [{ name: req.body.search},{email: req.body.search} ,{userType: 'CUSTOMER' }]
+                },
 
-        }
-        else if (req.body.userType && req.body.search) {
-            // console.log("&&&&&&&&&&&&&&&&&&&& ")
-            obj = {
-                $or: [{ status: { $in: ["ACTIVE", "BLOCK"] }, userType: req.body.userType, name: value }, { status: { $in: ["ACTIVE", "BLOCK"] }, userType: req.body.userType, email: value }]
-            }
-        }
-        else {
-            obj = {
-                $or: [{ $and: [{ userType: req.body.userType }, { name: value }] }, { $and: [{ userType: req.body.userType }, { email: value }] }]
-                // $and: [{ name: req.body.search},{email: req.body.search} ,{userType: 'CUSTOMER' }]
-            }
-        }
-        let options = {
-            page: req.body.pageNumber || 1,
-            // select: 'userType email name status businessName gender  country',
-            limit: 10,
-            sort: { createdAt: -1 },
-            select: 'userType email name status mobile_no address country businessName gender',
-            lean: false
-        }
-        userSchema.paginate(obj, options, (err, data) => {
-            if (err) {
-                return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.INTERNAL_SERVER_ERROR);
-            }
-            if (!data) {
-                return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND);
-            }
-            // console.log("dat", data)
-            Response.sendResponseWithPagination(res, resCode.EVERYTHING_IS_OK, resMessage.SUCCESSFULLY_DONE, data.docs, { total: data.total, limit: data.limit, currentPage: data.page, totalPage: data.pages });
 
-        })
-    },
+                    //................................................................editCustomer API for AdminPanel.................................................................................. //
 
-    'logOut': (req, res) => {
-        console.log("req for logout is " + JSON.stringify(req.body))
-        if (!req.body)
-            Response.sendResponseWithoutData(res, resCode.BAD_REQUEST, "Please give userId.")
-        else {
-            userSchema.update({ _id: req.body._id }, { $set: { jwtToken: '', socialId: '' } }, (error, result) => {
-                if (error) {
-                    console.log("error of logout " + JSON.stringify(error))
-                    Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.INTERNAL_SERVER_ERROR)
-                } else if (!result) {
-                    Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
-                }
-                else {
-                    console.log("result of logout " + JSON.stringify(result))
-                    Response.sendResponseWithoutData(res, resCode.EVERYTHING_IS_OK, "User logged out successfully.")
-                }
-            })
-        }
-    }
+                    "edit": (req, res) => {
+                        console.log((req.body));
+                        userSchema.findOne({ _id: req.body._id }, (err, success) => {
+                            if (err)
+                                return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG);
+                            if (!success)
+                                return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, "UserId Not found");
+                            //success part
+                            cloudinary.uploadImage(req.body.profilePic, (err, result) => {
+                                console.log("login result On controller", result, "err", err);
+                                if (err)
+                                    return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, "Picture not uploaded successfully");
+                                if (result)
+                                    req.body.profilePic = result;
+
+                                userSchema.findByIdAndUpdate({ _id: req.body._id, status: "ACTIVE" }, req.body, { new: true, select: { "password": 0 } }, (err2, final) => {
+                                    if (err2 || !final)
+                                        return Response.sendResponseWithData(res, resCode.INTERNAL_SERVER_ERROR, "Error Occured.", err2)
+                                    return Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "Profile updated successfully.", final)
+                                })
+                            })
+                        })
+                    },
+
+                        //...............................................................delete User Api for both................................................................................//
+
+                        "deleteUser": (req, res) => {
+                            console.log("delete user request" + req.body._id)
+                            userSchema.findById({ _id: req.body._id }).exec((error, result) => {
+                                if (error)
+                                    Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
+                                else if (!result)
+                                    Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
+                                else {
+                                    userSchema.findByIdAndUpdate({ _id: req.body._id }, { $set: { status: "INACTIVE" } }, (error, result) => {
+                                        if (error) {
+                                            return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
+                                        }
+                                        else if (!result)
+                                            return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
+                                        else {
+                                            eventSchema.update({ userId: req.body._id }, { status: "INACTIVE" }, { multi: true }, (err1, success) => {
+                                                if (err1) {
+                                                    return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
+                                                }
+                                                else if (!success)
+                                                    return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
+                                                else {
+                                                    Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "User is deleted successfully ...", success)
+                                                }
+
+                                            })
+                                        }
+                                    })
+                                }
+                            })
+                        },
+
+
+                            // "deleteUser": (req, res) => {
+                            //     console.log("delete user request" + req.body._id)
+                            //     userSchema.findByIdAndUpdate({ _id: req.body._id }, { $set: { status: "INACTIVE" } }, { new: true }, (error, result) => {
+                            //         if (error)
+                            //             Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
+                            //         else if (!result)
+                            //             Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
+                            //         else           
+                            //             Response.sendResponseWithoutData(res, resCode.EVERYTHING_IS_OK, "User is successfully deleted. ")
+                            //     })
+                            // },
+
+
+
+
+
+                            // ...............................................................Block/Active User Api for both by Admin Panel................................................................................//
+
+
+                            "blockUser": (req, res) => {
+                                userSchema.findById({ _id: req.body._id }).exec(function (err, data) {
+                                    console.log(" iam aID********************>>", req.body._id)
+                                    if (err) {
+                                        console.log("@@@@@@@", err)
+                                        Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
+                                    }
+                                    else if (!data)
+                                        Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
+                                    else {
+                                        if (data.status == 'ACTIVE') {
+                                            userSchema.findByIdAndUpdate({ _id: req.body._id }, { $set: { status: "BLOCK" } }, (error, result) => {
+                                                if (error) {
+                                                    console.log("@@@@@@@", error)
+                                                    return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
+                                                }
+                                                else if (!result)
+                                                    return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
+                                                else {
+                                                    eventSchema.update({ userId: req.body._id }, { status: "BLOCK" }, { multi: true }, (err1, success) => {
+                                                        if (err1) {
+                                                            // console.log("@@@@@@@", error)
+                                                            return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
+                                                        }
+                                                        else if (!success)
+                                                            return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
+                                                        else {
+                                                            Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "User is blocked successfully . ", success)
+                                                        }
+
+                                                    })
+
+                                                    //  Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "User is successfully blocked. ", result)
+                                                }
+                                            })
+                                        }
+                                        else if (data.status == 'BLOCK') {
+                                            userSchema.findByIdAndUpdate({ _id: req.body._id }, { $set: { status: "ACTIVE" } }, { new: true }, (errr, result1) => {
+                                                if (errr) {
+                                                    Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
+                                                }
+                                                else if (!result1)
+                                                    Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
+                                                else {
+                                                    eventSchema.update({ userId: req.body._id }, { status: "ACTIVE" }, { multi: true }, (err1, success) => {
+                                                        if (err1) {
+                                                            // console.log("@@@@@@@", error)
+                                                            return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG)
+                                                        }
+                                                        else if (!success)
+                                                            return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
+                                                        else {
+                                                            Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "User is now actived... ", success)
+                                                        }
+
+                                                    })
+                                                    //Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "User is active successfully . ", result1)
+                                                }
+                                            })
+                                        }
+
+                                    }
+
+                                })
+
+
+                            },
+
+
+
+                                //................................................................forgot password API............................................................................//
+
+                                "forgotPassword": (req, res) => {
+                                    console.log("Forgot password request " + JSON.stringify(req.body))
+                                    if (!req.body.email)
+                                        return Response.sendResponseWithData(res, resCode.BAD_REQUEST, "Please provide email");
+                                    else {
+                                        var otp = message.getCode();
+                                        const saltRounds = 10;
+                                        bcrypt.genSalt(saltRounds, (err, salt) => {
+                                            bcrypt.hash(otp, salt, (error, hash) => {
+                                                console.log("Replace password is >>", hash);
+                                                var newvalues = { $set: { password: hash } };
+                                                console.log("hass>>>>>>", hash);
+                                                userSchema.findOneAndUpdate({ email: req.body.email, status: "ACTIVE" }, newvalues, (err, success) => {
+                                                    if (err)
+                                                        return Response.sendResponseWithoutData(res, resCode.BAD_REQUEST.resMessage.WENT_WRONG);
+                                                    if (!success)
+                                                        return Response.sendResponseWithData(res, resCode.NOT_FOUND, "Email not found");
+
+                                                    message.sendemail(success.email, "Updated Password for Aqua_Ludus Account", `Dear ${success.name} , \ 
+                    Your password is `+ otp, (err, result) => {
+                                                            if (err) {
+                                                                console.log("Email not sent")
+                                                                Response.sendResponseWithoutData(res, resCode.UNAUTHORIZED, resMessage.UNAUTHORIZED);
+                                                            }
+                                                            else {
+                                                                console.log("Email for forgotPassword sent successfully");
+                                                                Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "Password sent successfully.");
+                                                            }
+                                                        });
+
+                                                })
+                                            })
+                                        })
+                                    }
+                                },
+
+                                    //......................................................................changePassword API............................................................................//
+
+                                    "changePassword": (req, res) => {
+                                        if (!req.body.oldPassword || !req.headers._id || !req.body.newPassword || !req.body.confirmPassword)
+                                            return Response.sendResponseWithData(res, resCode.BAD_REQUEST, "Please provide all required data.");
+
+                                        console.log("Change password request " + JSON.stringify(req.body))
+                                        userSchema.findById(req.headers._id, (err, success) => {
+                                            if (err) {
+                                                console.log("Data of change pass>>>>>>>>>>>>>>", err)
+                                                return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG);
+                                            }
+                                            if (!success)
+                                                return Response.sendResponseWithData(res, resCode.NOT_FOUND, "USER NOT EXIST");
+                                            //   //success
+                                            {
+                                                bcrypt.compare(req.body.oldPassword, success.password, (err1, result1) => {
+                                                    console.log("err>>>>>>", err1, "result of change>>>>", result1);
+                                                    if (result1) {
+                                                        if (req.body.newPassword != req.body.confirmPassword) {
+                                                            return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, "New password and confirmed password should be same");
+                                                        }
+                                                        let salt = bcrypt.genSaltSync(10);
+                                                        let newPassword = bcrypt.hashSync(req.body.newPassword, salt);
+                                                        userSchema.update({ _id: req.headers._id }, { $set: { 'password': newPassword } }, { new: true }).exec((err2, succ2) => {
+                                                            if (err2) {
+                                                                return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.WENT_WRONG);
+                                                            } else {
+
+                                                                Response.sendResponseWithoutData(res, resCode.EVERYTHING_IS_OK, resMessage.PASSWORD_UPDATE_SUCCESS);
+
+                                                            }
+
+                                                        })
+                                                    } else {
+                                                        return Response.sendResponseWithoutData(res, resCode.BAD_REQUEST, resMessage.OLD_PASSWORD_INCORRECT);
+                                                    }
+                                                })
+                                            }
+                                        })
+
+                                    },
+
+                                        //......................................................................getAllCustomer API for Admin............................................................................//
+
+                                        'getAllCustomer': (req, res) => {
+                                            //console.log("get al customer")
+                                            // var query = {};
+                                            let options = {
+                                                page: req.params.pageNumber || 1,
+                                                select: 'userType email name status mobile_no  address',
+                                                limit: 10,
+                                                sort: { createdAt: -1 },
+                                                //password:0,
+                                                lean: false
+                                            }
+                                            userSchema.paginate({ $and: [{ userType: "CUSTOMER" }, { $or: [{ status: "ACTIVE" }, { status: "BLOCK" }] }] }, options, (error, result) => {
+                                                if (error)
+                                                    Response.sendResponseWithoutData(res, resCode.INTERNAL_SERVER_ERROR, resMessage.INTERNAL_SERVER_ERROR)
+                                                else if (result.docs.length == 0)
+                                                    Response.sendResponseWithData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
+                                                else {
+                                                    console.log("result is" + JSON.stringify(result))
+                                                    result.docs.map(x => delete x['password'])
+                                                    Response.sendResponseWithPagination(res, resCode.EVERYTHING_IS_OK, resMessage.SUCCESSFULLY_DONE, result.docs, { total: result.total, limit: result.limit, currentPage: result.page, totalPage: result.pages });
+                                                }
+                                            })
+                                        },
+
+                                            //......................................................................getAllBusiness API for Admin............................................................................//
+                                            'getAllBusiness': (req, res) => {
+                                                //console.log("get al customer")
+                                                // var query = {};
+                                                let options = {
+                                                    page: req.params.pageNumber || 1,
+                                                    select: 'userType email name status  businessName gender  country',
+                                                    limit: 10,
+                                                    sort: { createdAt: -1 },
+                                                    //password:0,
+                                                    lean: false
+                                                }
+                                                userSchema.paginate({ $and: [{ userType: "BUSINESS" }, { $or: [{ status: "ACTIVE" }, { status: "BLOCK" }] }] }, options, (error, result) => {
+                                                    if (error)
+                                                        Response.sendResponseWithoutData(res, resCode.INTERNAL_SERVER_ERROR, resMessage.INTERNAL_SERVER_ERROR)
+                                                    else if (result.docs.length == 0)
+                                                        Response.sendResponseWithData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
+                                                    else {
+                                                        console.log("result is" + JSON.stringify(result))
+                                                        result.docs.map(x => delete x['password'])
+                                                        Response.sendResponseWithPagination(res, resCode.EVERYTHING_IS_OK, resMessage.SUCCESSFULLY_DONE, result.docs, { total: result.total, limit: result.limit, currentPage: result.page, totalPage: result.pages });
+                                                    }
+                                                })
+                                            },
+                                                //........................................................Save reviews...........................................................
+                                                'postReviews': (req, res) => {
+                                                    console.log('Request for postReviews', req.body)
+                                                    userSchema.findByIdAndUpdate({ _id: req.body._id, userType: "CUSTOMER" }, { $set: { reviews: req.body.reviews } }, { new: true }, (err, result) => {
+                                                        if (err)
+                                                            Response.sendResponseWithoutData(res, resCode.INTERNAL_SERVER_ERROR, resMessage.INTERNAL_SERVER_ERROR)
+                                                        else {
+                                                            console.log("result of post reviews", result)
+                                                            notification.single_notification(result.deviceToken, 'Review Posted!!', 'You are successfully placed your review regarding app', result.businessManId, result._id, result.profilePic, result.name)
+                                                            return Response.sendResponseWithoutData(res, resCode.EVERYTHING_IS_OK, 'Your Review  is updated Successfully.');
+                                                        }
+                                                    }
+                                                    )
+                                                },
+                                                    //...................................................View Reviews..............................................................
+                                                    'viewReviews': (req, res) => {
+                                                        console.log(`request for view Reviews ${JSON.stringify(req.body)}`)
+                                                        // let options = {
+                                                        //     page: req.params.pageNumber ,
+                                                        //     select:{reviews:1,name:1,address:1},
+                                                        //     limit: 10,
+                                                        //     //password:0,//,createdAt:1,updatedAt:1
+                                                        //     lean: false
+                                                        // }
+                                                        userSchema.find({ userType: "CUSTOMER", "reviews": { $exists: true, $ne: null } }, { reviews: 1, name: 1, address: 1, profilePic: 1 }).sort({ updatedAt: -1 }).limit(5).exec((err, result) => {
+                                                            console.log("result of post reviews", result, err)
+                                                            if (err)
+                                                                Response.sendResponseWithoutData(res, resCode.INTERNAL_SERVER_ERROR, resMessage.INTERNAL_SERVER_ERROR)
+                                                            else {
+
+                                                                //   return Response.sendResponseWithData(res, resCode.BAD_REQUEST, "Customer's reviews list found successfully",result);
+                                                                Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "Customer's reviews list found successfully", result);
+                                                            }
+                                                        })
+
+                                                    },
+
+
+                                                        "searchCustomerFilter": (req, res) => {
+
+                                                            var value = new RegExp('^' + req.body.search, "i")
+                                                            var obj
+                                                            if (req.body.search && req.body.status) {
+                                                                obj = {
+                                                                    $or: [{ $and: [{ status: req.body.status }, { userType: req.body.userType }, { name: value }] }, { $and: [{ status: req.body.status }, { userType: req.body.userType }, { email: value }] }]
+                                                                }
+                                                            }
+
+                                                            else if (!req.body.search && req.body.status) {
+                                                                obj = {
+                                                                    $and: [{ status: req.body.status }, { userType: req.body.userType }]
+                                                                }
+                                                            }
+                                                            else if (req.body.userType && !req.body.status && !req.body.search) {
+                                                                // console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% ")
+                                                                obj = { status: { $in: ["ACTIVE", "BLOCK"] }, userType: req.body.userType }
+                                                                //    {"status":"ACTIVE" || "BLOCK"}
+                                                                // $and: [{ name: req.body.search},{email: req.body.search} ,{userType: 'CUSTOMER' }]
+
+                                                            }
+                                                            else if (req.body.userType && req.body.search) {
+                                                                // console.log("&&&&&&&&&&&&&&&&&&&& ")
+                                                                obj = {
+                                                                    $or: [{ status: { $in: ["ACTIVE", "BLOCK"] }, userType: req.body.userType, name: value }, { status: { $in: ["ACTIVE", "BLOCK"] }, userType: req.body.userType, email: value }]
+                                                                }
+                                                            }
+                                                            else {
+                                                                obj = {
+                                                                    $or: [{ $and: [{ userType: req.body.userType }, { name: value }] }, { $and: [{ userType: req.body.userType }, { email: value }] }]
+                                                                    // $and: [{ name: req.body.search},{email: req.body.search} ,{userType: 'CUSTOMER' }]
+                                                                }
+                                                            }
+                                                            let options = {
+                                                                page: req.body.pageNumber || 1,
+                                                                // select: 'userType email name status businessName gender  country',
+                                                                limit: 10,
+                                                                sort: { createdAt: -1 },
+                                                                select: 'userType email name status mobile_no address country businessName gender',
+                                                                lean: false
+                                                            }
+                                                            userSchema.paginate(obj, options, (err, data) => {
+                                                                if (err) {
+                                                                    return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.INTERNAL_SERVER_ERROR);
+                                                                }
+                                                                if (!data) {
+                                                                    return Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND);
+                                                                }
+                                                                // console.log("dat", data)
+                                                                Response.sendResponseWithPagination(res, resCode.EVERYTHING_IS_OK, resMessage.SUCCESSFULLY_DONE, data.docs, { total: data.total, limit: data.limit, currentPage: data.page, totalPage: data.pages });
+
+                                                            })
+                                                        },
+
+                                                            'logOut': (req, res) => {
+                                                                console.log("req for logout is " + JSON.stringify(req.body))
+                                                                if (!req.body)
+                                                                    Response.sendResponseWithoutData(res, resCode.BAD_REQUEST, "Please give userId.")
+                                                                else {
+                                                                    userSchema.update({ _id: req.body._id }, { $set: { jwtToken: '', socialId: '' } }, (error, result) => {
+                                                                        if (error) {
+                                                                            console.log("error of logout " + JSON.stringify(error))
+                                                                            Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.INTERNAL_SERVER_ERROR)
+                                                                        } else if (!result) {
+                                                                            Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
+                                                                        }
+                                                                        else {
+                                                                            console.log("result of logout " + JSON.stringify(result))
+                                                                            Response.sendResponseWithoutData(res, resCode.EVERYTHING_IS_OK, "User logged out successfully.")
+                                                                        }
+                                                                    })
+                                                                }
+                                                            }
 
 
 

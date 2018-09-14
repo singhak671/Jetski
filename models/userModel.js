@@ -155,4 +155,6 @@ module.exports = mongoose.model('User', user);
         }
 
     })
-})();
+})
+
+();
