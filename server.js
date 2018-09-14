@@ -141,10 +141,10 @@ cron.schedule('0 * * * *', () => {
                                         // if (succ1.userId.deviceType || succ1.userId.deviceToken) {
                                         console.log("notificatiopn data during cron execution--------->>>", succ1.userId.deviceToken, 'booking cancelled !', `Your booking is cancelled done by ${succ1.name} requested for the event ${succ1.eventName}`, succ1.businessManId, succ1.userId, succ1.userId.profilePic, succ1.userId.name)
                                         if (succ1.userId.deviceType == 'IOS')
-                                            return notification.sendNotification(succ1.userId.deviceToken, 'booking cancelled !', `Your booking is cancelled for ${succ1.eventName}`, { type: 'event' }, notiObj)
+                                            return notification.sendNotification(succ1.userId.deviceToken, 'booking cancelled !', `Your booking is cancelled for ${succ1.eventName}`, { type: 'event' },{ details: notiObj }, notiObj)
 
                                         if (succ1.userId.deviceType == 'ANDROID') {
-                                            notification.sendNotification(succ1.userId.deviceToken, 'booking cancelled !', `Your booking is cancelled for ${succ1.eventName}`, { type: 'event' }, notiObj)
+                                            notification.sendNotification(succ1.userId.deviceToken, 'booking cancelled !', `Your booking is cancelled for ${succ1.eventName}`, { type: 'event' },{ details: notiObj }, notiObj)
                                         }
 
                                         if (succ1.deviceType == 'WEBSITE') {

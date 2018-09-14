@@ -155,33 +155,33 @@ module.exports = {
         }
     },
 
-    // "createStripeAccount": (req, res) => {
+    "createStripeAccount": (req, res) => {
 
 
 
-    //     // stripe.tokens.create({
-    //     //     card: {
-    //     //         "number": '378282246310005',
-    //     //         "exp_month": 12,
-    //     //         "exp_year": 2019,
-    //     //         "cvc": '123'
-    //     //     },
-    //     // }).then((result) => {
-    //     //     console.log('token==>>>', result);
-    //     //     if (result) {
-    //     //         var token = result.id;
-    //     //         console.log('token==>>>', result.id); // Using Express //////tok_visa
-    //     //         stripe.accounts.create({
-    //     //             country: "US",
-    //     //             type: "custom",
-    //     //             account_token: token,
-    //     //         })
-    //     //             .then(function (acct) {
-    //     //                 console.log('acct==>>>', acct);
-    //     //                 // asynchronously called
-    //     //             });
-    //     //     }
-    //     // });
+        // stripe.tokens.create({
+        //     card: {
+        //         "number": '378282246310005',
+        //         "exp_month": 12,
+        //         "exp_year": 2019,
+        //         "cvc": '123'
+        //     },
+        // }).then((result) => {
+        //     console.log('token==>>>', result);
+        //     if (result) {
+        //         var token = result.id;
+        //         console.log('token==>>>', result.id); // Using Express //////tok_visa
+        //         stripe.accounts.create({
+        //             country: "US",
+        //             type: "custom",
+        //             account_token: token,
+        //         })
+        //             .then(function (acct) {
+        //                 console.log('acct==>>>', acct);
+        //                 // asynchronously called
+        //             });
+        //     }
+        // });
 
 
 
@@ -190,68 +190,77 @@ module.exports = {
 
 
     
-    //           //create account             
+              //create account             
 
-    //         stripe.accounts.create({
-    //             type: 'custom',
-    //             country: 'US',
-    //             email: "pramod@mobo.com"
-    //         }, function (err, account) {
-    //             // asynchronously called
-    //             if (err) {
-    //                 // console.log('err==>>>', err)
-    //                 // return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, "errr in strip")
-    //             }
-    //             else {
-    //                  console.log(account)
-    //                 // console.log("account--------->>",account)
+            stripe.accounts.create({
+                type: 'custom',
+                country: 'US',
+                email: "avinash123@mobo.com"
+            }, function (err, account) {
+                // asynchronously called
+                if (err) {
+                    // console.log('err==>>>', err)
+                    // return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, "errr in strip")
+                }
+                else {
+                     console.log(account.id)
+                    // console.log("account--------->>",account)
 
-    //                 stripe.tokens.create({
-    //                     card: {
-    //                        "number": '4000056655665556',
-    //                        "exp_month": 12,
-    //                       "exp_year": 2019,
-    //                        "cvc": '123',
-    //                        "currency":"usd"
-    //                      },            
-    //                 }).then((result) => {
-    //                     // console.log('token==>>>', result);
-    //                     if (result) {
-    //                         var token = result.id; // Using Express //////tok_visa
-    //                       console.log("token>>",result.id)
+                    stripe.tokens.create({
+                        card: {
+                           "number": '4000056655665556',
+                           "exp_month": 12,
+                          "exp_year": 2019,
+                           "cvc": '123',
+                           "currency":"usd"
+                         },            
+                    }).then((result) => {
+                        // console.log('token==>>>', result);
+                        if (result) {
+                            var token = result.id; // Using Express //////tok_visa
+                          console.log("token>>",result.id)
 
-    //                 // var token2 =token
+                    // var token2 =token
                     
-    //                  var stripe_acc = account.id// save stripe account
-    //                 //  console.log("stripeAccountId>>>>>>>>>>>>>>",stripe_acc)
+                     var stripe_acc = account.id// save stripe account
+                    //  console.log("stripeAccountId>>>>>>>>>>>>>>",stripe_acc)
 
-    //                 try{
-    //                     stripe.accounts.createExternalAccount(
-    //                        stripe_acc,
-    //                    {external_account: token}
+                    try{
+                        stripe.accounts.createExternalAccount(
+                           stripe_acc,
+                       {external_account: token}
                                              
-    //                 )
-    //                 }catch(err){
-    //                     console.log(`Error of external account ${JSON.stringify(err)}`)
-    //                 }
-    //                  console.log("@@@@@@@@ extnl acc>>>>",)
+                    )
+                    }catch(err){
+                        console.log(`Error of external account ${JSON.stringify(err)}`)
+                    }
+                     console.log("@@@@@@@@ external Account Created Successfully >>>>",)
+
+                  
+
+                }
+            })
 
 
+            stripe.balance.retrieve({
+                stripe_account: "acct_1D88cVKpPoRHeGQX"
+              }, function(err, balance) {
+                // asynchronously called
+              
+              
+                console.log("show balance of individual connected User>>>>>>>>>>>>>++++++++++",err,  balance)
+              });
+              
 
 
-    //             }
-    //         })
+            // stripe.balance.retrieve(function (err, balance) {
+            //     // asynchronously called
+            //     console.log("show balance>>>>>>>>>>>>>++++++++++", balance)
+            // })
+        }})
 
 
-
-    //         // stripe.balance.retrieve(function (err, balance) {
-    //         //     // asynchronously called
-    //         //     console.log("show balance>>>>>>>>>>>>>++++++++++", balance)
-    //         // })
-    //     }})
-
-
-    // },
+    },
 
 
 

@@ -87,15 +87,17 @@ var notifications = {
             payload.data = data;
            
            
-            // if (details != '')
-            // payload.details = details;
+            if (details != '')
+            payload.details = details;
 
         //callback style
         fcm.send(payload, function (err, response) {
             if (err) {
                 console.log("Something has gone wrong!", err);
             } else {
-                console.log("Successfully sent with response: ", response);
+                 console.log("Successfully sent with response: ", response);
+                
+                 console.log("!!!!!!!!!!!!!!@@@@@@@@@@@@@@@@@@",notiObj)
                 let obj = {
                     customerId: { cid: notiObj.userId, image: notiObj.image, name:notiObj.name },
                     bussinessId: { bid: notiObj.businessManId },
@@ -105,6 +107,9 @@ var notifications = {
                     type:notiObj.type,
                     
                 };
+
+                // console.log("!!!!!!!!!!!!!!@@@@@@@@@@@@@@@@@@",obj)
+
                 if(notiObj.eventStatus)
                     obj.eventStatus = notiObj.eventStatus;
 
