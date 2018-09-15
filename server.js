@@ -64,7 +64,7 @@ cron.schedule('0 * * * *', () => {
             var result = item.duration[0].date.formatted + "T" + item.duration[0].times[0].time + ":00.000Z"
             // "2018-08-30T15:23:00.000Z"
             //  console.log("i am here ....>>>>", result)
-            var newTime = new Date(result)
+            //  var newTime = new Date(result)
             var temp = new Date(result).getTime()
             // var c=temp+19800000
             // console.log('temp value =>>>', temp);
@@ -95,16 +95,10 @@ cron.schedule('0 * * * *', () => {
                                 // amount: 1,
                                 currency: "usd",
                                 destination: succ1.businessManId.stripeAccountId,//reciver
-                                //   source_type:"bank_account"
-                                //   description: "admin to business",
-                                // source_transaction: null,
-                                // charge:"ch_1D6HnuFvUkcGB9taqrMt2JuQ"
-                                // source_transaction: "ch_1D6HnuFvUkcGB9taqrMt2JuQ",//sender
-                                //   destination:'acct_1D6FRDB3m6P1mUHh',//succ1.businessStripeAccount//"acct_1D6FRDB3m6P1mUHh", 
                             }).then(function (transfer) {
                                 console.log("transfer------++++++++++->>>", transfer)
                                 booking.findByIdAndUpdate({ _id: item._id }, { $set: { 'bookingStatus': 'COMPLETED' } }, { multi: true }).exec((err11, succ11) => {
-                                    console.log('error ,succes==========>>>>>>', err1, succ1);
+                                    console.log('error ,succes==========>>>>>>', err11, succ11);
 
                                 })
                             });
