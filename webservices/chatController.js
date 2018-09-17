@@ -73,11 +73,11 @@ module.exports = {
 
 
                                         if (deviceType == 'IOS')
-                                            console.log("ISO noti>>>>>>>", deviceToken, `${name} has send you message:`, `${req.body.message[0].message}`, { type: 'chat', chatData: req.body }, { details: notiObj })
+                                            console.log("ISO noti>>>>>>>", deviceToken, `${name} has send you message:`, `${req.body.message[0].message}`, { type: 'chat', chatData: req.body }, { details: notiObj }, notiObj)
                                         notification.sendNotification(deviceToken, `${name} has send you message:`, `${req.body.message[0].message}`, { type: 'chat', chatData: req.body }, { details: notiObj }, notiObj)
 
                                         if (deviceType == 'ANDROID') {
-                                            console.log("ANDROID noti>>>>>>>", deviceToken, `${name} has send you message:`, `${req.body.message[0].message}`, { type: 'chat', chatData: req.body }, { details: notiObj })
+                                            console.log("ANDROID noti>>>>>>>", deviceToken, `${name} has send you message:`, `${req.body.message[0].message}`, { type: 'chat', chatData: req.body }, { details: notiObj }, notiObj)
                                             notification.sendNotification(deviceToken, `${name} has send you message:`, `${req.body.message[0].message}`, { type: 'chat', chatData: req.body }, { details: notiObj }, notiObj)
                                         }
 

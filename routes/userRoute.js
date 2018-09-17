@@ -18,7 +18,7 @@ router.get('/getAllBusiness/:pageNumber',authHandler.verifyToken,User.getAllBusi
 router.post('/searchCustomerFilter',authHandler.verifyToken,User.searchCustomerFilter);//by Admin panel
 router.post('/postReviews',authHandler.verifyToken,User.postReviews);
 router.get('/viewReviews',User.viewReviews);
-router.get('/logOut',User.logOut);
+router.get('/logOut',authHandler.verifyToken,User.logOut);
 
 
 router.post('/createStripeAccount',User.createStripeAccount)// Testing purpose

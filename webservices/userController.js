@@ -266,7 +266,7 @@ module.exports = {
                     console.log("show balance of individual connected User>>>>>>>>>>>>>++++++++++", err, balance)
                 });
 
-       
+
 
 
 
@@ -282,7 +282,7 @@ module.exports = {
 
 
 
-   
+
 
 
 
@@ -972,23 +972,23 @@ module.exports = {
 
     'logOut': (req, res) => {
         console.log("req for logout is " + JSON.stringify(req.body))
-        if (!req.body)
-            Response.sendResponseWithoutData(res, resCode.BAD_REQUEST, "Please give userId.")
-        else {
-            userSchema.update({ _id: req.body._id }, { $set: { jwtToken: '', socialId: '' } }, (error, result) => {
-                if (error) {
-                    console.log("error of logout " + JSON.stringify(error))
-                    Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.INTERNAL_SERVER_ERROR)
-                } else if (!result) {
-                    Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
-                }
-                else {
-                    console.log("result of logout " + JSON.stringify(result))
-                    Response.sendResponseWithoutData(res, resCode.EVERYTHING_IS_OK, "User logged out successfully.")
-                }
-            })
-        }
-    }
+        // if (!req.body)
+        //     Response.sendResponseWithoutData(res, resCode.BAD_REQUEST, "Please give userId.")
+        // else {
+        userSchema.update({ _id: req.headers._id }, { $set: { jwtToken: '', socialId: '' } }, (error, result) => {
+            if (error) {
+                console.log("error of logout " + JSON.stringify(error))
+                Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.INTERNAL_SERVER_ERROR)
+            } else if (!result) {
+                Response.sendResponseWithoutData(res, resCode.NOT_FOUND, resMessage.NOT_FOUND)
+            }
+            else {
+                console.log("result of logout " + JSON.stringify(result))
+                Response.sendResponseWithoutData(res, resCode.EVERYTHING_IS_OK, "User logged out successfully.")
+            }
+        })
+        // }
+    },
 
 
 

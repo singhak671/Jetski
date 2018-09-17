@@ -465,7 +465,7 @@ module.exports = {
         var query = { businessManId: req.body.userId, bookingStatus: "PENDING" }
         let options = {
             page: req.body.pageNumber || 1,
-            populate: [{ path: "eventId", select: "status eventStatus  eventCreated_At _id period eventName eventAddress eventDescription eventImage eventPrice createdAt" },
+            populate: [{ path: "eventId", select: "status eventStatus customerCount eventCreated_At _id period eventName eventAddress eventDescription eventImage eventPrice createdAt" },
             { path: "userId", select: "profilePic name" }],
             //select: 'status eventStatus duration eventCreated_At _id userId period eventName eventAddress eventDescription eventImage createdAt updatedAt',
             limit: req.body.limit || 10,
@@ -496,7 +496,7 @@ module.exports = {
         var query = { businessManId: req.body.userId, bookingStatus: "CONFIRMED" }
         let options = {
             page: req.body.pageNumber || 1,
-            populate: [{ path: "eventId", select: "status eventStatus  eventCreated_At _id period eventName eventAddress eventDescription eventPrice eventImage " },
+            populate: [{ path: "eventId", select: "status eventStatus customerCount eventCreated_At _id period eventName eventAddress eventDescription eventPrice eventImage " },
             { path: "userId", select: "profilePic name deviceToken" }],
             //select: 'status eventStatus duration eventCreated_At _id userId period eventName eventAddress eventDescription eventImage createdAt updatedAt',
             limit: req.body.limit || 10,
@@ -527,7 +527,7 @@ module.exports = {
         var query = { businessManId: req.body.userId, bookingStatus: "CANCELLED" }
         let options = {
             page: req.body.pageNumber || 1,
-            populate: [{ path: "eventId", select: "status eventStatus  eventCreated_At _id period eventName eventAddress eventDescription eventPrice eventImage " },
+            populate: [{ path: "eventId", select: "status eventStatus customerCount eventCreated_At _id period eventName eventAddress eventDescription eventPrice eventImage " },
             { path: "userId", select: "profilePic name" }],
             //select: 'status eventStatus duration eventCreated_At _id userId period eventName eventAddress eventDescription eventImage createdAt updatedAt',
             limit: req.body.limit || 10,
@@ -559,7 +559,7 @@ module.exports = {
         var query = { businessManId: req.body.userId, bookingStatus: "COMPLETED" }
         let options = {
             page: req.body.pageNumber || 1,
-            populate: [{ path: "eventId", select: "status eventStatus  eventCreated_At _id period eventName eventAddress eventDescription eventPrice eventImage " },
+            populate: [{ path: "eventId", select: "status eventStatus customerCount eventCreated_At _id period eventName eventAddress eventDescription eventPrice eventImage " },
             { path: "userId", select: "profilePic name" }],
             //select: 'status eventStatus duration eventCreated_At _id userId period eventName eventAddress eventDescription eventImage createdAt updatedAt',
             limit: req.body.limit || 10,
@@ -595,7 +595,7 @@ module.exports = {
             limit: 10,
             sort: { createdAt: -1 },
             lean: true,
-            populate: [{ path: 'businessManId', select: 'profilePic  name' }, { path: "eventId", select: "status  eventCreated_At _id eventName eventAddress eventDescription eventPrice eventImage createdAt" }]
+            populate: [{ path: 'businessManId', select: 'profilePic  name' }, { path: "eventId", select: "status  eventCreated_At _id eventName eventAddress eventDescription customerCount eventPrice eventImage createdAt" }]
 
         }
         booking.paginate(query, options, (err_1, result) => {
@@ -620,7 +620,7 @@ module.exports = {
         var query = { businessManId: req.body.userId, bookingStatus: "PENDING"}
         let options = {
             page: req.body.pageNumber || 1,
-            populate: [{ path: "eventId", select: "status eventStatus eventCreated_At _id  eventName eventAddress eventDescription eventImage createdAt" }],
+            populate: [{ path: "eventId", select: "status eventStatus customerCount eventCreated_At _id  eventName eventAddress eventDescription eventImage createdAt" }],
             //select: 'status eventStatus duration eventCreated_At _id userId period eventName eventAddress eventDescription eventImage createdAt updatedAt',
             limit: req.body.limit || 10,
             sort: { eventCreated_At: -1 },
@@ -645,7 +645,7 @@ module.exports = {
         var query = { businessManId: req.body.userId, bookingStatus: "CONFIRMED" }
         let options = {
             page: req.body.pageNumber || 1,
-            populate: [{ path: "eventId", select: "status eventStatus eventCreated_At _id  eventName eventAddress eventDescription eventPrice eventImage createdAt" }],
+            populate: [{ path: "eventId", select: "status eventStatus customerCount eventCreated_At _id  eventName eventAddress eventDescription eventPrice eventImage createdAt" }],
             //select: 'status eventStatus duration eventCreated_At _id userId period eventName eventAddress eventDescription eventImage createdAt updatedAt',
             limit: req.body.limit || 10,
             sort: { eventCreated_At: -1 },
@@ -1069,7 +1069,7 @@ module.exports = {
                             // if (deviceType && deviceToken) {
                             if (succ.deviceType == 'IOS') {
 
-                                // console.log('ios---------------', succ.deviceToken, 'booking Posted !', `You have successfully book the event ${result.eventName}`+'\n'+`Number of Customers: ${req.body.customerCount} People `, { type: 'event' },{ details: notiObj }, notiObj)
+                                // console.log('ios---------------', succ.deviceToken, 'booking Posted !', `You have successfully book the event ${result.eventName}`+'\n'+`Number of Customers: ${req.body.customerCount} People ``+'\n'+`Contact Us: ${email}`, { type: 'event' },{ details: notiObj }, notiObj)
                                 notification.sendNotification(succ.deviceToken, 'booking Posted !', `You have successfully book the event ${result.eventName}`+'\n'+`Number of Customers: ${req.body.customerCount} People `+'\n'+`Contact Us: ${email}`, { type: 'event' },{ details: notiObj }, notiObj)
                             }
 
@@ -1077,7 +1077,7 @@ module.exports = {
 
 
                             if (succ.deviceType == 'ANDROID') {
-                                  console.log("android--------------", succ.deviceToken, 'booking Posted !', `You have successfully book the event ${result.eventName}`+'\n'+`Number of Customers: ${req.body.customerCount} People `+'\n'+`Contact Us: ${email}`, { type: 'event' },{ details: notiObj },{ details: notiObj }, notiObj)
+                                  console.log("android--------------", succ.deviceToken, 'booking Posted !', `You have successfully book the event ${result.eventName}`+'\n'+`Number of Customers: ${req.body.customerCount} People `+'\n'+` Email: ${email}`, { type: 'event' },{ details: notiObj },{ details: notiObj }, notiObj)
                                 notification.sendNotification(succ.deviceToken, 'booking Posted !', `You have successfully book the event ${result.eventName}`+'\n'+`Number of Customers: ${req.body.customerCount} People `+'\n'+`Contact Us: ${email}`, { type: 'event' },{ details: notiObj },{ details: notiObj }, notiObj)
                             }
                             //  businessManId:req.body.businessManId,
@@ -1137,33 +1137,50 @@ module.exports = {
                                     var notiObj = {
                                         businessManId: result.businessManId._id,
                                         // if (deviceType && deviceToken) {
-                                        userId: result.userId,
+                                        userId: result_._id,
                                         profilePic: result_.profilePic,
                                         name: result_.name,
                                         eventId: result.eventId,
                                         type: 'event',
                                         eventStatus: 'CANCELLED'
                                     }
-                                    console.log('success refund-->', refund)
+                                    // console.log('success refund-->', refund)
                                     console.log("incoming Data in Cancel booking>>>>>", notiObj)
 
 
-
+            
 
 
                                     ///   //  console.log("notificatiopn data--------->>>", result_.deviceToken, `Booking Cancelled!!', ' Your booking is  Cancelled for the event ${result.eventName} and your amount will be refunded...!`, result.businessManId, result.userId, result_.profilePic, result_.name)
 
 
                                     if (result_.deviceType == 'IOS') {
-                                        notification.sendNotification(result_.deviceToken, `Booking Cancelled!!', ' Your booking is  Cancelled for the event ${result.eventName} and your amount will be refunded...!`, { type: 'event' },{ details: notiObj }, notiObj)
+
+
+                                        console.log("notificatiopn data--------->>>",result_.deviceToken, 'Booking Cancelled!!', `Your booking is  Cancelled for the event ${result.eventName} and your amount will be refunded...!`, { type: 'event' },{ details: notiObj }, notiObj)
+
+
+
+
+                                        notification.sendNotification(result_.deviceToken, 'Booking Cancelled!!', `Your booking is  Cancelled for the event ${result.eventName} and your amount will be refunded...!`, { type: 'event' },{ details: notiObj }, notiObj)
                                     }
 
                                     if (result_.deviceType == 'ANDROID') {
-                                        notification.sendNotification(result_.deviceToken, `Booking Cancelled!!', ' Your booking is  Cancelled for the event ${result.eventName} and your amount will be refunded...!`, { type: 'event' },{ details: notiObj }, notiObj)
+
+
+                                        console.log("notificatiopn data--------->>>", result_.deviceToken, 'Booking Cancelled!!', ` Your booking is  Cancelled for the event ${result.eventName} and your amount will be refunded...!`, { type: 'event' },{ details: notiObj }, notiObj)
+
+
+                                        notification.sendNotification(result_.deviceToken, 'Booking Cancelled!!', ` Your booking is  Cancelled for the event ${result.eventName} and your amount will be refunded...!`, { type: 'event' },{ details: notiObj }, notiObj)
                                     }
 
                                     // if (result.businessManId.deviceType == 'WEBSITE') {
-                                    notification.single_notification(`Booking Cancelled!!`, `Booking has been cancelled for ${result.eventName} by ${result_.name} `, result.businessManId._id, result.userId, notiObj.profilePic, result_.name, 'event', 'CANCELLED', result.eventId)
+
+
+
+                                        console.log("website data--------->>>",`Booking Cancelled!!`, `Booking has been cancelled for ${result.eventName} by ${result_.name} `, result.businessManId._id, notiObj.userId, notiObj.profilePic, result_.name, 'event', 'CANCELLED', result.eventId)
+
+                                    notification.single_notification(`Booking Cancelled!!`, `Booking has been cancelled for ${result.eventName} by ${result_.name} `, result.businessManId._id, notiObj.userId, notiObj.profilePic, result_.name, 'event', 'CANCELLED', result.eventId)
                                     //}
                                     response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Booking cancelled successfully and your amount will be refunded...")
 

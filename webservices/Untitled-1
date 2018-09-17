@@ -1,0 +1,21 @@
+==== for App=====
+
+
+'booking Posted !', `You have successfully book the event ${result.eventName}`!.
+    Number of Customer: 4 People
+      Contact Us: business@gmail.com
+
+
+
+    ====  For website =====
+     
+     `booking Posted !`, `Booking is successfully done by ${notiObj.name}  , requested for the event ${result.eventName}`
+          Number of Customer: 4 People
+          Mobile: 055 45 67 890
+          Email: Test@gmail.com
+
+
+booking Posted ! Booking is successfully done by abcd  , requested for the event event 3 
+         Number of Customer: 5 People 
+         Mobile: 9889888888 
+         Email: Test@gmail.com

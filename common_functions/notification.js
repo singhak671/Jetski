@@ -68,6 +68,7 @@ var notifications = {
 
 //=======================================================Notification by fcm================================================================
 'sendNotification': (deviceToken, title, message, data,details, notiObj) => {
+    // console.log("!!!!!!!!!!!!!!@@@@@@@@@@@@@@@@@@",notiObj)
         console.log(`Device token is ${deviceToken}`)
         var serverKey = 'AAAAdtyNEC0:APA91bFeZPCM-fslejcqzZHNrXE_fExyhkjqn5FzuXj4mJ3X9pkClFG9Hs0I76-pnIRmw512uEVBkhrMBzYF7FbqEirrVS6anw0uEuu8o3gzZG48hhCKlQrIEIZs36os5qTZiRU9b02r';
         var fcm = new FCM(serverKey);
@@ -97,7 +98,7 @@ var notifications = {
             } else {
                  console.log("Successfully sent with response: ", response);
                 
-                 console.log("!!!!!!!!!!!!!!@@@@@@@@@@@@@@@@@@",notiObj)
+                
                 let obj = {
                     customerId: { cid: notiObj.userId, image: notiObj.image, name:notiObj.name },
                     bussinessId: { bid: notiObj.businessManId },
