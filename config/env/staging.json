@@ -12,9 +12,9 @@
 		"name":"JET_SKI"		
 	},
     "twilio":{
-        "sid": "",
-        "auth_token": "",
-        "number":"+"
+        "sid": "AC0d2d1b1c5451771ceae267078e6dc23c",
+        "auth_token": "47f40a9fb853be19603855af4e8f2962",
+        "number":"9582601781"
     },
     "speakeasy":{
         "secret_key":"@123"

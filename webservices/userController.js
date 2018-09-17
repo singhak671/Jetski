@@ -263,12 +263,10 @@ module.exports = {
                     stripe_account: "acct_1D88cVKpPoRHeGQX"
                 }, function (err, balance) {
                     // asynchronously called
-
-
                     console.log("show balance of individual connected User>>>>>>>>>>>>>++++++++++", err, balance)
                 });
 
-                stipe.
+       
 
 
 

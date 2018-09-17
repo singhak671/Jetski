@@ -820,6 +820,7 @@ module.exports = {
         User.findOne({ _id: req.body.userId, status: "ACTIVE" })
             .populate({
                 path: "services.eventId",
+               
                 match: { period: req.body.period }
             })
             .skip((query.page - 1) * query.limit)
@@ -871,8 +872,9 @@ module.exports = {
         let todayArray = [];
         // let weekArray = [];
         // let monthlyArray = [];
+        // eventSchema.findOne({ _id: req.body.eventId }).populate({ path: 'userId', select: 'deviceType deviceToken name profilePic' }).exec((err5, succ1) => {//
 
-        eventSchema.findOne({ _id: req.body.eventId, status: "ACTIVE" }, (err, success) => {
+        eventSchema.findOne({ _id: req.body.eventId, status: "ACTIVE" }, {period:1,duration:1},(err, success) => {
             if (err)
                 return response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.");
             if (!success)
@@ -888,10 +890,13 @@ module.exports = {
                         if (success.duration[i].date.epoc * 1000 >= Time_stamp) {
                             todayArray.push(success.duration[i])
                             console.log('ARRAY IS for Today>>>>>', todayArray);
-
+                            var abcobj ={
+                                todayArray:todayArray,
+                                period:success.period
+                            }
                         }
                     }
-                    return response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, "Data found successfully", todayArray);
+                    return response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, "Data found successfully", abcobj);
                 
             }
         })
@@ -916,7 +921,7 @@ module.exports = {
 
                     var email = succ.email
                     async.waterfall([(callback) => {
-                        eventSchema.findOne({ _id: req.body.eventId }).populate({ path: 'userId', select: 'deviceType deviceToken name profilePic' }).exec((err5, succ1) => {//
+                        eventSchema.findOne({ _id: req.body.eventId }).populate({ path: 'userId', select: 'deviceType email mobile_no deviceToken name profilePic' }).exec((err5, succ1) => {//
                             if (err5)
                                 return response.sendResponseWithData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.", err5);
                             if (!succ1) {
@@ -929,6 +934,7 @@ module.exports = {
                                 deviceTypeWeb = succ1.userId.deviceType
                                 profilePic = succ1.userId.profilePic
                                 name = succ1.userId.name
+                                email=succ1.userId.email
                                 var array = [];
                                 array = req.body.duration[0].times;
                                 // if (array.length == 1) {
@@ -1009,7 +1015,9 @@ module.exports = {
                                         offset: req.body.offset,
                                         eventName: req.body.eventName,
                                         businessName: req.body.businessName,
+                                        customerCount:req.body.customerCount,
                                         customerName: req.body.customerName,
+                                        period:req.body.period,
                                         "transactionDate": req.body.transactionDate,
                                         "transactionTime": req.body.transactionTime,
                                         "transactionTimeStamp": req.body.transactionTimeStamp,
@@ -1026,8 +1034,8 @@ module.exports = {
                                         if (err_)
                                             console.log("err", err_)
                                         else {
-                                            console.log("*************************result_", JSON.stringify(result_))
-                                            console.log(`Charge object is ${JSON.stringify(charge1)}`)
+                                            // console.log("*************************result_", JSON.stringify(result_))
+                                            // console.log(`Charge object is ${JSON.stringify(charge1)}`)
                                             callback('', result_)
                                         }
                                     })
@@ -1040,6 +1048,7 @@ module.exports = {
                         } else {
                             var notiObj = {
                                 businessManId: req.body.businessManId,
+                                customerCount:req.body.customerCount,
                                 userId: req.body.userId,
                                 profilePic: succ.profilePic,
                                 name: succ.name,
@@ -1051,34 +1060,37 @@ module.exports = {
 
 
 
-                            console.log("888888888888>>>",notiObj)
+                            // console.log("888888888888>>>",notiObj)
 
 
                             // console.log("*********result final", result)
-                            console.log("notificatiopn data--------->>>", succ.deviceToken, 'booking Posted !', `Your booking is successfully done by ${notiObj.name} requested for the event ${result.eventName}`, req.body.businessManId, req.body.userId, succ.profilePic, succ.name)
+                            // console.log("notificatiopn data--------->>>", succ.deviceToken, 'booking Posted !', `Your booking is successfully done by ${notiObj.name} requested for the event ${result.eventName}`, req.body.businessManId, req.body.userId, succ.profilePic, succ.name)
                             // if (succ.deviceType || succ.deviceToken) {
                             // if (deviceType && deviceToken) {
                             if (succ.deviceType == 'IOS') {
-                                console.log("noti obj--------------<<<<<", notiObj)
-                                console.log('ios---------------', succ.deviceToken, 'booking Posted !', `You have successfully book the event ${result.eventName}`, { type: 'event' },{ details: notiObj }, notiObj)
-                                notification.sendNotification(succ.deviceToken, 'booking Posted !', `You have successfully book the event ${result.eventName}`, { type: 'event' },{ details: notiObj }, notiObj)
+
+                                // console.log('ios---------------', succ.deviceToken, 'booking Posted !', `You have successfully book the event ${result.eventName}`+'\n'+`Number of Customers: ${req.body.customerCount} People `, { type: 'event' },{ details: notiObj }, notiObj)
+                                notification.sendNotification(succ.deviceToken, 'booking Posted !', `You have successfully book the event ${result.eventName}`+'\n'+`Number of Customers: ${req.body.customerCount} People `+'\n'+`Contact Us: ${email}`, { type: 'event' },{ details: notiObj }, notiObj)
                             }
 
 
 
 
                             if (succ.deviceType == 'ANDROID') {
-                                console.log("and--------------", succ.deviceToken, 'booking Posted !', `You have successfully book the event ${result.eventName}`, { type: 'event' },{ details: notiObj },{ details: notiObj }, notiObj)
-                                notification.sendNotification(succ.deviceToken, 'booking Posted !', `You have successfully book the event ${result.eventName}`, { type: 'event' },{ details: notiObj },{ details: notiObj }, notiObj)
+                                  console.log("android--------------", succ.deviceToken, 'booking Posted !', `You have successfully book the event ${result.eventName}`+'\n'+`Number of Customers: ${req.body.customerCount} People `+'\n'+`Contact Us: ${email}`, { type: 'event' },{ details: notiObj },{ details: notiObj }, notiObj)
+                                notification.sendNotification(succ.deviceToken, 'booking Posted !', `You have successfully book the event ${result.eventName}`+'\n'+`Number of Customers: ${req.body.customerCount} People `+'\n'+`Contact Us: ${email}`, { type: 'event' },{ details: notiObj },{ details: notiObj }, notiObj)
                             }
                             //  businessManId:req.body.businessManId,
                             //if (deviceTypeWeb == 'WEBSITE') { //title, msg, bussinessId, customerId, image, name, type, eventStatus
-                            console.log("web----------------", 'booking Posted !', `Booking is successfully done by ${notiObj.name}  , requested for the event ${result.eventName}`, req.body.businessManId, req.body.userId, notiObj.profilePic, notiObj.name)
+                         
+                
+                         
+                            console.log("web----------------", 'booking Posted !', `Booking is successfully done by ${notiObj.name}  , requested for the event ${result.eventName} `+'\n'+` Number of Customers: ${req.body.customerCount} People `+'\n'+` Mobile: ${succ.mobile_no} `+'\n'+` Email: ${succ.email}` , req.body.businessManId, req.body.userId, notiObj.profilePic, notiObj.name)
 
 
 
 
-                            notification.single_notification(`booking Posted !`, `Booking is successfully done by ${notiObj.name}  , requested for the event ${result.eventName}`, req.body.businessManId, req.body.userId, notiObj.profilePic, notiObj.name, 'event', 'PENDING', req.body.eventId)
+                            notification.single_notification(`booking Posted !`, `Booking is successfully done by ${notiObj.name}  , requested for the event ${result.eventName} `+'\n'+`Number of Customers: ${req.body.customerCount} People `+'\n'+` Mobile: ${succ.mobile_no} `+'\n'+` Email: ${succ.email}` , req.body.businessManId, req.body.userId, notiObj.profilePic, notiObj.name, 'event', 'PENDING', req.body.eventId)
                             //}
                         }
                         response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Payment successfully done!")

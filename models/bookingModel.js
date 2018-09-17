@@ -72,6 +72,10 @@ const booking = mongoose.Schema({
         type: String
     },
 
+    customerCount:{
+        type: Number 
+    }
+
 },
     {
         timestamps: true

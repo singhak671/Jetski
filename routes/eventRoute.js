@@ -15,7 +15,7 @@ router.post('/addEvent',authHandler.verifyToken,Business.addEvent);
  router.post('/eventsCompleted',authHandler.verifyToken,Business.eventsCompleted);
  router.post('/confirmEventStatus',authHandler.verifyToken,Business.confirmEventStatus);
  router.post('/rejectEventStatus',authHandler.verifyToken,Business.rejectEventStatus);
- router.post('/bookingEvent',authHandler.verifyToken,Business.bookingEvent);
+ router.post('/bookingEvent',Business.bookingEvent);
  router.post('/booking',Business.booking);
  router.post('/eventDescription',authHandler.verifyToken,Business.eventDescription);
  router.post('/filterEvent',authHandler.verifyToken,Business.filterEvent);

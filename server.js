@@ -61,9 +61,11 @@ cron.schedule('0 * * * *', () => {
     console.log(" inside crone)))))))))")
     booking.find({}).exec((err, succ) => {
         asyncLoop(succ, (item, next) => {
-            var result = item.duration[0].date.formatted + "T" + item.duration[0].times[0].time + ":00.000Z"
+            var result = item.duration[0].date.formatted + "T" + item.duration[0].endTime + ":00.000Z"
             // "2018-08-30T15:23:00.000Z"
-            //  console.log("i am here ....>>>>", result)
+            console.log("i am here ....>>>>", result)
+            
+            //   console.log("i am here ....>>>>", item.duration[0].endTime)
             //  var newTime = new Date(result)
             var temp = new Date(result).getTime()
             // var c=temp+19800000
