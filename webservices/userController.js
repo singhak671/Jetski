@@ -975,7 +975,7 @@ module.exports = {
         // if (!req.body)
         //     Response.sendResponseWithoutData(res, resCode.BAD_REQUEST, "Please give userId.")
         // else {
-        userSchema.update({ _id: req.headers._id }, { $set: { jwtToken: '', socialId: '' } }, (error, result) => {
+        userSchema.update({ _id: req.headers._id }, { $set: { jwtToken: '', deviceToken: '' } }, (error, result) => {
             if (error) {
                 console.log("error of logout " + JSON.stringify(error))
                 Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.INTERNAL_SERVER_ERROR)

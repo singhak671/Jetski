@@ -77,19 +77,23 @@ var notifications = {
 
             to: deviceToken, // required fill with device token or topics
             //registration_ids: tokenArray,
+            "content_available": true,
             collapse_key: 'your_collapse_key',
-            click_action: "fcm.ACTION.NOTIF", 
+          
             notification: {
                 title: title,
-                body: message
+                body: message,
+                click_action: "fcm.ACTION.NOTIF"
             }
         };
+        
         if (data != '')
             payload.data = data;
            
            
             if (details != '')
             payload.details = details;
+           
 
         //callback style
         fcm.send(payload, function (err, response) {
