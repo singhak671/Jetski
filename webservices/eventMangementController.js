@@ -467,7 +467,7 @@ module.exports = {
             page: req.body.pageNumber || 1,
             populate: [{ path: "eventId", select: "status eventStatus customerCount eventCreated_At _id period eventName eventAddress eventDescription eventImage eventPrice createdAt" },
             { path: "userId", select: "profilePic name" }],
-            //select: 'status eventStatus duration eventCreated_At _id userId period eventName eventAddress eventDescription eventImage createdAt updatedAt',
+            select: 'customerCount  duration eventPrice period',
             limit: req.body.limit || 10,
             sort: { createdAt: -1 },
             lean: false
@@ -498,7 +498,7 @@ module.exports = {
             page: req.body.pageNumber || 1,
             populate: [{ path: "eventId", select: "status eventStatus customerCount eventCreated_At _id period eventName eventAddress eventDescription eventPrice eventImage " },
             { path: "userId", select: "profilePic name deviceToken" }],
-            //select: 'status eventStatus duration eventCreated_At _id userId period eventName eventAddress eventDescription eventImage createdAt updatedAt',
+            select: 'customerCount  duration eventPrice period',
             limit: req.body.limit || 10,
             sort: { createdAt: -1 },
             lean: false
@@ -527,9 +527,9 @@ module.exports = {
         var query = { businessManId: req.body.userId, bookingStatus: "CANCELLED" }
         let options = {
             page: req.body.pageNumber || 1,
-            populate: [{ path: "eventId", select: "status eventStatus customerCount eventCreated_At _id period eventName eventAddress eventDescription eventPrice eventImage " },
+            populate: [{ path: "eventId", select: "status eventStatus customerCount  _id period eventName eventAddress eventDescription  eventImage " },
             { path: "userId", select: "profilePic name" }],
-            //select: 'status eventStatus duration eventCreated_At _id userId period eventName eventAddress eventDescription eventImage createdAt updatedAt',
+            select: 'customerCount  duration eventPrice period',
             limit: req.body.limit || 10,
             sort: { createdAt: -1 },
             lean: false
@@ -561,7 +561,7 @@ module.exports = {
             page: req.body.pageNumber || 1,
             populate: [{ path: "eventId", select: "status eventStatus customerCount eventCreated_At _id period eventName eventAddress eventDescription eventPrice eventImage " },
             { path: "userId", select: "profilePic name" }],
-            //select: 'status eventStatus duration eventCreated_At _id userId period eventName eventAddress eventDescription eventImage createdAt updatedAt',
+            select: 'customerCount  duration eventPrice period',
             limit: req.body.limit || 10,
             sort: { createdAt: -1 },
             lean: false
@@ -620,8 +620,8 @@ module.exports = {
         var query = { businessManId: req.body.userId, bookingStatus: "PENDING"}
         let options = {
             page: req.body.pageNumber || 1,
-            populate: [{ path: "eventId", select: "status eventStatus customerCount eventCreated_At _id  eventName eventAddress eventDescription eventImage createdAt" }],
-            //select: 'status eventStatus duration eventCreated_At _id userId period eventName eventAddress eventDescription eventImage createdAt updatedAt',
+            populate: [{ path: "eventId", select: "status eventStatus  eventCreated_At _id  eventName eventAddress eventDescription eventImage createdAt" }],
+            select: 'customerCount  duration eventPrice period',
             limit: req.body.limit || 10,
             sort: { eventCreated_At: -1 },
             lean: false
@@ -645,8 +645,8 @@ module.exports = {
         var query = { businessManId: req.body.userId, bookingStatus: "CONFIRMED" }
         let options = {
             page: req.body.pageNumber || 1,
-            populate: [{ path: "eventId", select: "status eventStatus customerCount eventCreated_At _id  eventName eventAddress eventDescription eventPrice eventImage createdAt" }],
-            //select: 'status eventStatus duration eventCreated_At _id userId period eventName eventAddress eventDescription eventImage createdAt updatedAt',
+            populate: [{ path: "eventId", select: "status eventStatus customerCount  _id  eventName eventAddress eventDescription  eventImage createdAt" }],
+            select: 'customerCount  duration eventPrice period',
             limit: req.body.limit || 10,
             sort: { eventCreated_At: -1 },
             lean: false
@@ -701,7 +701,7 @@ module.exports = {
                         // if (result.userId.deviceType || result.userId.deviceToken) {
                         if (result.userId.deviceType == 'IOS') {
                             console.log("notification in confirm for device>>>>>>>", result.userId.deviceType)
-                            notification.sendNotification(result.userId.deviceToken, `Booking Confirmation:`, `Your booking has been confirmed for the event ${event}`, { type: 'event' },{ details: notiObj }, notiObj)
+                            notification.sendNotification(result.userId.deviceToken, `Booking Confirmation:`,`Your booking has been confirmed for the event ${event}`, { type: 'event' },{ details: notiObj }, notiObj)
                         }
 
 
@@ -1070,27 +1070,27 @@ module.exports = {
                             if (succ.deviceType == 'IOS') {
 
                                 // console.log('ios---------------', succ.deviceToken, 'booking Posted !', `You have successfully book the event ${result.eventName}`+'\n'+`Number of Customers: ${req.body.customerCount} People ``+'\n'+`Contact Us: ${email}`, { type: 'event' },{ details: notiObj }, notiObj)
-                                notification.sendNotification(succ.deviceToken, 'booking Posted !', `You have successfully book the event ${result.eventName}`+'\n'+`Number of Customers: ${req.body.customerCount} People `+'\n'+`Contact Us: ${email}`, { type: 'event' },{ details: notiObj }, notiObj)
+                                notification.sendNotification(succ.deviceToken, 'booking Posted !', `You have successfully book the event ${result.eventName}`+'\n'+` Number of Riders: ${req.body.customerCount} People `+'\n'+` Contact Us: ${email}`, { type: 'event' },{ details: notiObj }, notiObj)
                             }
 
 
 
 
                             if (succ.deviceType == 'ANDROID') {
-                                  console.log("android--------------", succ.deviceToken, 'booking Posted !', `You have successfully book the event ${result.eventName}`+'\n'+`Number of Customers: ${req.body.customerCount} People `+'\n'+` Email: ${email}`, { type: 'event' },{ details: notiObj },{ details: notiObj }, notiObj)
-                                notification.sendNotification(succ.deviceToken, 'booking Posted !', `You have successfully book the event ${result.eventName}`+'\n'+`Number of Customers: ${req.body.customerCount} People `+'\n'+`Contact Us: ${email}`, { type: 'event' },{ details: notiObj },{ details: notiObj }, notiObj)
+                                  console.log("android--------------", succ.deviceToken, 'booking Posted !', `You have successfully book the event ${result.eventName}`+'\n'+` Number of Riders: ${req.body.customerCount} People `+'\n'+` Email: ${email}`, { type: 'event' },{ details: notiObj },{ details: notiObj }, notiObj)
+                                notification.sendNotification(succ.deviceToken, 'booking Posted !', `You have successfully book the event ${result.eventName}`+'\n'+` Number of Riders: ${req.body.customerCount} People `+'\n'+` Contact Us: ${email}`, { type: 'event' },{ details: notiObj },{ details: notiObj }, notiObj)
                             }
                             //  businessManId:req.body.businessManId,
                             //if (deviceTypeWeb == 'WEBSITE') { //title, msg, bussinessId, customerId, image, name, type, eventStatus
                          
                 
                          
-                            console.log("web----------------", 'booking Posted !', `Booking is successfully done by ${notiObj.name}  , requested for the event ${result.eventName} `+'\n'+` Number of Customers: ${req.body.customerCount} People `+'\n'+` Mobile: ${succ.mobile_no} `+'\n'+` Email: ${succ.email}` , req.body.businessManId, req.body.userId, notiObj.profilePic, notiObj.name)
+                            console.log("web----------------", 'booking Posted !', `Booking is successfully done by ${notiObj.name}  , requested for the event ${result.eventName} `+'\n'+` Number of Riders: ${req.body.customerCount} People `+'\n'+` Mobile: ${succ.mobile_no} `+'\n'+` Email: ${succ.email}` , req.body.businessManId, req.body.userId, notiObj.profilePic, notiObj.name)
 
 
 
 
-                            notification.single_notification(`booking Posted !`, `Booking is successfully done by ${notiObj.name}  , requested for the event ${result.eventName} `+'\n'+`Number of Customers: ${req.body.customerCount} People `+'\n'+` Mobile: ${succ.mobile_no} `+'\n'+` Email: ${succ.email}` , req.body.businessManId, req.body.userId, notiObj.profilePic, notiObj.name, 'event', 'PENDING', req.body.eventId)
+                            notification.single_notification(`booking Posted !`,`Booking is successfully done by ${notiObj.name} , requested for the event ${result.eventName} `+'\n'+` Number of Riders: ${req.body.customerCount} People `+'\n'+` Mobile: ${succ.mobile_no} `+'\n'+` Email: ${succ.email}` , req.body.businessManId, req.body.userId, notiObj.profilePic, notiObj.name, 'event', 'PENDING', req.body.eventId)
                             //}
                         }
                         response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Payment successfully done!")
