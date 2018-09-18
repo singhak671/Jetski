@@ -63,8 +63,8 @@ var notifications = {
 'sendNotification': (deviceToken, title, message, data, notiObj) => {
         var serverKey = 'AAAAdtyNEC0:APA91bFeZPCM-fslejcqzZHNrXE_fExyhkjqn5FzuXj4mJ3X9pkClFG9Hs0I76-pnIRmw512uEVBkhrMBzYF7FbqEirrVS6anw0uEuu8o3gzZG48hhCKlQrIEIZs36os5qTZiRU9b02r';
         var fcm = new FCM(serverKey);
-        data.title = title;
-        data.body = body;
+        data["title"] = title;
+        data["body"] = body;
         var payload = {
 
             to: deviceToken, 
