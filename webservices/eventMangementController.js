@@ -11,35 +11,21 @@ var booking = require("../models/bookingModel.js")
 var feedback = require("../models/customerFeedbackModel.js")
 const waterfall = require('async-waterfall')
 const async = require('async');
-// const keySecret = 'sk_test_7OyC78h4UYqhcEiH2N2vcX9O';//client
 const keySecret = 'sk_test_RnCHCs3r4NmdEJ1Ex9nLfME5';//avanish
 const stripe = require("stripe")(keySecret);
-const keyPublishable = 'pk_test_qd08fVES1IsBAD3CZEKs00ng';
-// const keySecret = 'sk_test_c1fuFQmWKd4OZeCThFOtLFuY';//pramod
-
 const notification = require('../common_functions/notification');
 const Noti = require('../models/notificationModel');
-
 const cron = require('node-cron');
-const asyncLoop = require('node-async-loop');
-
 moment().format();
 
 function joinDateTime(d, t, offset) {
-    // console.log('d==>>', d + " t==>>>"+t);
     var dateString = d + " " + t,
         dateTimeParts = dateString.split(' '),
         timeParts = dateTimeParts[1].split(':'),
         dateParts = (dateTimeParts[0].split('-')).reverse(),
         date;
-    //     console.log("dateTimeParts==>>", dateTimeParts);
-    //     console.log("timeParts==>>", timeParts);
-    //     console.log("dateParts==>>", dateParts);
-    date = new Date(dateParts[2], parseInt(dateParts[1], 10) - 1, dateParts[0], timeParts[0], timeParts[1]);
-    //     console.log('date==>>' + date);
 
-    //     console.log(date.getTime()); //1379426880000
-    //     console.log(date);
+    date = new Date(dateParts[2], parseInt(dateParts[1], 10) - 1, dateParts[0], timeParts[0], timeParts[1]);
     var n = (new Date().getTimezoneOffset()) * 60000;  //-19800000
     offset = n - offset;
     var finalObj = { dateTime: (date.getTime()) - offset }
@@ -87,11 +73,9 @@ function filterFutureEvent(duration, offset) {
 
 module.exports = {
 
+    //.....................................................................Add event API...........................................................//
 
     'addEvent': (req, res) => {
-        // console.log("addddddddddddd", req.body);
-        console.log("***@@@@@@@@@@@@@@@@", req.body);
-
         if (!req.body) {
             return response.sendResponseWithoutData(res, responseCode.SOMETHING_WENT_WRONG, responseMessage.REQUIRED_DATA);
         }
@@ -104,7 +88,6 @@ module.exports = {
                 if (err5)
                     return response.sendResponseWithData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.", err5);
                 if (succ1) {
-                    console.log("successss>>>>>>>", succ1);
                     return response.sendResponseWithData(res, responseCode.BAD_REQUEST, "Event name already exists");
                 }
                 var base64 = req.body.eventImage
@@ -113,27 +96,20 @@ module.exports = {
                         req.body.eventImage = result;
                     }
                     var business = new eventSchema(req.body)
-
-
-                    // console.log("&&&&&&&&&&&&&&&&&&&&&.")
                     var durationArr = business.duration;
 
                     var valid = validateEvent(durationArr, req.body.offset);
                     if (!valid) {
-                        // console.log("@@@@@@@@@@@@@@@@@.")
                         return response.sendResponseWithData(res, responseCode.NOT_FOUND, "Please provide correct duration time");
                     }
                     else {
-                        // console.log("&&&&&&&&&&&&&&&&&&&&&.")
                         business.save((err2, createEvent) => {
                             if (err2) {
-                                console.log("business added error>>>>>>>>>>>", err2)
                                 response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.", err2)
                             }
                             else if (createEvent) {
                                 response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, "Event saved successfully.", createEvent);
                                 User.findByIdAndUpdate({ _id: req.body.userId }, { $push: { services: { eventId: createEvent._id } } }, { new: true }, (err3, success) => {
-                                    console.log("success", success)
                                     if (err3)
                                         console.log(err3)
                                     if (!success)
@@ -149,43 +125,7 @@ module.exports = {
         })
     },
 
-
-
-
-    //                 var durationArr = business.duration;
-    //                 var valid = validateEvent(durationArr, req.body.offset);
-    //                 if (!valid) {
-    //                     // console.log("@@@@@@@@@@@@@@@@@.")
-    //                     return response.sendResponseWithData(res, responseCode.NOT_FOUND, "Please provide correct duration time");
-    //                 }
-    //                 else {
-    //                     // console.log("&&&&&&&&&&&&&&&&&&&&&.")
-    //                     business.save((err2, createEvent) => {
-    //                         if (err2) {
-    //                             console.log("business added error>>>>>>>>>>>", err2)
-    //                             response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.", err2)
-    //                         }
-    //                         else if (createEvent) {
-    //                             response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, "Event saved successfully.", createEvent);
-    //                             User.findByIdAndUpdate({ _id: req.body.userId }, { $push: { services: { eventId: createEvent._id } } }, { new: true }, (err3, success) => {
-    //                                 console.log("success", success)
-    //                                 if (err3)
-    //                                     console.log(err3)
-    //                                 if (!success)
-    //                                     console.log("cannot update userId with the event update")
-    //                             })
-    //                         }
-    //                         else
-    //                             response.sendResponseWithoutData(res, responseCode.SOMETHING_WENT_WRONG, "Error !!!", err2)
-    //                     })
-    //                 }
-    //             })
-    //         })
-    //     })
-    // },
-
-
-    //-------------------------------------------------------------------------------All Event at business site before login-----------------------------------------------------------------//
+    //.......................................All Event at business site before login.................................................................//
     'allEvent': (req, res) => {
         //console.log("get al customer")
         //var durationArr = [];
@@ -349,7 +289,7 @@ module.exports = {
         //console.log("get al customer")
 
 
-        var query = { $or: [{ userId: req.body.userId,  status: "ACTIVE" }, { userId: req.body.userId, status: "ACTIVE" }] }
+        var query = { $or: [{ userId: req.body.userId, status: "ACTIVE" }, { userId: req.body.userId, status: "ACTIVE" }] }
         let options = {
             // page: req.params.pageNumber,
             select: 'period eventAddress createdAt eventImage offset duration eventName userId status eventDescription eventPrice ',
@@ -617,7 +557,7 @@ module.exports = {
 
     "filterEventsPending": (req, res) => {
         // var arr = []
-        var query = { businessManId: req.body.userId, bookingStatus: "PENDING"}
+        var query = { businessManId: req.body.userId, bookingStatus: "PENDING" }
         let options = {
             page: req.body.pageNumber || 1,
             populate: [{ path: "eventId", select: "status eventStatus  eventCreated_At _id  eventName eventAddress eventDescription eventImage createdAt" }],
@@ -701,13 +641,13 @@ module.exports = {
                         // if (result.userId.deviceType || result.userId.deviceToken) {
                         if (result.userId.deviceType == 'IOS') {
                             console.log("notification in confirm for device>>>>>>>", result.userId.deviceType)
-                            notification.sendNotification(result.userId.deviceToken, `Booking Confirmation:`,`Your booking has been confirmed for the event ${event}`, { type: 'event' },{ details: notiObj }, notiObj)
+                            notification.sendNotification(result.userId.deviceToken, `Booking Confirmation:`, `Your booking has been confirmed for the event ${event}`, { type: 'event' }, { details: notiObj }, notiObj)
                         }
 
 
                         if (result.userId.deviceType == 'ANDROID') {
                             console.log("notification in confirm for device>>>>>>>", result.userId.deviceType)
-                            notification.sendNotification(result.userId.deviceToken, `Booking Confirmation:`, `Your booking has been confirmed for the event ${event}`, { type: 'event' },{ details: notiObj }, notiObj)
+                            notification.sendNotification(result.userId.deviceToken, `Booking Confirmation:`, `Your booking has been confirmed for the event ${event}`, { type: 'event' }, { details: notiObj }, notiObj)
                         }
                     }
                     // if(deviceType=="WEBSITE")
@@ -777,9 +717,9 @@ module.exports = {
                                         console.log('noti result==========>', result.userId.deviceToken, 'Event Cancelled!!', event + ' Event is Cancelled...!', result.userId._id, result.userId.profilePic, result.userId.name)
 
                                         if (result.userId.deviceType == 'IOS')
-                                            notification.sendNotification(result.userId.deviceToken, `Booking cancelled:`, `Your booking has been cancelled for the event ${event}`, { type: 'event' },{ details: notiObj }, notiObj)
+                                            notification.sendNotification(result.userId.deviceToken, `Booking cancelled:`, `Your booking has been cancelled for the event ${event}`, { type: 'event' }, { details: notiObj }, notiObj)
                                         if (result.userId.deviceType == 'ANDROID') {
-                                            notification.sendNotification(result.userId.deviceToken, `Booking cancelled:`, `Your booking has been cancelled for the event ${event}`, { type: 'event' },{ details: notiObj }, notiObj)
+                                            notification.sendNotification(result.userId.deviceToken, `Booking cancelled:`, `Your booking has been cancelled for the event ${event}`, { type: 'event' }, { details: notiObj }, notiObj)
                                         }
                                         // else
                                         //     notification.single_notificationForWeb('Event cancelled!!', event + ' Event is cancelled...!', result.userId._id, result.userId.profilePic, result.userId.name)
@@ -812,7 +752,7 @@ module.exports = {
         var newDate1 = array + " 00:00:00"
         var d = new Date(newDate1)
         var Time_stamp = d.getTime();
-        let todayArray = [];     
+        let todayArray = [];
         let query = {
             page: req.body.page || 1,
             limit: req.body.limit || 10
@@ -820,7 +760,7 @@ module.exports = {
         User.findOne({ _id: req.body.userId, status: "ACTIVE" })
             .populate({
                 path: "services.eventId",
-               
+
                 match: { period: req.body.period }
             })
             .skip((query.page - 1) * query.limit)
@@ -833,21 +773,21 @@ module.exports = {
                 else {
                     //  console.log(success)
                     //=========================FOR DAILY=============================
-                  
-                        for (let x = 0; x < success.services.length; x++)
-                            if (success.services[x].eventId) {
-                                for (var i = 0; i < success.services[x].eventId.duration.length; i++) {
-                                    // console.log('TIME STAMP VALUE',Time_stamp);
-                                    // console.log('DATA EPOC IS',success.duration[i].date.epoc*1000);
-                                    // console.log('SUCCESS +++++++++',success.duration[i].date.epoc * 1000 == Time_stamp);
-                                    if (success.services[x].eventId.duration[i].date.epoc * 1000 == Time_stamp) {
-                                        todayArray.push(success.services[0].eventId.duration[i])
-                                        // console.log('ARRAY IS', todayArray);
-                                    }
+
+                    for (let x = 0; x < success.services.length; x++)
+                        if (success.services[x].eventId) {
+                            for (var i = 0; i < success.services[x].eventId.duration.length; i++) {
+                                // console.log('TIME STAMP VALUE',Time_stamp);
+                                // console.log('DATA EPOC IS',success.duration[i].date.epoc*1000);
+                                // console.log('SUCCESS +++++++++',success.duration[i].date.epoc * 1000 == Time_stamp);
+                                if (success.services[x].eventId.duration[i].date.epoc * 1000 == Time_stamp) {
+                                    todayArray.push(success.services[0].eventId.duration[i])
+                                    // console.log('ARRAY IS', todayArray);
                                 }
-                                success.services[x].eventId.duration = todayArray;
                             }
-                        return response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, success);
+                            success.services[x].eventId.duration = todayArray;
+                        }
+                    return response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, success);
                 }
             })
     },
@@ -874,7 +814,7 @@ module.exports = {
         // let monthlyArray = [];
         // eventSchema.findOne({ _id: req.body.eventId }).populate({ path: 'userId', select: 'deviceType deviceToken name profilePic' }).exec((err5, succ1) => {//
 
-        eventSchema.findOne({ _id: req.body.eventId, status: "ACTIVE" }, {period:1,duration:1},(err, success) => {
+        eventSchema.findOne({ _id: req.body.eventId, status: "ACTIVE" }, { period: 1, duration: 1 }, (err, success) => {
             if (err)
                 return response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.");
             if (!success)
@@ -883,21 +823,21 @@ module.exports = {
                 console.log("success===" + JSON.stringify(success))
                 //  console.log(success)
                 //=========================FOR All=============================
-                    for (var i = 0; i < success.duration.length; i++) {
-                        // console.log('TIME STAMP VALUE',Time_stamp);
-                        // console.log('DATA EPOC IS',success.duration[i].date.epoc*1000);
-                        // console.log('SUCCESS +++++++++',success.duration[i].date.epoc * 1000 == Time_stamp);
-                        if (success.duration[i].date.epoc * 1000 >= Time_stamp) {
-                            todayArray.push(success.duration[i])
-                            console.log('ARRAY IS for Today>>>>>', todayArray);
-                            var abcobj ={
-                                todayArray:todayArray,
-                                period:success.period
-                            }
+                for (var i = 0; i < success.duration.length; i++) {
+                    // console.log('TIME STAMP VALUE',Time_stamp);
+                    // console.log('DATA EPOC IS',success.duration[i].date.epoc*1000);
+                    // console.log('SUCCESS +++++++++',success.duration[i].date.epoc * 1000 == Time_stamp);
+                    if (success.duration[i].date.epoc * 1000 >= Time_stamp) {
+                        todayArray.push(success.duration[i])
+                        console.log('ARRAY IS for Today>>>>>', todayArray);
+                        var abcobj = {
+                            todayArray: todayArray,
+                            period: success.period
                         }
                     }
-                    return response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, "Data found successfully", abcobj);
-                
+                }
+                return response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, "Data found successfully", abcobj);
+
             }
         })
 
@@ -934,41 +874,41 @@ module.exports = {
                                 deviceTypeWeb = succ1.userId.deviceType
                                 profilePic = succ1.userId.profilePic
                                 name = succ1.userId.name
-                                email=succ1.userId.email
+                                email = succ1.userId.email
                                 var array = [];
                                 array = req.body.duration[0].times;
                                 // if (array.length == 1) {
-                                    if (validateEvent(req.body.duration, req.body.offset)) {
-                                        // transactionDate , transactionTime , transactionTimestamp, buninesNname , eventName, customerName. are required ** //
+                                if (validateEvent(req.body.duration, req.body.offset)) {
+                                    // transactionDate , transactionTime , transactionTimestamp, buninesNname , eventName, customerName. are required ** //
 
-                                        // booking.findOne({ eventId: req.body.eventId, userId: req.body.userId, businessManId: req.body.businessManId }, (err, success) => {
-                                        //     console.log("booking result---------->", err, success)
-                                        //     if (err)
-                                        //         return response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.", err)
-                                        // if (!success) {
+                                    // booking.findOne({ eventId: req.body.eventId, userId: req.body.userId, businessManId: req.body.businessManId }, (err, success) => {
+                                    //     console.log("booking result---------->", err, success)
+                                    //     if (err)
+                                    //         return response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.", err)
+                                    // if (!success) {
 
-                                        //     return response.sendResponseWithData(res, responseCode.NOT_FOUND, "Data not found", success)
-                                        // }
-                                        // else {
-                                        //     booking.create(req.body, (err, result) => {
-                                        //         if (err)
-                                        //             return response.sendResponseWithData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.", err);
-                                        //         else
-                                        //             console.log("booking is done>>>>>>>>>>>>", result)
-                                        //         // response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, success);
+                                    //     return response.sendResponseWithData(res, responseCode.NOT_FOUND, "Data not found", success)
+                                    // }
+                                    // else {
+                                    //     booking.create(req.body, (err, result) => {
+                                    //         if (err)
+                                    //             return response.sendResponseWithData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.", err);
+                                    //         else
+                                    //             console.log("booking is done>>>>>>>>>>>>", result)
+                                    //         // response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, success);
 
 
-                                        //     })
-                                        // }
-                                        //})
-                                    }
-                                    else
-                                        return response.sendResponseWithData(res, responseCode.NOT_FOUND, "Booking time expired..");
-                                       
+                                    //     })
+                                    // }
+                                    //})
+                                }
+                                else
+                                    return response.sendResponseWithData(res, responseCode.NOT_FOUND, "Booking time expired..");
+
                                 // }
                                 // else
                                 //     return response.sendResponseWithData(res, responseCode.NOT_FOUND, "Multiple time slot are not allowed");
-                                    callback(null, succ1)
+                                callback(null, succ1)
                             }
                         })//
                     }, (data, callback) => {
@@ -1015,9 +955,9 @@ module.exports = {
                                         offset: req.body.offset,
                                         eventName: req.body.eventName,
                                         businessName: req.body.businessName,
-                                        customerCount:req.body.customerCount,
+                                        customerCount: req.body.customerCount,
                                         customerName: req.body.customerName,
-                                        period:req.body.period,
+                                        period: req.body.period,
                                         "transactionDate": req.body.transactionDate,
                                         "transactionTime": req.body.transactionTime,
                                         "transactionTimeStamp": req.body.transactionTimeStamp,
@@ -1048,7 +988,7 @@ module.exports = {
                         } else {
                             var notiObj = {
                                 businessManId: req.body.businessManId,
-                                customerCount:req.body.customerCount,
+                                customerCount: req.body.customerCount,
                                 userId: req.body.userId,
                                 profilePic: succ.profilePic,
                                 name: succ.name,
@@ -1070,27 +1010,27 @@ module.exports = {
                             if (succ.deviceType == 'IOS') {
 
                                 // console.log('ios---------------', succ.deviceToken, 'booking Posted !', `You have successfully book the event ${result.eventName}`+'\n'+`Number of Customers: ${req.body.customerCount} People ``+'\n'+`Contact Us: ${email}`, { type: 'event' },{ details: notiObj }, notiObj)
-                                notification.sendNotification(succ.deviceToken, 'booking Posted !', `You have successfully book the event ${result.eventName}`+'\n'+` Number of Riders: ${req.body.customerCount} People `+'\n'+` Contact Us: ${email}`, { type: 'event' },{ details: notiObj }, notiObj)
+                                notification.sendNotification(succ.deviceToken, 'booking Posted !', `You have successfully book the event ${result.eventName}` + '\n' + ` Number of Riders: ${req.body.customerCount} People ` + '\n' + ` Contact Us: ${email}`, { type: 'event' }, { details: notiObj }, notiObj)
                             }
 
 
 
 
                             if (succ.deviceType == 'ANDROID') {
-                                  console.log("android--------------", succ.deviceToken, 'booking Posted !', `You have successfully book the event ${result.eventName}`+'\n'+` Number of Riders: ${req.body.customerCount} People `+'\n'+` Email: ${email}`, { type: 'event' },{ details: notiObj },{ details: notiObj }, notiObj)
-                                notification.sendNotification(succ.deviceToken, 'booking Posted !', `You have successfully book the event ${result.eventName}`+'\n'+` Number of Riders: ${req.body.customerCount} People `+'\n'+` Contact Us: ${email}`, { type: 'event' },{ details: notiObj },{ details: notiObj }, notiObj)
+                                console.log("android--------------", succ.deviceToken, 'booking Posted !', `You have successfully book the event ${result.eventName}` + '\n' + ` Number of Riders: ${req.body.customerCount} People ` + '\n' + ` Email: ${email}`, { type: 'event' }, { details: notiObj }, { details: notiObj }, notiObj)
+                                notification.sendNotification(succ.deviceToken, 'booking Posted !', `You have successfully book the event ${result.eventName}` + '\n' + ` Number of Riders: ${req.body.customerCount} People ` + '\n' + ` Contact Us: ${email}`, { type: 'event' }, { details: notiObj }, { details: notiObj }, notiObj)
                             }
                             //  businessManId:req.body.businessManId,
                             //if (deviceTypeWeb == 'WEBSITE') { //title, msg, bussinessId, customerId, image, name, type, eventStatus
-                         
-                
-                         
-                            console.log("web----------------", 'booking Posted !', `Booking is successfully done by ${notiObj.name}  , requested for the event ${result.eventName} `+'\n'+` Number of Riders: ${req.body.customerCount} People `+'\n'+` Mobile: ${succ.mobile_no} `+'\n'+` Email: ${succ.email}` , req.body.businessManId, req.body.userId, notiObj.profilePic, notiObj.name)
+
+
+
+                            console.log("web----------------", 'booking Posted !', `Booking is successfully done by ${notiObj.name}  , requested for the event ${result.eventName} ` + '\n' + ` Number of Riders: ${req.body.customerCount} People ` + '\n' + ` Mobile: ${succ.mobile_no} ` + '\n' + ` Email: ${succ.email}`, req.body.businessManId, req.body.userId, notiObj.profilePic, notiObj.name)
 
 
 
 
-                            notification.single_notification(`booking Posted !`,`Booking is successfully done by ${notiObj.name} , requested for the event ${result.eventName} `+'\n'+` Number of Riders: ${req.body.customerCount} People `+'\n'+` Mobile: ${succ.mobile_no} `+'\n'+` Email: ${succ.email}` , req.body.businessManId, req.body.userId, notiObj.profilePic, notiObj.name, 'event', 'PENDING', req.body.eventId)
+                            notification.single_notification(`booking Posted !`, `Booking is successfully done by ${notiObj.name} , requested for the event ${result.eventName} ` + '\n' + ` Number of Riders: ${req.body.customerCount} People ` + '\n' + ` Mobile: ${succ.mobile_no} ` + '\n' + ` Email: ${succ.email}`, req.body.businessManId, req.body.userId, notiObj.profilePic, notiObj.name, 'event', 'PENDING', req.body.eventId)
                             //}
                         }
                         response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Payment successfully done!")
@@ -1148,7 +1088,7 @@ module.exports = {
                                     console.log("incoming Data in Cancel booking>>>>>", notiObj)
 
 
-            
+
 
 
                                     ///   //  console.log("notificatiopn data--------->>>", result_.deviceToken, `Booking Cancelled!!', ' Your booking is  Cancelled for the event ${result.eventName} and your amount will be refunded...!`, result.businessManId, result.userId, result_.profilePic, result_.name)
@@ -1157,28 +1097,28 @@ module.exports = {
                                     if (result_.deviceType == 'IOS') {
 
 
-                                        console.log("notificatiopn data--------->>>",result_.deviceToken, 'Booking Cancelled!!', `Your booking is  Cancelled for the event ${result.eventName} and your amount will be refunded...!`, { type: 'event' },{ details: notiObj }, notiObj)
+                                        console.log("notificatiopn data--------->>>", result_.deviceToken, 'Booking Cancelled!!', `Your booking is  Cancelled for the event ${result.eventName} and your amount will be refunded...!`, { type: 'event' }, { details: notiObj }, notiObj)
 
 
 
 
-                                        notification.sendNotification(result_.deviceToken, 'Booking Cancelled!!', `Your booking is  Cancelled for the event ${result.eventName} and your amount will be refunded...!`, { type: 'event' },{ details: notiObj }, notiObj)
+                                        notification.sendNotification(result_.deviceToken, 'Booking Cancelled!!', `Your booking is  Cancelled for the event ${result.eventName} and your amount will be refunded...!`, { type: 'event' }, { details: notiObj }, notiObj)
                                     }
 
                                     if (result_.deviceType == 'ANDROID') {
 
 
-                                        console.log("notificatiopn data--------->>>", result_.deviceToken, 'Booking Cancelled!!', ` Your booking is  Cancelled for the event ${result.eventName} and your amount will be refunded...!`, { type: 'event' },{ details: notiObj }, notiObj)
+                                        console.log("notificatiopn data--------->>>", result_.deviceToken, 'Booking Cancelled!!', ` Your booking is  Cancelled for the event ${result.eventName} and your amount will be refunded...!`, { type: 'event' }, { details: notiObj }, notiObj)
 
 
-                                        notification.sendNotification(result_.deviceToken, 'Booking Cancelled!!', ` Your booking is  Cancelled for the event ${result.eventName} and your amount will be refunded...!`, { type: 'event' },{ details: notiObj }, notiObj)
+                                        notification.sendNotification(result_.deviceToken, 'Booking Cancelled!!', ` Your booking is  Cancelled for the event ${result.eventName} and your amount will be refunded...!`, { type: 'event' }, { details: notiObj }, notiObj)
                                     }
 
                                     // if (result.businessManId.deviceType == 'WEBSITE') {
 
 
 
-                                        console.log("website data--------->>>",`Booking Cancelled!!`, `Booking has been cancelled for ${result.eventName} by ${result_.name} `, result.businessManId._id, notiObj.userId, notiObj.profilePic, result_.name, 'event', 'CANCELLED', result.eventId)
+                                    console.log("website data--------->>>", `Booking Cancelled!!`, `Booking has been cancelled for ${result.eventName} by ${result_.name} `, result.businessManId._id, notiObj.userId, notiObj.profilePic, result_.name, 'event', 'CANCELLED', result.eventId)
 
                                     notification.single_notification(`Booking Cancelled!!`, `Booking has been cancelled for ${result.eventName} by ${result_.name} `, result.businessManId._id, notiObj.userId, notiObj.profilePic, result_.name, 'event', 'CANCELLED', result.eventId)
                                     //}
