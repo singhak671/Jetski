@@ -21,8 +21,6 @@ function uploadImage(image_data, callback){
     }
   })
 }
-
-
 //========================== Export module start =======================
 
 module.exports = {

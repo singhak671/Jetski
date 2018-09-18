@@ -1,11 +1,7 @@
 const mongoose =  require('mongoose');
-const log = console.log;
 global.Promise = mongoose.Promise;
 const config = require('../config/config')();
 
-
-
-// const config = require('../config/env/development').db.name;
 const DB_URL = `mongodb://localhost/JET_SKI`;
 
 var againConnect = ()=>{
@@ -21,11 +17,9 @@ db_connect();
 
 mongoose.connection.on('connected', () =>{ 
     clearInterval(againConnect);
-    log(`DB connected`);
 });
 
 mongoose.connection.on('error', (error) => {
-    log(`Error in DB connetcion is ${error}`);
 });
 
 mongoose.connection.on('disconnected', () => {

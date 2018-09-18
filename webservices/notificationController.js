@@ -39,7 +39,6 @@ const notiApi = {
             if (error)
                 response.sendResponseWithoutData(res, resCode.INTERNAL_SERVER_ERROR, resMessage.INTERNAL_SERVER_ERROR)
             else if (result.matchedCount == result.modifiedCount) {
-                console.log("***************************", result.matchedCount, result.modifiedCount)
                 response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, 'Read status updated successfully.', 0);
             }
             else
@@ -75,7 +74,6 @@ const notiApi = {
             if (error)
                 response.sendResponseWithoutData(res, resCode.INTERNAL_SERVER_ERROR, resMessage.INTERNAL_SERVER_ERROR)
             else if (result.matchedCount == result.modifiedCount) {
-                console.log("***************************", result.matchedCount, result.modifiedCount)
                 response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, 'Read status updated successfully.', 0);
             }
             else

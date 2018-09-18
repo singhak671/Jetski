@@ -18,9 +18,7 @@ const stripe = require("stripe")(keySecret);
 module.exports = {
 
     //.................................................................Signup API .............................................................//
-
     "signup": function (req, res) {
-
         if (!req.body.email || !req.body.password)
             Response.sendResponseWithData(res, resCode.INTERNAL_SERVER_ERROR, "email_id and password are required**");
         else {
@@ -29,7 +27,8 @@ module.exports = {
                     Response.sendResponseWithoutData(res, resCode.WENT_WRONG, resMessage.INTERNAL_SERVER_ERROR);
                 else if (result)
                     Response.sendResponseWithoutData(res, resCode.ALREADY_EXIST, `EmailId already exists with ${result.userType} account`);
-                else {
+                else {     
+
                     stripe.accounts.create({
                         type: 'custom',
                         country: 'US',
@@ -39,13 +38,16 @@ module.exports = {
                             return Response.sendResponseWithoutData(res, resCode.WENT_WRONG, "errr in strip")
                         }
                         else {
-                            req.body.stripeAccountId = account.id
-                            var token = req.body.stripe_token;
+
+                            req.body.stripeAccountId = account.id 
+
+                            var token = req.body.stripe_token; 
                             var stripe_acc = account.id
                             try {
                                 stripe.accounts.createExternalAccount(
                                     stripe_acc,
                                     { external_account: token }
+
                                 )
                             } catch (err) {
                                 console.log(`Error of external account ${JSON.stringify(err)}`)
@@ -64,6 +66,7 @@ module.exports = {
                                             var result = result.toObject();
                                             delete result.password;
                                             Response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, "You have successfully signup.", result)
+                                            
                                         }
                                     })
                                 })
@@ -74,7 +77,7 @@ module.exports = {
             })
         }
     },
-
+  
     //...................................................................Login API............................................................. //
     "login": (req, res) => {
         let id;
@@ -162,11 +165,8 @@ module.exports = {
                             var token = jwt.sign({ _id: result._id, email: result.email, password: result.password }, config.secret_key);
                             userSchema.findByIdAndUpdate({ _id: result._id }, { $set: { deviceToken: req.body.deviceToken, deviceType: req.body.deviceType } }, (err2, res3) => {
                                 if (err2) {
-                                    console.log("Token not updated.")
                                 }
-
                                 else if (res3) {
-                                    console.log("Token not updated.")
                                 }
                             })
                             delete result['password']
@@ -413,7 +413,6 @@ module.exports = {
     },
     //........................................................Save reviews..........................................................................//
     'postReviews': (req, res) => {
-        console.log('Request for postReviews', req.body)
         userSchema.findByIdAndUpdate({ _id: req.body._id, userType: "CUSTOMER" }, { $set: { reviews: req.body.reviews } }, { new: true }, (err, result) => {
             if (err)
                 Response.sendResponseWithoutData(res, resCode.INTERNAL_SERVER_ERROR, resMessage.INTERNAL_SERVER_ERROR)

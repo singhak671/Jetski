@@ -60,9 +60,7 @@ cron.schedule('* */24 * * *', () => {
                                 currency: "usd",
                                 destination: succ1.businessManId.stripeAccountId,
                             }).then(function (transfer) {
-                                console.log("transfer------++++++++++->>>", transfer)
                                 booking.findByIdAndUpdate({ _id: item._id }, { $set: { 'bookingStatus': 'COMPLETED' } }, { multi: true }).exec((err11, succ11) => {
-                                    console.log('error ,succes==========>>>>>>', err11, succ11);
                                 })
                             });
                             next();
@@ -71,15 +69,14 @@ cron.schedule('* */24 * * *', () => {
                 }
                 else if (item.bookingStatus == 'PENDING') {
                     booking.findById({ _id: item._id }).exec((err1, succ1) => {
-                        if (err1)
-                            console.log('Error is====>>>>>', err1);
+                        if (err1){
+                        }
                         else {
                             return stripe.refunds.create({
                                 charge: succ1.chargeId,
                                 amount: succ1.eventPrice,
                             }, function (err, refund) {
                                 if (err) {
-                                    console.log("err in refunds", err)
                                 }
                                 else {
                                     booking.findByIdAndUpdate({ _id: item._id }, { $set: { 'bookingStatus': 'CANCELLED' } }, { multi: true }).populate({ path: 'userId', select: 'deviceToken deviceType name profilePic' }).exec((err1_, succ1_) => {
@@ -87,13 +84,14 @@ cron.schedule('* */24 * * *', () => {
                                             businessManId: result.businessManId,
                                             userId: succ1_.userId._id,
                                             profilePic: succ1_.userId.profilePic,
-                                            name: succ1_.userId.name
+                                            name: succ1_.userId.name,
+                                            type: 'event' 
                                         }
                                         if (succ1.userId.deviceType == 'IOS')
-                                            return notification.sendNotification(succ1.userId.deviceToken, 'booking cancelled !', `Your booking is cancelled for ${succ1.eventName}`, { type: 'event' }, { details: notiObj }, notiObj)
+                                            return notification.sendNotification(succ1.userId.deviceToken, 'booking cancelled !', `Your booking is cancelled for ${succ1.eventName}`, notiObj, notiObj)
 
                                         if (succ1.userId.deviceType == 'ANDROID') {
-                                            notification.sendNotification(succ1.userId.deviceToken, 'booking cancelled !', `Your booking is cancelled for ${succ1.eventName}`, { type: 'event' }, { details: notiObj }, notiObj)
+                                            notification.sendNotification(succ1.userId.deviceToken, 'booking cancelled !', `Your booking is cancelled for ${succ1.eventName}`, notiObj, notiObj)
                                         }
 
                                         if (succ1.deviceType == 'WEBSITE') {
@@ -115,8 +113,6 @@ cron.schedule('* */24 * * *', () => {
     })
 })
 //------------------------------------------------------- cron ended ------------------------------------------//
-
-
 app.listen(environment.port, () => {
-    console.log(`Server is running on ${environment.port}`)
+console.log(`Server is running on ${environment.port}`)
 })

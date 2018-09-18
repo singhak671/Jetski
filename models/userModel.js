@@ -4,12 +4,6 @@ const mongoosePaginate = require('mongoose-paginate');
 var eventSchema = require('../models/eventManagementModel');
 const user = mongoose.Schema({
 
-
-    // userId:{
-    //     type: Schema.Types.ObjectId,
-    //     ref: 'eventSchema'
-    // },
-
     email: {
         type: String,
         lowercase: true
@@ -60,7 +54,7 @@ const user = mongoose.Schema({
         eventId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Businesses',
-            // _id:false
+
 
         },
         eventIdPeriod: {
@@ -75,7 +69,7 @@ const user = mongoose.Schema({
     },
     deviceType: {
         type: String,
-        // default:"WEBSITE",
+
         enum: ["IOS", "WEBSITE", "ANDROID"]
     },
     reviews: {
@@ -112,10 +106,6 @@ const user = mongoose.Schema({
         enum: ['Male', 'Female']
     }
 
-    // isApproved: {
-    //     type: Boolean,
-    //     default: true
-    // },
 
 },
     {
@@ -124,7 +114,7 @@ const user = mongoose.Schema({
 user.plugin(mongoosePaginate);
 module.exports = mongoose.model('User', user);
 
-//....SUPERADMIN Created.....//
+//........................................SUPERADMIN Created...............................................//
 
 (function init() {
 
@@ -143,12 +133,8 @@ module.exports = mongoose.model('User', user);
         else if (!result) {
             mongoose.model('Users', user).create(obj, (err, success) => {
                 if (err) console.log("Super Admin creation at create method error--> ", err);
-
                 else
-                    //  var token =  jwt.sign({_id:result._id,email:result.email,password:result.password},config.secret_key);
                     console.log("Super Admin creation at create method success--> ", success);
-
-
             })
         } else {
             console.log("Super Admin.");
@@ -157,4 +143,4 @@ module.exports = mongoose.model('User', user);
     })
 })
 
-();
+    ();

@@ -13,7 +13,7 @@ module.exports = {
     //***********************************************************************************chat API****************************************************************************/
 
     "chatAPI": (req, res) => {
-        var deviceType, deviceToken, name, profilePic, notiObj;
+        var deviceType, deviceToken, name, profilePic, notiObj, data;
         if (!req.body.eventId || !req.body.businesssManId || !req.body.message[0].senderId || !req.body.customerId || !req.body.message[0].message)
             return response.sendResponseWithoutData(res, responseCode.BAD_REQUEST, "Please provide all required fields !");
         else {
@@ -48,8 +48,11 @@ module.exports = {
                                             notiObj = {
                                                 userId: req.body.businesssManId,
                                                 profilePic: profilePic,
-                                                name: name
+                                                name: name,
+                                                type: 'chat'
                                             }
+                                            data = notiObj
+                                            data.chatData = req.body
                                         } else {
                                             deviceType = success3.businessManId.deviceType
                                             name = success3.customerId.name
@@ -61,13 +64,15 @@ module.exports = {
                                                 name: name,
                                                 type: 'chat'
                                             }
+                                            data = notiObj
+                                            data.chatData = req.body
                                         }
 
-                                        if (deviceType == 'IOS')
-                                            notification.sendNotification(deviceToken, `${name} has send you message:`, `${req.body.message[0].message}`, { type: 'chat', chatData: req.body }, { details: notiObj }, notiObj)
-
+                                        if (deviceType == 'IOS') {
+                                            notification.sendNotification(deviceToken, `${name} has send you message:`, `${req.body.message[0].message}`, data, notiObj)
+                                        }
                                         if (deviceType == 'ANDROID') {
-                                            notification.sendNotification(deviceToken, `${name} has send you message:`, `${req.body.message[0].message}`, { type: 'chat', chatData: req.body }, { details: notiObj }, notiObj)
+                                            notification.sendNotification(deviceToken, `${name} has send you message:`, `${req.body.message[0].message}`, data, notiObj)
                                         }
 
                                         notification.single_notification(`${name}`, `${req.body.message[0].message}`, req.body.businesssManId, req.body.customerId, profilePic, name, 'chat', 'CONFIRMED', eventId)

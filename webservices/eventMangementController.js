@@ -111,9 +111,10 @@ module.exports = {
                                 response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, "Event saved successfully.", createEvent);
                                 User.findByIdAndUpdate({ _id: req.body.userId }, { $push: { services: { eventId: createEvent._id } } }, { new: true }, (err3, success) => {
                                     if (err3)
-                                        console.log(err3)
+                                       return response.sendResponseWithData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.", err3);
                                     if (!success)
-                                        console.log("cannot update userId with the event update")
+                                     return response.sendResponseWithData(res, responseCode.NOT_FOUND, "cannot update userId with the event update");
+
                                 })
                             }
                             else
@@ -125,10 +126,8 @@ module.exports = {
         })
     },
 
-    //.......................................All Event at business site before login.................................................................//
+    //-------------------------------------------------------------------------All Event at business site before login-------------------------------------------------------------------------//
     'allEvent': (req, res) => {
-        //console.log("get al customer")
-        //var durationArr = [];
         var doc_arr = [];
         var result_new;
         var query = { status: "ACTIVE" };
@@ -136,12 +135,10 @@ module.exports = {
             page: req.body.pageNumber || 1,
             select: 'period eventAddress createdAt eventImage offset duration eventName status eventDescription eventPrice ',
             limit: req.body.limit || 5,
-            // match:{query},
             sort: { createdAt: -1 },
             populate: { path: 'userId', select: 'profilePic businessName name status', match: { status: "ACTIVE" } },
             lean: true
         }
-        //success
         eventSchema.paginate(query, options, (error, result) => {
             if (error)
                 response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR)
@@ -166,7 +163,6 @@ module.exports = {
                             callback(null, result);
                         }
 
-                        //callback(null, result);
                     }
                 ], (err, result) => {
                     if (result.docs.length == 0)
@@ -182,10 +178,7 @@ module.exports = {
     //-------------------------------------------------------------------------------Describe  particular event after login-----------------------------------------------------------------//
 
     "eventDescription": (req, res) => {
-
-        console.log('request is', req.body);
         var event_id = req.body._id;
-        // var description = [];
         var related_event = [];
         var data = {};
         waterfall([
@@ -214,21 +207,13 @@ module.exports = {
                 })
             }
         ], (err, success) => {
-
-
             data.related_event = related_event;
             response.sendResponseWithPagination(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, data);
         })
     },
 
     //-------------------------------------------------------------------------------alllatestEvent for app site as well as business website----------------------------------------------------------------//
-
-
-
-
     'latestEvents': (req, res) => {
-        //console.log("get al customer")
-        //var durationArr = [];
         var doc_arr = [];
         var result_new;
         var query = { status: "ACTIVE" };
@@ -236,12 +221,10 @@ module.exports = {
             page: req.body.pageNumber || 1,
             select: 'period eventAddress createdAt eventImage offset duration eventName status eventDescription eventPrice ',
             limit: req.body.limit || 5,
-            // match:{query},
             sort: { createdAt: -1 },
             populate: { path: 'userId', select: 'profilePic businessName name status', match: { status: "ACTIVE" } },
             lean: true
         }
-        //success
         eventSchema.paginate(query, options, (error, result) => {
             if (error)
                 response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR)
@@ -266,7 +249,6 @@ module.exports = {
                             callback(null, result);
                         }
 
-                        //callback(null, result);
                     }
                 ], (err, result) => {
                     if (result.docs.length == 0)
@@ -284,18 +266,12 @@ module.exports = {
 
 
     //-------------------------------------------------------------------------------My Event at business site after login  -----------------------------------------------------------------//
-    // need custom paginations
     'myAllEvents': (req, res) => {
-        //console.log("get al customer")
-
-
         var query = { $or: [{ userId: req.body.userId, status: "ACTIVE" }, { userId: req.body.userId, status: "ACTIVE" }] }
         let options = {
-            // page: req.params.pageNumber,
             select: 'period eventAddress createdAt eventImage offset duration eventName userId status eventDescription eventPrice ',
             limit: req.body.limit || 10,
             page: req.body.pageNumber || 1,
-            // match:{query},
             sort: { createdAt: -1 },
             populate: {
                 path: 'services.eventId', select: 'eventAddress duration  eventImage createdAt  eventName eventDescription period eventPrice ',
@@ -303,8 +279,6 @@ module.exports = {
                 match: { status: "ACTIVE" }
             },
             lean: false
-
-
         }
         eventSchema.paginate(query, options, (error, result) => {
             if (error)
@@ -312,30 +286,21 @@ module.exports = {
             else if (result.docs.length == 0)
                 response.sendResponseWithData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND)
             else {
-                console.log("result is" + JSON.stringify(result))
-                // response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result)
                 response.sendResponseWithPagination(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result.docs, { total: result.total, limit: result.limit, currentPage: result.page, totalPage: result.pages });
 
             }
         })
     },
 
-
-
-
-
     //------------------------------------------------------------------------------- API for Filter location in app   -----------------------------------------------------------------//
     "eventLocation": (req, res) => {
         eventSchema.find({ status: "ACTIVE" }).lean().exec((error, result) => {
-            console.log("==", result.length)
             var eventAddressArr = [];
             if (error)
                 response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
             else if (result.length == 0)
                 response.sendResponseWithoutData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND)
             else {
-
-                console.log('Result is=====>>>>>', result);
                 result.map(x => x.duration = filterFutureEvent(x.duration, x.offset))
                 result.map(x => x.duration = x.duration.filter(y => y.isExpired == false))
                 result.map(x => x.duration.length > 0 ? x.duration.map(z => z.times = z.times.filter(k => k.isExpired == false)) : null);
@@ -357,7 +322,6 @@ module.exports = {
 
     "locationDetail": (req, res) => {
         var temp_data = {};
-        console.log("array=====>>>", req.body)
         let list = req.body.eventAddress.map((x) => x.eventAddress)
         let query = list.length > 0 ? { eventAddress: { $in: list }, status: "ACTIVE" } : { status: "ACTIVE" };
         eventSchema.find(query).populate("userId", { name: 1, profilePic: 1, businessName: 1 }).exec((error, result) => {
@@ -383,8 +347,6 @@ module.exports = {
                         } else {
                             callback(null, result);
                         }
-
-                        //callback(null, result);
                     }
                 ], (err, result) => {
                     if (result.length == 0)
@@ -449,8 +411,6 @@ module.exports = {
             if (result.docs.length == 0)
                 return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found")
             else {
-                console.log("result====>", JSON.stringify(result))
-                //  notification.single_notification(result.userId.deviceToken, 'Booking Confirmation!!', 'Your Booking is Confirmed...!', req.body.userId,result.userId)
                 response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result)
             }
         })
@@ -531,7 +491,6 @@ module.exports = {
         var query = { userId: req.body.userId }
         let options = {
             page: req.body.pagenumber || 1,
-            // select: 'status  eventPrice  eventStatus  eventCreated_At  _id   eventName eventAddress eventDescription eventImage  ',
             limit: 10,
             sort: { createdAt: -1 },
             lean: true,
@@ -544,8 +503,6 @@ module.exports = {
             if (result.docs.length == 0)
                 return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found")
             else {
-                // delete result[0]["id"];
-                //  result.map(x => delete x['id'])
                 response.sendResponseWithPagination(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result.docs, { total: result.total, limit: result.limit, currentPage: result.page, totalPage: result.pages });
 
             }
@@ -556,7 +513,6 @@ module.exports = {
 
 
     "filterEventsPending": (req, res) => {
-        // var arr = []
         var query = { businessManId: req.body.userId, bookingStatus: "PENDING" }
         let options = {
             page: req.body.pageNumber || 1,
@@ -597,21 +553,13 @@ module.exports = {
             if (!result)
                 return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found")
             else {
-                // notification.single_notification(result.userId.deviceToken, 'Booking Confirmation!!', 'Your Booking is Confirmed...!', req.body.userId, result.userId)
-
                 response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, result)
             }
         })
     },
 
     //------------------------------------------------------------------------------- API for Confirm individual in business site   -----------------------------------------------------------------//
-
-
-
-
-
     "confirmEventStatus": (req, res) => {
-        console.log("event status request " + req.body.bookingId)
         booking.findByIdAndUpdate({ _id: req.body.bookingId }, { $set: { bookingStatus: "CONFIRMED" } }, { new: true }).populate({ path: "userId", select: "deviceToken name profilePic deviceType" }).exec((error, result) => {
             if (error)
                 response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
@@ -619,16 +567,13 @@ module.exports = {
                 response.sendResponseWithoutData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND)
             else {
                 var result = result
-                // console.log(`confirm event status result------------->${JSON.stringify(result)}`)
                 var event;
                 eventSchema.findById({ _id: result.eventId, status: "ACTIVE" }).exec((err_, result_) => {
                     if (err_)
                         response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
                     else {
-                        // console.log(`confirm event status result_------------->${JSON.stringify(result_)}`)
 
                         event = result_.eventName;
-                        console.log(result.userId.deviceToken, 'Event Confirmation!!', event + ' Event is Confirmed...!', result.userId._id, result.userId.profilePic, result.userId.name)
                         var notiObj = {
                             businessManId: result.businessManId,
                             userId: result.userId._id,
@@ -638,24 +583,16 @@ module.exports = {
                             type: 'event',
                             eventStatus: 'CONFIRMED'
                         }
-                        // if (result.userId.deviceType || result.userId.deviceToken) {
                         if (result.userId.deviceType == 'IOS') {
-                            console.log("notification in confirm for device>>>>>>>", result.userId.deviceType)
-                            notification.sendNotification(result.userId.deviceToken, `Booking Confirmation:`, `Your booking has been confirmed for the event ${event}`, { type: 'event' }, { details: notiObj }, notiObj)
+                            notification.sendNotification(result.userId.deviceToken, `Booking Confirmation:`, `Your booking has been confirmed for the event ${event}`, notiObj, notiObj)
                         }
 
 
                         if (result.userId.deviceType == 'ANDROID') {
-                            console.log("notification in confirm for device>>>>>>>", result.userId.deviceType)
-                            notification.sendNotification(result.userId.deviceToken, `Booking Confirmation:`, `Your booking has been confirmed for the event ${event}`, { type: 'event' }, { details: notiObj }, notiObj)
+                            notification.sendNotification(result.userId.deviceToken, `Booking Confirmation:`, `Your booking has been confirmed for the event ${event}`, notiObj, notiObj)
                         }
                     }
-                    // if(deviceType=="WEBSITE")
-                    //     notification.single_notification('Event Confirmation!!', event + ' Event is Confirmed...!', result.userId._id, result.userId.profilePic, result.userId.name)
-                    // notification.single_notificationForWeb(result.userId.deviceToken, 'Event Cancelled!!', event + ' Event is Cancelled...!', result.userId._id, result.userId.profilePic, result.userId.name, '')
-
                     response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Event status is confirmed")
-                    // }
                 })
 
             }
@@ -663,16 +600,9 @@ module.exports = {
         })
     },
 
-
-
-
     //------------------------------------------------------------------------------- API for Reject individual in business site   -----------------------------------------------------------------//
 
-
-
-
     "rejectEventStatus": (req, res) => {
-        console.log("event status request for cancel " + req.body.bookingId)
         booking.findById({ _id: req.body.bookingId }).populate({ path: "userId", select: "deviceToken name profilePic deviceType" }).exec((error, result) => {
             if (error)
                 response.sendResponseWithData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG, error)
@@ -680,28 +610,21 @@ module.exports = {
                 response.sendResponseWithData(res, responseCode.NOT_FOUND, responseMessage.NOT_FOUND, result)
             else {
                 var result = result
-                console.log(`cancel event status result------------->${JSON.stringify(result)}`)
                 var event;
                 eventSchema.findById({ _id: result.eventId, status: "ACTIVE" }, (err_, result_) => {
                     if (err_)
                         response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
                     else {
-                        console.log(`cancel event status result_------------->${JSON.stringify(result_.eventName)}`)
-                        console.log("Pppopdfufydfsjuysdfjfdgs", result.chargeId, result.eventPrice)
                         event = result_.eventName;
-                        console.log("event0-00---", event)
                         return stripe.refunds.create({
                             charge: result.chargeId,
                             amount: (result.eventPrice),
                         }, function (err, refund) {
                             if (err) {
-                                console.log("err in refunds", err)
-                                // notification.single_notification(result.userId.deviceToken, 'Payment Issue Occur', event + 'Error occur during payment as the amount has already been refunded. ', result.businessManId, result.userId._id, result.userId.profilePic, result.userId.name)
                                 response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Error occur during payment as the amount has already been refunded.")
                             }
                             else {
                                 booking.findByIdAndUpdate({ _id: req.body.bookingId }, { $set: { bookingStatus: "CANCELLED", paymentStatus: "Refund" } }, { new: true }).exec((err_1, result_1) => {
-                                    console.log('success refund-->', refund)
                                     if (err_1)
                                         response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Error occur ")
                                     else {
@@ -714,122 +637,43 @@ module.exports = {
                                             type: 'event',
                                             eventStatus: 'CANCELLED'
                                         }
-                                        console.log('noti result==========>', result.userId.deviceToken, 'Event Cancelled!!', event + ' Event is Cancelled...!', result.userId._id, result.userId.profilePic, result.userId.name)
 
                                         if (result.userId.deviceType == 'IOS')
-                                            notification.sendNotification(result.userId.deviceToken, `Booking cancelled:`, `Your booking has been cancelled for the event ${event}`, { type: 'event' }, { details: notiObj }, notiObj)
+                                            notification.sendNotification(result.userId.deviceToken, `Booking cancelled:`, `Your booking has been cancelled for the event ${event}`, notiObj, notiObj)
                                         if (result.userId.deviceType == 'ANDROID') {
-                                            notification.sendNotification(result.userId.deviceToken, `Booking cancelled:`, `Your booking has been cancelled for the event ${event}`, { type: 'event' }, { details: notiObj }, notiObj)
+                                            notification.sendNotification(result.userId.deviceToken, `Booking cancelled:`, `Your booking has been cancelled for the event ${event}`, notiObj, notiObj)
                                         }
-                                        // else
-                                        //     notification.single_notificationForWeb('Event cancelled!!', event + ' Event is cancelled...!', result.userId._id, result.userId.profilePic, result.userId.name)
+
                                     }
-                                    //  notification.single_notificationForWeb(result.userId.deviceToken, 'Event Cancelled!!', event + ' Event is Cancelled...!', result.userId._id, result.userId.profilePic, result.userId.name)
                                     response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Event status is cancelled")
-                                    //}
+
                                 })
                             }
-
                         })
-
                     }
                 })
-
             }
         })
     },
 
-
-
-    //-------------------------------------------------------------------------------  Business filter at website DAILY/WEEKLY/MONTHLY  -----------------------------------------------------------------//
-
-
-    "filterEvent": (req, res) => {
-
-        var date = new Date();
-        var newDate = date.toJSON()
-        var array = newDate.split("T")[0];
-        var newDate1 = array + " 00:00:00"
-        var d = new Date(newDate1)
-        var Time_stamp = d.getTime();
-        let todayArray = [];
-        let query = {
-            page: req.body.page || 1,
-            limit: req.body.limit || 10
-        }
-        User.findOne({ _id: req.body.userId, status: "ACTIVE" })
-            .populate({
-                path: "services.eventId",
-
-                match: { period: req.body.period }
-            })
-            .skip((query.page - 1) * query.limit)
-            // .limit(query.limit)
-            .exec((err, success) => {
-                if (err)
-                    return response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.");
-                if (!success)
-                    return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found.");
-                else {
-                    //  console.log(success)
-                    //=========================FOR DAILY=============================
-
-                    for (let x = 0; x < success.services.length; x++)
-                        if (success.services[x].eventId) {
-                            for (var i = 0; i < success.services[x].eventId.duration.length; i++) {
-                                // console.log('TIME STAMP VALUE',Time_stamp);
-                                // console.log('DATA EPOC IS',success.duration[i].date.epoc*1000);
-                                // console.log('SUCCESS +++++++++',success.duration[i].date.epoc * 1000 == Time_stamp);
-                                if (success.services[x].eventId.duration[i].date.epoc * 1000 == Time_stamp) {
-                                    todayArray.push(success.services[0].eventId.duration[i])
-                                    // console.log('ARRAY IS', todayArray);
-                                }
-                            }
-                            success.services[x].eventId.duration = todayArray;
-                        }
-                    return response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, success);
-                }
-            })
-    },
-
-
-
-
     //------------------------------------------------------------------------------- Filter DAILY/WEEKLY/MONTHLY for APP (BookNow &&& Reschedule Booking) s  -----------------------------------------------------------------//
-
-
     "bookingEvent": (req, res) => {
-
         var date = new Date();
         var newDate = date.toJSON()
         var array = newDate.split("T")[0]
         var newDate1 = array + " 00:00:00"
         var d = new Date(newDate1)
         var Time_stamp = d.getTime();
-        // var nextWeek = new Date(Time_stamp + 7 * 24 * 60 * 60 * 1000);
-
-
         let todayArray = [];
-        // let weekArray = [];
-        // let monthlyArray = [];
-        // eventSchema.findOne({ _id: req.body.eventId }).populate({ path: 'userId', select: 'deviceType deviceToken name profilePic' }).exec((err5, succ1) => {//
-
         eventSchema.findOne({ _id: req.body.eventId, status: "ACTIVE" }, { period: 1, duration: 1 }, (err, success) => {
             if (err)
                 return response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.");
             if (!success)
                 return response.sendResponseWithData(res, responseCode.NOT_FOUND, "Data not found.", success);
             else {
-                console.log("success===" + JSON.stringify(success))
-                //  console.log(success)
-                //=========================FOR All=============================
                 for (var i = 0; i < success.duration.length; i++) {
-                    // console.log('TIME STAMP VALUE',Time_stamp);
-                    // console.log('DATA EPOC IS',success.duration[i].date.epoc*1000);
-                    // console.log('SUCCESS +++++++++',success.duration[i].date.epoc * 1000 == Time_stamp);
                     if (success.duration[i].date.epoc * 1000 >= Time_stamp) {
                         todayArray.push(success.duration[i])
-                        console.log('ARRAY IS for Today>>>>>', todayArray);
                         var abcobj = {
                             todayArray: todayArray,
                             period: success.period
@@ -837,13 +681,10 @@ module.exports = {
                     }
                 }
                 return response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, "Data found successfully", abcobj);
-
             }
         })
-
-
     },
-    //====================================================================================================================================================
+    //---------------------------------------------------------------booking API-------------------------------------------------------------------------------//
     'booking': (req, res) => {
         if (!req.body) {
             return response.sendResponseWithoutData(res, responseCode.SOMETHING_WENT_WRONG, responseMessage.REQUIRED_DATA);
@@ -851,13 +692,11 @@ module.exports = {
         else {
             var deviceTypeWeb, profilePic, name
             User.findOne({ _id: req.body.userId, userType: "CUSTOMER", status: "ACTIVE" }, (err4, succ) => {
-                //  User.findOne({ "_id": req.body.companyId, "status": "ACTIVE" }, (err_, result_) => {
-                // console.log("err result for booking event--->", err4, succ)
                 if (err4)
                     return response.sendResponseWithData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.", err4);
                 if (!succ)
                     return response.sendResponseWithData(res, responseCode.NOT_FOUND, "UserId not found");
-                else {//
+                else {
 
                     var email = succ.email
                     async.waterfall([(callback) => {
@@ -865,88 +704,45 @@ module.exports = {
                             if (err5)
                                 return response.sendResponseWithData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.", err5);
                             if (!succ1) {
-                                // console.log("successss>>>>>>>", succ1);
                                 return response.sendResponseWithData(res, responseCode.NOT_FOUND, "eventId Not found");
                             }
                             else {
-                                // console.log("*************dsvvdadbvbcvzxbvcz", succ1)
-                                // console.log("****************************succ1.userId.deviceType", succ1.userId.deviceType)
                                 deviceTypeWeb = succ1.userId.deviceType
                                 profilePic = succ1.userId.profilePic
                                 name = succ1.userId.name
                                 email = succ1.userId.email
                                 var array = [];
                                 array = req.body.duration[0].times;
-                                // if (array.length == 1) {
                                 if (validateEvent(req.body.duration, req.body.offset)) {
-                                    // transactionDate , transactionTime , transactionTimestamp, buninesNname , eventName, customerName. are required ** //
-
-                                    // booking.findOne({ eventId: req.body.eventId, userId: req.body.userId, businessManId: req.body.businessManId }, (err, success) => {
-                                    //     console.log("booking result---------->", err, success)
-                                    //     if (err)
-                                    //         return response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.", err)
-                                    // if (!success) {
-
-                                    //     return response.sendResponseWithData(res, responseCode.NOT_FOUND, "Data not found", success)
-                                    // }
-                                    // else {
-                                    //     booking.create(req.body, (err, result) => {
-                                    //         if (err)
-                                    //             return response.sendResponseWithData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.", err);
-                                    //         else
-                                    //             console.log("booking is done>>>>>>>>>>>>", result)
-                                    //         // response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, success);
-
-
-                                    //     })
-                                    // }
-                                    //})
                                 }
                                 else
                                     return response.sendResponseWithData(res, responseCode.NOT_FOUND, "Booking time expired..");
-
-                                // }
-                                // else
-                                //     return response.sendResponseWithData(res, responseCode.NOT_FOUND, "Multiple time slot are not allowed");
                                 callback(null, succ1)
                             }
-                        })//
+                        })
                     }, (data, callback) => {
                         var charge1;
-                        console.log("enter in stripe>>>>>")
                         stripe.customers.create({
-                            email: email, // customer email, which user need to enter while making payment
-                            source: req.body.stripeToken // token for the given card 
+                            email: email,
+                            source: req.body.stripeToken
                         }).then((customer) => {
-                            console.log("customer stripe>>>>")
                             if (!customer)
                                 response.sendResponseWithoutData(res, responseCode.WENT_WRONG, " No such token.... ")
                             else {
-                                return stripe.charges.create({ // charge the customer
+                                return stripe.charges.create({
                                     amount: req.body.eventPrice * 100,
                                     currency: "usd",
-
                                     customer: customer.id
                                 })
                             }
-
-                            console.log("customer=====>", customer)
                         })
                             .then((charge) => {
                                 charge1 = charge
-                                console.log("============charge stripe============>>", charge.status)
                                 if (!charge1) {
 
-                                    console.log("Cannot charge a customer that has no active card", charge1.id)
                                     response.sendResponseWithoutData(res, responseCode.WENT_WRONG, "Your card is not active.")
                                 }
                                 else {
-                                    console.log("charge1============>", charge1.id)
-
-
-
-
-
                                     var obj = {
                                         eventId: req.body.eventId,
                                         userId: req.body.userId,
@@ -966,16 +762,10 @@ module.exports = {
                                         "bookingStatus": "PENDING",
                                         "eventPrice": req.body.eventPrice
                                     }
-
-
-
-
                                     booking.create(obj, (err_, result_) => {
                                         if (err_)
-                                            console.log("err", err_)
+                                        response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR)
                                         else {
-                                            // console.log("*************************result_", JSON.stringify(result_))
-                                            // console.log(`Charge object is ${JSON.stringify(charge1)}`)
                                             callback('', result_)
                                         }
                                     })
@@ -983,7 +773,6 @@ module.exports = {
                             })
                     },], (err, result) => {
                         if (err) {
-                            console.log("errr6", err)
                             response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR)
                         } else {
                             var notiObj = {
@@ -996,60 +785,31 @@ module.exports = {
                                 type: 'event',
                                 eventStatus: 'PENDING'
                             }
-
-
-
-
-                            // console.log("888888888888>>>",notiObj)
-
-
-                            // console.log("*********result final", result)
-                            // console.log("notificatiopn data--------->>>", succ.deviceToken, 'booking Posted !', `Your booking is successfully done by ${notiObj.name} requested for the event ${result.eventName}`, req.body.businessManId, req.body.userId, succ.profilePic, succ.name)
-                            // if (succ.deviceType || succ.deviceToken) {
-                            // if (deviceType && deviceToken) {
                             if (succ.deviceType == 'IOS') {
-
-                                // console.log('ios---------------', succ.deviceToken, 'booking Posted !', `You have successfully book the event ${result.eventName}`+'\n'+`Number of Customers: ${req.body.customerCount} People ``+'\n'+`Contact Us: ${email}`, { type: 'event' },{ details: notiObj }, notiObj)
-                                notification.sendNotification(succ.deviceToken, 'booking Posted !', `You have successfully book the event ${result.eventName}` + '\n' + ` Number of Riders: ${req.body.customerCount} People ` + '\n' + ` Contact Us: ${email}`, { type: 'event' }, { details: notiObj }, notiObj)
+                                notification.sendNotification(succ.deviceToken, 'booking Posted !', `You have successfully book the event ${result.eventName}` + '\n' + ` Number of Riders: ${req.body.customerCount} People ` + '\n' + ` Contact Us: ${email}`, notiObj , notiObj)
                             }
 
 
 
 
                             if (succ.deviceType == 'ANDROID') {
-                                console.log("android--------------", succ.deviceToken, 'booking Posted !', `You have successfully book the event ${result.eventName}` + '\n' + ` Number of Riders: ${req.body.customerCount} People ` + '\n' + ` Email: ${email}`, { type: 'event' }, { details: notiObj }, { details: notiObj }, notiObj)
-                                notification.sendNotification(succ.deviceToken, 'booking Posted !', `You have successfully book the event ${result.eventName}` + '\n' + ` Number of Riders: ${req.body.customerCount} People ` + '\n' + ` Contact Us: ${email}`, { type: 'event' }, { details: notiObj }, { details: notiObj }, notiObj)
+                                notification.sendNotification(succ.deviceToken, 'booking Posted !', `You have successfully book the event ${result.eventName}` + '\n' + ` Number of Riders: ${req.body.customerCount} People ` + '\n' + ` Contact Us: ${email}`, notiObj, notiObj)
                             }
-                            //  businessManId:req.body.businessManId,
-                            //if (deviceTypeWeb == 'WEBSITE') { //title, msg, bussinessId, customerId, image, name, type, eventStatus
-
-
-
-                            console.log("web----------------", 'booking Posted !', `Booking is successfully done by ${notiObj.name}  , requested for the event ${result.eventName} ` + '\n' + ` Number of Riders: ${req.body.customerCount} People ` + '\n' + ` Mobile: ${succ.mobile_no} ` + '\n' + ` Email: ${succ.email}`, req.body.businessManId, req.body.userId, notiObj.profilePic, notiObj.name)
-
-
-
-
                             notification.single_notification(`booking Posted !`, `Booking is successfully done by ${notiObj.name} , requested for the event ${result.eventName} ` + '\n' + ` Number of Riders: ${req.body.customerCount} People ` + '\n' + ` Mobile: ${succ.mobile_no} ` + '\n' + ` Email: ${succ.email}`, req.body.businessManId, req.body.userId, notiObj.profilePic, notiObj.name, 'event', 'PENDING', req.body.eventId)
-                            //}
                         }
                         response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Payment successfully done!")
-                        // }
-
                     })
-                }//
+                }
             })
         }
     },
 
-    //=============================================================cancel booking for app=======================================================
+    ////---------------------------------------------------------------cancel booking for app//-----------------------------------------------------------------------//
     'cancelBooking': (req, res) => {
         var query = { _id: req.body._id, $or: [{ bookingStatus: "PENDING" }, { bookingStatus: "CONFIRMED" }] }
         booking.findOneAndUpdate(query, { $set: { bookingStatus: "CANCELLED" } }, { new: true })
             .populate("businessManId", "deviceType deviceToken profilePic name").exec((err, result) => {
-                // console.log("**********************", err, result)
                 if (err) {
-                    console.log("err1,", err)
                     return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
                 }
                 if (!result)
@@ -1057,26 +817,21 @@ module.exports = {
                 else {
 
                     var result = result;
-                    // console.log("result >>>>>",result)
                     User.findById({ _id: result.userId, userType: "CUSTOMER", status: "ACTIVE" }, (err_, result_) => {
                         if (err_)
                             return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
                         else {
-                            //  }
-                            console.log('result____===>>>>>', result_);
-                            var amount = ((90 * result.eventPrice) / 100) * 100
+                            var amount = ((80 * result.eventPrice) / 100) * 100
                             return stripe.refunds.create({
                                 charge: result.chargeId,
-                                amount: Math.round(amount),//((90* result.eventPrice)/100),
+                                amount: Math.round(amount),
                             }, function (err, refund) {
                                 if (err) {
-                                    console.log("err in refunds", err)
+                                    return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
                                 }
                                 else {
-
                                     var notiObj = {
                                         businessManId: result.businessManId._id,
-                                        // if (deviceType && deviceToken) {
                                         userId: result_._id,
                                         profilePic: result_.profilePic,
                                         name: result_.name,
@@ -1084,44 +839,13 @@ module.exports = {
                                         type: 'event',
                                         eventStatus: 'CANCELLED'
                                     }
-                                    // console.log('success refund-->', refund)
-                                    console.log("incoming Data in Cancel booking>>>>>", notiObj)
-
-
-
-
-
-                                    ///   //  console.log("notificatiopn data--------->>>", result_.deviceToken, `Booking Cancelled!!', ' Your booking is  Cancelled for the event ${result.eventName} and your amount will be refunded...!`, result.businessManId, result.userId, result_.profilePic, result_.name)
-
-
                                     if (result_.deviceType == 'IOS') {
-
-
-                                        console.log("notificatiopn data--------->>>", result_.deviceToken, 'Booking Cancelled!!', `Your booking is  Cancelled for the event ${result.eventName} and your amount will be refunded...!`, { type: 'event' }, { details: notiObj }, notiObj)
-
-
-
-
-                                        notification.sendNotification(result_.deviceToken, 'Booking Cancelled!!', `Your booking is  Cancelled for the event ${result.eventName} and your amount will be refunded...!`, { type: 'event' }, { details: notiObj }, notiObj)
+                                        notification.sendNotification(result_.deviceToken, 'Booking Cancelled!!', `Your booking is  Cancelled for the event ${result.eventName} and your amount will be refunded...!`, notiObj, notiObj)
                                     }
-
                                     if (result_.deviceType == 'ANDROID') {
-
-
-                                        console.log("notificatiopn data--------->>>", result_.deviceToken, 'Booking Cancelled!!', ` Your booking is  Cancelled for the event ${result.eventName} and your amount will be refunded...!`, { type: 'event' }, { details: notiObj }, notiObj)
-
-
-                                        notification.sendNotification(result_.deviceToken, 'Booking Cancelled!!', ` Your booking is  Cancelled for the event ${result.eventName} and your amount will be refunded...!`, { type: 'event' }, { details: notiObj }, notiObj)
+                                        notification.sendNotification(result_.deviceToken, 'Booking Cancelled!!', ` Your booking is  Cancelled for the event ${result.eventName} and your amount will be refunded...!`, notiObj, notiObj)
                                     }
-
-                                    // if (result.businessManId.deviceType == 'WEBSITE') {
-
-
-
-                                    console.log("website data--------->>>", `Booking Cancelled!!`, `Booking has been cancelled for ${result.eventName} by ${result_.name} `, result.businessManId._id, notiObj.userId, notiObj.profilePic, result_.name, 'event', 'CANCELLED', result.eventId)
-
                                     notification.single_notification(`Booking Cancelled!!`, `Booking has been cancelled for ${result.eventName} by ${result_.name} `, result.businessManId._id, notiObj.userId, notiObj.profilePic, result_.name, 'event', 'CANCELLED', result.eventId)
-                                    //}
                                     response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Booking cancelled successfully and your amount will be refunded...")
 
                                 }
@@ -1134,10 +858,9 @@ module.exports = {
     },
 
 
-    //    ********************************************************************************************** My all booking in app *********************************************************************************
+    //-------------------------------------------------------------------------------My all booking in app ----------------------------------------------------------------------//
     "myBookingShow": (req, res) => {
         var query = { userId: req.body.userId }
-        // console.log("++++++++++++++++", query)
         booking.find({ userId: req.body.userId }, { eventId: 1, duration: 1, _id: 0 }).populate("eventId", { duration: 0, userId: 0 }).populate("userId", { name: 1, profilePic: 1 }).exec((error, result) => {
             if (error)
                 return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG)
@@ -1149,7 +872,7 @@ module.exports = {
     },
 
 
-    //********************************************************************************************  API for addCustomerFeedback  for App **************************************************************************  */
+    ////-----------------------------------------------------  API for addCustomerFeedback  for App --------------------------------------------------------------//  */
 
     "addCustomerFeedback": (req, res) => {
         if (!req.body.eventId || !req.body.businessManId || !req.body.customerId)
@@ -1162,7 +885,6 @@ module.exports = {
                     return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "UserId Not found");
                 else {
                     eventSchema.findOne({ _id: req.body.eventId, businessName: req.body.businessName, status: "ACTIVE" }, (err, success2) => {
-                        console.log("in events------->>", err, success2)
                         if (err)
                             return response.sendResponseWithoutData(res, responseCode.WENT_WRONG, responseMessage.WENT_WRONG);
                         else if (!success2)
@@ -1177,9 +899,7 @@ module.exports = {
                                         return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Something went wrong....");
                                     else {
                                         if (success)
-                                            console.log("checking success**********>>>>>>>>>>", success)
-                                        console.log("noti data===>", success.deviceToken, 'feedback Posted !', ' Your feedback is successfully send.', req.body.businessManId, req.body.customerId, success.profilePic, success.name)
-                                        notification.single_notification(`feedback Posted !`, ' Your feedback is successfully send.', req.body.businessManId, req.body.customerId, success.profilePic, success.name, 'feedback', 'COMPLETED', req.body.eventId)
+                                            notification.single_notification(`feedback Posted !`, ' Your feedback is successfully send.', req.body.businessManId, req.body.customerId, success.profilePic, success.name, 'feedback', 'COMPLETED', req.body.eventId)
                                         response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, "Feedback is successfully send.", success3);
                                     }
 
@@ -1189,7 +909,7 @@ module.exports = {
 
             })
     },
-    //********************************************************************************************  API for viewCustomerFeedback  for App **************************************************************************  */
+    //-------------------------------------------------------------------------  API for viewCustomerFeedback  for App -------------------------------------------------------------------------  //
 
     "viewCustomerFeedback": (req, res) => {
         if (!req.body.eventId || !req.body.businessManId)
@@ -1202,16 +922,13 @@ module.exports = {
                 if (succ.length == 0)
                     return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found!");
                 else if (succ) {
-                    // succ=succ.feedback.pop()
-
                     response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, succ);
                 }
             })
         }
     },
 
-
-
+    //-------------------------------------------------------------------------  API for viewCustomerFeedback  for customer-------------------------------------------------------------------------  //
     "myEventFeedback": (req, res) => {
         if (!req.body.businessManId)
             return response.sendResponseWithoutData(res, responseCode.BAD_REQUEST, "Please provide all required fields !");
@@ -1229,7 +946,6 @@ module.exports = {
     },
     //................................................Average of rating according to paticular bssinessman.....................................
     'avgBussinessList': (req, res) => {
-        console.log(`request for avg rating of particular customer ${JSON.stringify(req.body)}`)
         feedback.aggregate(
             [
                 { $unwind: "$feedback" },
@@ -1262,7 +978,7 @@ module.exports = {
             }
         })
     },
-    //********************************************************************************************  API for viewCustomerFeedback  for website **************************************************************************  */
+    //-------------------------------------------------------------------------  API for viewCustomerFeedback  for website ------------------------------------------------------------------------- //
 
     "allFeedbackViews": (req, res) => {
         feedback.find({}).populate("customerId", "_id name address profilePic").populate("eventId", "eventPrice").exec((err, succ) => {
@@ -1277,25 +993,19 @@ module.exports = {
         })
     },
 
-    //********************************************************************************************  API for getting all events for Admin panel **************************************************************************  */
+    //-------------------------------------------------------------------------  API for getting all events for Admin panel -------------------------------------------------------------------------  //
 
 
     'getAllEvents': (req, res) => {
         var n = req.body.pageNumber || 1, m = 10
         var value = new RegExp('^' + req.body.search, "i")
-        //     if (req.body.search) {
-
-        //     }
         var query = {
             $or: [{ $and: [{ status: "ACTIVE" }, { "businessName": value }] }, { $and: [{ status: "ACTIVE" }, { eventName: value }] }], status: "ACTIVE"
         }
-        // $and: [{ name: req.body.search},{email: req.body.search} ,{userType: 'CUSTOMER' }] }
         var options = {
 
-            // page: req.body.pageNumber || 1,
             select: '_id eventName eventImage businessName eventCreated_At eventPrice',
             populate: [{ path: "userId", select: " status name ", match: { status: "ACTIVE" } }],
-            //  match:{userId},
             limit: 100000000,
             sort: { eventCreated_At: -1 },
             lean: true
@@ -1307,28 +1017,19 @@ module.exports = {
             else if (result.docs.length == 0)
                 return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found")
             else {
-                // console.log('result is=====>>>>',JSON.stringify(result));
 
                 var arr = result.docs.filter((x) => {
                     if (x.userId != null)
                         return x;
                 })
-
-                console.log('Array is=====>>>>>>', JSON.stringify(arr));
-
                 var userList1 = arr.slice((n - 1) * m, n * m)
-
-                //var userList1 = arr.slice((pageNumber - 1) * limit, pageNumber* limit)
-                console.log("custom pagination>>>>>>>>>>>>>", JSON.stringify(userList1))
                 var x = {
                     "total": arr.length,
                     "limit": 10,
                     "currentPage": n,
                     "totalPage": Math.ceil(arr.length / 10)
                 }
-                console.log("total===.", x)
                 response.sendResponseWithPagination(res, responseCode.EVERYTHING_IS_OK, responseMessage.SUCCESSFULLY_DONE, userList1, x);
-
             }
 
         })
@@ -1336,10 +1037,9 @@ module.exports = {
 
 
 
-    //********************************************************************************************  API transaction management >>> Admin panel **************************************************************************  */
+    //-------------------------------------------------------------------------  API transaction management >>> Admin panel -------------------------------------------------------------------------  //
 
     "transactionManagementFilter": (req, res) => {
-        console.log("request is-------------->", req.body);
         let options = {
             page: req.body.pageNumber || 1,
             limit: req.body.limit || 10,
@@ -1350,10 +1050,7 @@ module.exports = {
             lean: false
         }
         var obj;
-        // var date1 = new Date(req.body.fromDate);
-        // var date2 = new Date(req.body.toDate);
         var query = { transactionDate: { $gte: req.body.fromDate, $lte: req.body.toDate } }
-        console.log("QUERY is-----", query);
         var value = new RegExp('^' + req.body.search, "i")
         if (!req.body.fromDate && req.body.toDate) {
             return response.sendResponseWithoutData(res, responseCode.NOT_FOUND, "Data not found")

@@ -16,10 +16,6 @@ const userFeedbackSchema = new Schema({
 
     feedback: [
         {
-            // customerId:{
-            //     type:Schema.Types.ObjectId,
-            //     ref: 'User'
-            // },
             feedbackDescription: {
                 type: String
             },

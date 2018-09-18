@@ -3,7 +3,7 @@ var FCM = require('fcm-push');
 var options = {
     "cert": "MobiloitteEnterpriseDistribution.pem",
     "key": "MobiloitteEnterpriseDistribution.pem",
-    "passphrase": "Mobiloitte1", //Acropole
+    "passphrase": "Mobiloitte1",
     "gateway": "gateway.sandbox.push.apple.com",
     "port": 2195,
     "enhanced": true,
@@ -26,23 +26,20 @@ var notifications = {
 
 
     'iosPush': (deviceToken, title, message, data) => {
-        console.log("deviceToken", deviceToken)
         var apnConnection = new apn.Connection(options);
         var myDevice = new apn.Device(deviceToken);
         var note = new apn.Notification();
-        note.expiry = Math.floor(Date.now() / 1000) + 3600; // Expires 1 hour from now.
+        note.expiry = Math.floor(Date.now() / 1000) + 3600; 
         note.badge = 1;
         note.sound = "ping.aiff";
         note.alert = title + ' ' + message;
         note.payload = data
         try {
-            apnConnection.pushNotification(note, myDevice); //devicIos
+            apnConnection.pushNotification(note, myDevice); 
             apnConnection.on('transmitted', function (note, deviceToken) {
-                console.log('APNS: Successfully transmitted message' + JSON.stringify(note));
             });
         } catch (ex) {
-            console.log("in Error");
-            console.log(ex);
+         
         }
     },
     //====================================Notification for app====================================================================
@@ -57,26 +54,19 @@ var notifications = {
             eventStatus:eventStatus,
             eventId:eventId 
         };
-        console.log(":::::::::::::::::::::::::", obj)
         let noti = new Noti(obj);
-        console.log("******", noti)
         noti.save((er1, ress) => {
-            console.log(`Error is ${JSON.stringify(er1)}   result is noti ${JSON.stringify(ress)}`)
-            //response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, 'Order has been placed successfully and confirmation code send to your mobile number.',result)
         })
     }, 
 
 //=======================================================Notification by fcm================================================================
-'sendNotification': (deviceToken, title, message, data,details, notiObj) => {
-    // console.log("!!!!!!!!!!!!!!@@@@@@@@@@@@@@@@@@",notiObj)
-        console.log(`Device token is ${deviceToken}`)
+'sendNotification': (deviceToken, title, message, data, notiObj) => {
         var serverKey = 'AAAAdtyNEC0:APA91bFeZPCM-fslejcqzZHNrXE_fExyhkjqn5FzuXj4mJ3X9pkClFG9Hs0I76-pnIRmw512uEVBkhrMBzYF7FbqEirrVS6anw0uEuu8o3gzZG48hhCKlQrIEIZs36os5qTZiRU9b02r';
         var fcm = new FCM(serverKey);
 
         var payload = {
 
-            to: deviceToken, // required fill with device token or topics
-            //registration_ids: tokenArray,
+            to: deviceToken, 
             "content_available": true,
             collapse_key: 'your_collapse_key',
           
@@ -84,25 +74,14 @@ var notifications = {
                 title: title,
                 body: message,
                 click_action: "fcm.ACTION.NOTIF"
-            }
+            },
+            data : data
         };
-        
-        if (data != '')
-            payload.data = data;
-           
-           
-            if (details != '')
-            payload.details = details;
-           
+        // payload.data = data;
 
-        //callback style
         fcm.send(payload, function (err, response) {
             if (err) {
-                console.log("Something has gone wrong!", err);
-            } else {
-                 console.log("Successfully sent with response: ", response);
-                
-                
+            } else {             
                 let obj = {
                     customerId: { cid: notiObj.userId, image: notiObj.image, name:notiObj.name },
                     bussinessId: { bid: notiObj.businessManId },
@@ -112,17 +91,11 @@ var notifications = {
                     type:notiObj.type,
                     
                 };
-
-                // console.log("!!!!!!!!!!!!!!@@@@@@@@@@@@@@@@@@",obj)
-
                 if(notiObj.eventStatus)
                     obj.eventStatus = notiObj.eventStatus;
 
                 let noti = new Noti(obj);
-                console.log("******", noti)
                 noti.save((er1, ress) => {
-                    console.log(`Error is ${JSON.stringify(er1)}   result is ${JSON.stringify(ress)}`)
-                    //response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, 'Order has been placed successfully and confirmation code send to your mobile number.',result)
                 })
 
             }
@@ -131,51 +104,18 @@ var notifications = {
     },
 
         'notificationForWeb': (pushSubscription, title, msg, bussinessId) => {
-            console.log(`web noti api hit`)
-            console.log("request for push-------->", JSON.stringify(req.body))
-            console.log("inside push")
-            const message = 'Notificartion for bussiness';//req.body.message;
-            //  var subscription;
+            const message = 'Notificartion for bussiness';
             var options = {
                 gcmAPIKey: 'AIzaSyBhBx_hxg8QUCbjo_D3gb-dHFY_APurdl8',
                 TTL: 24 * 60 * 60,
                 vapidDetails: {
-                    subject: req.body.email,//'mailto:sender@example.com',
+                    subject: req.body.email,
                     publicKey: 'BDqxMfc7QPfi5AFUMvO8ciGMsTSWIVzcPvPUZvEhH33Z8iS2br8lLBIHkQfhcqElyy2GAk11UxIFlVQhJzzK34U',//vapidKeys.publicKey,
-                    privateKey: 'yS4QUTovZQASwXRx9IiVBXLnIkFl9-Q70AO3lMgDrs0'//vapidKeys.privateKey
+                    privateKey: 'yS4QUTovZQASwXRx9IiVBXLnIkFl9-Q70AO3lMgDrs0'
                 },
             }
 
         },
-
-            testing: () => {
-                var serverKey = 'AAAAdtyNEC0:APA91bFeZPCM-fslejcqzZHNrXE_fExyhkjqn5FzuXj4mJ3X9pkClFG9Hs0I76-pnIRmw512uEVBkhrMBzYF7FbqEirrVS6anw0uEuu8o3gzZG48hhCKlQrIEIZs36os5qTZiRU9b02r';
-                var fcm = new FCM(serverKey);
-                var deviceToken = "eYATUn5umo8:APA91bHDBFkqQcjaJ1CRxffFjo81BDKBGOj8u5Dbx6mWB6E2Iw8bxJ_aMGX2PF9oO1EwI3EWPSvETWXyebOQT6Q5CGF76-AZa_jp_ylCd1CGO8r1FG_mSVK-EHFgtexG3mYy8lyx3utN";
-                var payload = {
-                    to: deviceToken, // required fill with device token or topics
-                    //registration_ids: tokenArray,
-                    collapse_key: 'your_collapse_key',
-                    notification: {
-                        title: 'title',
-                        body: 'message'
-                    }
-                };
-                payload.data = {
-                    hf: 'gfghfghj',
-                    fghf: 'hfghfghfgh'
-                };
-
-                //callback style
-                fcm.send(payload, function (err, response) {
-                    if (err) {
-                        console.log("Something has gone wrong!", err);
-                    } else {
-                        console.log("Successfully sent with response: ", response);
-                    }
-                });
-            }
-
 }
 
 module.exports = notifications;
