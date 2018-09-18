@@ -77,7 +77,8 @@ var notifications = {
             },
             data : data
         };
-        // payload.data = data;
+        payload.data.title = title;
+        payload.data.body = body;
 
         fcm.send(payload, function (err, response) {
             if (err) {
