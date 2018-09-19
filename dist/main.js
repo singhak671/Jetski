@@ -180,7 +180,6 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 
 
 
-// import { NgbdDatepickerPopup } from './datepicker-popup';
 var AppModule = /** @class */ (function () {
     function AppModule() {
     }
@@ -194,7 +193,6 @@ var AppModule = /** @class */ (function () {
                 _pages_user_details_user_details_component__WEBPACK_IMPORTED_MODULE_15__["UserDetailsComponent"],
                 _pages_edit_user_detail_edit_user_detail_component__WEBPACK_IMPORTED_MODULE_16__["EditUserDetailComponent"],
                 _pages_business_business_component__WEBPACK_IMPORTED_MODULE_17__["BusinessComponent"],
-                // NgbdDatepickerPopup,
                 _pages_edit_business_detail_edit_business_detail_component__WEBPACK_IMPORTED_MODULE_18__["EditBusinessDetailComponent"],
                 _pages_side_menu_side_menu_component__WEBPACK_IMPORTED_MODULE_20__["SideMenuComponent"],
                 _pages_view_business_detail_view_business_detail_component__WEBPACK_IMPORTED_MODULE_21__["ViewBusinessDetailComponent"],
@@ -265,20 +263,62 @@ __webpack_require__.r(__webpack_exports__);
 
 var routes = [
     { path: '', redirectTo: 'login', pathMatch: 'full' },
-    { path: 'login', component: _pages_login_login_component__WEBPACK_IMPORTED_MODULE_0__["LoginComponent"] },
-    { path: 'forgotPassword', component: _pages_forgot_password_forgot_password_component__WEBPACK_IMPORTED_MODULE_1__["ForgotPasswordComponent"] },
-    { path: 'dashboard', component: _pages_dashboard_dashboard_component__WEBPACK_IMPORTED_MODULE_2__["DashboardComponent"] },
-    { path: 'business-management', component: _pages_business_business_component__WEBPACK_IMPORTED_MODULE_5__["BusinessComponent"] },
-    { path: 'userDetails', component: _pages_user_details_user_details_component__WEBPACK_IMPORTED_MODULE_3__["UserDetailsComponent"] },
-    { path: 'editUserDetail', component: _pages_edit_user_detail_edit_user_detail_component__WEBPACK_IMPORTED_MODULE_4__["EditUserDetailComponent"] },
-    { path: 'editBusinessDetail', component: _pages_edit_business_detail_edit_business_detail_component__WEBPACK_IMPORTED_MODULE_6__["EditBusinessDetailComponent"] },
-    { path: 'businessDetails', component: _pages_view_business_detail_view_business_detail_component__WEBPACK_IMPORTED_MODULE_7__["ViewBusinessDetailComponent"] },
-    { path: 'editBusinessDetail', component: _pages_edit_business_detail_edit_business_detail_component__WEBPACK_IMPORTED_MODULE_6__["EditBusinessDetailComponent"] },
-    { path: 'content-management', component: _pages_content_management_content_management_component__WEBPACK_IMPORTED_MODULE_8__["ContentManagementComponent"] },
-    { path: 'content-edit', component: _pages_content_management_edit_content_management_edit_component__WEBPACK_IMPORTED_MODULE_9__["ContentManagementEditComponent"] },
-    { path: 'content-view', component: _pages_content_management_view_content_management_view_component__WEBPACK_IMPORTED_MODULE_10__["ContentManagementViewComponent"] },
-    { path: 'event-management', component: _pages_event_management_event_management_component__WEBPACK_IMPORTED_MODULE_11__["EventManagementComponent"] },
-    { path: 'transactions', component: _pages_transaction_management_transaction_management_component__WEBPACK_IMPORTED_MODULE_12__["TransactionManagementComponent"] }
+    {
+        path: 'login',
+        component: _pages_login_login_component__WEBPACK_IMPORTED_MODULE_0__["LoginComponent"]
+    },
+    {
+        path: 'forgotPassword',
+        component: _pages_forgot_password_forgot_password_component__WEBPACK_IMPORTED_MODULE_1__["ForgotPasswordComponent"]
+    },
+    {
+        path: 'dashboard',
+        component: _pages_dashboard_dashboard_component__WEBPACK_IMPORTED_MODULE_2__["DashboardComponent"]
+    },
+    {
+        path: 'business-management',
+        component: _pages_business_business_component__WEBPACK_IMPORTED_MODULE_5__["BusinessComponent"]
+    },
+    {
+        path: 'userDetails',
+        component: _pages_user_details_user_details_component__WEBPACK_IMPORTED_MODULE_3__["UserDetailsComponent"]
+    },
+    {
+        path: 'editUserDetail',
+        component: _pages_edit_user_detail_edit_user_detail_component__WEBPACK_IMPORTED_MODULE_4__["EditUserDetailComponent"]
+    },
+    {
+        path: 'editBusinessDetail',
+        component: _pages_edit_business_detail_edit_business_detail_component__WEBPACK_IMPORTED_MODULE_6__["EditBusinessDetailComponent"]
+    },
+    {
+        path: 'businessDetails',
+        component: _pages_view_business_detail_view_business_detail_component__WEBPACK_IMPORTED_MODULE_7__["ViewBusinessDetailComponent"]
+    },
+    {
+        path: 'editBusinessDetail',
+        component: _pages_edit_business_detail_edit_business_detail_component__WEBPACK_IMPORTED_MODULE_6__["EditBusinessDetailComponent"]
+    },
+    {
+        path: 'content-management',
+        component: _pages_content_management_content_management_component__WEBPACK_IMPORTED_MODULE_8__["ContentManagementComponent"]
+    },
+    {
+        path: 'content-edit',
+        component: _pages_content_management_edit_content_management_edit_component__WEBPACK_IMPORTED_MODULE_9__["ContentManagementEditComponent"]
+    },
+    {
+        path: 'content-view',
+        component: _pages_content_management_view_content_management_view_component__WEBPACK_IMPORTED_MODULE_10__["ContentManagementViewComponent"]
+    },
+    {
+        path: 'event-management',
+        component: _pages_event_management_event_management_component__WEBPACK_IMPORTED_MODULE_11__["EventManagementComponent"]
+    },
+    {
+        path: 'transactions',
+        component: _pages_transaction_management_transaction_management_component__WEBPACK_IMPORTED_MODULE_12__["TransactionManagementComponent"]
+    }
 ];
 
 
@@ -302,7 +342,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"mainbox main-modify\">\n    <app-side-menu></app-side-menu>\n    <div class=\"right-section\">\n        <div class=\"copyrights\">Copyright © 2018 Aqua Ludus All Rights Reserved.</div>\n        <div class=\"right-inner\">\n\n            <h1 class=\"heading\">BUSINESS MANAGEMENT</h1>\n            <div class=\"filter-block\">\n                <fieldset class=\"global-fieldset\">\n                    <legend>User Board</legend>\n                    <div class=\"filter-content\">\n                        <div class=\"row\">\n                            <div class=\"col-sm-6\">\n                                    <form [formGroup]=\"BusinessForm\" > \n                                <div class=\"form-group\">\n                                    <div class=\"pull-left\">\n                                        <div class=\"col-sm-6\">\n                                            <div class=\"form-group d-inline-block\">\n                                                <div class=\"show-entries mb0\">\n                                                    <select class=\"form-control\"  (change)='filter()' formControlName=\"sort\">\n                                                        <option value=''>STATUS</option>\n                                                        <option value='ACTIVE'>ACTIVE</option>\n                                                        <option value='BLOCK'>BLOCK</option>\n                                                    </select>\n                                                </div>\n                                            </div>\n                                        </div>\n                                    </div>\n                                    <div class=\"search-icon pull-right\" align=\"right\">\n                                        <input type=\"text\" (keyup)=\"filter()\" class=\"form-control max-wt-300 search-input\" placeholder=\"Search by name/email\" formControlName=\"search\">\n                                        <i class=\"fa fa-search\" aria-hidden=\"true\"></i>\n                                    </div>\n                                </div>\n                                </form>\n                            </div>\n                            <div class=\"col-sm-6\">\n                                <!-- <div class=\"btn-right\">\n                              <a class=\"btn btn-red btn-common\" href=\"add-user.html\">Add</a>\n                           </div> -->\n                            </div>\n                        </div>\n\n                        <div class=\"box box-blue\">\n                            <div class=\"box-body\">\n                                <div class=\"custom-table table-responsive\">\n                                    <table class=\"table table-striped table-border\">\n                                        <thead>\n                                            <tr>\n                                                <th>SNo.</th>\n                                                <th>Full Name</th>\n                                                <th>Business Name</th>\n                                                <th>Email</th>\n                                                <th>Gender</th>\n                                                <th>Country</th>\n                                                <th>Action</th>\n                                                <th>Activate</th>\n                                            </tr>\n                                        </thead>\n                                        <tbody>\n\n                                            <tr *ngFor=\"let item of modified | paginate: { itemsPerPage: 10, currentPage: pageNo, totalItems: paginationData.total };index as i\">\n                                                <td>{{(i+1)+srNo}}</td>\n                                                <td>{{item.name}}</td>\n                                                <td>{{item.businessName}}</td>\n                                                <td>{{item.email}}</td>\n                                                <td>{{item.gender}}</td>\n                                                <td>{{item.country}}</td>\n                                                <td>\n                                                    <div class=\"action-btn\">\n                                                        <!-- <a class=\"btn btn-sm btn-success\" (click)=\"view(i)\"><i class=\"fa fa-eye\"></i> View</a> -->\n                                                        <a class=\"btn btn-sm btn-success\" (click)=\"view(i)\">\n                                                            <i class=\"fa fa-eye\"></i> View</a>\n                                                        <a class=\"btn btn-sm btn-primary\" (click)=\"edit(i)\">\n                                                            <i class=\"fa fa-edit\"></i> Edit</a>\n                                                        <a class=\"btn btn-sm btn-danger\" (click)=\"userdel(i)\">\n                                                            <i class=\"fa fa-trash\"></i> Delete</a>\n                                                    </div>\n                                                </td>\n                                                <td>\n                                                        <label class=\"switch\">\n                                                                <input type=\"checkbox\" name=\"active\" (click)=\"userStatus(item)\" value='item.status' [(ngModel)]=\"item.status\">\n                                                                <span class=\"slider round\"></span>\n                                                            </label>\n                                                </td>\n                                            </tr>\n                                            <tr *ngIf=\"modified.length==0\">\n                                                <span>No record found</span>\n                                            </tr>\n                                        </tbody>\n                                    </table>\n                                </div>\n\n                            </div>\n                        </div>\n                    </div>\n                </fieldset>\n            </div>\n\n\n            <ul class=\"pagination\">\n                <li *ngIf=\"paginationData.total > paginationData.limit\"></li>\n            </ul>\n            <pagination-controls (pageChange)=\"changePage($event)\"></pagination-controls>\n\n        </div>\n    </div>\n</div>\n\n<!-- Modal-blocked -->\n<div id=\"delete\" class=\"modal fade\" data-easein=\"bounceIn\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"costumModalLabel\"\n    aria-hidden=\"true\">\n    <div class=\"modal-dialog\">\n        <div class=\"modal-content common-detail-modal\">\n            <div class=\"modal-header\">\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">\n                    ×\n                </button>\n            </div>\n            <div class=\"modal-body\">\n                <p class=\"modal-inner-text\">\n                    Are you sure you want to delete user ?\n                </p>\n\n                <div class=\"button-box mt20\">\n                    <a class=\"btn btn-red mr10\" (click)=delete(i)>Yes</a>\n                    <a class=\"btn btn-danger\" data-dismiss=\"modal\">No</a>\n                </div>\n            </div>\n            <div class=\"modal-footer\">\n\n            </div>\n        </div>\n    </div>\n</div>"
+module.exports = "<div class=\"mainbox main-modify\">\n    <app-side-menu></app-side-menu>\n    <div class=\"right-section\">\n        <div class=\"copyrights\">Copyright © 2018 Aqua Ludus All Rights Reserved.</div>\n        <div class=\"right-inner\">\n\n            <h1 class=\"heading\">BUSINESS MANAGEMENT</h1>\n            <div class=\"filter-block\">\n                <fieldset class=\"global-fieldset\">\n                    <legend>User Board</legend>\n                    <div class=\"filter-content\">\n                        <div class=\"row\">\n                            <div class=\"col-sm-6\">\n                                    <form [formGroup]=\"BusinessForm\" > \n                                <div class=\"form-group\">\n                                    <div class=\"pull-left\">\n                                        <div class=\"col-sm-6\">\n                                            <div class=\"form-group d-inline-block\">\n                                                <div class=\"show-entries mb0\">\n                                                    <select class=\"form-control\"  (change)='filter()' formControlName=\"sort\">\n                                                        <option value=''>STATUS</option>\n                                                        <option value='ACTIVE'>ACTIVE</option>\n                                                        <option value='BLOCK'>BLOCK</option>\n                                                    </select>\n                                                </div>\n                                            </div>\n                                        </div>\n                                    </div>\n                                    <div class=\"search-icon pull-right\" align=\"right\">\n                                        <input type=\"text\" (keyup)=\"filter()\" class=\"form-control max-wt-300 search-input\" placeholder=\"Search by name/email\" formControlName=\"search\">\n                                        <i class=\"fa fa-search\" aria-hidden=\"true\"></i>\n                                    </div>\n                                </div>\n                                </form>\n                            </div>\n                            <div class=\"col-sm-6\">\n                            </div>\n                        </div>\n\n                        <div class=\"box box-blue\">\n                            <div class=\"box-body\">\n                                <div class=\"custom-table table-responsive\">\n                                    <table class=\"table table-striped table-border\">\n                                        <thead>\n                                            <tr>\n                                                <th>SNo.</th>\n                                                <th>Full Name</th>\n                                                <th>Business Name</th>\n                                                <th>Email</th>\n                                                <th>Gender</th>\n                                                <th>Country</th>\n                                                <th>Action</th>\n                                                <th>Activate</th>\n                                            </tr>\n                                        </thead>\n                                        <tbody>\n\n                                            <tr *ngFor=\"let item of modified | paginate: { itemsPerPage: 10, currentPage: pageNo, totalItems: paginationData.total };index as i\">\n                                                <td>{{(i+1)+srNo}}</td>\n                                                <td>{{item.name}}</td>\n                                                <td>{{item.businessName}}</td>\n                                                <td>{{item.email}}</td>\n                                                <td>{{item.gender}}</td>\n                                                <td>{{item.country}}</td>\n                                                <td>\n                                                    <div class=\"action-btn\">\n                                                        <a class=\"btn btn-sm btn-success\" (click)=\"view(i)\">\n                                                            <i class=\"fa fa-eye\"></i> View</a>\n                                                        <a class=\"btn btn-sm btn-primary\" (click)=\"edit(i)\">\n                                                            <i class=\"fa fa-edit\"></i> Edit</a>\n                                                        <a class=\"btn btn-sm btn-danger\" (click)=\"userdel(i)\">\n                                                            <i class=\"fa fa-trash\"></i> Delete</a>\n                                                    </div>\n                                                </td>\n                                                <td>\n                                                        <label class=\"switch\">\n                                                                <input type=\"checkbox\" name=\"active\" (click)=\"userStatus(item)\" value='item.status' [(ngModel)]=\"item.status\">\n                                                                <span class=\"slider round\"></span>\n                                                            </label>\n                                                </td>\n                                            </tr>\n                                            <tr *ngIf=\"modified.length==0\">\n                                                <span>No record found</span>\n                                            </tr>\n                                        </tbody>\n                                    </table>\n                                </div>\n\n                            </div>\n                        </div>\n                    </div>\n                </fieldset>\n            </div>\n\n\n            <div *ngIf=\"paginationData.total >\n                paginationData.limit\">\n           <pagination-controls (pageChange)=\"changePage($event)\"></pagination-controls>\n\n           </div>\n        </div>\n    </div>\n</div>\n\n<div id=\"delete\" class=\"modal fade\" data-easein=\"bounceIn\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"costumModalLabel\"\n    aria-hidden=\"true\">\n    <div class=\"modal-dialog\">\n        <div class=\"modal-content common-detail-modal\">\n            <div class=\"modal-header\">\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">\n                    ×\n                </button>\n            </div>\n            <div class=\"modal-body\">\n                <p class=\"modal-inner-text\">\n                    Are you sure you want to delete user ?\n                </p>\n\n                <div class=\"button-box mt20\">\n                    <a class=\"btn btn-red mr10\" (click)=delete(i)>Yes</a>\n                    <a class=\"btn btn-danger\" data-dismiss=\"modal\">No</a>\n                </div>\n            </div>\n            <div class=\"modal-footer\">\n\n            </div>\n        </div>\n    </div>\n</div>"
 
 /***/ }),
 
@@ -334,7 +374,6 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 var BusinessComponent = /** @class */ (function () {
-    //i : any= '';
     function BusinessComponent(router, service, fb) {
         this.router = router;
         this.service = service;
@@ -352,50 +391,13 @@ var BusinessComponent = /** @class */ (function () {
         });
         for (var i = 1; i <= 15; i++) {
             this.collection.push("item " + i);
-            // console.log(`pagination i ${i}`)
         }
-        // console.log(this.customer)
     }
     BusinessComponent.prototype.ngOnInit = function () {
-        console.log("in business");
-        // this.getAllBusiness()
         this.search();
     };
-    // getAllBusiness(){
-    //   this.service.getApi(`admin/getAllBusiness/${this.pageNo}`,1).subscribe(response=>{
-    //     console.log('res')
-    //     if(response['response_code']==200){
-    //         console.log('successfully found',response)
-    //         this.business = response[`result`]
-    //         console.log("i am here>>>>>>>>>",this.modified)
-    //         this.modified = this.business
-    //         for(let i=0; i<this.business.length; i++){
-    //           if(this.business[i].status == 'ACTIVE'){
-    //             this.modified[i].status = true
-    //           }
-    //           else if(this.business[i].status == 'BLOCK'){
-    //             this.modified[i].status = false
-    //           }
-    //         }
-    //       console.log('result of all business--->',JSON.stringify(this.business))
-    //         // this.service.showSuccess(response['response_message'])
-    //        // console.log('result of all business--->', JSON.stringify(this.business))
-    //       this.paginationData = response['paginationData']
-    //       this.srNo = (this.pageNo - 1) * this.paginationData.limit
-    //       // this.service.showSuccess(response['response_message'])
-    //     }
-    //       else{
-    //         this.service.toastErr(response['response_message'])
-    //       }
-    //      },error=>{
-    //        console.log('error =>', error)
-    //        this.service.toastErr('Something Went Wrong')
-    //     })
-    // }
     BusinessComponent.prototype.changePage = function (page) {
-        console.log('page no--->', page);
         this.pageNo = page;
-        // this.getAllBusiness()
         this.search();
     };
     BusinessComponent.prototype.filter = function () {
@@ -403,29 +405,23 @@ var BusinessComponent = /** @class */ (function () {
         this.search();
     };
     BusinessComponent.prototype.view = function (l) {
-        console.log('id of business--->', JSON.stringify(this.business[l]._id));
         localStorage.setItem('_id of business', this.business[l]._id);
         this.router.navigate(['./businessDetails']);
     };
     BusinessComponent.prototype.edit = function (l) {
-        console.log('id of business--->', JSON.stringify(this.business[l]._id));
         localStorage.setItem('_id of business', this.business[l]._id);
         this.router.navigate(['./editBusinessDetail']);
     };
     BusinessComponent.prototype.userdel = function (l) {
-        console.log('id of business--->', JSON.stringify(this.business[l]._id));
         localStorage.setItem('_id of business', this.business[l]._id);
         $('#delete').modal('show');
     };
     BusinessComponent.prototype.delete = function (l) {
-        // console.log('id of business--->',JSON.stringify(this.business[l]._id))
         var _this = this;
         var delData = { '_id': localStorage.getItem('_id of business'),
             "userType": "BUSINESS" };
         this.service.postApi("admin/deleteUser", delData, 1).subscribe(function (response) {
-            console.log('delete res');
             if (response['response_code'] == 200) {
-                console.log(' business data delete successfully', response);
                 localStorage.removeItem('_id of business');
                 _this.search();
             }
@@ -433,41 +429,28 @@ var BusinessComponent = /** @class */ (function () {
                 _this.service.toastErr(response['response_message']);
             }
         }, function (error) {
-            console.log('error =>', error);
             _this.service.toastErr('Something Went Wrong');
         });
         $('#delete').modal('hide');
     };
     BusinessComponent.prototype.userStatus = function (item) {
         var _this = this;
-        // localStorage.setItem('_id of customer',item._id);
         this.status = item.status;
         if (this.status == "ACTIVE" || "BLOCK") {
             var delData = { '_id': item._id };
-            console.log("@@@@@@>>", delData);
             this.service.postApi("admin/blockUser", delData, 1).subscribe(function (response) {
-                console.log('status res');
                 if (response['response_code'] == 200) {
-                    //this.obj.active = 'BLOCK';
-                    console.log(' Customer data status is >>>>>>+', response);
-                    // localStorage.removeItem('_id of customer')
                 }
                 else {
                     _this.modified = [];
-                    console.log('Failure', response['responseMessage']);
                 }
             }, function (error) {
-                console.log('error =>', error);
                 _this.service.toastErr('Something Went Wrong');
             });
         }
     };
     BusinessComponent.prototype.search = function () {
         var _this = this;
-        // if(e.target.value == 'activation'){
-        //   this.getAllCustomer()
-        // }
-        // else{
         var postData = {
             search: this.BusinessForm.controls['search'].value,
             status: this.BusinessForm.controls['sort'].value,
@@ -480,9 +463,7 @@ var BusinessComponent = /** @class */ (function () {
             }
         }
         this.service.postApi("user/searchCustomerFilter", postData, 1).subscribe(function (response) {
-            // console.log("0000000000 search",postData)
             if (response['response_code'] == 200) {
-                // console.log('success', response['result'])
                 _this.business = response['result'];
                 _this.modified = _this.business;
                 for (var i = 0; i < _this.business.length; i++) {
@@ -493,15 +474,14 @@ var BusinessComponent = /** @class */ (function () {
                         _this.modified[i].status = false;
                     }
                 }
-                // console.log('result of all customer filter API--->', JSON.stringify(this.business))
                 _this.paginationData = response['paginationData'];
                 _this.srNo = (_this.pageNo - 1) * _this.paginationData.limit;
             }
             else {
-                console.log('Failure', response['responseMessage']);
+                _this.paginationData = { total: 0, limit: 10 };
+                _this.modified = [];
             }
         }, function (error) {
-            console.log('something went wrong');
         });
         // }
     };
@@ -538,7 +518,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n\n\n\n<div class=\"mainbox main-modify\">\n  <app-side-menu></app-side-menu>\n  <div class=\"right-section\">\n    <div class=\"copyrights\">Copyright © 2018 Aqua Ludus All Rights Reserved.</div>\n    <div class=\"right-inner\">\n              <div class=\"filter-block\">\n                <form [formGroup]='editForm' >\n                <fieldset class=\"global-fieldset\" >\n                   <legend>{{controls}}</legend>\n                    <div class=\"filter-content\">\n                        \n                         <div class=\"common-detail-box\">\n                            <!-- < style=\"margin-left: 25% ; margin-right: 25%\">  -->\n                                <ckeditor formControlName='data'\n                                [(ngModel)]=\"mycontent\" #myckeditor [config]=\"ckeConfig\" debounce=\"500\" >\n                                </ckeditor>\n                            \n                            <div class=\"table-button text-center mt30\">\n                               <button class=\"btn btn-red\" (click)='save()'>Save </button>\n                               <button  class=\"btn btn-danger\" [routerLink]='([\"/content-management\"])' >Back</button>\n                            </div>\n                         </div>\n  \n                    </div>\n                </fieldset>\n              </form>\n              </div>        \n          </div>  \n        </div>\n  </div>\n  \n  \n  \n  \n  \n  \n\n\n\n\n\n\n\n<!-- \n<app-side-menu></app-side-menu>\n<form style=\"margin-left: 25% ; margin-right: 25%\"> \n  <ckeditor></ckeditor>\n \n  \n  <div class=\"table-button text-center mt10\" style=\"margin-left: -30%\">\n      <a class=\"btn btn-red\" >Save </a>\n      <a class=\"btn btn-danger\" >Cancel</a>\n  </div>\n</form>\n  \n\n\n\n -->\n"
+module.exports = "<div class=\"mainbox main-modify\">\n  <app-side-menu></app-side-menu>\n  <div class=\"right-section\">\n    <div class=\"copyrights\">Copyright © 2018 Aqua Ludus All Rights Reserved.</div>\n    <div class=\"right-inner\">\n              <div class=\"filter-block\">\n                <form [formGroup]='editForm' >\n                <fieldset class=\"global-fieldset\" >\n                   <legend>{{controls}}</legend>\n                    <div class=\"filter-content\">\n                        \n                         <div class=\"common-detail-box\">\n                                <ckeditor formControlName='data'\n                                [(ngModel)]=\"mycontent\" #myckeditor [config]=\"ckeConfig\" debounce=\"500\" >\n                                </ckeditor>\n                            \n                            <div class=\"table-button text-center mt30\">\n                               <button class=\"btn btn-red\" (click)='save()'>Save </button>\n                               <button  class=\"btn btn-danger\" [routerLink]='([\"/content-management\"])' >Back</button>\n                            </div>\n                         </div>\n  \n                    </div>\n                </fieldset>\n              </form>\n              </div>        \n          </div>  \n        </div>\n  </div>\n  \n"
 
 /***/ }),
 
@@ -582,37 +562,26 @@ var ContentManagementEditComponent = /** @class */ (function () {
     ContentManagementEditComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.controls = localStorage.getItem('control');
-        // if( this.controls == 'About Us'){
-        //   // this.viewData = response['result'][0].aboutUs
-        //   //   console.log('About Us',this.viewData)
-        //    }
         this.controls = localStorage.getItem('control-edit');
         this.service.getApi("static/getStaticContent", 1).subscribe(function (response) {
-            console.log('res');
             if (response['response_code'] == 200) {
-                console.log(' STATIC CONTENTS', response);
                 if (_this.controls == 'About Us') {
                     _this.viewData = response['result'][0].aboutUs;
-                    console.log('About Us', _this.viewData);
                 }
                 else if (_this.controls == 'Terms And Conditions') {
                     _this.viewData = response['result'][0].termsAndConditions;
-                    console.log('Terms And Conditions', _this.viewData);
                 }
                 else if (_this.controls == 'Privacy Policy') {
                     _this.viewData = response['result'][0].privacyPolicy;
-                    console.log('Privacy Policy', _this.viewData);
                 }
                 _this.editForm.patchValue({
                     data: _this.viewData
                 });
-                // this.viewData = response['result'][0].
             }
             else {
                 _this.service.toastErr(response['response_message']);
             }
         }, function (error) {
-            console.log('error =>', error);
             _this.service.toastErr('Something Went Wrong');
         });
     };
@@ -635,10 +604,7 @@ var ContentManagementEditComponent = /** @class */ (function () {
             };
         }
         this.service.postApi('static/updateStatic', postData, 1).subscribe(function (response) {
-            console.log("**********************");
             if (response['response_code'] == 200) {
-                console.log("Save content data - " + response);
-                //this.service.showSuccess(response['response_message'])  
                 _this.route.navigate(['/content-management']);
             }
             else {
@@ -681,7 +647,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"mainbox main-modify\">\n  <app-side-menu></app-side-menu>\n<div class=\"right-section\">\n  <div class=\"copyrights\">Copyright © 2018 App name All Rights Reserved.</div>\n  <div class=\"right-inner\">\n            <div class=\"filter-block\" style=\"font-family: -webkit-body;\">\n              <fieldset class=\"global-fieldset\">\n                 <legend>{{controls}}</legend>\n                  <div class=\"filter-content\">\n                      \n                       <div class=\"common-detail-box\">\n                         <!-- <p [innerHtml]=\"viewData\"></p> -->\n                         <div [innerHtml]=\"viewData\"></div>\n                        \n                       \n                          <div class=\"table-button text-center mt30\">\n                             <!-- <button (click)=\"editUser()\" class=\"btn btn-red\">Edit </button> -->\n                             <button  class=\"btn btn-danger\" [routerLink]='([\"/content-management\"])' >Back</button>\n                          </div>\n                       </div>\n\n                  </div>\n              </fieldset>\n            </div>        \n        </div>  \n      </div>\n</div>\n\n\n\n\n\n"
+module.exports = "<div class=\"mainbox main-modify\">\n  <app-side-menu></app-side-menu>\n<div class=\"right-section\">\n  <div class=\"copyrights\">Copyright © 2018 App name All Rights Reserved.</div>\n  <div class=\"right-inner\">\n            <div class=\"filter-block\" style=\"font-family: -webkit-body;\">\n              <fieldset class=\"global-fieldset\">\n                 <legend>{{controls}}</legend>\n                  <div class=\"filter-content\">\n                      \n                       <div class=\"common-detail-box\">\n                         <div [innerHtml]=\"viewData\"></div>                                     \n                          <div class=\"table-button text-center mt30\">\n                             <button  class=\"btn btn-danger\" [routerLink]='([\"/content-management\"])' >Back</button>\n                          </div>\n                       </div>\n\n                  </div>\n              </fieldset>\n            </div>        \n        </div>  \n      </div>\n</div>\n\n\n\n\n\n"
 
 /***/ }),
 
@@ -719,29 +685,22 @@ var ContentManagementViewComponent = /** @class */ (function () {
         var _this = this;
         this.controls = localStorage.getItem('control');
         this.service.getApi("static/getStaticContent", 1).subscribe(function (response) {
-            console.log('res');
             if (response['response_code'] == 200) {
-                console.log(' STATIC CONTENTS', response);
                 if (_this.controls == 'About Us') {
                     _this.viewData = response['result'][0].aboutUs;
-                    console.log('About Us', _this.viewData);
                 }
                 else if (_this.controls == 'Terms And Conditions') {
                     _this.viewData = response['result'][0].termsAndConditions;
-                    console.log('Terms And Conditions', _this.viewData);
                 }
                 else if (_this.controls == 'Privacy Policy') {
                     _this.viewData = response['result'][0].privacyPolicy;
-                    console.log('Privacy Policy', _this.viewData);
                 }
                 _this.viewData = _this.sanitizer.bypassSecurityTrustHtml(_this.viewData);
-                // this.viewData = response['result'][0].
             }
             else {
                 _this.service.toastErr(response['response_message']);
             }
         }, function (error) {
-            console.log('error =>', error);
             _this.service.toastErr('Something Went Wrong');
         });
     };
@@ -778,7 +737,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"mainbox main-modify\">\n  <app-side-menu></app-side-menu>\n  <div class=\"right-section\">\n    <div class=\"copyrights\">Copyright © 2018 Aqua Ludus All Rights Reserved.</div>\n    <div class=\"right-inner\">\n\n      <h1 class=\"heading\">STATIC CONTENT MANAGEMENT</h1>\n\n      <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n      <!-- <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> -->\n      <link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css\">\n      <br>\n      <form style=\"margin-left: 25%; margin-right: 25%\">\n          <div class=\"table-responsive\"> \n        <table ng-controller=\"employeeDataCtrl\" border=\"1\" class=\"table table-bordered\">\n\n          <thead>\n            <tr>\n              <th>S.No</th>\n              <th>Page Name</th>\n              <th>Action</th>\n            </tr>\n          </thead>\n          <tbody>\n            <tr>\n              <td>01</td>\n              <td>About Us</td>\n              <td>\n                <!-- <i class=\"fa fa-eye\" style=\"font-size:36px\" class=\"fa\" (click)='view(\"About Us\")' >&#xf06e;</i> -->\n                <a class=\"btn btn-sm btn-success\" (click)='view(\"About Us\")'>\n                  <i class=\"fa fa-eye\"></i> View</a>&nbsp; &nbsp;\n              <a class=\"btn btn-sm btn-primary\" (click)=\"edit('About Us')\">\n                  <i class=\"fa fa-edit\"></i> Edit</a>\n              </td>\n            </tr>\n            <tr>\n              <td>02</td>\n              <td>Terms And Conditions</td>\n              <td>\n                <!-- <i class=\"fa fa-eye\" style=\"font-size:36px\" class=\"fa\" (click)='view(\"Terms And Conditions\")'>&#xf06e;</i> -->\n                <a class=\"btn btn-sm btn-success\" (click)='view(\"Terms And Conditions\")'>\n                  <i class=\"fa fa-eye\"></i> View</a>&nbsp; &nbsp;\n              <a class=\"btn btn-sm btn-primary\" (click)=\"edit('Terms And Conditions')\">\n                  <i class=\"fa fa-edit\"></i> Edit</a>\n              </td>\n            </tr>\n            <tr>\n              <td>03</td>\n              <td>Privacy Policy</td>\n              <td>\n                <!-- <i class=\"fa fa-eye\" style=\"font-size:36px\" class=\"fa\" (click)='view(\"Privacy Policy\")'>&#xf06e;</i> -->\n                <a class=\"btn btn-sm btn-success\" (click)='view(\"Privacy Policy\")'>\n                  <i class=\"fa fa-eye\"></i> View</a>&nbsp; &nbsp;\n              <a class=\"btn btn-sm btn-primary\" (click)=\"edit('Privacy Policy')\">\n                  <i class=\"fa fa-edit\"></i> Edit</a>\n              </td>\n            </tr>\n          </tbody>\n        </table>\n       </div>\n\n\n\n      </form>\n    </div>\n  </div>\n</div>"
+module.exports = "<div class=\"mainbox main-modify\">\n  <app-side-menu></app-side-menu>\n  <div class=\"right-section\">\n    <div class=\"copyrights\">Copyright © 2018 Aqua Ludus All Rights Reserved.</div>\n    <div class=\"right-inner\">\n\n      <h1 class=\"heading\">STATIC CONTENT MANAGEMENT</h1>\n\n      <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n      <link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css\">\n      <br>\n      <form style=\"margin-left: 25%; margin-right: 25%\">\n          <div class=\"table-responsive\"> \n        <table ng-controller=\"employeeDataCtrl\" border=\"1\" class=\"table table-bordered\">\n\n          <thead>\n            <tr>\n              <th>S.No</th>\n              <th>Page Name</th>\n              <th>Action</th>\n            </tr>\n          </thead>\n          <tbody>\n            <tr>\n              <td>01</td>\n              <td>About Us</td>\n              <td>\n                <a class=\"btn btn-sm btn-success\" (click)='view(\"About Us\")'>\n                  <i class=\"fa fa-eye\"></i> View</a>&nbsp; &nbsp;\n              <a class=\"btn btn-sm btn-primary\" (click)=\"edit('About Us')\">\n                  <i class=\"fa fa-edit\"></i> Edit</a>\n              </td>\n            </tr>\n            <tr>\n              <td>02</td>\n              <td>Terms And Conditions</td>\n              <td>\n                <a class=\"btn btn-sm btn-success\" (click)='view(\"Terms And Conditions\")'>\n                  <i class=\"fa fa-eye\"></i> View</a>&nbsp; &nbsp;\n              <a class=\"btn btn-sm btn-primary\" (click)=\"edit('Terms And Conditions')\">\n                  <i class=\"fa fa-edit\"></i> Edit</a>\n              </td>\n            </tr>\n            <tr>\n              <td>03</td>\n              <td>Privacy Policy</td>\n              <td>\n                <a class=\"btn btn-sm btn-success\" (click)='view(\"Privacy Policy\")'>\n                  <i class=\"fa fa-eye\"></i> View</a>&nbsp; &nbsp;\n              <a class=\"btn btn-sm btn-primary\" (click)=\"edit('Privacy Policy')\">\n                  <i class=\"fa fa-edit\"></i> Edit</a>\n              </td>\n            </tr>\n          </tbody>\n        </table>\n       </div>\n\n\n\n      </form>\n    </div>\n  </div>\n</div>"
 
 /***/ }),
 
@@ -852,7 +811,7 @@ module.exports = "/* \n$height : 40px;\n$width: 70px;\n.switch {\n  position: re
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"mainbox main-modify\">\n    <app-side-menu></app-side-menu>\n    <div class=\"right-section\">\n        <div class=\"copyrights\">Copyright © 2018 Aqua Ludus All Rights Reserved.</div>\n        <div class=\"right-inner\">\n\n            <h1 class=\"heading\">USER MANAGEMENT</h1>\n            <div class=\"filter-block\">\n                <fieldset class=\"global-fieldset\">\n                    <legend>User Board</legend>\n                    <div class=\"filter-content\">\n                        <div class=\"row\">\n                            <div class=\"col-sm-6\">\n                                <form [formGroup]=\"dashboardForm\" > \n                                    <div class=\"form-group\">\n                                        <div class=\"pull-left\">\n                                            <div class=\"col-sm-6\">\n                                                <div class=\"form-group d-inline-block\">\n                                                    <div class=\"show-entries mb0\">\n                                                        <select class=\"form-control\"  (change)='filter()' formControlName=\"sort\">\n                                                            <option value=''>STATUS</option>\n                                                            <option value='ACTIVE'>ACTIVE</option>\n                                                            <option value='BLOCK'>BLOCK</option>\n                                                        </select>\n                                                    </div>\n                                                </div>\n                                            </div>\n                                        </div>\n                                        <div class=\"search-icon pull-right\" align=\"right\">\n                                            <input type=\"text\" (keyup)=\"filter()\" class=\"form-control max-wt-300 search-input\" placeholder=\"Search by name/email\" formControlName=\"search\">\n                                            <i class=\"fa fa-search\" aria-hidden=\"true\"></i>\n                                        </div>\n                                    </div>\n                                </form>\n                            </div>\n                            <div class=\"col-sm-6\">\n                                <!-- <div class=\"btn-right\">\n                              <a class=\"btn btn-red btn-common\" href=\"add-user.html\">Add</a>\n                           </div> -->\n                            </div>\n                        </div>\n\n                        <div class=\"box box-blue\">\n                            <div class=\"box-body\">\n                                <div class=\"custom-table table-responsive\">\n                                    <table class=\"table table-striped table-border\">\n                                        <thead>\n                                            <tr>\n                                                <th>SNo.</th>\n                                                <th>Name</th>\n                                                <th>Email</th>\n                                                <th>MobileNo.</th>\n                                                <th>Address</th>\n                                                <th>Action</th>\n                                                <th>&nbsp;&nbsp;&nbsp;&nbsp;Activate</th>\n                                            </tr>\n                                        </thead>\n                                        <tbody>\n<!-- \n<tr *ngFor=\"let item of customer | paginate: { itemsPerPage: 10, currentPage: p}; let i=index\"> -->\n        <tr *ngFor=\"let item of modified | paginate: { itemsPerPage: 10, currentPage: pageNo, totalItems: paginationData.total };index as i\">\n                                                <td>{{(i+1)+srNo}}</td>\n                                                <td>{{item.name}}</td>\n                                                <td>{{item.email}}</td>\n                                                <td>{{item.mobile_no}}</td>\n                                                <td>{{item.address}}</td>\n                                                <td>\n                                                    <div class=\"action-btn\">\n                                                        <a class=\"btn btn-sm btn-success\" (click)=\"view(i)\">\n                                                            <i class=\"fa fa-eye\"></i> View</a>\n                                                        <a class=\"btn btn-sm btn-primary\" (click)=\"edit(i)\">\n                                                            <i class=\"fa fa-edit\"></i> Edit</a>\n                                                        <a class=\"btn btn-sm btn-danger\" (click)=\"userdel(i)\">\n                                                            <i class=\"fa fa-trash\"></i> Delete</a>\n                                                    </div>\n                                                </td>\n                                                <td>\n                                                    <label class=\"switch\">\n                                                        <input type=\"checkbox\" name=\"active\" (click)=\"userStatus(item)\" value='item.status' [(ngModel)]=\"item.status\">\n                                                        <span class=\"slider round\"></span>\n                                                    </label>\n                                                </td>\n                                            </tr>\n                                            <tr *ngIf=\"modified.length==0\">\n                                                <span>No record found</span>\n                                            </tr>\n                                        </tbody>\n                                    </table>\n                                </div>\n\n                            </div>\n                        </div>\n                    </div>\n                </fieldset>\n            </div>\n\n\n            <ul class=\"pagination\">\n                    <li *ngIf=\"paginationData.total > paginationData.limit\"></li>\n                    </ul>\n                    <pagination-controls (pageChange)=\"changePage($event)\"></pagination-controls>\n       \n\n\n        </div>\n    </div>\n</div>\n\n<!-- Modal-blocked -->\n<div id=\"delete\" class=\"modal fade\" data-easein=\"bounceIn\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"costumModalLabel\"\n    aria-hidden=\"true\">\n    <div class=\"modal-dialog\">\n        <div class=\"modal-content common-detail-modal\">\n            <div class=\"modal-header\">\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">\n                    ×\n                </button>\n            </div>\n            <div class=\"modal-body\">\n                <p class=\"modal-inner-text\">\n                    Are you sure you want to delete user ?\n                </p>\n\n                <div class=\"button-box mt20\">\n                    <a class=\"btn btn-red mr10\" (click)=\"delete(i)\">Yes</a>\n                    <a class=\"btn btn-danger\" data-dismiss=\"modal\">No</a>\n                </div>\n            </div>\n            <div class=\"modal-footer\">\n\n            </div>\n        </div>\n    </div>\n</div>"
+module.exports = "<div class=\"mainbox main-modify\">\n    <app-side-menu></app-side-menu>\n    <div class=\"right-section\">\n        <div class=\"copyrights\">Copyright © 2018 Aqua Ludus All Rights Reserved.</div>\n        <div class=\"right-inner\">\n\n            <h1 class=\"heading\">USER MANAGEMENT</h1>\n            <div class=\"filter-block\">\n                <fieldset class=\"global-fieldset\">\n                    <legend>User Board</legend>\n                    <div class=\"filter-content\">\n                        <div class=\"row\">\n                            <div class=\"col-sm-6\">\n                                <form [formGroup]=\"dashboardForm\" > \n                                    <div class=\"form-group\">\n                                        <div class=\"pull-left\">\n                                            <div class=\"col-sm-6\">\n                                                <div class=\"form-group d-inline-block\">\n                                                    <div class=\"show-entries mb0\">\n                                                        <select class=\"form-control\"  (change)='filter()' formControlName=\"sort\">\n                                                            <option value=''>STATUS</option>\n                                                            <option value='ACTIVE'>ACTIVE</option>\n                                                            <option value='BLOCK'>BLOCK</option>\n                                                        </select>\n                                                    </div>\n                                                </div>\n                                            </div>\n                                        </div>\n                                        <div class=\"search-icon pull-right\" align=\"right\">\n                                            <input type=\"text\" (keyup)=\"filter()\" class=\"form-control max-wt-300 search-input\" placeholder=\"Search by name/email\" formControlName=\"search\">\n                                            <i class=\"fa fa-search\" aria-hidden=\"true\"></i>\n                                        </div>\n                                    </div>\n                                </form>\n                            </div>\n                            <div class=\"col-sm-6\">\n                            </div>\n                        </div>\n\n                        <div class=\"box box-blue\">\n                            <div class=\"box-body\">\n                                <div class=\"custom-table table-responsive\">\n                                    <table class=\"table table-striped table-border\">\n                                        <thead>\n                                            <tr>\n                                                <th>SNo.</th>\n                                                <th>Name</th>\n                                                <th>Email</th>\n                                                <th>MobileNo.</th>\n                                                <th>Address</th>\n                                                <th>Action</th>\n                                                <th>&nbsp;&nbsp;&nbsp;&nbsp;Activate</th>\n                                            </tr>\n                                        </thead>\n                                        <tbody>\n\n        <tr *ngFor=\"let item of modified | paginate: { itemsPerPage: 10, currentPage: pageNo, totalItems: paginationData.total };index as i\">\n                                                <td>{{(i+1)+srNo}}</td>\n                                                <td>{{item.name}}</td>\n                                                <td>{{item.email}}</td>\n                                                <td>{{item.mobile_no}}</td>\n                                                <td>{{item.address}}</td>\n                                                <td>\n                                                    <div class=\"action-btn\">\n                                                        <a class=\"btn btn-sm btn-success\" (click)=\"view(i)\">\n                                                            <i class=\"fa fa-eye\"></i> View</a>\n                                                        <a class=\"btn btn-sm btn-primary\" (click)=\"edit(i)\">\n                                                            <i class=\"fa fa-edit\"></i> Edit</a>\n                                                        <a class=\"btn btn-sm btn-danger\" (click)=\"userdel(i)\">\n                                                            <i class=\"fa fa-trash\"></i> Delete</a>\n                                                    </div>\n                                                </td>\n                                                <td>\n                                                    <label class=\"switch\">\n                                                        <input type=\"checkbox\" name=\"active\" (click)=\"userStatus(item)\" value='item.status' [(ngModel)]=\"item.status\">\n                                                        <span class=\"slider round\"></span>\n                                                    </label>\n                                                </td>\n                                            </tr>\n                                            <tr *ngIf=\"modified.length==0\">\n                                                <span>No record found</span>\n                                            </tr>\n                                        </tbody>\n                                    </table>\n                                </div>\n\n                            </div>\n                        </div>\n                    </div>\n                </fieldset>\n            </div>\n\n\n                    <div *ngIf=\"paginationData.total >\n                         paginationData.limit\">\n                    <pagination-controls (pageChange)=\"changePage($event)\"></pagination-controls>\n       \n                    </div>\n\n        </div>\n    </div>\n</div>\n\n<div id=\"delete\" class=\"modal fade\" data-easein=\"bounceIn\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"costumModalLabel\"\n    aria-hidden=\"true\">\n    <div class=\"modal-dialog\">\n        <div class=\"modal-content common-detail-modal\">\n            <div class=\"modal-header\">\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">\n                    ×\n                </button>\n            </div>\n            <div class=\"modal-body\">\n                <p class=\"modal-inner-text\">\n                    Are you sure you want to delete user ?\n                </p>\n\n                <div class=\"button-box mt20\">\n                    <a class=\"btn btn-red mr10\" (click)=\"delete(i)\">Yes</a>\n                    <a class=\"btn btn-danger\" data-dismiss=\"modal\">No</a>\n                </div>\n            </div>\n            <div class=\"modal-footer\">\n\n            </div>\n        </div>\n    </div>\n</div>"
 
 /***/ }),
 
@@ -894,7 +853,6 @@ var DashboardComponent = /** @class */ (function () {
         this.id = '';
         this.paginationData = {};
         this.obj = {};
-        //i : any= '';+
         this.modified = [];
         this.dashboardForm = this.fb.group({
             'search': [''],
@@ -903,91 +861,44 @@ var DashboardComponent = /** @class */ (function () {
         });
         for (var i = 1; i <= 10; i++) {
             this.collection.push("item " + i);
-            // console.log(`pagination i ${i}`)
         }
-        // console.log(this.customer)
     }
     DashboardComponent.prototype.ngOnInit = function () {
-        console.log("in dashboard");
-        // this.getAllCustomer();
         this.search();
     };
-    // //****************************GET ALL CUSTOMERS *************************************** */
-    // getAllCustomer() {
-    //   this.service.getApi(`admin/getAllCustomer/${this.pageNo}`,1).subscribe(response => {
-    //     // console.log('res')
-    //     if (response['response_code'] == 200) {
-    //       console.log(' Customer data found successfully', response)
-    //       this.customer = response[`result`]
-    //       this.modified = this.customer
-    //       for (let i = 0; i < this.customer.length; i++) {
-    //         if (this.customer[i].status == 'ACTIVE') {
-    //           this.modified[i].status = true
-    //         }
-    //         else if (this.customer[i].status == 'BLOCK') {
-    //           this.modified[i].status = false
-    //         }
-    //       }
-    //       // console.log('result of all customer--->', JSON.stringify(this.customer))
-    //       this.paginationData = response['paginationData']
-    //       this.srNo = (this.pageNo - 1) * this.paginationData.limit
-    //       // this.service.showSuccess(response['response_message'])
-    //     }
-    //     else {
-    //       this.service.toastErr(response['response_message'])
-    //     }
-    //   }, error => {
-    //     console.log('error =>', error)
-    //     this.service.toastErr('Something Went Wrong')
-    //   })
-    // }
     DashboardComponent.prototype.view = function (l) {
-        console.log('id of customer--->', JSON.stringify(this.customer[l]._id));
         localStorage.setItem('_id of customer', this.customer[l]._id);
-        // localStorage.setItem('status of customer', this.customer[l].status);
         this.router.navigate(['/userDetails']);
     };
     DashboardComponent.prototype.userStatus = function (item) {
         var _this = this;
-        // localStorage.setItem('_id of customer',item._id);
         this.status = item.status;
         if (this.status == "ACTIVE" || "BLOCK") {
             var delData = { '_id': item._id };
-            console.log("@@@@@@>>", delData);
             this.service.postApi("admin/blockUser", delData, 1).subscribe(function (response) {
-                console.log('status res');
                 if (response['response_code'] == 200) {
-                    //this.obj.active = 'BLOCK';
-                    console.log(' Customer data status is >>>>>>+', response);
-                    // localStorage.removeItem('_id of customer')
                 }
                 else {
                     _this.service.toastErr(response['response_message']);
                 }
             }, function (error) {
-                console.log('error =>', error);
                 _this.service.toastErr('Something Went Wrong');
             });
         }
     };
     DashboardComponent.prototype.edit = function (l) {
-        console.log('id of customer--->', JSON.stringify(this.customer[l]._id));
         localStorage.setItem('_id of customer', this.customer[l]._id);
         this.router.navigate(['./editUserDetail']);
     };
     DashboardComponent.prototype.userdel = function (l) {
-        console.log('id of customer--->', JSON.stringify(this.customer[l]._id));
         localStorage.setItem('_id of customer', this.customer[l]._id);
         $('#delete').modal('show');
     };
     DashboardComponent.prototype.delete = function (l) {
-        // console.log('id of customer--->',JSON.stringify(this.customer[l]._id))
         var _this = this;
         var delData = { '_id': localStorage.getItem('_id of customer') };
         this.service.postApi("admin/deleteUser", delData, 1).subscribe(function (response) {
-            console.log('delete res');
             if (response['response_code'] == 200) {
-                console.log(' Customer data delete successfully', response);
                 localStorage.removeItem('_id of customer');
                 _this.search();
             }
@@ -995,17 +906,11 @@ var DashboardComponent = /** @class */ (function () {
                 _this.service.toastErr(response['response_message']);
             }
         }, function (error) {
-            console.log('error =>', error);
             _this.service.toastErr('Something Went Wrong');
         });
         $('#delete').modal('hide');
     };
     DashboardComponent.prototype.search = function () {
-        // pageNumber=1
-        // if(e.target.value == 'activation'){
-        //   this.getAllCustomer()
-        // }
-        // else{
         var _this = this;
         var postData = {
             search: this.dashboardForm.controls['search'].value,
@@ -1013,16 +918,13 @@ var DashboardComponent = /** @class */ (function () {
             userType: "CUSTOMER",
             pageNumber: this.pageNo
         };
-        // console.log("postData===>",postData)
         for (var val in postData) {
             if (postData[val] == '') {
                 delete postData[val];
             }
         }
         this.service.postApi("user/searchCustomerFilter", postData, 1).subscribe(function (response) {
-            // console.log("0000000000 search", postData)
             if (response['response_code'] == 200) {
-                // console.log('success', response['result'])
                 _this.customer = response['result'];
                 _this.modified = _this.customer;
                 for (var i = 0; i < _this.customer.length; i++) {
@@ -1033,27 +935,22 @@ var DashboardComponent = /** @class */ (function () {
                         _this.modified[i].status = false;
                     }
                 }
-                // console.log('result of all customer filter API--->', JSON.stringify(this.customer))
                 _this.paginationData = response['paginationData'];
                 _this.srNo = (_this.pageNo - 1) * _this.paginationData.limit;
             }
             else {
+                _this.paginationData = { total: 0, limit: 10 };
                 _this.modified = [];
-                console.log('Failure', response['responseMessage']);
             }
         }, function (error) {
-            console.log('something went wrong');
         });
-        // }
     };
     DashboardComponent.prototype.filter = function () {
         this.pageNo = 1;
         this.search();
     };
     DashboardComponent.prototype.changePage = function (page) {
-        console.log('page no--->', page);
         this.pageNo = page;
-        // this.getAllCustomer()
         this.search();
     };
     DashboardComponent = __decorate([
@@ -1089,7 +986,7 @@ module.exports = ".mt30{\n    margin-right: 85px;\n}\n"
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n\n<div class=\"mainbox main-modify\">\n    <app-side-menu></app-side-menu>\n    <div class=\"right-section\">\n      <div class=\"copyrights\">Copyright © 2018 Aqua Ludus All Rights Reserved.</div>\n      <div class=\"right-inner\">\n                <div class=\"filter-block\">\n                  <fieldset class=\"global-fieldset\">\n                     <legend>Edit Business</legend>\n                      <div class=\"filter-content\">\n                          <form class=\"login_box_outer\" [formGroup]=\"editForm\">\n                           <div class=\"common-detail-box\">\n                            <div style=\"margin-left: 45%;margin-right: 25%; font-size:20%;\"><img [src]=\"imageUrl\" style=\"width: 200px;\" ></div>                            \n                            <br><br> \n                               <div class=\"textmanagment\">\n                              <div class=\"form-group row\">\n                                 <label class=\"col-sm-4 label-right label-top\">Name :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>\n                                 <div class=\"col-sm-8 label-left label-top\">  \n                                   <input type=\"text\" name=\"fname\" id=\"fname\" placeholder= \"Name\" class=\"form-control \" formControlName='name' maxlength=\"30\">\n                                    <!-- <input type=\"text\" value= class=\"form-control custom-input custom-control\" readonly > -->\n                                    <div class=\"errMsg\" *ngIf=\"editForm.get('name').dirty && editForm.get('name').invalid\"> \n                                        <span style='color:red' [ngClass]=\"{error:editForm.get('name').hasError('required')}\" *ngIf=\"editForm.get('name').hasError('required')\">*Please enter name.</span>\n                                        <span style='color:red' [ngClass]=\"{error:editForm.get('name').hasError('pattern')}\" *ngIf=\"editForm.get('name').hasError('pattern')\">*Please enter valid name.</span>\n                                    </div>\n                                 </div>\n                              </div>\n\n                              <div class=\"form-group row\">\n                                  <label class=\"col-sm-4 label-right label-top\">Business Name :</label>\n                                  <div class=\"col-sm-8 label-left label-top\">  \n                                    <input type=\"text\" name=\"name\" id=\"name\" placeholder= \"Business Name\" class=\"form-control \" formControlName='bname' maxlength=\"30\">\n                                     <!-- <input type=\"text\" value= class=\"form-control custom-input custom-control\" readonly > -->\n                                     <div class=\"errMsg\" *ngIf=\"editForm.get('bname').dirty && editForm.get('bname').invalid\"> \n                                        <span style='color:red' [ngClass]=\"{error:editForm.get('bname').hasError('required')}\" *ngIf=\"editForm.get('bname').hasError('required')\">*Please enter business name.</span>\n                                        <span style='color:red' [ngClass]=\"{error:editForm.get('bname').hasError('pattern')}\" *ngIf=\"editForm.get('bname').hasError('pattern')\">*Please enter valid business name.</span>\n                                    </div>\n                                  </div>\n                               </div>\n\n                              <div class=\"form-group row\">\n                                 <label class=\"col-sm-4 label-right label-top\">Email :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>\n                                 <div class=\"col-sm-8 label-left label-top\">\n                                    {{business?.email}}\n                                 </div>\n                              </div>\n                              \n                              <div class=\"form-group row\">\n                                <label class=\"col-sm-4 label-right label-top\">Gender :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>\n                                <div class=\"col-sm-8 label-left label-top\"> \n                                   <!-- <input type=\"text\" name=\"gender\" id=\"gender\" placeholder= \"gender\" class=\"form-control \" formControlName='gender' > -->\n                                   <select  placeholder= \"gender\" class=\"form-control \" formControlName='gender'>\n                                       <option value=\"\">Select Gender</option>\n                                       <option  value=\"Male\" >Male</option>\n                                       <option  value=\"Female\" >Female</option>\n                                   </select>\n                                   <div class=\"errMsg\" *ngIf=\"editForm.get('gender').dirty && editForm.get('gender').invalid\"> \n                                    <!-- <span style='color:red' [ngClass]=\"{error:editForm.get('gender').hasError('required')}\" *ngIf=\"editForm.get('gender').hasError('required')\">*Please select gender.</span> -->\n                                </div>\n                                 \n                                </div>\n                             </div>\n                             <!-- <div><span></span><my-date-picker  placeholder= \"Date of birth\" name=\"mydate\" id=\"DOB\"  [options]=\"myDatePickerOptions\" formControlName='DOB' ></my-date-picker></span></div> -->\n                              <div class=\"form-group row\">\n                                 <label class=\"col-sm-4 label-right label-top\">Date of birth:&nbsp;&nbsp;&nbsp;&nbsp;</label>\n                                <div class=\"col-sm-8 label-left label-top\">  \n                                    <my-date-picker  placeholder= \"Date of birth ( YYYY - MM- DD )\" name=\"mydate\" id=\"DOB\"  [options]=\"myDatePickerOptions\"    formControlName='DOB' ></my-date-picker>\n                                  <div class=\"errMsg\" *ngIf=\"editForm.get('DOB').dirty && editForm.get('DOB').invalid\"> \n                                    <!-- <span style='color:red' [ngClass]=\"{error:editForm.get('DOB').hasError('pattern')}\" *ngIf=\"editForm.get('DOB').hasError('pattern')\">*Please match the format required. </span> -->\n                                </div>\n                                 \n\n\n                                \n                                </div>\n                             </div>\n                             </div>\n                              <div class=\"table-button text-center mt30\">\n\n                                    <button  class=\"btn btn-red\" (click)='save()'  [disabled]='editForm.invalid' >Save </button>\n                                    <button  class=\"btn btn-danger\" (click)='cancel()' >Cancel</button>\n\n                                \n                              </div>\n                           </div>\n                           </form>\n  \n                      </div>\n                  </fieldset>\n                </div>        \n            </div>  \n          </div>\n       </div>\n  \n  \n  <!-- Modal-blocked -->\n  <div id=\"costumModal10\" class=\"modal fade\" data-easein=\"bounceIn\"  tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"costumModalLabel\" aria-hidden=\"true\">\n            <div class=\"modal-dialog\">\n                <div class=\"modal-content common-detail-modal\">\n                    <div class=\"modal-header\">\n                        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">\n                            ×\n                        </button>\n                    </div>\n                    <div class=\"modal-body\">\n                        <p class=\"modal-inner-text\">\n                           Are you sure you want to delete this token ?\n                        </p>\n  \n                        <div class=\"button-box mt20\">\n                           <a class=\"btn btn-success mr10\" (click)=\"logout()\" data-dismiss=\"modal\">yes</a>\n                           <a class=\"btn btn-danger\" href=\"\">No</a>\n                        </div>\n                    </div>\n                    <div class=\"modal-footer\">\n                        \n                    </div>\n                </div>\n            </div>\n        </div>\n  "
+module.exports = "\n\n<div class=\"mainbox main-modify\">\n    <app-side-menu></app-side-menu>\n    <div class=\"right-section\">\n      <div class=\"copyrights\">Copyright © 2018 Aqua Ludus All Rights Reserved.</div>\n      <div class=\"right-inner\">\n                <div class=\"filter-block\">\n                  <fieldset class=\"global-fieldset\">\n                     <legend>Edit Business</legend>\n                      <div class=\"filter-content\">\n                          <form class=\"login_box_outer\" [formGroup]=\"editForm\">\n                           <div class=\"common-detail-box\">\n                            <div style=\"margin-left: 45%;margin-right: 25%; font-size:20%;\"><img [src]=\"imageUrl\" style=\"width: 200px;\" ></div>                            \n                            <br><br> \n                               <div class=\"textmanagment\">\n                              <div class=\"form-group row\">\n                                 <label class=\"col-sm-4 label-right label-top\">Name :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>\n                                 <div class=\"col-sm-8 label-left label-top\">  \n                                   <input type=\"text\" name=\"fname\" id=\"fname\" placeholder= \"Name\" class=\"form-control \" formControlName='name' maxlength=\"30\">\n                                    <div class=\"errMsg\" *ngIf=\"editForm.get('name').dirty && editForm.get('name').invalid\"> \n                                        <span style='color:red' [ngClass]=\"{error:editForm.get('name').hasError('required')}\" *ngIf=\"editForm.get('name').hasError('required')\">*Please enter name.</span>\n                                        <span style='color:red' [ngClass]=\"{error:editForm.get('name').hasError('pattern')}\" *ngIf=\"editForm.get('name').hasError('pattern')\">*Please enter valid name.</span>\n                                    </div>\n                                 </div>\n                              </div>\n\n                              <div class=\"form-group row\">\n                                  <label class=\"col-sm-4 label-right label-top\">Business Name :</label>\n                                  <div class=\"col-sm-8 label-left label-top\">  \n                                    <input type=\"text\" name=\"name\" id=\"name\" placeholder= \"Business Name\" class=\"form-control \" formControlName='bname' maxlength=\"30\">\n                                     <div class=\"errMsg\" *ngIf=\"editForm.get('bname').dirty && editForm.get('bname').invalid\"> \n                                        <span style='color:red' [ngClass]=\"{error:editForm.get('bname').hasError('required')}\" *ngIf=\"editForm.get('bname').hasError('required')\">*Please enter business name.</span>\n                                        <span style='color:red' [ngClass]=\"{error:editForm.get('bname').hasError('pattern')}\" *ngIf=\"editForm.get('bname').hasError('pattern')\">*Please enter valid business name.</span>\n                                    </div>\n                                  </div>\n                               </div>\n\n                              <div class=\"form-group row\">\n                                 <label class=\"col-sm-4 label-right label-top\">Email :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>\n                                 <div class=\"col-sm-8 label-left label-top\">\n                                    {{business?.email}}\n                                 </div>\n                              </div>\n                              \n                              <div class=\"form-group row\">\n                                <label class=\"col-sm-4 label-right label-top\">Gender :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>\n                                <div class=\"col-sm-8 label-left label-top\"> \n                                   <select  placeholder= \"gender\" class=\"form-control \" formControlName='gender'>\n                                       <option value=\"\">Select Gender</option>\n                                       <option  value=\"Male\" >Male</option>\n                                       <option  value=\"Female\" >Female</option>\n                                   </select>\n                                   <div class=\"errMsg\" *ngIf=\"editForm.get('gender').dirty && editForm.get('gender').invalid\"> \n                                </div>\n                                 \n                                </div>\n                             </div>\n                              <div class=\"form-group row\">\n                                 <label class=\"col-sm-4 label-right label-top\">Date of birth:&nbsp;&nbsp;&nbsp;&nbsp;</label>\n                                <div class=\"col-sm-8 label-left label-top\">  \n                                    <my-date-picker  placeholder= \"Date of birth ( YYYY - MM- DD )\" name=\"mydate\" id=\"DOB\"  [options]=\"myDatePickerOptions\"    formControlName='DOB' ></my-date-picker>\n                                  <div class=\"errMsg\" *ngIf=\"editForm.get('DOB').dirty && editForm.get('DOB').invalid\"> \n                                </div>\n                                 \n\n\n                                \n                                </div>\n                             </div>\n                             </div>\n                              <div class=\"table-button text-center mt30\">\n\n                                    <button  class=\"btn btn-red\" (click)='save()'  [disabled]='editForm.invalid' >Save </button>\n                                    <button  class=\"btn btn-danger\" (click)='cancel()' >Cancel</button>\n\n                                \n                              </div>\n                           </div>\n                           </form>\n  \n                      </div>\n                  </fieldset>\n                </div>        \n            </div>  \n          </div>\n       </div>\n  \n  \n  <div id=\"costumModal10\" class=\"modal fade\" data-easein=\"bounceIn\"  tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"costumModalLabel\" aria-hidden=\"true\">\n            <div class=\"modal-dialog\">\n                <div class=\"modal-content common-detail-modal\">\n                    <div class=\"modal-header\">\n                        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">\n                            ×\n                        </button>\n                    </div>\n                    <div class=\"modal-body\">\n                        <p class=\"modal-inner-text\">\n                           Are you sure you want to delete this token ?\n                        </p>\n  \n                        <div class=\"button-box mt20\">\n                           <a class=\"btn btn-success mr10\" (click)=\"logout()\" data-dismiss=\"modal\">yes</a>\n                           <a class=\"btn btn-danger\" href=\"\">No</a>\n                        </div>\n                    </div>\n                    <div class=\"modal-footer\">\n                        \n                    </div>\n                </div>\n            </div>\n        </div>\n  "
 
 /***/ }),
 
@@ -1127,12 +1024,6 @@ var EditBusinessDetailComponent = /** @class */ (function () {
         this.formBuilder = formBuilder;
         this.Id = '';
         this.DOB = '';
-        // public myDatePickerOptions: IMyDpOptions = { 
-        //   dateFormat: 'yyyy-mm-dd', 
-        //   disableSince: {year: 0, month: 0, day: 0},
-        //   showTodayBtn:true,
-        //   yearSelector:true
-        //  };
         this.myDatePickerOptions = {
             dateFormat: 'yyyy-mm-dd',
             editableDateField: false,
@@ -1149,17 +1040,13 @@ var EditBusinessDetailComponent = /** @class */ (function () {
     }
     EditBusinessDetailComponent.prototype.ngOnInit = function () {
         this.Id = localStorage.getItem('_id of business');
-        console.log('id on nginit==>', this.Id);
         this.viewParticularbusiness();
-        // this.onDateChanged()
     };
     //==========================================================VIEW PARTICULAR business API ====================================================================
     EditBusinessDetailComponent.prototype.viewParticularbusiness = function () {
         var _this = this;
         this.service.getApi("admin/viewDetail/" + this.Id, 1).subscribe(function (response) {
-            console.log("!!!!!!!!!!!!!!!!******");
             if (response['response_code'] == 200) {
-                console.log("view particular user " + response);
                 _this.business = response["result"];
                 _this.editForm.patchValue({
                     name: _this.business.name || '',
@@ -1169,23 +1056,13 @@ var EditBusinessDetailComponent = /** @class */ (function () {
                 });
                 _this.business = response["result"];
                 if (response['result'].profilePic) {
-                    // console.log('image exist') 
                     _this.imageUrl = _this.business.profilePic;
                 }
                 else {
-                    //    console.log('image doesn"t exist') 
                     _this.imageUrl = 'assets/img/default_profile_image.png';
                 }
-                console.log("in particular view==>" + JSON.stringify(_this.business));
-                // this.service.showSuccess(response['response_message'])  
                 if (response['result'].dateOfBirth) {
-                    // this.dob = this.profileData.dateOfBirth.substring(0,10)
-                    console.log('DOB');
                     _this.DOB = _this.business.dateOfBirth.formatted;
-                    // this.dob = this.dob.substring(0,10)
-                    console.log('dob is ' + _this.DOB + ' and dateofbirth is' + response['result'].dateOfBirth);
-                    console.log("in particular view==>" + JSON.stringify(_this.business));
-                    // this.service.showSuccess(response['response_message'])  
                 }
                 else {
                     _this.DOB = "";
@@ -1200,7 +1077,6 @@ var EditBusinessDetailComponent = /** @class */ (function () {
     };
     EditBusinessDetailComponent.prototype.save = function () {
         var _this = this;
-        console.log('save clicked !!');
         var postData = {
             "_id": this.Id,
             "userType": "BUSINESS",
@@ -1209,12 +1085,9 @@ var EditBusinessDetailComponent = /** @class */ (function () {
             "gender": this.editForm.get('gender').value,
             "dateOfBirth": this.editForm.get('DOB').value
         };
-        console.log('posting this data -->>', postData);
         this.service.postApi('admin/edit/', postData, 1).subscribe(function (response) {
-            console.log("**********************");
             if (response['response_code'] == 200) {
                 console.log("view particular user " + response);
-                //  this.service.showSuccess(response['response_message'])  
                 _this.route.navigate(['/business-management']);
             }
             else {
@@ -1225,7 +1098,6 @@ var EditBusinessDetailComponent = /** @class */ (function () {
         });
     };
     EditBusinessDetailComponent.prototype.cancel = function () {
-        console.log('cancel clicked !!');
         this.route.navigate(['/business-management']);
     };
     EditBusinessDetailComponent.prototype.onDateChanged = function () {
@@ -1236,7 +1108,6 @@ var EditBusinessDetailComponent = /** @class */ (function () {
             day: d.getDate() };
         this.myDatePickerOptions = copy1;
     };
-    // Returns copy of myDatePickerOptions
     EditBusinessDetailComponent.prototype.getCopyOfOptions = function () {
         return JSON.parse(JSON.stringify(this.myDatePickerOptions));
     };
@@ -1273,7 +1144,7 @@ module.exports = "#append_wrapper>.row:first-child {display:none;}"
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n\n<div class=\"mainbox main-modify\">\n    <app-side-menu></app-side-menu>\n  <div class=\"right-section\">\n    <div class=\"copyrights\">Copyright © 2018 Aqua Ludus All Rights Reserved.</div>\n    <div class=\"right-inner\">\n              <div class=\"filter-block\">\n                <fieldset class=\"global-fieldset\">\n                   <legend>User board</legend>\n                    <div class=\"filter-content\">\n                        <form class=\"login_box_outer\" [formGroup]=\"editForm\">\n                         <div class=\"common-detail-box\">\n                      \n                            <div style=\"margin-left: 45%;margin-right: 25%; font-size:20%;\"><img [src]=\"imageUrl\" style=\"width: 250px\" /></div>                            \n                            <br>                         \n                            <div class=\"form-group row\">\n                               <label class=\"col-sm-4 label-right label-top\">Name :</label>\n                               <div class=\"col-sm-8 label-left label-top\">  \n                                 <input type=\"text\" name=\"fname\" id=\"fname\" placeholder= \"Name\" class=\"form-control \" formControlName='name' maxlength=\"30\">\n                                 <div class=\"errMsg\" *ngIf=\"editForm.get('name').dirty && editForm.get('name').invalid\"> \n                                    <span style='color:red' [ngClass]=\"{error:editForm.get('name').hasError('required')}\" *ngIf=\"editForm.get('name').hasError('required')\">*Please enter name.</span>\n                                    <span style='color:red' [ngClass]=\"{error:editForm.get('name').hasError('pattern')}\" *ngIf=\"editForm.get('name').hasError('pattern')\">*Please enter valid name.</span>\n                                </div>\n                             </div>\n                          </div>\n                            <div class=\"form-group row\">\n                               <label class=\"col-sm-4 label-right label-top\">Email :</label>\n                               <div class=\"col-sm-8 label-left label-top\">\n                                  {{customer?.email}}\n                               </div>\n                            </div>\n                            \n                            <div class=\"form-group row\">\n                              <label class=\"col-sm-4 label-right label-top\">Address :</label>\n                              <div class=\"col-sm-8 label-left label-top\"> \n                                 <input type=\"text\" name=\"address\" id=\"address\" placeholder= \"Address\" class=\"form-control \" formControlName='address' maxlength=\"100\">\n                                 <div class=\"errMsg\" *ngIf=\"editForm.get('address').dirty && editForm.get('address').invalid\"> \n                                        <span style='color:red' [ngClass]=\"{error:editForm.get('name').hasError('required')}\" *ngIf=\"editForm.get('name').hasError('required')\">*Address required*</span>\n\n                                    <span style='color:red' [ngClass]=\"{error:editForm.get('address').hasError('required')}\" *ngIf=\"editForm.get('address').hasError('required')\">*Please provide address.</span>\n                                </div>\n                             </div>\n                          </div>\n                            <div class=\"form-group row\">\n                               <label class=\"col-sm-4 label-right label-top\">Phone No:</label>\n                              <div class=\"col-sm-8 label-left label-top\">  \n                                <input type=\"text\" placeholder= \"Phone_no\" name=\"phone_no\" id=\"phone_no\"  class=\"form-control \" formControlName='phone'  maxlength=\"14\">\n                                <div class=\"errMsg\" *ngIf=\"editForm.get('phone').dirty && editForm.get('phone').invalid\"> \n                                        <span style='color:red' [ngClass]=\"{error:editForm.get('phone').hasError('pattern')}\" *ngIf=\"editForm.get('phone').hasError('pattern')\">*Please provide valid phone number.</span>\n                                    </div>\n                               \n                              </div>\n                           </div>\n                            <div class=\"table-button text-center mt30\">\n                               <button  class=\"btn btn-red\" (click)='save()' [disabled]='editForm.invalid'  >Save </button>\n                               <button  class=\"btn btn-danger\" (click)='cancel()' >Cancel</button>\n                            </div>\n                         </div>\n                         </form>\n\n                    </div>\n                </fieldset>\n              </div>        \n          </div>  \n        </div>\n     </div>\n\n\n<!-- Modal-blocked -->\n<div id=\"costumModal10\" class=\"modal fade\" data-easein=\"bounceIn\"  tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"costumModalLabel\" aria-hidden=\"true\">\n          <div class=\"modal-dialog\">\n              <div class=\"modal-content common-detail-modal\">\n                  <div class=\"modal-header\">\n                      <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">\n                          ×\n                      </button>\n                  </div>\n                  <div class=\"modal-body\">\n                      <p class=\"modal-inner-text\">\n                         Are you sure you want to delete this token ?\n                      </p>\n\n                      <div class=\"button-box mt20\">\n                         <a class=\"btn btn-success mr10\" (click)=\"logout()\" data-dismiss=\"modal\">yes</a>\n                         <a class=\"btn btn-danger\" href=\"\">No</a>\n                      </div>\n                  </div>\n                  <div class=\"modal-footer\">\n                      \n                  </div>\n              </div>\n          </div>\n      </div>\n"
+module.exports = "\n\n<div class=\"mainbox main-modify\">\n    <app-side-menu></app-side-menu>\n  <div class=\"right-section\">\n    <div class=\"copyrights\">Copyright © 2018 Aqua Ludus All Rights Reserved.</div>\n    <div class=\"right-inner\">\n              <div class=\"filter-block\">\n                <fieldset class=\"global-fieldset\">\n                   <legend>User board</legend>\n                    <div class=\"filter-content\">\n                        <form class=\"login_box_outer\" [formGroup]=\"editForm\">\n                         <div class=\"common-detail-box\">\n                      \n                            <div style=\"margin-left: 45%;margin-right: 25%; font-size:20%;\"><img [src]=\"imageUrl\" style=\"width: 250px\" /></div>                            \n                            <br>                         \n                            <div class=\"form-group row\">\n                               <label class=\"col-sm-4 label-right label-top\">Name :</label>\n                               <div class=\"col-sm-8 label-left label-top\">  \n                                 <input type=\"text\" name=\"fname\" id=\"fname\" placeholder= \"Name\" class=\"form-control \" formControlName='name' maxlength=\"30\">\n                                 <div class=\"errMsg\" *ngIf=\"editForm.get('name').dirty && editForm.get('name').invalid\"> \n                                    <span style='color:red' [ngClass]=\"{error:editForm.get('name').hasError('required')}\" *ngIf=\"editForm.get('name').hasError('required')\">*Please enter name.</span>\n                                    <span style='color:red' [ngClass]=\"{error:editForm.get('name').hasError('pattern')}\" *ngIf=\"editForm.get('name').hasError('pattern')\">*Please enter valid name.</span>\n                                </div>\n                             </div>\n                          </div>\n                            <div class=\"form-group row\">\n                               <label class=\"col-sm-4 label-right label-top\">Email :</label>\n                               <div class=\"col-sm-8 label-left label-top\">\n                                  {{customer?.email}}\n                               </div>\n                            </div>\n                            \n                            <div class=\"form-group row\">\n                              <label class=\"col-sm-4 label-right label-top\">Address :</label>\n                              <div class=\"col-sm-8 label-left label-top\"> \n                                 <input type=\"text\" name=\"address\" id=\"address\" placeholder= \"Address\" class=\"form-control \" formControlName='address' maxlength=\"100\">\n                                 <div class=\"errMsg\" *ngIf=\"editForm.get('address').dirty && editForm.get('address').invalid\"> \n                                        <span style='color:red' [ngClass]=\"{error:editForm.get('name').hasError('required')}\" *ngIf=\"editForm.get('name').hasError('required')\">*Address required*</span>\n\n                                    <span style='color:red' [ngClass]=\"{error:editForm.get('address').hasError('required')}\" *ngIf=\"editForm.get('address').hasError('required')\">*Please provide address.</span>\n                                </div>\n                             </div>\n                          </div>\n                            <div class=\"form-group row\">\n                               <label class=\"col-sm-4 label-right label-top\">Phone No:</label>\n                              <div class=\"col-sm-8 label-left label-top\">  \n                                <input type=\"text\" placeholder= \"Phone_no\" name=\"phone_no\" id=\"phone_no\"  class=\"form-control \" formControlName='phone'  maxlength=\"14\">\n                                <div class=\"errMsg\" *ngIf=\"editForm.get('phone').dirty && editForm.get('phone').invalid\"> \n                                        <span style='color:red' [ngClass]=\"{error:editForm.get('phone').hasError('pattern')}\" *ngIf=\"editForm.get('phone').hasError('pattern')\">*Please provide valid phone number.</span>\n                                    </div>\n                               \n                              </div>\n                           </div>\n                            <div class=\"table-button text-center mt30\">\n                               <button  class=\"btn btn-red\" (click)='save()' [disabled]='editForm.invalid'  >Save </button>\n                               <button  class=\"btn btn-danger\" (click)='cancel()' >Cancel</button>\n                            </div>\n                         </div>\n                         </form>\n\n                    </div>\n                </fieldset>\n              </div>        \n          </div>  \n        </div>\n     </div>\n\n\n<div id=\"costumModal10\" class=\"modal fade\" data-easein=\"bounceIn\"  tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"costumModalLabel\" aria-hidden=\"true\">\n          <div class=\"modal-dialog\">\n              <div class=\"modal-content common-detail-modal\">\n                  <div class=\"modal-header\">\n                      <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">\n                          ×\n                      </button>\n                  </div>\n                  <div class=\"modal-body\">\n                      <p class=\"modal-inner-text\">\n                         Are you sure you want to delete this token ?\n                      </p>\n\n                      <div class=\"button-box mt20\">\n                         <a class=\"btn btn-success mr10\" (click)=\"logout()\" data-dismiss=\"modal\">yes</a>\n                         <a class=\"btn btn-danger\" href=\"\">No</a>\n                      </div>\n                  </div>\n                  <div class=\"modal-footer\">\n                      \n                  </div>\n              </div>\n          </div>\n      </div>\n"
 
 /***/ }),
 
@@ -1318,16 +1189,13 @@ var EditUserDetailComponent = /** @class */ (function () {
     }
     EditUserDetailComponent.prototype.ngOnInit = function () {
         this.Id = localStorage.getItem('_id of customer');
-        console.log('id on nginit==>', this.Id);
         this.viewParticularCustomer();
     };
     //==========================================================VIEW PARTICULAR CUSTOMER API ====================================================================
     EditUserDetailComponent.prototype.viewParticularCustomer = function () {
         var _this = this;
         this.service.getApi("admin/viewDetail/" + this.Id, 1).subscribe(function (response) {
-            console.log("**********************");
             if (response['response_code'] == 200) {
-                console.log("view particular user " + response);
                 _this.customer = response["result"];
                 _this.editForm.patchValue({
                     name: _this.customer.name || '',
@@ -1335,15 +1203,11 @@ var EditUserDetailComponent = /** @class */ (function () {
                     phone: _this.customer.mobile_no || '',
                 });
                 if (response['result'].profilePic) {
-                    // console.log('image exist') 
                     _this.imageUrl = _this.customer.profilePic;
                 }
                 else {
-                    //    console.log('image doesn"t exist') 
                     _this.imageUrl = 'assets/img/default_profile_image.png';
                 }
-                console.log("in particular view==>" + JSON.stringify(_this.customer));
-                // this.service.showSuccess(response['response_message'])  
             }
             else {
                 _this.service.toastErr(response['response_message']);
@@ -1354,7 +1218,6 @@ var EditUserDetailComponent = /** @class */ (function () {
     };
     EditUserDetailComponent.prototype.save = function () {
         var _this = this;
-        console.log('save clicked !!');
         var postData = {
             "_id": this.Id,
             "userType": "CUSTOMER",
@@ -1362,12 +1225,8 @@ var EditUserDetailComponent = /** @class */ (function () {
             "mobile_no": this.editForm.get('phone').value,
             "address": this.editForm.get('address').value
         };
-        console.log('posting this data -->>', postData);
         this.service.postApi('admin/edit/', postData, 1).subscribe(function (response) {
-            console.log("**********************");
             if (response['response_code'] == 200) {
-                console.log("view particular user " + response);
-                //this.service.showSuccess(response['response_message'])  
                 _this.route.navigate(['/dashboard']);
             }
             else {
@@ -1378,7 +1237,6 @@ var EditUserDetailComponent = /** @class */ (function () {
         });
     };
     EditUserDetailComponent.prototype.cancel = function () {
-        console.log('cancel clicked !!');
         this.route.navigate(['/dashboard']);
     };
     EditUserDetailComponent = __decorate([
@@ -1414,7 +1272,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"mainbox main-modify\">\n    <app-side-menu></app-side-menu>\n    <div class=\"right-section\">\n        <div class=\"copyrights\">Copyright © 2018 Aqua Ludus All Rights Reserved.</div>\n        <div class=\"right-inner\">\n\n            <h1 class=\"heading\">EVENT MANAGEMENT</h1>\n            <div class=\"filter-block\">\n                <fieldset class=\"global-fieldset\">\n                    <legend>User Board</legend>\n                    <div class=\"filter-content\">\n                        <div class=\"row\">\n                            <div class=\"col-sm-6\">\n                                <form [formGroup]=\"eventForm\">\n                                    <div class=\"form-group\">\n                                        <div class=\"search-icon pull-left\" align=\"left\">\n                                            <input type=\"text\" (keyup)=\"filter()\" class=\"form-control max-wt-300 search-input\" placeholder=\"Search by Event/Business\"\n                                                formControlName=\"search\">\n                                            <i class=\"fa fa-search\" aria-hidden=\"true\"></i>\n                                        </div>\n\n\n                                    </div>\n                                </form>\n                            </div>\n                            <div class=\"col-sm-6\">\n                                <!-- <div class=\"btn-right\">\n                            <a class=\"btn btn-red btn-common\" href=\"add-user.html\">Add</a>\n                         </div> -->\n                            </div>\n                        </div>\n                        <br>\n\n                        <div class=\"box box-blue\">\n                            <div class=\"box-body\">\n                                <div class=\"custom-table table-responsive\">\n                                    <table class=\"table table-striped table-border\">\n                                        <thead>\n                                            <tr>\n                                                <th>SNo.</th>\n                                                <th>Event Name</th>\n                                                <th>Business Name</th>\n                                                <th>User Name</th>\n                                            </tr>\n                                        </thead>\n                                        <tbody>\n                                            <!-- <tr  *ngFor='let item of Event | paginate: { itemsPerPage: totalSize, currentPage: currPage, totalItems: pageSize };index as i'> -->\n                                            <tr *ngFor=\"let item of Event | paginate: { itemsPerPage: 10, currentPage: pageNo, totalItems: paginationData.total };index as i\">\n\n                                                <td>{{(i+1)+srNo}}</td>\n                                                <td>{{item.eventName}}</td>\n                                                <td>{{item.businessName}}</td>\n                                                <td>{{item.userId.name}}</td>\n\n                                            </tr>\n                                            <tr *ngIf=\"Event.length==0\">\n                                                <span>No record found</span>\n                                            </tr>\n                                        </tbody>\n                                    </table>\n                                    <!-- <label type=\"date\" class=\"col-sm-4 label-right label-top\">From:<label> -->\n                                    <!-- <input type=\"date\"  class=\"form-control max-wt-300 search-input\" placeholder=\"Search by date\"> </label> -->\n\n                                </div>\n\n                            </div>\n                        </div>\n                    </div>\n                </fieldset>\n            </div>\n\n\n            <ul class=\"pagination\">\n                <li *ngIf=\"paginationData.total > paginationData.limit\"></li>\n            </ul>\n\n            <pagination-controls (pageChange)=\"changePage($event)\"></pagination-controls>\n        </div>\n    </div>\n</div>\n\n<!-- Modal-blocked -->\n<div id=\"delete\" class=\"modal fade\" data-easein=\"bounceIn\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"costumModalLabel\"\n    aria-hidden=\"true\">\n    <div class=\"modal-dialog\">\n        <div class=\"modal-content common-detail-modal\">\n            <div class=\"modal-header\">\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">\n                    ×\n                </button>\n            </div>\n            <div class=\"modal-body\">\n                <p class=\"modal-inner-text\">\n                    Are you sure you want to delete user ?\n                </p>\n\n                <div class=\"button-box mt20\">\n                    <a class=\"btn btn-red mr10\">Yes</a>\n                    <a class=\"btn btn-danger\" data-dismiss=\"modal\">No</a>\n                </div>\n            </div>\n            <div class=\"modal-footer\">\n\n            </div>\n        </div>\n    </div>\n</div>"
+module.exports = "<div class=\"mainbox main-modify\">\n    <app-side-menu></app-side-menu>\n    <div class=\"right-section\">\n        <div class=\"copyrights\">Copyright © 2018 Aqua Ludus All Rights Reserved.</div>\n        <div class=\"right-inner\">\n\n            <h1 class=\"heading\">EVENT MANAGEMENT</h1>\n            <div class=\"filter-block\">\n                <fieldset class=\"global-fieldset\">\n                    <legend>User Board</legend>\n                    <div class=\"filter-content\">\n                        <div class=\"row\">\n                            <div class=\"col-sm-6\">\n                                <form [formGroup]=\"eventForm\">\n                                    <div class=\"form-group\">\n                                        <div class=\"search-icon pull-left\" align=\"left\">\n                                            <input type=\"text\" (keyup)=\"filter()\" class=\"form-control max-wt-300 search-input\" placeholder=\"Search by Event/Business\"\n                                                formControlName=\"search\">\n                                            <i class=\"fa fa-search\" aria-hidden=\"true\"></i>\n                                        </div>\n\n\n                                    </div>\n                                </form>\n                            </div>\n                            <div class=\"col-sm-6\">\n                      \n                            </div>\n                        </div>\n                        <br>\n\n                        <div class=\"box box-blue\">\n                            <div class=\"box-body\">\n                                <div class=\"custom-table table-responsive\">\n                                    <table class=\"table table-striped table-border\">\n                                        <thead>\n                                            <tr>\n                                                <th>SNo.</th>\n                                                <th>Event Name</th>\n                                                <th>Business Name</th>\n                                                <th>User Name</th>\n                                            </tr>\n                                        </thead>\n                                        <tbody>\n                                            <tr *ngFor=\"let item of Event | paginate: { itemsPerPage: 10, currentPage: pageNo, totalItems: paginationData.total };index as i\">\n\n                                                <td>{{(i+1)+srNo}}</td>\n                                                <td>{{item.eventName}}</td>\n                                                <td>{{item.businessName}}</td>\n                                                <td>{{item.userId.name}}</td>\n\n                                            </tr>\n                                            <tr *ngIf=\"Event.length==0\">\n                                                <span>No record found</span>\n                                            </tr>\n                                        </tbody>\n                                    </table>\n                                   \n                                </div>\n\n                            </div>\n                        </div>\n                    </div>\n                </fieldset>\n            </div>\n\n            <div *ngIf=\"paginationData.total > paginationData.limit\">\n                <pagination-controls (pageChange)=\"changePage($event)\"></pagination-controls>\n            </div>\n            \n        </div>\n    </div>\n</div>\n\n<!-- Modal-blocked -->\n<div id=\"delete\" class=\"modal fade\" data-easein=\"bounceIn\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"costumModalLabel\"\n    aria-hidden=\"true\">\n    <div class=\"modal-dialog\">\n        <div class=\"modal-content common-detail-modal\">\n            <div class=\"modal-header\">\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">\n                    ×\n                </button>\n            </div>\n            <div class=\"modal-body\">\n                <p class=\"modal-inner-text\">\n                    Are you sure you want to delete user ?\n                </p>\n\n                <div class=\"button-box mt20\">\n                    <a class=\"btn btn-red mr10\">Yes</a>\n                    <a class=\"btn btn-danger\" data-dismiss=\"modal\">No</a>\n                </div>\n            </div>\n            <div class=\"modal-footer\">\n\n            </div>\n        </div>\n    </div>\n</div>"
 
 /***/ }),
 
@@ -1443,14 +1301,12 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
-// import {IMyDpOptions, IMyDateModel} from 'mydatepicker';
 var EventManagementComponent = /** @class */ (function () {
     function EventManagementComponent(fb, service) {
         this.fb = fb;
         this.service = service;
         this.paginationData = {};
         this.Event = [];
-        // eventData:any=[];
         this.pageSize = {};
         this.pageNo = 1;
         this.eventForm = fb.group({
@@ -1462,7 +1318,6 @@ var EventManagementComponent = /** @class */ (function () {
     };
     //****************************GET ALL Events *************************************** */
     EventManagementComponent.prototype.changePage = function (page) {
-        console.log('page no--->', page);
         this.pageNo = page;
         this.getAllEvent();
     };
@@ -1477,22 +1332,17 @@ var EventManagementComponent = /** @class */ (function () {
             pageNumber: this.pageNo,
         };
         this.service.postApi("event/getAllEvents", postData, 1).subscribe(function (response) {
-            // console.log('res')
             if (response['response_code'] == 200) {
-                console.log(' Event data found successfully', response);
                 _this.Event = response["result"];
                 _this.paginationData = response["paginationData"];
                 _this.limit = response["paginationData"].limit;
-                console.log('LIMIT IS--->>>', _this.limit);
                 _this.srNo = (_this.pageNo - 1) * _this.paginationData.limit;
-                console.log("############", _this.paginationData);
             }
             else {
                 _this.Event = [];
-                console.log('Failure', response['responseMessage']);
+                _this.paginationData = { total: 0, limit: 10 };
             }
         }, function (error) {
-            console.log('error =>', error);
             _this.service.toastErr('Something Went Wrong');
         });
     };
@@ -1529,7 +1379,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<!-- <p>\n  forgot-password works!\n</p> -->\n\n\n\n<header class=\"beforelogin\">\n\t\t<div class=\"logo\"><a href=\"javascript:void(0)\"><img src=\"assets/img/jetski.jpg\"></a></div>\n\t</header>\n\t  <div class=\"before-login-wrapper\">\n       <div class=\"inner-content clearfix\">\n       \t  <div class=\"login-main-content\">\n\t\t       \t <div class=\"before-login-logo\">\n\t\t \t        \n               </div>\n               <form class=\"login_box_outer\" [formGroup]=\"forgotForm\" (ngSubmit)=\"forgot(forgotForm.value)\">\n\t\t \t        <div class=\"login-content-box\">\n\t\t \t        \t  <h2 class=\"heading\">Forgot Password</h2>\n\t\t \t        \t   <div class=\"form-group\">\n\t\t \t        \t   \t<label>Email Address\n                        <span class=\"require\">*</span>\n                       </label>\n                       <input type=\"text\"  class=\"form-control\" placeholder=\"Email\" [formControl]=\"forgotForm.controls['email']\" maxlength=\"50\">\n                       \n\n\n                       <div class=\"error-block\" *ngIf=\"forgotForm.controls['email'].dirty && forgotForm.controls['email'].invalid\">\n\n                          <span style='color:red' [ngClass]=\"{error:forgotForm.controls['email'].hasError('required')}\" *ngIf=\"forgotForm.controls['email'].hasError('required')\">*Please enter an email.</span>\n                          <span style='color:red' [ngClass]=\"{error: forgotForm.controls['email'].hasError('pattern')}\" *ngIf=\"forgotForm.controls['email'].hasError('pattern')\">*Please enter valid email.</span>\n                          <span style='color:red' [ngClass]=\"{error: forgotForm.controls['email'].hasError('maxlength') && forgotForm.controls['email'].dirty}\"\n                            *ngIf=\"forgotForm.controls['email'].hasError('maxlength') && ! forgotForm.controls['email'].hasError('pattern')\">*Please enter valid email.</span>\n        \n        \n                        </div>\n\n\n\n                    <!-- <div class=\"error-block\" *ngIf=\"forgotForm.controls['email'].dirty && forgotForm.controls['email'].invalid\">\n                    <span *ngIf=\"forgotForm.controls['email'].hasError('required')\">*Please enter an email.</span>\n                    <span *ngIf=\"forgotForm.controls['email'].hasError('pattern')\">*Please enter valid email.</span>\n                    </div>  -->\n                    </div> \n                    <div></div>\n                    \n                       <!-- <label class=\"error\">Please enter your Id</label> -->\n\t\t \t        \t \n\t\t \t        \t  \n                       <!-- <label class=\"error\">Please enter your password</label> -->\n                     \n\n                       <div class=\"table-button text-center mt20\">\n                        <button  class=\"btn btn-red\" [disabled]=\"forgotForm.invalid\"  >SEND </button>\n                        <button  class=\"btn btn-danger\" [routerLink]=\"['/login']\" >BACK</button>\n                     </div>\n\n\t\t \t        \t   </div> \n\t         \n            </form>\n        </div>\n      </div>\n      </div>\n    \n\t<div class=\"copyrights\">Copyright © 2018 Aqua Ludus All Rights Reserved.</div>\n  <!-- <script src=\"assets/js/jquery-2.2.4.min.js\"></script>\n  <script src=\"assets/js/bootstrap.min.js\"></script>\n  <script src=\"assets/js/custom.js\"></script> -->\n\n  \n    \n  \n"
+module.exports = "<!-- <p>\n  forgot-password works!\n</p> -->\n\n\n\n<header class=\"beforelogin\">\n\t\t<div class=\"logo\"><a href=\"javascript:void(0)\"><img src=\"assets/img/jetski.jpg\"></a></div>\n\t</header>\n\t  <div class=\"before-login-wrapper\">\n       <div class=\"inner-content clearfix\">\n       \t  <div class=\"login-main-content\">\n\t\t       \t <div class=\"before-login-logo\">\n\t\t \t        \n               </div>\n               <form class=\"login_box_outer\" [formGroup]=\"forgotForm\" (ngSubmit)=\"forgot(forgotForm.value)\">\n\t\t \t        <div class=\"login-content-box\">\n\t\t \t        \t  <h2 class=\"heading\">Forgot Password</h2>\n\t\t \t        \t   <div class=\"form-group\">\n\t\t \t        \t   \t<label>Email Address\n                        <span class=\"require\">*</span>\n                       </label>\n                       <input type=\"text\"  class=\"form-control\" placeholder=\"Email\" [formControl]=\"forgotForm.controls['email']\" maxlength=\"50\">\n                       \n\n\n                       <div class=\"error-block\" *ngIf=\"forgotForm.controls['email'].dirty && forgotForm.controls['email'].invalid\">\n\n                          <span style='color:red' [ngClass]=\"{error:forgotForm.controls['email'].hasError('required')}\" *ngIf=\"forgotForm.controls['email'].hasError('required')\">*Please enter an email.</span>\n                          <span style='color:red' [ngClass]=\"{error: forgotForm.controls['email'].hasError('pattern')}\" *ngIf=\"forgotForm.controls['email'].hasError('pattern')\">*Please enter valid email.</span>\n                          <span style='color:red' [ngClass]=\"{error: forgotForm.controls['email'].hasError('maxlength') && forgotForm.controls['email'].dirty}\"\n                            *ngIf=\"forgotForm.controls['email'].hasError('maxlength') && ! forgotForm.controls['email'].hasError('pattern')\">*Please enter valid email.</span>\n        \n        \n                        </div>\n\n\n\n                 \n                    </div> \n                    <div></div>\n                    \n                  \n                       <div class=\"table-button text-center mt20\">\n                        <button  class=\"btn btn-red\" [disabled]=\"forgotForm.invalid\"  >SEND </button>\n                        <button  class=\"btn btn-danger\" [routerLink]=\"['/login']\" >BACK</button>\n                     </div>\n\n\t\t \t        \t   </div> \n\t         \n            </form>\n        </div>\n      </div>\n      </div>\n    \n\t<div class=\"copyrights\">Copyright © 2018 Aqua Ludus All Rights Reserved.</div>\n\n    \n  \n"
 
 /***/ }),
 
@@ -1579,23 +1429,18 @@ var ForgotPasswordComponent = /** @class */ (function () {
     };
     ForgotPasswordComponent.prototype.forgot = function (val) {
         var _this = this;
-        console.log("forgot password " + this.forgotForm.value);
         var forgotData = {
             'email': val.email
         };
         this.service.postApi('user/forgotPassword', forgotData, 0).subscribe(function (response) {
-            console.log("response " + response);
             if (response['response_code'] == 200) {
-                console.log('link send successfully...');
                 _this.service.showSuccess(response['response_message']);
                 _this.router.navigate(['/login']);
             }
             else {
                 _this.service.toastErr(response['response_message']);
-                console.log("in else " + response['response_message']);
             }
         }, function (error) {
-            console.log('error occur', error);
             _this.service.toastErr(error);
         });
     };
@@ -1632,7 +1477,7 @@ module.exports = "#append_wrapper>.row:first-child {display:none;}\n"
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<header class=\"beforelogin\">\n\n  <div class=\"left-header\">\n    <div class=\"logo\">\n      <a>\n        <img src=\"../assets/img/jetski.jpg\">\n      </a>\n    </div>\n  </div>\n</header>\n<div class=\"before-login-wrapper\">\n  <div class=\"inner-content clearfix\">\n    <div class=\"login-main-content\">\n      <div class=\"before-login-logo\">\n\n      </div>\n      <form class=\"login_box_outer\" [formGroup]=\"loginForm\" (ngSubmit)=\"login(loginForm.value)\" novalidate>\n        <div class=\"login-content-box\">\n          <h2 class=\"heading\">Login</h2>\n              <div class=\"form-group\">\n                <label>Email Address\n                  <span class=\"require\">*</span>\n                </label>\n                <input type=\"text\" class=\"form-control\" placeholder=\"Email\"  [formControl]=\"loginForm.controls['email']\" maxlength=\"50\">\n                <div class=\"error-block\" *ngIf=\"loginForm.controls['email'].dirty && loginForm.controls['email'].invalid\">\n\n                  <span style='color:red' [ngClass]=\"{error:loginForm.controls['email'].hasError('required')}\" *ngIf=\"loginForm.controls['email'].hasError('required')\">*Please enter an email.</span>\n                  <span style='color:red' [ngClass]=\"{error: loginForm.controls['email'].hasError('pattern')}\" *ngIf=\"loginForm.controls['email'].hasError('pattern')\">*Please enter valid email.</span>\n                  <span style='color:red' [ngClass]=\"{error: loginForm.controls['email'].hasError('maxlength') && loginForm.controls['email'].dirty}\"\n                    *ngIf=\"loginForm.controls['email'].hasError('maxlength') && ! loginForm.controls['email'].hasError('pattern')\">*Please enter valid email.</span>\n\n\n                </div>\n              </div>\n          <!-- <label class=\"error\">Please enter your Id</label> -->\n\n          <div class=\"form-group\">\n            <label>Password <span class=\"require\">*</span></label>\n            <input type=\"password\" name=\"pass\" class=\"form-control\" placeholder=\"Password\"  [formControl]=\"loginForm.controls['pass']\"\n              maxlength=\"16\">\n            <div class=\"error-block\" *ngIf=\"loginForm.controls['pass'].dirty && loginForm.controls['pass'].invalid\">\n              <span style='color:red' [ngClass]=\"{error:loginForm.controls['pass'].hasError('required')}\" *ngIf=\"loginForm.controls['pass'].hasError('required')\">*Please enter Password.</span>\n              <span style='color:red' [ngClass]=\"{error:loginForm.controls['pass'].hasError('minlength')}\" *ngIf=\"loginForm.controls['pass'].hasError('minlength')\">*Password must be between 8 to 16 characters</span>\n                 <span  style='color:red' [ngClass]=\"{error:loginForm.controls['pass'].hasError('pattern')}\" *ngIf=\"loginForm.controls['pass'].hasError('pattern')\">*Please enter valid password.</span>\n            </div>\n          </div> \n\n          <!-- <label class=\"error\">Please enter your password</label> -->\n          <div class=\"remeberme-block  clearfix \">\n            <div class=\"pull-left\">\n              <input type=\"checkbox\" id=\"remberMe\" value=\"remberMe\"  [formControl]=\"loginForm.controls['remberMe']\">\n              <label for=\"remberMe\">Remember me</label>\n            </div>\n            <div class=\"pull-right\">\n              <a class=\"forget-pass\" [routerLink]=\"['/forgotPassword']\">Forgot Password?</a>\n            </div>\n          </div>\n          <div class=\"button-box\" align=\"center\">\n            <button type=\"submit\" class=\"btn btn-red width100\"  [disabled]=\"loginForm.invalid\">LOGIN</button>\n            <!-- <a type=\"submit\" class=\"btn btn-red width100\" href=\"javascript:void(0)\">Login</a>\n                       </div> -->\n          </div>\n        </div>\n\n\n      </form>\n    </div>\n  </div>\n</div>\n\n<div class=\"copyrights\">Copyright © 2018 Aqua Ludus All Rights Reserved.</div>\n<!-- <script src=\"assets/js/jquery-2.2.4.min.js\"></script>\n  <script src=\"assets/js/bootstrap.min.js\"></script>\n  <script src=\"assets/js/custom.js\"></script> -->"
+module.exports = "<header class=\"beforelogin\">\n\n  <div class=\"left-header\">\n    <div class=\"logo\">\n      <a>\n        <img src=\"../assets/img/jetski.jpg\">\n      </a>\n    </div>\n  </div>\n</header>\n<div class=\"before-login-wrapper\">\n  <div class=\"inner-content clearfix\">\n    <div class=\"login-main-content\">\n      <div class=\"before-login-logo\">\n\n      </div>\n      <form class=\"login_box_outer\" [formGroup]=\"loginForm\" (ngSubmit)=\"login(loginForm.value)\" novalidate>\n        <div class=\"login-content-box\">\n          <h2 class=\"heading\">Login</h2>\n              <div class=\"form-group\">\n                <label>Email Address\n                  <span class=\"require\">*</span>\n                </label>\n                <input type=\"text\" class=\"form-control\" placeholder=\"Email\"  [formControl]=\"loginForm.controls['email']\" maxlength=\"50\">\n                <div class=\"error-block\" *ngIf=\"loginForm.controls['email'].dirty && loginForm.controls['email'].invalid\">\n\n                  <span style='color:red' [ngClass]=\"{error:loginForm.controls['email'].hasError('required')}\" *ngIf=\"loginForm.controls['email'].hasError('required')\">*Please enter an email.</span>\n                  <span style='color:red' [ngClass]=\"{error: loginForm.controls['email'].hasError('pattern')}\" *ngIf=\"loginForm.controls['email'].hasError('pattern')\">*Please enter valid email.</span>\n                  <span style='color:red' [ngClass]=\"{error: loginForm.controls['email'].hasError('maxlength') && loginForm.controls['email'].dirty}\"\n                    *ngIf=\"loginForm.controls['email'].hasError('maxlength') && ! loginForm.controls['email'].hasError('pattern')\">*Please enter valid email.</span>\n\n\n                </div>\n              </div>\n\n          <div class=\"form-group\">\n            <label>Password <span class=\"require\">*</span></label>\n            <input type=\"password\" name=\"pass\" class=\"form-control\" placeholder=\"Password\"  [formControl]=\"loginForm.controls['pass']\"\n              maxlength=\"16\">\n            <div class=\"error-block\" *ngIf=\"loginForm.controls['pass'].dirty && loginForm.controls['pass'].invalid\">\n              <span style='color:red' [ngClass]=\"{error:loginForm.controls['pass'].hasError('required')}\" *ngIf=\"loginForm.controls['pass'].hasError('required')\">*Please enter Password.</span>\n              <span style='color:red' [ngClass]=\"{error:loginForm.controls['pass'].hasError('minlength')}\" *ngIf=\"loginForm.controls['pass'].hasError('minlength')\">*Password must be between 8 to 16 characters</span>\n                 <span  style='color:red' [ngClass]=\"{error:loginForm.controls['pass'].hasError('pattern')}\" *ngIf=\"loginForm.controls['pass'].hasError('pattern')\">*Please enter valid password.</span>\n            </div>\n          </div> \n\n          <div class=\"remeberme-block  clearfix \">\n            <div class=\"pull-left\">\n              <input type=\"checkbox\" id=\"remberMe\" value=\"remberMe\"  [formControl]=\"loginForm.controls['remberMe']\">\n              <label for=\"remberMe\">Remember me</label>\n            </div>\n            <div class=\"pull-right\">\n              <a class=\"forget-pass\" [routerLink]=\"['/forgotPassword']\">Forgot Password?</a>\n            </div>\n          </div>\n          <div class=\"button-box\" align=\"center\">\n            <button type=\"submit\" class=\"btn btn-red width100\"  [disabled]=\"loginForm.invalid\">LOGIN</button>\n         \n          </div>\n        </div>\n\n\n      </form>\n    </div>\n  </div>\n</div>\n\n<div class=\"copyrights\">Copyright © 2018 Aqua Ludus All Rights Reserved.</div>\n"
 
 /***/ }),
 
@@ -1677,8 +1522,6 @@ var LoginComponent = /** @class */ (function () {
     LoginComponent.prototype.ngOnInit = function () {
         this.loginForm = this.formBuilder.group({
             'email': ['', _angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].compose([_angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required, _angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].pattern(/^[A-Z0-9_]+([\.][A-Z0-9_]+)*@[A-Z0-9-]+(\.[a-zA-Z]{2,3})+$/i), _angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].maxLength(50)])],
-            //'email': ['', [Validators.required, Validators.pattern("[^ @]*@[^ @]*")]],
-            //'pass':['', [Validators.required, Validators.minLength(8)]],
             'pass': ['', _angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].compose([_angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required, _angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].maxLength(16), _angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].minLength(8)])],
             'remberMe': [false]
         });
@@ -1688,47 +1531,29 @@ var LoginComponent = /** @class */ (function () {
                     return true;
             });
         });
-        // if(localStorage.getItem('LoginData') != null) {
-        //   let loginData = JSON.parse(localStorage.getItem('LoginData'))
-        //   this.loginForm.controls['email'].setValue(loginData.email)
-        //    this.loginForm.controls['pass'].setValue(loginData.pass)
-        //   this.loginForm.controls['remberMe'].setValue(loginData.remberMe)
-        // }
         this.loginForm.patchValue({
             email: this.cookieService.get('email'),
             pass: this.cookieService.get('password'),
             remberMe: this.cookieService.check('remberMe')
         });
-        console.log("i am hereeeeee>>>>", this.cookieService.get('email'), this.cookieService.get('password'), this.cookieService.check('remberMe'));
     };
     LoginComponent.prototype.login = function (dataa) {
         var _this = this;
-        // if(this.loginForm.dirty && this.loginForm.valid)
-        // alert(`Email: ${this.loginForm.value.email} Password: ${this.loginForm.value.pass} `)
-        // console.log(this.loginForm.value)
-        console.log(dataa);
         var loginData = {
             "email": dataa.email,
             "password": dataa.pass,
             "userType": "SUPERADMIN"
         };
-        console.log(loginData);
         this.service.postApi('user/login', loginData, 0).subscribe(function (response) {
             _this.responseData = response;
-            // console.log("Pramod"+JSON.stringify(this.responseData))
-            // console.log(`Login Data====>${JSON.stringify(response)}`);
             if (response['response_code'] == 200) {
                 _this.service.showSuccess(response['response_message']);
-                // console.log("success")
                 localStorage.setItem('token', _this.responseData.token);
                 localStorage.setItem('adminId', _this.responseData.result._id);
                 _this.router.navigate(['/dashboard']);
                 localStorage.token = response["token"];
                 localStorage.adminId = response["result"]["_id"];
-                console.log('successfully login', response['response_message']);
                 if (_this.loginForm.controls['remberMe'].value == true) {
-                    console.log('remberMe me is true ');
-                    console.log("i am hereeeeee>>>>", _this.cookieService.get('email'), _this.cookieService.get('password'), _this.cookieService.check('remberMe'));
                     _this.cookieService.set('email', _this.loginForm.controls['email'].value);
                     _this.cookieService.set('password', _this.loginForm.controls['pass'].value);
                     _this.cookieService.set('remberMe', _this.loginForm.controls['remberMe'].value);
@@ -1737,15 +1562,12 @@ var LoginComponent = /** @class */ (function () {
                     _this.cookieService.delete('email');
                     _this.cookieService.delete('password');
                     _this.cookieService.delete('remberMe');
-                    console.log('remberMe  is false ');
-                    console.log("in else " + response['response_message']);
                 }
             }
             else {
                 _this.service.toastErr(response['response_message']);
             }
         }, function (error) {
-            console.log('error occur', error);
             _this.service.toastErr("Something went wrong");
         });
     };
@@ -1782,7 +1604,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"headeres\">\n    <nav class=\"navbar navbar-default\">\n      <!-- Brand and toggle get grouped for better mobile display -->\n      <div class=\"navbar-headeres\">\n        <button type=\"button\" class=\"navbar-toggle collapsed\" data-toggle=\"collapse\" data-target=\"#profile-collapse\" aria-expanded=\"false\">\n        <span class=\"sr-only\">Toggle navigation</span>\n        <span class=\"icon-bar\"></span>\n        <span class=\"icon-bar\"></span>\n        <span class=\"icon-bar\"></span>\n        </button>\n      </div>\n    </nav>\t\n  </div>\n  <div class=\"left-section\">\n    <div class=\"menubox\">\n      <div class=\"mobmenu\">\n        <span></span>\n        <span></span>\n        <span></span>\n      </div>\n    </div>\n    <div class=\"left-headeres\">\n      <div class=\"logo\"><a><img src=\"../assets/img/jetski.jpg\"></a></div>\n    </div>\n        <div class=\"user-panel\">\n  \n            <span class=\"view-inline user_name\">Admin Panel</span>\n        </div>\n    <div class=\"left-menu\">\n      <ul class=\"nav\">\n        <li><a [ngClass]=\"{'active': isActive == 'dashboard'}\" (click)=\"tabManag('dashboard')\"><i class=\"fa fa-users\"></i>USER MANAGEMENT</a></li>\n        <li><a [ngClass]=\"{'active': isActive == 'business-management'}\" (click)=\"tabManag('business-management')\"><i class=\"fa fa-angellist\"></i>BUSINESS MANAGEMENT</a></li>\n        <li><a [ngClass]=\"{'active': isActive == 'transactions'}\" (click)=\"tabManag('transactions')\"><i class=\"fa fa-product-hunt\"></i>TRANSACTIONS</a></li>\n        <li><a [ngClass]=\"{'active': isActive == 'event-management' }\" (click)=\"tabManag('event-management')\"><i class=\"fa fa-lastfm\"></i>EVENT MANAGEMENT</a></li>\n        <li><a [ngClass]=\"{'active': isActive == 'content-management' }\" (click)=\"tabManag('content-management')\"><i class=\"fa fa-lastfm\"></i>CONTENT MANAGEMENT</a></li>\n        <li><a [ngClass]=\"{'active': isActive == 'logout'}\" data-toggle=\"modal\" data-target=\"#logout\"  ><i class=\"fa fa-sign-out\"></i>LOGOUT</a></li>\n      </ul>\n    </div>\n  </div>\n  \n\n\n\n<!-- Modal-blocked -->\n<div id=\"logout\" class=\"modal fade\" data-easein=\"bounceIn\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"costumModalLabel\"\n    aria-hidden=\"true\">\n    <div class=\"modal-dialog\">\n        <div class=\"modal-content common-detail-modal\">\n            <div class=\"modal-header\">\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">\n                    ×\n                </button>\n            </div>\n            <div class=\"modal-body\">\n                <p class=\"modal-inner-text\">\n                    Are you sure you want to logout ?\n                </p>\n\n                <div class=\"button-box mt20\">\n                    <a class=\"btn btn-red mr10\" (click)=\"logoutYes()\">yes</a>\n                    <a class=\"btn btn-danger\" data-dismiss=\"modal\">No</a>\n                </div>\n            </div>\n            <div class=\"modal-footer\">\n\n            </div>\n        </div>\n    </div>\n</div>\n\n\n\n\n\n\n"
+module.exports = "<div class=\"headeres\">\n    <nav class=\"navbar navbar-default\">\n      <div class=\"navbar-headeres\">\n        <button type=\"button\" class=\"navbar-toggle collapsed\" data-toggle=\"collapse\" data-target=\"#profile-collapse\" aria-expanded=\"false\">\n        <span class=\"sr-only\">Toggle navigation</span>\n        <span class=\"icon-bar\"></span>\n        <span class=\"icon-bar\"></span>\n        <span class=\"icon-bar\"></span>\n        </button>\n      </div>\n    </nav>\t\n  </div>\n  <div class=\"left-section\">\n    <div class=\"menubox\">\n      <div class=\"mobmenu\">\n        <span></span>\n        <span></span>\n        <span></span>\n      </div>\n    </div>\n    <div class=\"left-headeres\">\n      <div class=\"logo\"><a><img src=\"../assets/img/jetski.jpg\"></a></div>\n    </div>\n        <div class=\"user-panel\">\n  \n            <span class=\"view-inline user_name\">Admin Panel</span>\n        </div>\n    <div class=\"left-menu\">\n      <ul class=\"nav\">\n        <li><a [ngClass]=\"{'active': isActive == 'dashboard'}\" (click)=\"tabManag('dashboard')\"><i class=\"fa fa-users\"></i>USER MANAGEMENT</a></li>\n        <li><a [ngClass]=\"{'active': isActive == 'business-management'}\" (click)=\"tabManag('business-management')\"><i class=\"fa fa-angellist\"></i>BUSINESS MANAGEMENT</a></li>\n        <li><a [ngClass]=\"{'active': isActive == 'transactions'}\" (click)=\"tabManag('transactions')\"><i class=\"fa fa-product-hunt\"></i>TRANSACTIONS</a></li>\n        <li><a [ngClass]=\"{'active': isActive == 'event-management' }\" (click)=\"tabManag('event-management')\"><i class=\"fa fa-lastfm\"></i>EVENT MANAGEMENT</a></li>\n        <li><a [ngClass]=\"{'active': isActive == 'content-management' }\" (click)=\"tabManag('content-management')\"><i class=\"fa fa-lastfm\"></i>CONTENT MANAGEMENT</a></li>\n        <li><a [ngClass]=\"{'active': isActive == 'logout'}\" data-toggle=\"modal\" data-target=\"#logout\"  ><i class=\"fa fa-sign-out\"></i>LOGOUT</a></li>\n      </ul>\n    </div>\n  </div>\n  \n\n\n\n<div id=\"logout\" class=\"modal fade\" data-easein=\"bounceIn\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"costumModalLabel\"\n    aria-hidden=\"true\">\n    <div class=\"modal-dialog\">\n        <div class=\"modal-content common-detail-modal\">\n            <div class=\"modal-header\">\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">\n                    ×\n                </button>\n            </div>\n            <div class=\"modal-body\">\n                <p class=\"modal-inner-text\">\n                    Are you sure you want to logout ?\n                </p>\n\n                <div class=\"button-box mt20\">\n                    <a class=\"btn btn-red mr10\" (click)=\"logoutYes()\">yes</a>\n                    <a class=\"btn btn-danger\" data-dismiss=\"modal\">No</a>\n                </div>\n            </div>\n            <div class=\"modal-footer\">\n\n            </div>\n        </div>\n    </div>\n</div>\n\n\n\n\n\n\n"
 
 /***/ }),
 
@@ -1812,7 +1634,6 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 var SideMenuComponent = /** @class */ (function () {
     function SideMenuComponent(router) {
         this.router = router;
-        // this.isActive = 'dashboard';
     }
     SideMenuComponent.prototype.ngOnInit = function () {
         this.isActive = event;
@@ -1825,7 +1646,6 @@ var SideMenuComponent = /** @class */ (function () {
         var url = window.location.href.split('/');
         var page = url[url.length - 1];
         this.isActive = page;
-        console.log("result in dashboard", this.isActive);
         this.router.navigate(['/' + event]);
     };
     SideMenuComponent.prototype.logoutYes = function () {
@@ -1871,7 +1691,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"mainbox main-modify\">\n    <app-side-menu></app-side-menu>\n    <div class=\"right-section\">\n        <div class=\"copyrights\">Copyright © 2018 Aqua Ludus All Rights Reserved.</div>\n        <div class=\"right-inner\">\n\n            <h1 class=\"heading\">TRANSACTION LISTS</h1>\n            <div class=\"filter-block\">\n                <fieldset class=\"global-fieldset\">\n                    <legend>Transaction Board</legend>\n                    <div class=\"filter-content\">\n                        <div class=\"row\">\n                            <div class=\"col-sm-6\">\n                                <form [formGroup]=\"transantionForm\">\n                                    <div class=\"form-group\">\n                                        <div class=\"search-icon pull-left\" align=\"left\">\n                                            <input type=\"text\" class=\"form-control max-wt-300 search-input\"  placeholder=\"Search by Event/Business/Customer\"\n                                                formControlName=\"search\" (keyup)='filter(1)'>\n                                            <i class=\"fa fa-search\" aria-hidden=\"true\"></i>\n                                        </div>\n                                        <div class=\"pull-left\">\n                                            <div class=\"col-sm-6\">\n                                                <div class=\"form-group d-inline-block\">\n                                                    <div class=\"show-entries mb0\">\n                                                        <!-- <select class=\"form-control\"> -->\n                                                                <select class=\"form-control\" formControlName=\"sort\" (change)='filter(2)' >\n\n                                                            <option value=''>STATUS</option>\n                                                            <option value='PENDING'>PENDING</option>\n                                                            <option value='CANCELLED'>CANCELLED</option>\n                                                            <option value='CONFIRMED'>CONFIRMED</option>\n                                                            <option value='COMPLETED'>COMPLETED</option>\n                                                        </select>\n                                                    </div>\n                                                </div>\n                                            </div>\n                                        </div>\n\n                                        <div class=\"form-group row\">\n                                            <label class=\"col-sm-4 label-left label-top\">From:</label>\n                                           <div class=\"col-sm-4 label-right label-top\"></div>  \n                                               <my-date-picker  placeholder= \"YYYY - MM- DD \" name=\"from\" id=\"from\"  [options]=\"fromDate\"    formControlName='from' (dateChanged)=\"onFromDate($event)\"></my-date-picker>                                             \n                                           </div>\n\n                                           <div class=\"form-group row\">\n                                            <label class=\"col-sm-4 label-left label-top\">To:</label>\n                                           <div class=\"col-sm-4 label-right label-top\"></div>  \n                                               <my-date-picker [disabled]='beDisable' placeholder= \"YYYY - MM- DD \" name=\"to\" id=\"todate\"  [options]=\"toDate\"   formControlName='to' (dateChanged)=\"onToDate($event)\"></my-date-picker>                                           \n                                           </div>\n\n\n\n                                        <!-- <div>From:\n                                            <input type=\"date\" name=\"doj\" max=\"{{currentDay | date:'yyyy-MM-dd'}}\" placeholder=\"YYYY-MM-DD\">\n                                            <!-- <span ng-show=\"registration.dob.$touched && registration.dob.$invalid\" style=\"color:red\">The Date of Birth is required.</span> -->\n                                        <!-- </div>\n                                       <br> <div class=\"form-group row\">\n                                            <div>To:\n                                                <input type=\"date\" name=\"doj\" max=\"{{currentDay | date:'yyyy-MM-dd'}}\" placeholder=\"YYYY-MM-DD\">\n                                            </div>\n                                        </div> --> \n                                    </div>\n                                    \n                                </form>\n                            </div>\n                            <div class=\"col-sm-6\">\n                                <!-- <div class=\"btn-right\">\n                            <a class=\"btn btn-red btn-common\" href=\"add-user.html\">Add</a>\n                         </div> -->\n                            </div>\n                        </div>\n\n                        <div class=\"box box-blue\">\n                            <div class=\"box-body\">\n                                <div class=\"custom-table table-responsive\">\n                                    <table class=\"table table-striped table-border\">\n                                        <thead>\n                                            <tr>\n                                                <th>SNo.</th>\n                                                <th>Event Name</th>\n                                                <th>Business Name</th>\n                                                <th>Customer Name</th>\n                                                <th>Transaction Date</th>\n                                                <th>Transaction time</th>\n                                                <th>status</th>\n                                                <th>Amount(USD)</th>\n\n                                            </tr>\n                                        </thead>\n                                        <tbody>\n\n                                            <tr *ngFor=\"let item of Transaction | paginate: { itemsPerPage: 10, currentPage: pageNo, totalItems: paginationData.total };index as i\">\n                                                <td>{{(i+1)+srNo}}</td>\n                                                <td>{{item.eventName}}</td>\n                                                <td>{{item.businessName}}</td>\n                                                <td>{{item.userId.name}}</td>\n                                                <td>{{item.transactionDate}}</td>\n                                                <td>{{item.transactionTime}}</td>\n                                                <td>{{item.bookingStatus}}</td>\n                                                <td>{{item.eventPrice}}</td>\n                                            </tr>\n                                            <tr *ngIf=\"Transaction.length==0\">\n                                                    <span>No record found</span>\n                                                </tr>\n                                        </tbody>\n                                    </table>\n                                </div>\n\n                            </div>\n                        </div>\n                    </div>\n                </fieldset>\n            </div>\n\n\n            <ul class=\"pagination\">\n                <li *ngIf=\"paginationData.total > paginationData.limit\"></li>\n            </ul>\n            <pagination-controls (pageChange)=\"changePage($event)\"></pagination-controls>\n\n        </div>\n    </div>\n</div>\n\n<!-- Modal-blocked -->\n<div id=\"delete\" class=\"modal fade\" data-easein=\"bounceIn\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"costumModalLabel\"\n    aria-hidden=\"true\">\n    <div class=\"modal-dialog\">\n        <div class=\"modal-content common-detail-modal\">\n            <div class=\"modal-header\">\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">\n                    ×\n                </button>\n            </div>\n            <div class=\"modal-body\">\n                <p class=\"modal-inner-text\">\n                    Are you sure you want to delete user ?\n                </p>\n\n                <div class=\"button-box mt20\">\n                    <a class=\"btn btn-red mr10\">Yes</a>\n                    <a class=\"btn btn-danger\" data-dismiss=\"modal\">No</a>\n                </div>\n            </div>\n            <div class=\"modal-footer\">\n\n            </div>\n        </div>\n    </div>\n</div>"
+module.exports = "<div class=\"mainbox main-modify\">\n    <app-side-menu></app-side-menu>\n    <div class=\"right-section\">\n        <div class=\"copyrights\">Copyright © 2018 Aqua Ludus All Rights Reserved.</div>\n        <div class=\"right-inner\">\n\n            <h1 class=\"heading\">TRANSACTION LISTS</h1>\n            <div class=\"filter-block\">\n                <fieldset class=\"global-fieldset\">\n                    <legend>Transaction Board</legend>\n                    <div class=\"filter-content\">\n                        <div class=\"row\">\n                            <div class=\"col-sm-6\">\n                                <form [formGroup]=\"transantionForm\">\n                                    <div class=\"form-group\">\n                                        <div class=\"search-icon pull-left\" align=\"left\">\n                                            <input type=\"text\" class=\"form-control max-wt-300 search-input\"  placeholder=\"Search by Event/Business/Customer\"\n                                                formControlName=\"search\" (keyup)='filter(1)'>\n                                            <i class=\"fa fa-search\" aria-hidden=\"true\"></i>\n                                        </div>\n                                        <div class=\"pull-left\">\n                                            <div class=\"col-sm-6\">\n                                                <div class=\"form-group d-inline-block\">\n                                                    <div class=\"show-entries mb0\">\n                                                                <select class=\"form-control\" formControlName=\"sort\" (change)='filter(2)' >\n\n                                                            <option value=''>STATUS</option>\n                                                            <option value='PENDING'>PENDING</option>\n                                                            <option value='CANCELLED'>CANCELLED</option>\n                                                            <option value='CONFIRMED'>CONFIRMED</option>\n                                                            <option value='COMPLETED'>COMPLETED</option>\n                                                        </select>\n                                                    </div>\n                                                </div>\n                                            </div>\n                                        </div>\n\n                                        <div class=\"form-group row\">\n                                            <label class=\"col-sm-4 label-left label-top\">From:</label>\n                                           <div class=\"col-sm-4 label-right label-top\"></div>  \n                                               <my-date-picker  placeholder= \"YYYY - MM- DD \" name=\"from\" id=\"from\"  [options]=\"fromDate\"    formControlName='from' (dateChanged)=\"onFromDate($event)\"></my-date-picker>                                             \n                                           </div>\n\n                                           <div class=\"form-group row\">\n                                            <label class=\"col-sm-4 label-left label-top\">To:</label>\n                                           <div class=\"col-sm-4 label-right label-top\"></div>  \n                                               <my-date-picker [disabled]='beDisable' placeholder= \"YYYY - MM- DD \" name=\"to\" id=\"todate\"  [options]=\"toDate\"   formControlName='to' (dateChanged)=\"onToDate($event)\"></my-date-picker>                                           \n                                           </div>                                 \n                                    </div>\n                                    \n                                </form>\n                            </div>\n                            <div class=\"col-sm-6\">\n                           \n                            </div>\n                        </div>\n\n                        <div class=\"box box-blue\">\n                            <div class=\"box-body\">\n                                <div class=\"custom-table table-responsive\">\n                                    <table class=\"table table-striped table-border\">\n                                        <thead>\n                                            <tr>\n                                                <th>SNo.</th>\n                                                <th>Event Name</th>\n                                                <th>Business Name</th>\n                                                <th>Customer Name</th>\n                                                <th>Transaction Date</th>\n                                                <th>Transaction time</th>\n                                                <th>status</th>\n                                                <th>Amount(USD)</th>\n\n                                            </tr>\n                                        </thead>\n                                        <tbody>\n\n                                            <tr *ngFor=\"let item of Transaction | paginate: { itemsPerPage: 10, currentPage: pageNo, totalItems: paginationData.total };index as i\">\n                                                <td>{{(i+1)+srNo}}</td>\n                                                <td>{{item.eventName}}</td>\n                                                <td>{{item.businessName}}</td>\n                                                <td>{{item.userId.name}}</td>\n                                                <td>{{item.transactionDate}}</td>\n                                                <td>{{item.transactionTime}}</td>\n                                                <td>{{item.bookingStatus}}</td>\n                                                <td>{{item.eventPrice}}</td>\n                                            </tr>\n                                            <tr *ngIf=\"Transaction.length==0\">\n                                                    <span>No record found</span>\n                                                </tr>\n                                        </tbody>\n                                    </table>\n                                </div>\n\n                            </div>\n                        </div>\n                    </div>\n                </fieldset>\n            </div>\n            \n            <div *ngIf=\"paginationData.total > paginationData.limit\">\n                <pagination-controls (pageChange)=\"changePage($event)\"></pagination-controls>\n            </div>\n            \n\n        </div>\n    </div>\n</div>\n\n\n<div id=\"delete\" class=\"modal fade\" data-easein=\"bounceIn\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"costumModalLabel\"\n    aria-hidden=\"true\">\n    <div class=\"modal-dialog\">\n        <div class=\"modal-content common-detail-modal\">\n            <div class=\"modal-header\">\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">\n                    ×\n                </button>\n            </div>\n            <div class=\"modal-body\">\n                <p class=\"modal-inner-text\">\n                    Are you sure you want to delete user ?\n                </p>\n\n                <div class=\"button-box mt20\">\n                    <a class=\"btn btn-red mr10\">Yes</a>\n                    <a class=\"btn btn-danger\" data-dismiss=\"modal\">No</a>\n                </div>\n            </div>\n            <div class=\"modal-footer\">\n\n            </div>\n        </div>\n    </div>\n</div>"
 
 /***/ }),
 
@@ -1907,7 +1727,6 @@ var TransactionManagementComponent = /** @class */ (function () {
         this.paginationData = {};
         this.modified = [];
         this.Transaction = [];
-        // eventData:any=[];
         this.pageSize = {};
         this.pageNo = 1;
         this.beDisable = true;
@@ -1933,34 +1752,22 @@ var TransactionManagementComponent = /** @class */ (function () {
     TransactionManagementComponent.prototype.ngOnInit = function () {
         this.getAllTransaction();
     };
-    //****************************GET ALL transaction *************************************** */
+    //**************************** GET ALL transaction *************************************** */
     TransactionManagementComponent.prototype.changePage = function (page) {
-        console.log('page no--->', page);
         this.pageNo = page;
         this.getAllTransaction();
-        // this.search()
     };
     TransactionManagementComponent.prototype.filter = function (num) {
         var _this = this;
         this.pageNo = 1;
-        // this.getAllTransaction()
         setTimeout(function () {
             _this.getAllTransaction();
         }, 300);
-        // if(num==1){
-        //   console.log('filter search')
-        // }
-        // else if(num==2){
-        //   console.log('filter by drop down',)
-        // } 
-        // else if(num==3){
-        //   console.log('filter by date',$('#todate').val())
-        //   console.log('filter by date',this.todate)
-        // }
     };
     TransactionManagementComponent.prototype.getAllTransaction = function () {
         var _this = this;
         if (!(this.transantionForm.value.from && this.transantionForm.value.to)) {
+            this.beDisable = true;
             this.transantionForm.patchValue({
                 'to': null,
                 'from': null
@@ -1973,16 +1780,8 @@ var TransactionManagementComponent = /** @class */ (function () {
             toDate: this.transantionForm.value.to ? this.transantionForm.value.to.formatted : '',
             pageNumber: this.pageNo
         };
-        console.log("BEFORE POSTING DATA===>", postData);
-        // for (let val in postData) {
-        //   if (postData[val] == '') {
-        //     delete postData[val]
-        //   }
-        // }  
         this.service.postApi("event/transactionManagementFilter", postData, 1).subscribe(function (response) {
-            // console.log('res')
             if (response['response_code'] == 200) {
-                // console.log(' Event data found successfully', response)
                 _this.modified = response["result"];
                 _this.Transaction = _this.modified;
                 for (var i = 0; i < _this.modified.length; i++) {
@@ -1997,23 +1796,16 @@ var TransactionManagementComponent = /** @class */ (function () {
                 }
                 _this.paginationData = response["paginationData"];
                 _this.srNo = (_this.pageNo - 1) * _this.paginationData.limit;
-                console.log("############", _this.paginationData);
             }
             else {
                 _this.Transaction = [];
-                console.log('Failure', response['responseMessage']);
+                _this.paginationData = { total: 0, limit: 10 };
             }
         }, function (error) {
-            console.log('error =>', error);
             _this.service.toastErr('Something Went Wrong');
         });
     };
-    // filterChange(){
-    //   console.log('FILTER FORM VALUES-->', this.transantionForm.value)
-    // }
     TransactionManagementComponent.prototype.onFromDate = function (event) {
-        console.log(this.transantionForm.value);
-        // console.log(event)
         if (event.formatted) {
             this.beDisable = false;
             var d = new Date(event.jsdate.getTime());
@@ -2027,7 +1819,6 @@ var TransactionManagementComponent = /** @class */ (function () {
         }
         else {
             this.beDisable = true;
-            // this.filter(3)
             this.transantionForm.patchValue({
                 'to': null,
                 'from': null
@@ -2040,20 +1831,18 @@ var TransactionManagementComponent = /** @class */ (function () {
     };
     TransactionManagementComponent.prototype.onToDate = function (event) {
         var _this = this;
-        console.log('TO DATE EVENT IS--->', event);
-        setTimeout(function () {
-            console.log(_this.transantionForm.controls['to'].value);
-            console.log(_this.transantionForm.controls['from'].value);
-            if (_this.transantionForm.controls['to'].value.formatted && _this.transantionForm.controls['from'].value.formatted) {
-                _this.filter(3);
-            }
-            else {
-                _this.transantionForm.patchValue({
-                    'to': null
-                });
-            }
-        }, 300);
-        // console.log('Form Value is+++++++++++', this.transantionForm.value)
+        if (event.formatted) {
+            setTimeout(function () {
+                if (_this.transantionForm.controls['to'].value.formatted && _this.transantionForm.controls['from'].value.formatted) {
+                    _this.filter(3);
+                }
+                else {
+                    _this.transantionForm.patchValue({
+                        'to': null
+                    });
+                }
+            }, 300);
+        }
     };
     TransactionManagementComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
@@ -2088,7 +1877,7 @@ module.exports = "#append_wrapper>.row:first-child {display:none;}\n.mt30{\n    
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<head>\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css\">\n</head>\n<div class=\"mainbox main-modify\">\n    <app-side-menu></app-side-menu>\n    <div class=\"right-section\">\n        <div class=\"copyrights\">Copyright © 2018 Aqua Ludus All Rights Reserved.</div>\n        <div class=\"right-inner\">\n            <div class=\"filter-block\">\n                <fieldset class=\"global-fieldset\">\n                    <legend>User board</legend>\n                    <div class=\"filter-content\">\n                        <div class=\"common-detail-box\">      \n                            <div style=\"margin-left: 15%;margin-right: 25%; font-size:20%;\"><img [src]=\"imageUrl\" style=\"width: 250px;\"/></div>                            \n                            <br>\n                            <div class=\"form-group row\">\n                                <label class=\"col-sm-4 label-right label-top\">Name: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>\n                                <div class=\"col-sm-8 label-left label-top\">{{customer?.name}}\n                                    <!-- <input type=\"text\" value= class=\"form-control custom-input custom-control\" readonly > -->\n                                </div>\n                            </div>\n                            <div class=\"form-group row\">\n                                <label class=\"col-sm-4 label-right label-top\">Email: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>\n                                <div class=\"col-sm-8 label-left label-top\">\n                                    {{customer?.email}}\n                                </div>\n                            </div>\n                            <div class=\"form-group row\">\n                                <label class=\"col-sm-4 label-right label-top\">Address: &nbsp;&nbsp;&nbsp;</label>\n                                <div class=\"col-sm-8 label-left label-top\">\n                                    {{customer?.address}}\n                                </div>\n                            </div>\n                            <div class=\"form-group row\">\n                                <label class=\"col-sm-4 label-right label-top\">Phone No:</label>\n                                <div class=\"col-sm-8  label-left label-top\">\n                                    {{customer?.mobile_no}}\n                                </div>\n                            </div>\n                            <div class=\"table-button text-center mt10\" style=\"margin-left: -30%\">\n                                <a class=\"btn btn-red\" (click)=\"edit()\">Edit </a>\n                                <a class=\"btn btn-danger\" (click)=\"cancel()\">Cancel</a>\n                            </div>\n                        </div>\n\n                    </div>\n                </fieldset>\n            </div>\n        </div>\n    </div>\n</div>\n\n\n<!-- Modal-blocked -->\n<div id=\"costumModal10\" class=\"modal fade\" data-easein=\"bounceIn\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"costumModalLabel\"\n    aria-hidden=\"true\">\n    <div class=\"modal-dialog\">\n        <div class=\"modal-content common-detail-modal\">\n            <div class=\"modal-header\">\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">\n                    ×\n                </button>\n            </div>\n            <div class=\"modal-body\">\n                <p class=\"modal-inner-text\">\n                    Are you sure you want to delete this token ?\n                </p>\n\n                <div class=\"button-box mt20\">\n                    <a class=\"btn btn-success mr10\" (click)=\"logout()\" data-dismiss=\"modal\">yes</a>\n                    <a class=\"btn btn-danger\" href=\"\">No</a>\n                </div>\n            </div>\n            <div class=\"modal-footer\">\n\n            </div>\n        </div>\n    </div>\n</div>"
+module.exports = "<head>\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css\">\n</head>\n<div class=\"mainbox main-modify\">\n    <app-side-menu></app-side-menu>\n    <div class=\"right-section\">\n        <div class=\"copyrights\">Copyright © 2018 Aqua Ludus All Rights Reserved.</div>\n        <div class=\"right-inner\">\n            <div class=\"filter-block\">\n                <fieldset class=\"global-fieldset\">\n                    <legend>User board</legend>\n                    <div class=\"filter-content\">\n                        <div class=\"common-detail-box\">      \n                            <div style=\"margin-left: 15%;margin-right: 25%; font-size:20%;\"><img [src]=\"imageUrl\" style=\"width: 250px;\"/></div>                            \n                            <br>\n                            <div class=\"form-group row\">\n                                <label class=\"col-sm-4 label-right label-top\">Name: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>\n                                <div class=\"col-sm-8 label-left label-top\">{{customer?.name}}\n                                </div>\n                            </div>\n                            <div class=\"form-group row\">\n                                <label class=\"col-sm-4 label-right label-top\">Email: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>\n                                <div class=\"col-sm-8 label-left label-top\">\n                                    {{customer?.email}}\n                                </div>\n                            </div>\n                            <div class=\"form-group row\">\n                                <label class=\"col-sm-4 label-right label-top\">Address: &nbsp;&nbsp;&nbsp;</label>\n                                <div class=\"col-sm-8 label-left label-top\">\n                                    {{customer?.address}}\n                                </div>\n                            </div>\n                            <div class=\"form-group row\">\n                                <label class=\"col-sm-4 label-right label-top\">Phone No:</label>\n                                <div class=\"col-sm-8  label-left label-top\">\n                                    {{customer?.mobile_no}}\n                                </div>\n                            </div>\n                            <div class=\"table-button text-center mt10\" style=\"margin-left: -30%\">\n                                <a class=\"btn btn-red\" (click)=\"edit()\">Edit </a>\n                                <a class=\"btn btn-danger\" (click)=\"cancel()\">Cancel</a>\n                            </div>\n                        </div>\n\n                    </div>\n                </fieldset>\n            </div>\n        </div>\n    </div>\n</div>\n\n\n<!-- Modal-blocked -->\n<div id=\"costumModal10\" class=\"modal fade\" data-easein=\"bounceIn\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"costumModalLabel\"\n    aria-hidden=\"true\">\n    <div class=\"modal-dialog\">\n        <div class=\"modal-content common-detail-modal\">\n            <div class=\"modal-header\">\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">\n                    ×\n                </button>\n            </div>\n            <div class=\"modal-body\">\n                <p class=\"modal-inner-text\">\n                    Are you sure you want to delete this token ?\n                </p>\n\n                <div class=\"button-box mt20\">\n                    <a class=\"btn btn-success mr10\" (click)=\"logout()\" data-dismiss=\"modal\">yes</a>\n                    <a class=\"btn btn-danger\" href=\"\">No</a>\n                </div>\n            </div>\n            <div class=\"modal-footer\">\n\n            </div>\n        </div>\n    </div>\n</div>"
 
 /***/ }),
 
@@ -2125,27 +1914,20 @@ var UserDetailsComponent = /** @class */ (function () {
     }
     UserDetailsComponent.prototype.ngOnInit = function () {
         this.Id = localStorage.getItem('_id of customer');
-        console.log('id on nginit==>', this.Id);
         this.viewParticularCustomer();
     };
     //==========================================================VIEW PARTICULAR CUSTOMER API ====================================================================
     UserDetailsComponent.prototype.viewParticularCustomer = function () {
         var _this = this;
         this.service.getApi("admin/viewDetail/" + this.Id, 1).subscribe(function (response) {
-            // console.log("**********************")
             if (response['response_code'] == 200) {
-                // console.log(`view particular user ${response}`)
                 _this.customer = response["result"];
                 if (response['result'].profilePic) {
-                    // console.log('image exist') 
                     _this.imageUrl = _this.customer.profilePic;
                 }
                 else {
-                    //    console.log('image doesn"t exist') 
                     _this.imageUrl = 'assets/img/default_profile_image.png';
                 }
-                // console.log(`in particular view==>${JSON.stringify(this.customer)}`)
-                // this.service.showSuccess(response['response_message'])  
             }
             else {
                 _this.service.toastErr(response['response_message']);
@@ -2193,7 +1975,7 @@ module.exports = ".mt30{\n    margin-right: 85px;\n}"
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n<div class=\"mainbox main-modify\">\n    <app-side-menu></app-side-menu>\n  <div class=\"right-section\">\n    <div class=\"copyrights\">Copyright © 2018 Aqua Ludus All Rights Reserved.</div>\n    <div class=\"right-inner\">\n              <div class=\"filter-block\">\n                <fieldset class=\"global-fieldset\">\n                   <legend>View Business</legend>\n                    <div class=\"filter-content\">\n                         <div class=\"common-detail-box\">\n                            <div style=\"margin-left: 25%;margin-right: 25%; font-size:20%;\"><img [src]=\"imageUrl\" width=\"200px\"/></div>                            \n                            <br><br> <br>\n                            <div class=\"form-group row\">\n                               <label class=\"col-sm-4 label-right label-top\">Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</label>\n                               <div class=\"col-sm-8 label-left label-top\">{{business?.name}}\n                                  <!-- <input type=\"text\" value= class=\"form-control custom-input custom-control\" readonly > -->\n                               </div>\n                            </div>\n                            <div class=\"form-group row\">\n                                <label class=\"col-sm-4 label-right label-top\">Business Name:</label>\n                                <div class=\"col-sm-8 label-left label-top\">\n                                   {{business?.businessName}}\n                                </div>\n                             </div>\n                            <div class=\"form-group row\">\n                               <label class=\"col-sm-4 label-right label-top\">Email&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</label>\n                               <div class=\"col-sm-8 label-left label-top\">\n                                  {{business?.email}}\n                               </div>\n                            </div>\n                            <div class=\"form-group row\">\n                               <label class=\"col-sm-4 label-right label-top\">Gender&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</label>\n                               <div class=\"col-sm-8 label-left label-top\">\n                                {{business?.gender}}\n                               </div>\n                            </div>\n                            <div class=\"form-group row\">\n                               <label class=\"col-sm-4 label-right label-top\">Date of birth&nbsp;&nbsp;&nbsp;&nbsp;:</label>\n                               <div class=\"col-sm-8  label-left label-top\">\n                                  {{business?.dateOfBirth.formatted}}\n                               </div>\n                            </div>\n                            <div class=\"table-button text-center mt30\">\n                               <a class=\"btn btn-red\" (click)=\"edit()\">Edit </a>\n                               <a class=\"btn btn-danger\" (click)=\"cancel()\">Cancel</a>\n                            </div>\n                         </div>\n\n                    </div>\n                </fieldset>\n              </div>        \n          </div>  \n        </div>\n     </div>\n\n\n<!-- Modal-blocked -->\n<div id=\"costumModal10\" class=\"modal fade\" data-easein=\"bounceIn\"  tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"costumModalLabel\" aria-hidden=\"true\">\n          <div class=\"modal-dialog\">\n              <div class=\"modal-content common-detail-modal\">\n                  <div class=\"modal-header\">\n                      <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">\n                          ×\n                      </button>\n                  </div>\n                  <div class=\"modal-body\">\n                      <p class=\"modal-inner-text\">\n                         Are you sure you want to delete this token ?\n                      </p>\n\n                      <div class=\"button-box mt20\">\n                         <a class=\"btn btn-success mr10\" (click)=\"logout()\" data-dismiss=\"modal\">yes</a>\n                         <a class=\"btn btn-danger\" href=\"\">No</a>\n                      </div>\n                  </div>\n                  <div class=\"modal-footer\">\n                      \n                  </div>\n              </div>\n          </div>\n      </div>\n"
+module.exports = "\n<div class=\"mainbox main-modify\">\n    <app-side-menu></app-side-menu>\n  <div class=\"right-section\">\n    <div class=\"copyrights\">Copyright © 2018 Aqua Ludus All Rights Reserved.</div>\n    <div class=\"right-inner\">\n              <div class=\"filter-block\">\n                <fieldset class=\"global-fieldset\">\n                   <legend>View Business</legend>\n                    <div class=\"filter-content\">\n                         <div class=\"common-detail-box\">\n                            <div style=\"margin-left: 25%;margin-right: 25%; font-size:20%;\"><img [src]=\"imageUrl\" width=\"200px\"/></div>                            \n                            <br><br> <br>\n                            <div class=\"form-group row\">\n                               <label class=\"col-sm-4 label-right label-top\">Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</label>\n                               <div class=\"col-sm-8 label-left label-top\">{{business?.name}}\n                               </div>\n                            </div>\n                            <div class=\"form-group row\">\n                                <label class=\"col-sm-4 label-right label-top\">Business Name:</label>\n                                <div class=\"col-sm-8 label-left label-top\">\n                                   {{business?.businessName}}\n                                </div>\n                             </div>\n                            <div class=\"form-group row\">\n                               <label class=\"col-sm-4 label-right label-top\">Email&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</label>\n                               <div class=\"col-sm-8 label-left label-top\">\n                                  {{business?.email}}\n                               </div>\n                            </div>\n                            <div class=\"form-group row\">\n                               <label class=\"col-sm-4 label-right label-top\">Gender&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</label>\n                               <div class=\"col-sm-8 label-left label-top\">\n                                {{business?.gender}}\n                               </div>\n                            </div>\n                            <div class=\"form-group row\">\n                               <label class=\"col-sm-4 label-right label-top\">Date of birth&nbsp;&nbsp;&nbsp;&nbsp;:</label>\n                               <div class=\"col-sm-8  label-left label-top\">\n                                  {{business?.dateOfBirth.formatted}}\n                               </div>\n                            </div>\n                            <div class=\"table-button text-center mt30\">\n                               <a class=\"btn btn-red\" (click)=\"edit()\">Edit </a>\n                               <a class=\"btn btn-danger\" (click)=\"cancel()\">Cancel</a>\n                            </div>\n                         </div>\n\n                    </div>\n                </fieldset>\n              </div>        \n          </div>  \n        </div>\n     </div>\n\n\n<div id=\"costumModal10\" class=\"modal fade\" data-easein=\"bounceIn\"  tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"costumModalLabel\" aria-hidden=\"true\">\n          <div class=\"modal-dialog\">\n              <div class=\"modal-content common-detail-modal\">\n                  <div class=\"modal-header\">\n                      <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">\n                          ×\n                      </button>\n                  </div>\n                  <div class=\"modal-body\">\n                      <p class=\"modal-inner-text\">\n                         Are you sure you want to delete this token ?\n                      </p>\n\n                      <div class=\"button-box mt20\">\n                         <a class=\"btn btn-success mr10\" (click)=\"logout()\" data-dismiss=\"modal\">yes</a>\n                         <a class=\"btn btn-danger\" href=\"\">No</a>\n                      </div>\n                  </div>\n                  <div class=\"modal-footer\">\n                      \n                  </div>\n              </div>\n          </div>\n      </div>\n"
 
 /***/ }),
 
@@ -2230,39 +2012,20 @@ var ViewBusinessDetailComponent = /** @class */ (function () {
     }
     ViewBusinessDetailComponent.prototype.ngOnInit = function () {
         this.Id = localStorage.getItem('_id of business');
-        console.log('id on nginit==>', this.Id);
         this.viewParticularBusiness();
     };
     //==========================================================VIEW PARTICULAR CUSTOMER API ====================================================================
     ViewBusinessDetailComponent.prototype.viewParticularBusiness = function () {
         var _this = this;
         this.service.getApi("admin/viewDetail/" + localStorage.getItem('_id of business'), 1).subscribe(function (response) {
-            console.log("**********************");
             if (response['response_code'] == 200) {
-                console.log("view particular user " + response);
                 _this.business = response["result"];
                 if (response['result'].profilePic) {
-                    // console.log('image exist') 
                     _this.imageUrl = _this.business.profilePic;
                 }
                 else {
-                    //    console.log('image doesn"t exist') 
                     _this.imageUrl = 'assets/img/default_profile_image.png';
                 }
-                console.log("in particular view==>" + JSON.stringify(_this.business));
-                // this.service.showSuccess(response['response_message'])  
-                //        if(response['result'].dateOfBirth){
-                //         // this.dob = this.profileData.dateOfBirth.substring(0,10)
-                //         console.log('DOB') 
-                //         this.DOB = this.business.dateOfBirth.formatted
-                //         // this.dob = this.dob.substring(0,10)
-                //         console.log('dob is '+ this.DOB +' and dateofbirth is'+response['result'].dateOfBirth)
-                //       console.log(`in particular view==>${JSON.stringify(this.business)}`)
-                //    // this.service.showSuccess(response['response_message'])  
-                // }
-                // else{
-                //   this.DOB=""
-                // }
             }
             else {
                 _this.service.toastErr(response['response_message']);
@@ -2321,16 +2084,13 @@ var MainService = /** @class */ (function () {
     function MainService(http, toastr) {
         this.http = http;
         this.toastr = toastr;
-        //    baseUrl =  'http://172.16.6.74:8000/api/v1/';
+        // baseUrl =  'http://172.16.6.74:8000/api/v1/';
         //    >>>>staging URL>>
         this.baseUrl = 'http://162.222.32.20:1406/api/v1/';
     }
     MainService.prototype.postApi = function (url, data, isHeader) {
-        console.log("entered in post api ");
         if (isHeader == 0) {
-            console.log("header 0");
             var httpOptions;
-            // let superData = JSON.parse(localStorage.getItem('superData'))
             httpOptions = {
                 headers: new _angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpHeaders"]({
                     "Content-Type": "application/json",
@@ -2340,7 +2100,6 @@ var MainService = /** @class */ (function () {
         }
         else if (isHeader == 1) {
             var httpOptions;
-            //   let superData = JSON.parse(localStorage.getItem('superData'))
             httpOptions = {
                 headers: new _angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpHeaders"]({
                     "Content-Type": "application/json",
@@ -2362,7 +2121,6 @@ var MainService = /** @class */ (function () {
             return this.http.get((this.baseUrl + url), httpOptions);
         }
         else if (isHeader == 1) {
-            // console.log('token',localStorage.token)
             var httpOptions;
             httpOptions = {
                 headers: new _angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpHeaders"]({
@@ -2378,7 +2136,6 @@ var MainService = /** @class */ (function () {
         this.toastr.success(msg);
     };
     MainService.prototype.toastErr = function (msg) {
-        console.log('err in toaster');
         this.toastr.error(msg);
     };
     MainService = __decorate([
