@@ -7,7 +7,7 @@ const mongoose = require('mongoose');
 const cron = require('node-cron');
 const asyncLoop = require('node-async-loop');
 var booking = require("./models/bookingModel.js")
-const keySecret = 'sk_test_RnCHCs3r4NmdEJ1Ex9nLfME5';//avanish
+const keySecret = 'sk_test_7OyC78h4UYqhcEiH2N2vcX9O';//client
 const stripe = require("stripe")(keySecret);
 var notification = require('./common_functions/notification');
 

@@ -11,22 +11,14 @@
 		"pass":"mobiloitte123",
 		"name":"JET_SKI"		
 	},
-    "twilio":{
-        "sid": "AC0d2d1b1c5451771ceae267078e6dc23c",
-        "auth_token": "47f40a9fb853be19603855af4e8f2962",
-        "number":"9582601781"
-    },
-    "speakeasy":{
-        "secret_key":"@123"
-    },
     "nodemailer":{
-        "pass": "pramodsmsit",
-        "user": "pramodgiri54@gmail.com"
+        "pass": "Aqualudus91",
+        "user": "aqualudusllc@gmail.com"
     },
 
     "cloudinary":{
-        "CLOUD_NAME"   : "smsit",
-        "API_KEY"      : "359377722525269",
-        "API_SECRET"   : "OIUzbbSYowTrLVySFFVh02oN-uo"
+        "CLOUD_NAME"   : "aqua-ludus-llc",
+        "API_KEY"      : "473999989568776",
+        "API_SECRET"   : "nu4-VYUH81zikgmWuhens3WFldU"
       }
 }

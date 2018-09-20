@@ -8,7 +8,7 @@ const webpush = require('web-push');
 const vapidKeys = webpush.generateVAPIDKeys()
 let subscribers = [];
 const notiApi = {
-    //================================Notification shown in web===============================================================
+    //================================Notification shown in web===============================================================//
     'notificationList': (req, res) => {
         let options = {
             page: req.body.pageNumber,
@@ -26,6 +26,8 @@ const notiApi = {
             }
         })
     },
+    //================================Unread Notification shown in web===============================================================//
+
     'unreadCount': (req, res) => {
         Notification.count({ "bussinessId.bid": req.params.bussinessId, noti_type: 'BUSINESS', "bussinessId.isRead": false }, (error, result) => {
             if (error)
@@ -34,6 +36,9 @@ const notiApi = {
                 response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, 'Unread count found successfully.', result);
         })
     },
+
+    //================================ read Notification shown in web===============================================================//
+
     'updateReadStatus': (req, res) => {
         Notification.updateMany({ "bussinessId.bid": req.params.bussinessId, noti_type: 'BUSINESS' }, { $set: { "bussinessId.isRead": true } }, (error, result) => {
             if (error)
@@ -61,27 +66,6 @@ const notiApi = {
             }
         })
     },
-    'unreadCountWebApp': (req, res) => {
-        Notification.count({ "customerId.cid": req.params.customerId, noti_type: 'CUSTOMER', "customerId.isRead": false }, (error, result) => {
-            if (error)
-                response.sendResponseWithoutData(res, resCode.INTERNAL_SERVER_ERROR, resMessage.INTERNAL_SERVER_ERROR)
-            else
-                response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, 'Unread count found successfully.', result);
-        })
-    },
-    'updateReadStatusApp': (req, res) => {
-        Notification.updateMany({ "customerId.cid": req.params.customerId, noti_type: 'CUSTOMER' }, { $set: { "customerId.isRead": true } }, (error, result) => {
-            if (error)
-                response.sendResponseWithoutData(res, resCode.INTERNAL_SERVER_ERROR, resMessage.INTERNAL_SERVER_ERROR)
-            else if (result.matchedCount == result.modifiedCount) {
-                response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, 'Read status updated successfully.', 0);
-            }
-            else
-                response.sendResponseWithData(res, resCode.EVERYTHING_IS_OK, 'Read status updated successfully.', result.matchedCount - result.modifiedCount);
-        })
-    },
-
-   
 }
 
 module.exports = notiApi;

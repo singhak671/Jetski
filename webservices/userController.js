@@ -12,8 +12,9 @@ const notification = require('../common_functions/notification');
 const Noti = require('../models/notificationModel');
 var waterfall = require("async-waterfall");
 const async = require('async');
-const keySecret = 'sk_test_RnCHCs3r4NmdEJ1Ex9nLfME5';//avanish
+const keySecret = 'sk_test_7OyC78h4UYqhcEiH2N2vcX9O';//client
 const stripe = require("stripe")(keySecret);
+
 
 module.exports = {
 

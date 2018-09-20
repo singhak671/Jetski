@@ -119,10 +119,10 @@ module.exports = mongoose.model('User', user);
 (function init() {
 
     let obj = {
-        adminName: "Pramod Giri",
+        adminName: "JET SKI",
         password: "admin1234",
         userType: "SUPERADMIN",
-        email: "pramod.giri@mobiloitte.in",
+        email: "jetski@gmail.com",
         mobile_no: "+918299547036",
         address: "Okhla Phase-1, Delhi"
     };

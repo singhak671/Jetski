@@ -5,6 +5,8 @@ const resMessage = require('../helper/httpResponseMessage');
 
 const staticApi = {
 
+ //-----------------------------------------------------------Content update API --------------------------------------------------------------------------//
+
     'updateStatic': (req, res) => {
         if (!req.body)
             Response.sendResponseWithoutData(res, resCode.BAD_REQUEST, resMessage.BAD_REQUEST)
@@ -20,6 +22,8 @@ const staticApi = {
                 })
         }
     },
+
+    //-----------------------------------------------------------Static API --------------------------------------------------------------------------//
     'getStaticContent': (req, res) => {
         StaticContent.find((error, result) => {
             if (error)

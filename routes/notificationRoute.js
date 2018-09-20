@@ -6,9 +6,5 @@ const authHandler = require('../middleware/auth_handler');
 router.post('/notificationList',authHandler.verifyToken,notification.notificationList);
 router.get('/unreadCount/:bussinessId',authHandler.verifyToken,notification.unreadCount)
 router.get('/updateReadStatus/:bussinessId',authHandler.verifyToken,notification.updateReadStatus)
-router.get('/unreadCountWebApp/:customerId',authHandler.verifyToken,notification.unreadCountWebApp)
-router.get('/updateReadStatusApp/:customerId',authHandler.verifyToken,notification.updateReadStatusApp)
-
-
 
 module.exports = router;
