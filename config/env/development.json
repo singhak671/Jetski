@@ -16,6 +16,7 @@
         "pass": "Aqualudus91",
         "user": "aqualudusllc@gmail.com"
     },
+    
     "cloudinary":{
       "CLOUD_NAME"   : "aqua-ludus-llc",
       "API_KEY"      : "473999989568776",
