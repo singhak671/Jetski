@@ -70,6 +70,7 @@ cron.schedule('* */24 * * *', () => {
                 else if (item.bookingStatus == 'PENDING') {
                     booking.findById({ _id: item._id }).exec((err1, succ1) => {
                         if (err1){
+                            console.log("err in refunds", err)
                         }
                         else {
                             return stripe.refunds.create({
