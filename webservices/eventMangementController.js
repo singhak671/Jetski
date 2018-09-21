@@ -684,9 +684,9 @@ module.exports = {
             }
         })
     },
+
     //---------------------------------------------------------------booking API-------------------------------------------------------------------------------//
-
-
+   
     'booking': (req, res) => {
         if (!req.body) {
             return response.sendResponseWithoutData(res, responseCode.SOMETHING_WENT_WRONG, responseMessage.REQUIRED_DATA);
@@ -694,13 +694,11 @@ module.exports = {
         else {
             var deviceTypeWeb, profilePic, name
             User.findOne({ _id: req.body.userId, userType: "CUSTOMER", status: "ACTIVE" }, (err4, succ) => {
-                //  User.findOne({ "_id": req.body.companyId, "status": "ACTIVE" }, (err_, result_) => {
-                // console.log("err result for booking event--->", err4, succ)
                 if (err4)
                     return response.sendResponseWithData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.", err4);
                 if (!succ)
                     return response.sendResponseWithData(res, responseCode.NOT_FOUND, "UserId not found");
-                else {//
+                else {
 
                     var email = succ.email
                     async.waterfall([(callback) => {
@@ -708,88 +706,45 @@ module.exports = {
                             if (err5)
                                 return response.sendResponseWithData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.", err5);
                             if (!succ1) {
-                                // console.log("successss>>>>>>>", succ1);
                                 return response.sendResponseWithData(res, responseCode.NOT_FOUND, "eventId Not found");
                             }
                             else {
-                                // console.log("*************dsvvdadbvbcvzxbvcz", succ1)
-                                // console.log("****************************succ1.userId.deviceType", succ1.userId.deviceType)
                                 deviceTypeWeb = succ1.userId.deviceType
                                 profilePic = succ1.userId.profilePic
                                 name = succ1.userId.name
-                                email=succ1.userId.email
+                                email = succ1.userId.email
                                 var array = [];
                                 array = req.body.duration[0].times;
-                                // if (array.length == 1) {
-                                    if (validateEvent(req.body.duration, req.body.offset)) {
-                                        // transactionDate , transactionTime , transactionTimestamp, buninesNname , eventName, customerName. are required ** //
-
-                                        // booking.findOne({ eventId: req.body.eventId, userId: req.body.userId, businessManId: req.body.businessManId }, (err, success) => {
-                                        //     console.log("booking result---------->", err, success)
-                                        //     if (err)
-                                        //         return response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.", err)
-                                        // if (!success) {
-
-                                        //     return response.sendResponseWithData(res, responseCode.NOT_FOUND, "Data not found", success)
-                                        // }
-                                        // else {
-                                        //     booking.create(req.body, (err, result) => {
-                                        //         if (err)
-                                        //             return response.sendResponseWithData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.", err);
-                                        //         else
-                                        //             console.log("booking is done>>>>>>>>>>>>", result)
-                                        //         // response.sendResponseWithData(res, responseCode.EVERYTHING_IS_OK, success);
-
-
-                                        //     })
-                                        // }
-                                        //})
-                                    }
-                                    else
-                                        return response.sendResponseWithData(res, responseCode.NOT_FOUND, "Booking time expired..");
-                                       
-                                // }
-                                // else
-                                //     return response.sendResponseWithData(res, responseCode.NOT_FOUND, "Multiple time slot are not allowed");
-                                    callback(null, succ1)
+                                if (validateEvent(req.body.duration, req.body.offset)) {
+                                }
+                                else
+                                    return response.sendResponseWithData(res, responseCode.NOT_FOUND, "Booking time expired..");
+                                callback(null, succ1)
                             }
-                        })//
+                        })
                     }, (data, callback) => {
                         var charge1;
-                        console.log("enter in stripe>>>>>")
                         stripe.customers.create({
-                            email: email, // customer email, which user need to enter while making payment
-                            source: req.body.stripeToken // token for the given card 
+                            email: email,
+                            source: req.body.stripeToken
                         }).then((customer) => {
-                            console.log("customer stripe>>>>")
                             if (!customer)
                                 response.sendResponseWithoutData(res, responseCode.WENT_WRONG, " No such token.... ")
                             else {
-                                return stripe.charges.create({ // charge the customer
+                                return stripe.charges.create({
                                     amount: req.body.eventPrice * 100,
                                     currency: "usd",
-
                                     customer: customer.id
                                 })
                             }
-
-                            // console.log("customer=====>", customer)
                         })
                             .then((charge) => {
                                 charge1 = charge
-                                // console.log("============charge stripe============>>", charge.status)
                                 if (!charge1) {
 
-                                    // console.log("Cannot charge a customer that has no active card", charge1.id)
                                     response.sendResponseWithoutData(res, responseCode.WENT_WRONG, "Your card is not active.")
                                 }
                                 else {
-                                    console.log("charge1============>", charge1.id)
-
-
-
-
-
                                     var obj = {
                                         eventId: req.body.eventId,
                                         userId: req.body.userId,
@@ -798,9 +753,9 @@ module.exports = {
                                         offset: req.body.offset,
                                         eventName: req.body.eventName,
                                         businessName: req.body.businessName,
-                                        customerCount:req.body.customerCount,
+                                        customerCount: req.body.customerCount,
                                         customerName: req.body.customerName,
-                                        period:req.body.period,
+                                        period: req.body.period,
                                         "transactionDate": req.body.transactionDate,
                                         "transactionTime": req.body.transactionTime,
                                         "transactionTimeStamp": req.body.transactionTimeStamp,
@@ -809,16 +764,10 @@ module.exports = {
                                         "bookingStatus": "PENDING",
                                         "eventPrice": req.body.eventPrice
                                     }
-
-
-
-
                                     booking.create(obj, (err_, result_) => {
                                         if (err_)
-                                            console.log("err", err_)
+                                        response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR)
                                         else {
-                                            // console.log("*************************result_", JSON.stringify(result_))
-                                            // console.log(`Charge object is ${JSON.stringify(charge1)}`)
                                             callback('', result_)
                                         }
                                     })
@@ -826,12 +775,11 @@ module.exports = {
                             })
                     },], (err, result) => {
                         if (err) {
-                            console.log("errr6", err)
                             response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR)
                         } else {
                             var notiObj = {
                                 businessManId: req.body.businessManId,
-                                customerCount:req.body.customerCount,
+                                customerCount: req.body.customerCount,
                                 userId: req.body.userId,
                                 profilePic: succ.profilePic,
                                 name: succ.name,
@@ -839,180 +787,22 @@ module.exports = {
                                 type: 'event',
                                 eventStatus: 'PENDING'
                             }
-
-
-
-
-                            // console.log("888888888888>>>",notiObj)
-
-
-                            // console.log("*********result final", result)
-                            // console.log("notificatiopn data--------->>>", succ.deviceToken, 'booking Posted !', `Your booking is successfully done by ${notiObj.name} requested for the event ${result.eventName}`, req.body.businessManId, req.body.userId, succ.profilePic, succ.name)
-                            // if (succ.deviceType || succ.deviceToken) {
-                            // if (deviceType && deviceToken) {
                             if (succ.deviceType == 'IOS') {
-
-                                // console.log('ios---------------', succ.deviceToken, 'booking Posted !', `You have successfully book the event ${result.eventName}`+'\n'+`Number of Customers: ${req.body.customerCount} People ``+'\n'+`Contact Us: ${email}`, { type: 'event' },{ details: notiObj }, notiObj)
-                                notification.sendNotification(succ.deviceToken, 'booking Posted !', `You have successfully book the event ${result.eventName}`+'\n'+` Number of Riders: ${req.body.customerCount} People `+'\n'+` Contact Us: ${email}`,notiObj, notiObj)
+                                notification.sendNotification(succ.deviceToken, 'booking Posted !', `You have successfully book the event ${result.eventName}` + '\n' + ` Number of Riders: ${req.body.customerCount} People ` + '\n' + ` Contact Us: ${email}`, notiObj , notiObj)
                             }
 
-
-
-
-                            if (succ.deviceType == 'ANDROID') {
-                                  console.log("android--------------", succ.deviceToken, 'booking Posted !', `You have successfully book the event ${result.eventName}`+'\n'+` Number of Riders: ${req.body.customerCount} People `+'\n'+` Email: ${email}`,notiObj, notiObj)
-                                notification.sendNotification(succ.deviceToken, 'booking Posted !', `You have successfully book the event ${result.eventName}`+'\n'+` Number of Riders: ${req.body.customerCount} People `+'\n'+` Contact Us: ${email}`,notiObj, notiObj)
+                            if (succ.deviceType == 'ANDROID') {               
+                                notification.sendNotification(succ.deviceToken, 'booking Posted !', `You have successfully book the event ${result.eventName}` + '\n' + ` Number of Riders: ${req.body.customerCount} People ` + '\n' + ` Contact Us: ${email}`, notiObj, notiObj)
                             }
-                            //  businessManId:req.body.businessManId,
-                            //if (deviceTypeWeb == 'WEBSITE') { //title, msg, bussinessId, customerId, image, name, type, eventStatus
-                         
-                
-                         
-                            console.log("web----------------", 'booking Posted !', `Booking is successfully done by ${notiObj.name}  , requested for the event ${result.eventName} `+'\n'+` Number of Riders: ${req.body.customerCount} People `+'\n'+` Mobile: ${succ.mobile_no} `+'\n'+` Email: ${succ.email}` , req.body.businessManId, req.body.userId, notiObj.profilePic, notiObj.name)
 
-
-
-
-                            notification.single_notification(`booking Posted !`,`Booking is successfully done by ${notiObj.name} , requested for the event ${result.eventName} `+'\n'+` Number of Riders: ${req.body.customerCount} People `+'\n'+` Mobile: ${succ.mobile_no} `+'\n'+` Email: ${succ.email}` , req.body.businessManId, req.body.userId, notiObj.profilePic, notiObj.name, 'event', 'PENDING', req.body.eventId)
-                            //}
+                            notification.single_notification(`booking Posted !`, `Booking is successfully done by ${notiObj.name} , requested for the event ${result.eventName} ` + '\n' + ` Number of Riders: ${req.body.customerCount} People ` + '\n' + ` Mobile: ${succ.mobile_no} ` + '\n' + ` Email: ${succ.email}`, req.body.businessManId, req.body.userId, notiObj.profilePic, notiObj.name, 'event', 'PENDING', req.body.eventId)                         
+                            response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Payment successfully done!")
                         }
-                        response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Payment successfully done!")
-                        // }
-
                     })
-                }//
+                }
             })
         }
     },
-
-
-
-    // 'booking': (req, res) => {
-    //     if (!req.body) {
-    //         return response.sendResponseWithoutData(res, responseCode.SOMETHING_WENT_WRONG, responseMessage.REQUIRED_DATA);
-    //     }
-    //     else {
-    //         var deviceTypeWeb, profilePic, name
-    //         User.findOne({ _id: req.body.userId, userType: "CUSTOMER", status: "ACTIVE" }, (err4, succ) => {
-    //             if (err4)
-    //                 return response.sendResponseWithData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.", err4);
-    //             if (!succ)
-    //                 return response.sendResponseWithData(res, responseCode.NOT_FOUND, "UserId not found");
-    //             else {
-
-    //                 var email = succ.email
-    //                 async.waterfall([(callback) => {
-    //                     eventSchema.findOne({ _id: req.body.eventId }).populate({ path: 'userId', select: 'deviceType email mobile_no deviceToken name profilePic' }).exec((err5, succ1) => {//
-    //                         if (err5)
-    //                             return response.sendResponseWithData(res, responseCode.INTERNAL_SERVER_ERROR, "Error Occured.", err5);
-    //                         if (!succ1) {
-    //                             return response.sendResponseWithData(res, responseCode.NOT_FOUND, "eventId Not found");
-    //                         }
-    //                         else {
-    //                             deviceTypeWeb = succ1.userId.deviceType
-    //                             profilePic = succ1.userId.profilePic
-    //                             name = succ1.userId.name
-    //                             email = succ1.userId.email
-    //                             var array = [];
-    //                             array = req.body.duration[0].times;
-    //                             if (validateEvent(req.body.duration, req.body.offset)) {
-    //                             }
-    //                             else
-    //                                 return response.sendResponseWithData(res, responseCode.NOT_FOUND, "Booking time expired..");
-    //                             callback(null, succ1)
-    //                         }
-    //                     })
-    //                 }, (data, callback) => {
-    //                     var charge1;
-    //                     stripe.customers.create({
-    //                         email: email,
-    //                         source: req.body.stripeToken
-    //                     }).then((customer) => {
-    //                         if (!customer)
-    //                             response.sendResponseWithoutData(res, responseCode.WENT_WRONG, " No such token.... ")
-    //                         else {
-    //                             return stripe.charges.create({
-    //                                 amount: req.body.eventPrice * 100,
-    //                                 currency: "usd",
-    //                                 customer: customer.id
-    //                             })
-    //                         }
-    //                     })
-    //                         .then((charge) => {
-    //                             charge1 = charge
-    //                             if (!charge1) {
-
-    //                                 response.sendResponseWithoutData(res, responseCode.WENT_WRONG, "Your card is not active.")
-    //                             }
-    //                             else {
-    //                                 var obj = {
-    //                                     eventId: req.body.eventId,
-    //                                     userId: req.body.userId,
-    //                                     businessManId: req.body.businessManId,
-    //                                     duration: req.body.duration,
-    //                                     offset: req.body.offset,
-    //                                     eventName: req.body.eventName,
-    //                                     businessName: req.body.businessName,
-    //                                     customerCount: req.body.customerCount,
-    //                                     customerName: req.body.customerName,
-    //                                     period: req.body.period,
-    //                                     "transactionDate": req.body.transactionDate,
-    //                                     "transactionTime": req.body.transactionTime,
-    //                                     "transactionTimeStamp": req.body.transactionTimeStamp,
-    //                                     "paymentStatus": charge1.status,
-    //                                     "chargeId": charge1.id,
-    //                                     "bookingStatus": "PENDING",
-    //                                     "eventPrice": req.body.eventPrice
-    //                                 }
-    //                                 booking.create(obj, (err_, result_) => {
-    //                                     if (err_)
-    //                                     response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR)
-    //                                     else {
-    //                                         callback('', result_)
-    //                                     }
-    //                                 })
-    //                             }
-    //                         })
-    //                 },], (err, result) => {
-    //                     if (err) {
-    //                         response.sendResponseWithoutData(res, responseCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR)
-    //                     } else {
-    //                         var notiObj = {
-    //                             businessManId: req.body.businessManId,
-    //                             customerCount: req.body.customerCount,
-    //                             userId: req.body.userId,
-    //                             profilePic: succ.profilePic,
-    //                             name: succ.name,
-    //                             eventId: req.body.eventId,
-    //                             type: 'event',
-    //                             eventStatus: 'PENDING'
-    //                         }
-    //                         if (succ.deviceType == 'IOS') {
-    //                             notification.sendNotification(succ.deviceToken, 'booking Posted !', `You have successfully book the event ${result.eventName}` + '\n' + ` Number of Riders: ${req.body.customerCount} People ` + '\n' + ` Contact Us: ${email}`, notiObj , notiObj)
-    //                         }
-
-
-
-
-    //                         if (succ.deviceType == 'ANDROID') {
-                             
-                             
-    //                             console.log("notification>>>>>>",succ.deviceToken, 'booking Posted !', `You have successfully book the event ${result.eventName}` + '\n' + ` Number of Riders: ${req.body.customerCount} People ` + '\n' + ` Contact Us: ${email}`, notiObj, notiObj)
-                           
-                                
-
-
-    //                         notification.single_notification(`booking Posted !`, `Booking is successfully done by ${notiObj.name} , requested for the event ${result.eventName} ` + '\n' + ` Number of Riders: ${req.body.customerCount} People ` + '\n' + ` Mobile: ${succ.mobile_no} ` + '\n' + ` Email: ${succ.email}`, req.body.businessManId, req.body.userId, notiObj.profilePic, notiObj.name, 'event', 'PENDING', req.body.eventId)
-    //                             notification.sendNotification(succ.deviceToken, 'booking Posted !', `You have successfully book the event ${result.eventName}` + '\n' + ` Number of Riders: ${req.body.customerCount} People ` + '\n' + ` Contact Us: ${email}`, notiObj, notiObj)
-    //                         }
-    //                         notification.single_notification(`booking Posted !`, `Booking is successfully done by ${notiObj.name} , requested for the event ${result.eventName} ` + '\n' + ` Number of Riders: ${req.body.customerCount} People ` + '\n' + ` Mobile: ${succ.mobile_no} ` + '\n' + ` Email: ${succ.email}`, req.body.businessManId, req.body.userId, notiObj.profilePic, notiObj.name, 'event', 'PENDING', req.body.eventId)
-    //                     }
-    //                     response.sendResponseWithoutData(res, responseCode.EVERYTHING_IS_OK, "Payment successfully done!")
-    //                 })
-    //             }
-    //         })
-    //     }
-    // },
 
     ////---------------------------------------------------------------cancel booking for app//-----------------------------------------------------------------------//
     'cancelBooking': (req, res) => {
