@@ -119,12 +119,13 @@ module.exports = mongoose.model('User', user);
 (function init() {
 
     let obj = {
+        
         adminName: "JET SKI",
-        password: "admin1234",
+        password: "Aqualudus91",
         userType: "SUPERADMIN",
-        email: "jetski@gmail.com",
-        mobile_no: "+918299547036",
-        address: "Okhla Phase-1, Delhi"
+        email: "aqualudusllc@gmail.com"
+      
+
     };
     let salt = bcrypt.genSaltSync(10);
     obj.password = bcrypt.hashSync(obj.password, salt)
