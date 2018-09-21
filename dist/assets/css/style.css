@@ -210,10 +210,11 @@ a, input, button {
 }
 
 .logo img {
-    display: inline-block;
-
-    width:100px;
-        margin-top: 6px;
+	display: inline-block;
+    width: 83px;
+    position: absolute;
+    margin-top: 1px;
+    left: 8px;
 
 }
 .right-section{
