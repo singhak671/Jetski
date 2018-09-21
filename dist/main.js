@@ -2084,7 +2084,7 @@ var MainService = /** @class */ (function () {
     function MainService(http, toastr) {
         this.http = http;
         this.toastr = toastr;
-        // baseUrl =  'http://172.16.6.74:8000/api/v1/';
+        //    baseUrl =  'http://172.16.6.74:8000/api/v1/';
         //    >>>>staging URL>>
         this.baseUrl = 'http://162.222.32.20:1406/api/v1/';
     }
