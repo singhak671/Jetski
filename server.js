@@ -117,3 +117,22 @@ cron.schedule('* */24 * * *', () => {
 app.listen(environment.port, () => {
 console.log(`Server is running on ${environment.port}`)
 })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

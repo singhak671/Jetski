@@ -2087,7 +2087,7 @@ var MainService = /** @class */ (function () {
         // baseUrl =  'http://172.16.6.74:8000/api/v1/';
         //    >>>>staging URL>>
         //   baseUrl = 'http://162.222.32.20:1406/api/v1/';
-        this.baseUrl = window.location.origin;
+        this.baseUrl = window.location.origin + '/api/v1/';
     }
     MainService.prototype.postApi = function (url, data, isHeader) {
         if (isHeader == 0) {
@@ -2210,7 +2210,7 @@ Object(_angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_1__["platformB
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /Users/admin/Desktop/jet-ski/src/main.ts */"./src/main.ts");
+module.exports = __webpack_require__(/*! /Users/admin/Desktop/jet ski/src/main.ts */"./src/main.ts");
 
 
 /***/ })
