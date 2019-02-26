@@ -1007,7 +1007,7 @@ module.exports = {
             select: '_id eventName eventImage businessName eventCreated_At eventPrice',
             populate: [{ path: "userId", select: " status name ", match: { status: "ACTIVE" } }],
             limit: 100000000,
-            sort: { eventCreated_At: -1 },
+            sort: { createdAt: -1 },
             lean: true
         }
 

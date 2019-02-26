@@ -366,6 +366,8 @@ module.exports = {
                         message.sendemail(success.email, "Updated Password for Aqua_Ludus Account", `Dear ${success.name} , \ 
                     Your password is `+ otp, (err, result) => {
                                 if (err) {
+                                    // return Response.sendResponseWithoutData(res, resCode.BAD_REQUEST.resMessage.WENT_WRONG);
+
                                     Response.sendResponseWithoutData(res, resCode.UNAUTHORIZED, resMessage.UNAUTHORIZED);
                                 }
                                 else {
